@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Property
+namespace Models.Property.Enums
 {
-    class test2
+    public enum PaymentStatus
     {
+        Pending,
+        Completed,
+        Failed
     }
 }
