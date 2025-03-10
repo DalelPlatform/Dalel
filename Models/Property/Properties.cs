@@ -1,4 +1,6 @@
-﻿using Models.Property.Enums;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Models.Property.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,5 +28,13 @@ namespace Models.Property
         public float CancelationCharges { get; set; }
         public DateTime ModificationDate { get; set; }
         public string OwnerId { get; set; } // fk PropertyOwners.userId
+    }
+
+    public class PropertiesConfigiruation : IEntityTypeConfiguration<Properties>
+    {
+        public void Configure(EntityTypeBuilder<Properties> builder)
+        {
+
+        }
     }
 }
