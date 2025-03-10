@@ -8,17 +8,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Models.User
 {
-    public class PropertyOwners
+    public class HomeChefs
     {
-        public string UserId { get; set; } //fk & pk
+        public string UserId { get; set; } // fk & pk
+
         public AspDotNetUsers AspDotNetUsers { get; set; }
     }
 
-    public class PropertyOwnersConfiguration : IEntityTypeConfiguration<PropertyOwners>
+    public class HomeChefsConfiguration : IEntityTypeConfiguration<HomeChefs>
     {
-        public void Configure(EntityTypeBuilder<PropertyOwners> builder)
+        public void Configure(EntityTypeBuilder<HomeChefs> builder)
         {
-            builder.HasKey(PropertyOwners => PropertyOwners.UserId);
+            builder.HasKey(HomeChef => HomeChef.UserId);
 
 
         }

@@ -8,17 +8,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Models.User
 {
-    public class PropertyOwners
+    public class Agency
     {
         public string UserId { get; set; } //fk & pk
         public AspDotNetUsers AspDotNetUsers { get; set; }
     }
 
-    public class PropertyOwnersConfiguration : IEntityTypeConfiguration<PropertyOwners>
+    public class AgencyConfiguration : IEntityTypeConfiguration<Agency>
     {
-        public void Configure(EntityTypeBuilder<PropertyOwners> builder)
+        public void Configure(EntityTypeBuilder<Agency> builder)
         {
-            builder.HasKey(PropertyOwners => PropertyOwners.UserId);
+            builder.HasKey(Agency => Agency.UserId);
 
 
         }
