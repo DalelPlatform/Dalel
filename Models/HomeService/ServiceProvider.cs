@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Models.Hotel;
+using Models.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Models.HomeService
 {
-    public class ServiceProvider : AspNetUser
+    public class ServiceProvider : AspDotNetUsers
     {
         public string Image { get; set; }
         public List<string> Skills { get; set; } = new List<string>();
