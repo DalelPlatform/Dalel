@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Agency
+namespace Models.WeddingPlaces.Enums
 {
-    class test
+    public enum InquiryStatus
     {
+        Pending,
+        Rejected,
+        Confirmed
     }
 }

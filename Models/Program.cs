@@ -1,7 +1,4 @@
-﻿
-
-
-class Program
+﻿class Program
 {
 
     static int Main()

@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Models.HomeChef;
+using Models.HomeService;
+using Models.Driver;
+using Models.Property;
 using Models.Restaurant;
 
 namespace Models.User
@@ -13,10 +16,20 @@ namespace Models.User
 
         #region Restaurant
         public AspDotNetUsers AspDotNetUsers { get; set; }
+
+        public ICollection<BookingProperties> BookingProperties { get; set; }
+        public ICollection<PaymentProperties> PaymentProperties { get; set; }
+        public ICollection<ReviewProperties> ReviewProperties { get; set; }
         public ICollection<RestaurantOrders> restaurantOrders { get; set; }
         public ICollection<PaymentRestaurantOrders> paymentRestaurantOrders { get; set; }
 
+
         public ICollection<RestaurantReervations> restaurantReervations { get; set; }
+        public ICollection<ServiceQuaries> serviceQuaries { get; set; }
+        public ICollection<ServiceProviderPayment> serviceProviderPayments { get; set; }
+        public ICollection<ServiceProviderBooking> serviceProviderBookings { get; set; }
+        public ICollection<ServiceProviderReview> serviceProviderReviews { get; set; }
+
 
         public ReviewRestaurantOrders reviewRestaurantOrders { get; set; }
         #endregion
@@ -29,6 +42,14 @@ namespace Models.User
 
         public ReviewHomeChefOrders reviewHomeChefOrders { get;set; }
         #endregion
+        #region Driver
+        public ICollection<BookingVehicle> bookingVehicles { get; set; }
+
+        public ICollection<PaymentVehicle> paymentVehicles { get; set; }
+        public ReviewVehicle reviewVehicle { get; set; }
+        
+        #endregion
+
     }
 
     public class ClientsConfiguration : IEntityTypeConfiguration<Clients>
@@ -36,6 +57,8 @@ namespace Models.User
         public void Configure(EntityTypeBuilder<Clients> builder)
         {
             builder.HasKey(client => client.UserId);
+
+            
 
 
             //Relation between Clients & RestaurantOrders  one to many
@@ -83,6 +106,11 @@ namespace Models.User
             builder.HasOne(reviewhomecheforder => reviewhomecheforder.reviewHomeChefOrders)
                 .WithOne(client => client.clients)
                 .HasForeignKey<ReviewHomeChefOrders>(reviewhomecheforder => reviewhomecheforder.ClientId);
+
+            // relation between Clients & BookingVehicle (one to many)  
+
+            builder.HasMany(bookingvehicle => bookingvehicle.bookingVehicles)
+                .WithOne(client => client.Client).HasForeignKey(bookingvehicle => bookingvehicle.ClientId);
         }
     }
 }

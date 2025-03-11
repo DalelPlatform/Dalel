@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Agency;
 
 namespace Models.Driver
 {
@@ -26,5 +27,7 @@ namespace Models.Driver
         public virtual ICollection<BookingVehicle> BookingVehicles { get; set; }
         public virtual ICollection<PaymentVehicle> Payments { get; set; }
         public virtual ICollection<ReviewVehicle> Reviews { get; set; }
+        public ICollection<PackageBooking> packageBookings { get; set; }
+        public ICollection<Agency_CustomerInquiry> AgencyInquiry { get; set; }
     }
 }

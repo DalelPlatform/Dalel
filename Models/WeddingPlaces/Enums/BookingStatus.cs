@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.HomeService
+namespace Models.WeddingPlaces.Enums
 {
-    class test
+    public enum BookingStatus
     {
+        panding,
+        confirmed,
+        rejected
     }
 }
