@@ -21,21 +21,29 @@ namespace Models.HomeService
         public virtual CategoryServices CategoryServices { get; set; }
         public virtual ServiceProvider ServiceProvider { get; set; }
     }
+
     public class ServiceQuariesConfiguration : IEntityTypeConfiguration<ServiceQuaries>
     {
         public void Configure(EntityTypeBuilder<ServiceQuaries> builder)
         {
+            // Primary Key
             builder.HasKey(sq => sq.Id);
+
+            // Properties
             builder.Property(sq => sq.Question)
-                .HasMaxLength(500);
+                .HasMaxLength(1000);
+
             builder.Property(sq => sq.Answer)
-                .HasMaxLength(500);
+                .HasMaxLength(1000);
+
+            // Relationships
             builder.HasOne(sq => sq.CategoryServices)
                 .WithMany(cs => cs.Quaries)
                 .HasForeignKey(sq => sq.CategoryServicesId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasOne(sq => sq.ServiceProvider)
-                .WithMany(sp => sp.)
+                .WithMany()
                 .HasForeignKey(sq => sq.ServiceProviderId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

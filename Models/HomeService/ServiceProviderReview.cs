@@ -26,10 +26,12 @@ namespace Models.HomeService
             builder.HasKey(sr => sr.Id);
             builder.Property(sr => sr.Review)
                 .HasMaxLength(1000);
+
             builder.HasOne(sr => sr.ServiceProvider)
                 .WithMany(sp => sp.Reviews)
                 .HasForeignKey(sr => sr.ServiceProviderId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasOne(sr => sr.ServiceProviderBooking)
                 .WithMany(sb => sb.Reviews)
                 .HasForeignKey(sr => sr.ServiceProviderId)
