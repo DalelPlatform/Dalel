@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 
 namespace Models.HomeService
 {
-    public class ServiceProvider : AspDotNetUsers
+    public class ServiceProvider
     {
+        public int UserId { get; set; }
+        public AspDotNetUsers AspDotNetUsers { get; set; }
         public string Image { get; set; }
         public List<string> Skills { get; set; } = new List<string>();
         public DateTime StartProfisionalAt { get; set; }
@@ -29,7 +31,7 @@ namespace Models.HomeService
     {
         public void Configure(EntityTypeBuilder<ServiceProvider> builder)
         {
-            builder.HasKey(sp => sp.Id);
+            builder.HasKey(sp =>  new {sp.UserId, sp.CategoryServicesId });
 
             builder.Property(sp => sp.Image)
                 .HasMaxLength(255);
@@ -63,20 +65,6 @@ namespace Models.HomeService
                 .HasForeignKey(sr => sr.ServiceProviderId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasData(
-                new ServiceProvider
-                {
-                    Image = "image1.jpg",
-                    Skills = new List<string> { "Plumbing", "Pipe Fitting" },
-                    StartProfisionalAt = DateTime.Now,
-                    AvailableFrom = DateTime.Now,
-                    AvailableTo = DateTime.Now.AddHours(8),
-                    About = "Experienced plumber",
-                    Licence = "LIC123",
-                    Certificate = "CERT123",
-                    CategoryServicesId = 1
-                }
-            );
         }
     }
 

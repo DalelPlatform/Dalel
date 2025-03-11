@@ -18,6 +18,7 @@ namespace Models.HomeService
         public DateTime QuestionDate { get; set; }
         public DateTime AnswerDate { get; set; }
         public int CategoryServicesId { get; set; }
+        public virtual User.Clients Client { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
         public virtual ServiceProvider ServiceProvider { get; set; }
     }
@@ -45,6 +46,11 @@ namespace Models.HomeService
             builder.HasOne(sq => sq.ServiceProvider)
                 .WithMany()
                 .HasForeignKey(sq => sq.ServiceProviderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(sc => sc.Client)
+                .WithMany(sq => sq.serviceQuaries)
+                .HasForeignKey(sq => sq.ClientId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

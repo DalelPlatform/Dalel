@@ -14,8 +14,8 @@ namespace Models.HomeService
         public string Name { get; set; }
         public string Image { get; set; }
         public string Description { get; set; }
-        public virtual ICollection<ServiceProvider> ServiceProviders { get; set; } = new List<ServiceProvider>();
-        public virtual ICollection<ServiceQuaries> Quaries { get; set; } = new List<ServiceQuaries>();
+        public virtual ICollection<ServiceProvider> ServiceProviders { get; set; }
+        public virtual ICollection<ServiceQuaries> Quaries { get; set; }
     }
 
     public class CategoryServicesConfiguration : IEntityTypeConfiguration<CategoryServices>
@@ -44,10 +44,6 @@ namespace Models.HomeService
                 .HasForeignKey(sq => sq.CategoryServicesId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasData(
-                new CategoryServices { Id = 1, Name = "Plumbing", Description = "Plumbing services" },
-                new CategoryServices { Id = 2, Name = "Electrical", Description = "Electrical services" }
-            );
         }
     }
 }

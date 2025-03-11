@@ -13,9 +13,12 @@ namespace Models.HomeService
         public int Id { get; set; }
         public int ServiceProviderId { get; set; }
         public int ClientId { get; set; }
+        public int BookingID { get; set; }
         public string Review { get; set; }
         public int Rating { get; set; }
         public DateTime ReviewDate { get; set; }
+        public virtual User.Clients Client { get; set; }
+
         public virtual ServiceProvider ServiceProvider { get; set; }
         public virtual ServiceProviderBooking ServiceProviderBooking { get; set; }
     }
@@ -34,7 +37,12 @@ namespace Models.HomeService
 
             builder.HasOne(sr => sr.ServiceProviderBooking)
                 .WithMany(sb => sb.Reviews)
-                .HasForeignKey(sr => sr.ServiceProviderId)
+                .HasForeignKey(sr => sr.BookingID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(sr => sr.Client)
+                .WithMany(c => c.serviceProviderReviews)
+                .HasForeignKey(sr => sr.ClientId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

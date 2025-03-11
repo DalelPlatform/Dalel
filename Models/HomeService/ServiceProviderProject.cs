@@ -24,10 +24,13 @@ namespace Models.HomeService
             builder.HasKey(pp => pp.Id);
             builder.Property(pp => pp.ProjectName)
                 .HasMaxLength(50);
+
             builder.Property(pp => pp.ProjectDescription)
                 .HasMaxLength(1000);
+
             builder.Property(pp => pp.ProjectImage)
                 .HasMaxLength(255);
+
             builder.HasOne(pp => pp.ServiceProvider)
                 .WithMany(sp => sp.Projects)
                 .HasForeignKey(pp => pp.ServiceProviderId)

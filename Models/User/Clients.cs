@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Models.HomeService;
 using Models.Property;
 using Models.Restaurant;
 
@@ -20,7 +21,13 @@ namespace Models.User
         public ICollection<RestaurantOrders> restaurantOrders { get; set; }
         public ICollection<PaymentRestaurantOrders> paymentRestaurantOrders { get; set; }
 
+
         public ICollection<RestaurantReervations> restaurantReervations { get; set; }
+        public ICollection<ServiceQuaries> serviceQuaries { get; set; }
+        public ICollection<ServiceProviderPayment> serviceProviderPayments { get; set; }
+        public ICollection<ServiceProviderBooking> serviceProviderBookings { get; set; }
+        public ICollection<ServiceProviderReview> serviceProviderReviews { get; set; }
+
 
         public ReviewRestaurantOrders reviewRestaurantOrders { get; set; }
         #endregion
