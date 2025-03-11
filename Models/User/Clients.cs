@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Models.HomeChef;
 using Models.Restaurant;
 
 namespace Models.User
@@ -18,6 +19,15 @@ namespace Models.User
         public ICollection<RestaurantReervations> restaurantReervations { get; set; }
 
         public ReviewRestaurantOrders reviewRestaurantOrders { get; set; }
+        #endregion
+
+
+        #region HomeChef
+        public ICollection<HomeChefOrders> homeChefOrders { get; set; }
+
+        public ICollection<PaymentHomeChefOrders> paymentHomeChefOrders { get; set; }
+
+        public ReviewHomeChefOrders reviewHomeChefOrders { get;set; }
         #endregion
     }
 
@@ -57,6 +67,22 @@ namespace Models.User
                 .WithOne(client => client.clients)
                 .HasForeignKey<ReviewRestaurantOrders>(reviewrestorder => reviewrestorder.ClientId);
 
+
+            //Relation between Clients & HomeChefOrders (one to many)
+            builder.HasMany(homecheforder => homecheforder.homeChefOrders)
+                .WithOne(client => client.clients)
+                .HasForeignKey(homecheforder => homecheforder.ClientId);
+
+
+            //Relation between Clients & PaymentHomeChefOrders (one to many)
+            builder.HasMany(payhomecheforder => payhomecheforder.paymentRestaurantOrders)
+                .WithOne(client => client.clients)
+                .HasForeignKey(payhomecheforder => payhomecheforder.ClientId);
+
+            //Relation between Clients & ReviewHomeChefOrders (one to one)
+            builder.HasOne(reviewhomecheforder => reviewhomecheforder.reviewHomeChefOrders)
+                .WithOne(client => client.clients)
+                .HasForeignKey<ReviewHomeChefOrders>(reviewhomecheforder => reviewhomecheforder.ClientId);
         }
     }
 }
