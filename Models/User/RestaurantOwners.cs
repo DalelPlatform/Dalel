@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Models.Restaurant;
 
 namespace Models.User
 {
@@ -12,7 +13,10 @@ namespace Models.User
     {
         public string UserId { get; set; } //fk & pk
 
+
+        //Relations :
         public AspDotNetUsers AspDotNetUsers { get; set; }
+        public Restaurants restaurants { get; set; }
     }
 
     public class RestaurantOwnersConfiguration : IEntityTypeConfiguration<RestaurantOwners>

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Models.Restaurant.Enums
 {
-    public enum SizeOfPiece
+    public enum CategoriesOfFood
     {
-        small,
-        medium,
-        large
+        drink,
+        snacks,
+        meal,
+        other
     }
 }

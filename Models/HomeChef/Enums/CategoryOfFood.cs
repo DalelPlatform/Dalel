@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Restaurant.Enums
+namespace Models.HomeChef.Enums
 {
-    public enum enTypeOfFood
+    public enum CategoryOfFood
     {
         drink,
         snacks,

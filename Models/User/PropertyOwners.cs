@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Models.User
 {
     public class PropertyOwners
     {
         public string UserId { get; set; } //fk & pk
         public AspDotNetUsers AspDotNetUsers { get; set; }
+
+        
     }
 
     public class PropertyOwnersConfiguration : IEntityTypeConfiguration<PropertyOwners>
