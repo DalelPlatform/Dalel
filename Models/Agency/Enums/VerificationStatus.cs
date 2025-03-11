@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Agency
+namespace Models.Agency.Enums
 {
-    class test
+    public enum VerificationStatus
     {
+        panding,
+        confirmed, 
+        rejected
+
     }
 }
