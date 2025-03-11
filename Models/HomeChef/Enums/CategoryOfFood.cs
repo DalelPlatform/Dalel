@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.HomeChef
+namespace Models.HomeChef.Enums
 {
-    class test2
+    public enum CategoryOfFood
     {
+        drink,
+        snacks,
+        meal,
+        other
     }
 }

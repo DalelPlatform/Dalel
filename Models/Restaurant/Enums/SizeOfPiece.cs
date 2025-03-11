@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Resturant
+namespace Models.Restaurant.Enums
 {
-    class test
+    public enum SizeOfPiece
     {
+        small,
+        medium,
+        large
     }
 }

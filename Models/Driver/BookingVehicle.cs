@@ -81,4 +81,5 @@ namespace Models.Driver
                    .OnDelete(DeleteBehavior.Cascade);
         }
     }
+
 }
