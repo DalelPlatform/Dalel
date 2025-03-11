@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Models.User;
 
 namespace Models.Hotel
 {
@@ -13,7 +14,7 @@ namespace Models.Hotel
         public string UserId { get; set; }
 
         // Navigation Properties
-        public AspNetUser User { get; set; }
+        public HotelOwners User { get; set; }
     }
 
 

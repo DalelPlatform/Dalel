@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Models.Property;
 
 namespace Models.User
 {
@@ -13,6 +14,10 @@ namespace Models.User
         public string UserId { get; set; } //fk & pk
 
         public AspDotNetUsers AspDotNetUsers { get; set; }
+
+        public ICollection<BookingProperties> BookingProperties { get; set; }
+        public ICollection<PaymentProperties> PaymentProperties { get; set; }
+        public ICollection<ReviewProperties> ReviewProperties { get; set; }
     }
 
     public class ClientsConfiguration : IEntityTypeConfiguration<Clients>
@@ -21,6 +26,7 @@ namespace Models.User
         {
             builder.HasKey(client => client.UserId);
 
+            
 
         }
     }
