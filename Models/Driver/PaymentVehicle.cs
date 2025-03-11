@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Models.User;
+
 
 namespace Models.Driver
 {
@@ -24,7 +26,7 @@ namespace Models.Driver
 
         // علاقة Many-to-One مع Client
         public string ClientId { get; set; }
-        public virtual Client Client { get; set; }
+        public virtual Clients Client { get; set; }
 
         // علاقة One-to-One مع BookingVehicle
         public int BookingVehicleId { get; set; }
@@ -43,7 +45,7 @@ namespace Models.Driver
 
             // ضبط العلاقة Many-to-One مع Client
             builder.HasOne(pv => pv.Client)
-                   .WithMany(c=>c.Payments)
+                   .WithMany(c=>c.paymentVehicles)
                    .HasForeignKey(pv => pv.ClientId)
                    .OnDelete(DeleteBehavior.Cascade);
 

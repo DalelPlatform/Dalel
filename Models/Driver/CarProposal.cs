@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Models.User;
 
 namespace Models.Driver
 {
@@ -29,7 +30,7 @@ namespace Models.Driver
 
 
         public string DriverId { get; set; }
-        public virtual Driver Driver { get; set; }
+        public virtual Drivers Driver { get; set; }
 
 
         public int BookingVehicleId { get; set; }
@@ -47,7 +48,7 @@ namespace Models.Driver
 
             // Relation with Driver (One-to-Many)
             builder.HasOne(cp => cp.Driver)
-                   .WithMany(d => d.CarProposals)
+                   .WithMany(d => d.proposals)
                    .HasForeignKey(cp => cp.DriverId)
                    .IsRequired()
                    .OnDelete(DeleteBehavior.Restrict); // منع الحذف التلقائي

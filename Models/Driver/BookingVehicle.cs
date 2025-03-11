@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Models.User;
 
 namespace Models.Driver
 {
@@ -34,7 +35,7 @@ namespace Models.Driver
 
 
         public string ClientId { get; set; }
-        public virtual Client Client { get; set; }
+        public virtual Clients Client { get; set; }
         public virtual ICollection<CarProposal> CarProposals { get; set; }
 
 
@@ -56,12 +57,7 @@ namespace Models.Driver
             builder.Property(bv => bv.DropoffLocation).IsRequired().HasMaxLength(255);
             builder.Property(bv => bv.SuggestedPrice).HasColumnType("decimal(18,2)").IsRequired();
 
-            // Relationship with Client
-            builder.HasOne(b => b.Client)
-                   .WithMany(B=>B.BookingVehicles)
-                   .HasForeignKey(b => b.ClientId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
+            
             // One-to-One Relationship with PaymentVehicle
             builder.HasOne(b => b.Payment)
                    .WithOne(p => p.BookingVehicle)

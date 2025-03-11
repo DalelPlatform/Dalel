@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Models.Driver;
 
 namespace Models.User
 {
@@ -54,6 +55,9 @@ namespace Models.User
         public HomeChefs homeChefs { get; set; }
 
         public Agency agency { get; set; }
+
+       
+      
 
     }
 

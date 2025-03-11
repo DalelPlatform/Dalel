@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Models.User;
 
 namespace Models.Driver
 {
@@ -25,7 +26,7 @@ namespace Models.Driver
 
         // علاقة Many-to-One مع Driver
         public string DriverId { get; set; }
-        public virtual Driver Driver { get; set; }
+        public virtual Drivers Driver { get; set; }
 
         // علاقة One-to-Many مع VehicleImage
         public virtual ICollection<VehicleImage> VehicleImages { get; set; } = new List<VehicleImage>();
@@ -48,9 +49,9 @@ namespace Models.Driver
 
             // ضبط العلاقة Many-to-One مع Driver
             builder.HasOne(v => v.Driver)
-                   .WithOne(d => d.Vehicle) // Driver لديه سيارة واحدة فقط
+                   .WithOne(d => d.vehicles) // Driver لديه سيارة واحدة فقط
                    .HasForeignKey<Vehicle>(v => v.DriverId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.Restrict);
 
             // ضبط العلاقة One-to-Many مع VehicleImage
             builder.HasMany(v => v.VehicleImages)
