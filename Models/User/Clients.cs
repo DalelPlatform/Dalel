@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Models.HomeService;
+using Models.Driver;
 using Models.Property;
 using Models.Restaurant;
+using Models.Driver;
 
 namespace Models.User
 {
@@ -31,6 +33,14 @@ namespace Models.User
 
         public ReviewRestaurantOrders reviewRestaurantOrders { get; set; }
         #endregion
+        #region Driver
+        public ICollection<BookingVehicle> bookingVehicles { get; set; }
+
+        public ICollection<PaymentVehicle> paymentVehicles { get; set; }
+        public ReviewVehicle reviewVehicle { get; set; }
+        
+        #endregion
+
     }
 
     public class ClientsConfiguration : IEntityTypeConfiguration<Clients>
@@ -71,6 +81,11 @@ namespace Models.User
                 .WithOne(client => client.clients)
                 .HasForeignKey<ReviewRestaurantOrders>(reviewrestorder => reviewrestorder.ClientId);
 
+
+            // relation between Clients & BookingVehicle (one to many)  
+
+            builder.HasMany(bookingvehicle => bookingvehicle.bookingVehicles)
+                .WithOne(client => client.Client).HasForeignKey(bookingvehicle => bookingvehicle.ClientId);
         }
     }
 }

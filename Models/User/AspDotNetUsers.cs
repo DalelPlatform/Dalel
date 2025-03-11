@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
 using Models.HomeService;
+using Models.Driver;
 
 namespace Models.User
 {
@@ -44,6 +45,10 @@ namespace Models.User
         public HomeChefs homeChefs { get; set; }
         public Agency agency { get; set; }
         public HomeService.ServiceProvider ServiceProvider { get; set; }
+
+       
+      
+
     }
 
     public class AspDotNetUsersConfiguration : IEntityTypeConfiguration<AspDotNetUsers>
