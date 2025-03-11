@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Models.Driver;
+using Models.Property;
 using Models.Restaurant;
 using Models.Driver;
 
@@ -14,6 +15,10 @@ namespace Models.User
 
         #region Restaurant
         public AspDotNetUsers AspDotNetUsers { get; set; }
+
+        public ICollection<BookingProperties> BookingProperties { get; set; }
+        public ICollection<PaymentProperties> PaymentProperties { get; set; }
+        public ICollection<ReviewProperties> ReviewProperties { get; set; }
         public ICollection<RestaurantOrders> restaurantOrders { get; set; }
         public ICollection<PaymentRestaurantOrders> paymentRestaurantOrders { get; set; }
 
@@ -36,6 +41,8 @@ namespace Models.User
         public void Configure(EntityTypeBuilder<Clients> builder)
         {
             builder.HasKey(client => client.UserId);
+
+            
 
 
             //Relation between Clients & RestaurantOrders  one to many
