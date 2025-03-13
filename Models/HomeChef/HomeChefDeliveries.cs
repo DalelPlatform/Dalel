@@ -15,7 +15,7 @@ namespace Models.HomeChef
 
         public bool SelfDelivery { get; set; }
 
-        public string DeliveryStatus { get; set; }
+        public string DeliveryStatus { get; set; } //enum
         public string TrackingId { get; set; }//fk
 
         public int HomeChefOrderId { get; set; }//fk

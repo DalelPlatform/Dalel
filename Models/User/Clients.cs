@@ -8,15 +8,14 @@ using Models.Restaurant;
 
 namespace Models.User
 {
-    public class Clients
+    public class Client
     {
         public string UserId { get; set; } //fk & pk
+        public virtual AppUser User { get; set; }
 
         //Relations 
 
         #region Restaurant
-        public AspDotNetUsers AspDotNetUsers { get; set; }
-
         public ICollection<BookingProperties> BookingProperties { get; set; }
         public ICollection<PaymentProperties> PaymentProperties { get; set; }
         public ICollection<ReviewProperties> ReviewProperties { get; set; }

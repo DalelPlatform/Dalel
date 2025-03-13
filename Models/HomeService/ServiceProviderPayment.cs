@@ -13,17 +13,17 @@ namespace Models.HomeService
     {
         public int Id { get; set; }
         public PaymentType Payment { get; set; }
-        public int BookingId { get; set; }
-        public virtual ServiceProviderBooking ServiceProviderBooking { get; set; }
+        public int RequestId { get; set; }
+        public virtual ServiceRequest ServiceRequest { get; set; }
     }
     public class ServiceProviderPaymentConfiguration : IEntityTypeConfiguration<ServiceProviderPayment>
     {
         public void Configure(EntityTypeBuilder<ServiceProviderPayment> builder)
         {
             builder.HasKey(sp => sp.Id);
-            builder.HasOne(sp => sp.ServiceProviderBooking)
-                .WithMany(sb => sb.Payments)
-                .HasForeignKey(sp => sp.BookingId)
+            builder.HasOne(sp => sp.ServiceRequest)
+                .WithOne(sb => sb.Payment)
+                .HasForeignKey<ServiceProviderPayment>(sp => sp.RequestId )
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

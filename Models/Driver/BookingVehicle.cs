@@ -35,7 +35,7 @@ namespace Models.Driver
 
 
         public string ClientId { get; set; }
-        public virtual Clients Client { get; set; }
+        public virtual Client Client { get; set; }
         public virtual ICollection<CarProposal> CarProposals { get; set; }
 
 

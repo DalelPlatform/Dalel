@@ -11,9 +11,9 @@ namespace Models.HomeChef
     public class HomeChefOrderMeals
     {
         public int Id { get; set; }
-        public float SupPrice { get; set; }
+        public double SupPrice { get; set; }
 
-        public float Quantity { get; set; }
+        public int Quantity { get; set; }
 
         public int HomeChefOrdersId { get; set; }//fk
         public int HomeChefMealsId { get; set; }//fk

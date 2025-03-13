@@ -8,8 +8,8 @@ namespace Models.HomeChef.Enums
 {
     public enum HomeChefPaymentType
     {
-        cash,
-        paypal,
-        stripe
+        Cash,
+        Paypal,
+        Stripe
     }
 }

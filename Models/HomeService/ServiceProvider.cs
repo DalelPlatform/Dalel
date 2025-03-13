@@ -11,8 +11,8 @@ namespace Models.HomeService
 {
     public class ServiceProvider
     {
-        public int UserId { get; set; }
-        public AspDotNetUsers AspDotNetUsers { get; set; }
+        public string UserId { get; set; }
+        public AppUser AppUser { get; set; }
         public string Image { get; set; }
         public List<string> Skills { get; set; } = new List<string>();
         public DateTime StartProfisionalAt { get; set; }
@@ -24,7 +24,7 @@ namespace Models.HomeService
         public int CategoryServicesId { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
         public virtual ICollection<ServiceProviderProject> Projects { get; set; } = new List<ServiceProviderProject>();
-        public virtual ICollection<ServiceProviderBooking> Bookings { get; set; } = new List<ServiceProviderBooking>();
+        public virtual ICollection<ServiceRequest> Requests { get; set; } = new List<ServiceProviderBooking>();
         public virtual ICollection<ServiceProviderReview> Reviews { get; set; } = new List<ServiceProviderReview>();
     }
     public class ServiceProviderConfiguration : IEntityTypeConfiguration<ServiceProvider>

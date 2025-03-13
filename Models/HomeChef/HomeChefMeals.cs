@@ -64,7 +64,8 @@ namespace Models.HomeChef
             //relation between HomeChefMeals & HomeChefMealImages (one to many)
             builder.HasMany(homechefmealimg => homechefmealimg.homeChefMealImages)
                 .WithOne(homechefmeal => homechefmeal.homeChefMeals)
-                .HasForeignKey(homechefmealimg => homechefmealimg.HomeChefMealsId);
+                .HasForeignKey(homechefmealimg => homechefmealimg.HomeChefMealsId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             //relation between HomeChefMeals & HomeChefOrderMeals (one to many)

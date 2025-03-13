@@ -8,9 +8,9 @@ namespace Models.HomeChef.Enums
 {
     public enum CategoryOfFood
     {
-        drink,
-        snacks,
-        meal,
-        other
+        Drink,
+        Snacks,
+        Meal,
+        Other
     }
 }

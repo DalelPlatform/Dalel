@@ -6,28 +6,30 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Models.HomeService.ENUMS;
+using Models.User;
 
 namespace Models.HomeService
 {
-    public class ServiceProviderBooking
+    public class ServiceRequest
     {
         public int Id { get; set; }
-        public int ServiceProviderId { get; set; }
         public int ClientId { get; set; }
-        public DateTime BookingDate { get; set; }
-        public DateTime BookingTime { get; set; }
+        public DateTime Date { get; set; }
         public BookingStatus Status { get; set; }
-        public string BookingType { get; set; }
-        public string BookingDescription { get; set; }
-        public string BookingAddress { get; set; }
-        public virtual User.Clients Client { get; set; }
-        public virtual ServiceProvider ServiceProvider { get; set; }
-        public virtual ICollection<ServiceProviderReview> Reviews { get; set; } = new List<ServiceProviderReview>();
-        public virtual ICollection<ServiceProviderPayment> Payments { get; set; } = new List<ServiceProviderPayment>();
+        public double StartPrice { get; set; }
+        public string Description { get; set; }
+        public string Address { get; set; }
+        public string? Image { get; set; }
+        public virtual Client Client { get; set; }
+        //relation with cat
+
+        public virtual ICollection<ServiceProviderPropsal> Propsals { get; set; } 
+        public virtual ServiceProviderReview Review { get; set; }
+        public virtual ServiceProviderPayment Payment { get; set; } 
     }
-    public class ServiceProviderBookingConfiguration : IEntityTypeConfiguration<ServiceProviderBooking>
+    public class ServiceProviderBookingConfiguration : IEntityTypeConfiguration<ServiceRequest>
     {
-        public void Configure(EntityTypeBuilder<ServiceProviderBooking> builder)
+        public void Configure(EntityTypeBuilder<ServiceRequest> builder)
         {
             builder.HasKey(sb => sb.Id);
             builder.Property(sb => sb.BookingType)

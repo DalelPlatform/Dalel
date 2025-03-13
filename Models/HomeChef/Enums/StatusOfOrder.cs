@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.HomeChef.Enums
 {
-    public enum StatusOfOrder
+    public enum HomeChefOrderStatus
     {
         panding,
         confirmed,

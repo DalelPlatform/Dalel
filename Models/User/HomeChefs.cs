@@ -22,7 +22,7 @@ namespace Models.User
 
         //Relations : 
 
-        public AspDotNetUsers AspDotNetUsers { get; set; }
+        public AppUser AppUser { get; set; }
 
         public ICollection<HomeChefMeals> homeChefMeals { get; set; }
 
