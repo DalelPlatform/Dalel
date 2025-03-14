@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Models.HomeChef
 {
-    public class HomeChefMealImages
+    public class HomeChefMealImage
     {
         public int Id { get; set; }
         public string Image {  get; set; }
@@ -18,14 +18,14 @@ namespace Models.HomeChef
 
         //Relations :
 
-        public virtual HomeChefMeals homeChefMeals { get; set; }
+        public virtual HomeChefMeal HomeChefMeal { get; set; }
 
     }
 
 
-    public class HomeChefMealImagesConfiguration : IEntityTypeConfiguration<HomeChefMealImages>
+    public class HomeChefMealImagesConfiguration : IEntityTypeConfiguration<HomeChefMealImage>
     {
-        public void Configure(EntityTypeBuilder<HomeChefMealImages> builder)
+        public void Configure(EntityTypeBuilder<HomeChefMealImage> builder)
         {
             builder.HasKey(homechefmealimg => homechefmealimg.Id);
             builder.Property(homechefmealimg => homechefmealimg.Image).HasColumnType("NVARCHAR(max)");

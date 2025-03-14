@@ -11,7 +11,7 @@ using Models.User;
 
 namespace Models.HomeChef
 {
-    public class PaymentHomeChefOrders
+    public class PaymentHomeChefOrder
     {
         
          public int Id { get; set; }
@@ -33,14 +33,14 @@ namespace Models.HomeChef
 
         //Relations :
 
-        public Clients clients { get; set; }
+        public virtual Client Client { get; set; }
 
-        public HomeChefOrders homeChefOrders { get; set; }
+        public virtual HomeChefOrder HomeChefOrder { get; set; }
      }
 
-    public class PaymentHomeChefOrdersConfiguration : IEntityTypeConfiguration<PaymentHomeChefOrders>
+    public class PaymentHomeChefOrdersConfiguration : IEntityTypeConfiguration<PaymentHomeChefOrder>
     {
-        public void Configure(EntityTypeBuilder<PaymentHomeChefOrders> builder)
+        public void Configure(EntityTypeBuilder<PaymentHomeChefOrder> builder)
         {
             builder.HasKey(payhomecheforder => payhomecheforder.Id);
             builder.Property(payhomecheforder => payhomecheforder.CodeApplied).HasColumnType("NVARCHAR(50)");

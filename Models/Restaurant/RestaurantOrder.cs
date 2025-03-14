@@ -11,7 +11,7 @@ using Models.User;
 
 namespace Models.Restaurant
 {
-    public class RestaurantOrders
+    public class RestaurantOrder
     {
         public int Id { get; set; }
 
@@ -21,40 +21,43 @@ namespace Models.Restaurant
 
         public StatusOfOrder OrderStatus { get; set; }
 
+        public bool IsDeleted { get; set; } 
+
         public int RestaurantId { get; set; } //fk
 
         public string ClientId { get; set; } // fk
 
 
         //Relations : 
-        public Restaurants restaurants { get; set; }
-        public Clients clients { get; set; }
+        public virtual Restaurant Restaurant { get; set; }
+        public virtual Client Client { get; set; }
 
-        public ICollection<RestaurantOrderItems> restaurantOrderItems { get; set; }
+        public virtual ICollection<RestaurantOrderItem> RestaurantOrderItem { get; set; }
 
-        public ICollection<ReviewRestaurantOrders> reviewRestaurantOrders { get; set; }
+        public virtual ICollection<ReviewRestaurantOrder> ReviewRestaurantOrder { get; set; }
 
         
     }
 
 
-    public class RestaurantOrdersConfiguration : IEntityTypeConfiguration<RestaurantOrders>
+    public class RestaurantOrdersConfiguration : IEntityTypeConfiguration<RestaurantOrder>
     {
-        public void Configure(EntityTypeBuilder<RestaurantOrders> builder)
+        public void Configure(EntityTypeBuilder<RestaurantOrder> builder)
         {
             builder.HasKey(restorder => restorder.Id);
             builder.Property(restorder => restorder.Date).HasDefaultValue("GETDATE()");
             builder.Property(restorder => restorder.OrderStatus).HasDefaultValue("panding");
 
             //Relation between RestaurantOrders & RestaurantOrderItems  (one to many)
-            builder.HasMany(restorderitem => restorderitem.restaurantOrderItems)
-                .WithOne(restorder => restorder.restaurantOrders)
+            builder.HasMany(restorderitem => restorderitem.RestaurantOrderItem)
+                .WithOne(restorder => restorder.RestaurantOrder)
                 .HasForeignKey(restorderitem => restorderitem.RestaurantOrderId);
+                
 
 
-
-            builder.HasMany(reviewrestorder => reviewrestorder.reviewRestaurantOrders)
-                .WithOne(restorder => restorder.restaurantOrders)
+            //Relation between ReviewRestaurantOrder & RestaurantOrders  (one to many)
+            builder.HasMany(reviewrestorder => reviewrestorder.ReviewRestaurantOrder)
+                .WithOne(restorder => restorder.RestaurantOrder)
                 .HasForeignKey(reviewrestorder => reviewrestorder.RestaurantOrderId);
            
         }

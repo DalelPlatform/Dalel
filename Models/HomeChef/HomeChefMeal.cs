@@ -10,7 +10,7 @@ using Models.User;
 
 namespace Models.HomeChef
 {
-    public class HomeChefMeals
+    public class HomeChefMeal
     {
         public int Id { get; set; }
         public int HomeChefId { get; set; } //fk
@@ -30,14 +30,16 @@ namespace Models.HomeChef
 
         public double Duration { get; set; }
 
+        public bool IsDeleted { get; set; }
+
 
         //Relations: 
 
-        public ICollection<HomeChefMealImages> homeChefMealImages { get; set; }
+        public virtual ICollection<HomeChefMealImage> HomeChefMealImage { get; set; }
 
-        public HomeChefs homeChefs { get; set; }
+        public virtual User.HomeChef HomeChef { get; set; }
 
-        public ICollection<HomeChefOrderMeals> homeChefOrderMeals { get; set; }
+        public virtual ICollection<HomeChefOrderMeal> HomeChefOrderMeal { get; set; }
 
 
 
@@ -46,9 +48,9 @@ namespace Models.HomeChef
     }
 
 
-    public class HomeChefMealsConfiguration : IEntityTypeConfiguration<HomeChefMeals>
+    public class HomeChefMealsConfiguration : IEntityTypeConfiguration<HomeChefMeal>
     {
-        public void Configure(EntityTypeBuilder<HomeChefMeals> builder)
+        public void Configure(EntityTypeBuilder<HomeChefMeal> builder)
         {
             builder.HasKey(homechefmeals => homechefmeals.Id);
             builder.Property(homechefmeals => homechefmeals.DishName).HasColumnType("NVARCHAR(100)").IsRequired();
@@ -56,21 +58,21 @@ namespace Models.HomeChef
             builder.Property(homechefmeals => homechefmeals.Price).HasColumnType("MONEY").IsRequired();
             builder.Property(homechefmeals => homechefmeals.AvailabilityStatus).HasColumnType("NVARCHAR(50)");
             builder.Property(homechefmeals => homechefmeals.DietaryTags).HasColumnType("NVARCHAR(max)");
-            builder.Property(homechefmeals => homechefmeals.FoodCategory).HasDefaultValue("panding");
-            builder.Property(homechefmeals => homechefmeals.PieceSize).HasDefaultValue("panding");
+            builder.Property(homechefmeals => homechefmeals.FoodCategory).HasDefaultValue("Panding");
+            builder.Property(homechefmeals => homechefmeals.PieceSize).HasDefaultValue("Panding");
 
 
 
-            //relation between HomeChefMeals & HomeChefMealImages (one to many)
-            builder.HasMany(homechefmealimg => homechefmealimg.homeChefMealImages)
-                .WithOne(homechefmeal => homechefmeal.homeChefMeals)
+            //relation between HomeChefMeal & HomeChefMealImage (one to many)
+            builder.HasMany(homechefmealimg => homechefmealimg.HomeChefMealImage)
+                .WithOne(homechefmeal => homechefmeal.HomeChefMeal)
                 .HasForeignKey(homechefmealimg => homechefmealimg.HomeChefMealsId)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
-            //relation between HomeChefMeals & HomeChefOrderMeals (one to many)
-            builder.HasMany(homechefordermeal => homechefordermeal.homeChefOrderMeals)
-                .WithOne(homechefmeal => homechefmeal.homeChefMeals)
+            //relation between HomeChefMeal & HomeChefOrderMeal (one to many)
+            builder.HasMany(homechefordermeal => homechefordermeal.HomeChefOrderMeal)
+                .WithOne(homechefmeal => homechefmeal.HomeChefMeal)
                 .HasForeignKey(homechefordermeal => homechefordermeal.HomeChefMealsId);
 
 

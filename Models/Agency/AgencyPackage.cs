@@ -17,7 +17,7 @@ namespace Models.Agency
         public int AgencyId { get; set; }
         public TravelAgencies Agency { get; set; }
         public ICollection<PackageStep> PackageSteps { get; set; }
-        public ICollection<PackageSchadule> PackageSchadules { get; set;
+        public ICollection<PackageSchadule> PackageSchadules { get; set; }
 
     }
 }

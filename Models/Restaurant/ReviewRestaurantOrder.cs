@@ -11,7 +11,7 @@ using Models.User;
 
 namespace Models.Restaurant
 {
-    public class ReviewRestaurantOrders
+    public class ReviewRestaurantOrder
     {
         public int Id { get; set; }
 
@@ -27,18 +27,18 @@ namespace Models.Restaurant
 
         //Relations : 
 
-        public Clients clients {  get; set; }
+        public virtual Client Client {  get; set; }
         
-        public RestaurantOrders restaurantOrders { get; set; }
+        public virtual RestaurantOrder RestaurantOrder { get; set; }
 
 
         
     }
 
 
-    public class ReviewRestaurantOrdersConfiguration : IEntityTypeConfiguration<ReviewRestaurantOrders>
+    public class ReviewRestaurantOrdersConfiguration : IEntityTypeConfiguration<ReviewRestaurantOrder>
     {
-        public void Configure(EntityTypeBuilder<ReviewRestaurantOrders> builder)
+        public void Configure(EntityTypeBuilder<ReviewRestaurantOrder> builder)
         {
             builder.HasKey(reviewrestorder => reviewrestorder.Id);
             builder.Property(reviewrestorder => reviewrestorder.Comments).HasColumnType("NVARCHAR(max)");

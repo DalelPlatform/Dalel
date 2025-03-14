@@ -10,7 +10,7 @@ using Models.User;
 
 namespace Models.Restaurant
 {
-    public class RestaurantReervations
+    public class RestaurantReervation
     {
         public int Id { get; set; }
         public string Comments { get; set; }
@@ -28,18 +28,18 @@ namespace Models.Restaurant
 
 
         //Relations : 
-        public Restaurants restaurants { get; set; }
-        public Clients clients {  get; set; }           
+        public virtual Restaurant Restaurant { get; set; }
+        public virtual Client Client {  get; set; }           
     }
 
-    public class RestaurantReervationsConfiguration : IEntityTypeConfiguration<RestaurantReervations>
+    public class RestaurantReervationsConfiguration : IEntityTypeConfiguration<RestaurantReervation>
     {
-        public void Configure(EntityTypeBuilder<RestaurantReervations> builder)
+        public void Configure(EntityTypeBuilder<RestaurantReervation> builder)
         {
             builder.HasKey(restreervations => restreervations.Id);
             builder.Property(restreervations => restreervations.ModificationDateTime).HasDefaultValue("GETDATE()");
             builder.Property(restreervations => restreervations.TableNumber).HasColumnType("NVARCHAR(100)");
-            builder.Property(restreervations => restreervations.ReervationStatus).HasDefaultValue("panding");
+            builder.Property(restreervations => restreervations.ReervationStatus).HasDefaultValue("Panding");
             builder.Property(restreervations => restreervations.Comments).HasColumnType("NVARCHAR(max)");
 
 

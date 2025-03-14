@@ -10,7 +10,7 @@ using Models.User;
 
 namespace Models.HomeChef
 {
-    public class ReviewHomeChefOrders
+    public class ReviewHomeChefOrder
     {
         public int Id { get; set; }
 
@@ -26,15 +26,15 @@ namespace Models.HomeChef
 
         //Relations : 
 
-        public Clients clients { get; set; }
+        public virtual Client Client { get; set; }
 
-        public HomeChefOrders homeChefOrders { get; set; }
+        public virtual HomeChefOrder HomeChefOrder { get; set; }
 
     }
 
-    public class ReviewHomeChefOrdersConfiguration : IEntityTypeConfiguration<ReviewHomeChefOrders>
+    public class ReviewHomeChefOrdersConfiguration : IEntityTypeConfiguration<ReviewHomeChefOrder>
     {
-        public void Configure(EntityTypeBuilder<ReviewHomeChefOrders> builder)
+        public void Configure(EntityTypeBuilder<ReviewHomeChefOrder> builder)
         {
             builder.HasKey(reviewhomeorder => reviewhomeorder.Id);
             builder.Property(reviewhomeorder => reviewhomeorder.Comments).HasColumnType("NVARCHAR(max)");

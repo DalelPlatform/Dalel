@@ -30,8 +30,8 @@ namespace Models.User
         public Drivers? drivers { get; set; }
         public HotelOwners? hotelOwners { get; set; }
         public PropertyOwners? propertyOwners { get; set; }
-        public RestaurantOwners? restaurantOwners { get; set; }
-        public HomeChefs? homeChefs { get; set; }
+        public RestaurantOwner? restaurantOwners { get; set; }
+        public HomeChef? homeChefs { get; set; }
         public Agency? agency { get; set; }
         public ServiceProvider? ServiceProvider { get; set; }    
 
@@ -70,11 +70,11 @@ namespace Models.User
 
             builder.HasOne(restaurantOwners => restaurantOwners.restaurantOwners)
                 .WithOne(usr => usr.AspDotNetUsers)
-                .HasForeignKey<RestaurantOwners>(restaurantOwners => restaurantOwners.UserId);
+                .HasForeignKey<RestaurantOwner>(restaurantOwners => restaurantOwners.UserId);
 
             builder.HasOne(homeChefs => homeChefs.homeChefs)
                .WithOne(usr => usr.AppUser)
-               .HasForeignKey<HomeChefs>(homeChefs => homeChefs.UserId);
+               .HasForeignKey<HomeChef>(homeChefs => homeChefs.UserId);
 
             builder.HasOne(agency => agency.agency)
                .WithOne(usr => usr.AspDotNetUsers)
