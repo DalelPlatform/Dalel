@@ -15,8 +15,10 @@ namespace Models.User
         public string UserId { get; set; } //fk & pk
         public AppUser AppUser { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         //Relation
-        public Properties Properties { get; set; }
+        public virtual Properties Properties { get; set; }
 
         
     }
