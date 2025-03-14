@@ -16,17 +16,20 @@ namespace Models.User
         //Relations 
 
         #region Restaurant
-        
+
         public virtual ICollection<RestaurantOrder> RestaurantOrder { get; set; }
         public virtual ICollection<PaymentRestaurantOrder> PaymentRestaurantOrder { get; set; }
-
-
         public virtual ICollection<RestaurantReervation> RestaurantReervations { get; set; }
-     
-
         public virtual ReviewRestaurantOrder ReviewRestaurantOrder { get; set; }
         #endregion
 
+        #region Property
+
+        public ICollection<BookingProperties> BookingProperties { get; set; }
+        public ICollection<PaymentProperties> PaymentProperties { get; set; }
+        public ICollection<ReviewProperties> ReviewProperties { get; set; }
+
+        #endregion
 
         #region HomeChef
         public virtual ICollection<HomeChefOrder> HomeChefOrder { get; set; }
@@ -35,6 +38,7 @@ namespace Models.User
 
         public virtual ReviewHomeChefOrder ReviewHomeChefOrder { get;set; }
         #endregion
+
 
 
         #region Driver
@@ -47,9 +51,6 @@ namespace Models.User
 
 
 
-        public ICollection<BookingProperties> BookingProperties { get; set; }
-        public ICollection<PaymentProperties> PaymentProperties { get; set; }
-        public ICollection<ReviewProperties> ReviewProperties { get; set; }
 
 
         public ICollection<ServiceQuaries> ServiceQuaries { get; set; }
@@ -60,11 +61,12 @@ namespace Models.User
 
     }
 
-    public class ClientsConfiguration : IEntityTypeConfiguration<Client>
+
+    public class ClientConfiguration : IEntityTypeConfiguration<Client>
     {
         public void Configure(EntityTypeBuilder<Client> builder)
         {
-            builder.HasKey(client => client.UserId);
+            builder.HasKey(Client => Client.UserId);
 
 
 

@@ -32,7 +32,7 @@ namespace Models.Restaurant
         public virtual Client Client {  get; set; }           
     }
 
-    public class RestaurantReervationsConfiguration : IEntityTypeConfiguration<RestaurantReervation>
+    public class RestaurantReervationConfiguration : IEntityTypeConfiguration<RestaurantReervation>
     {
         public void Configure(EntityTypeBuilder<RestaurantReervation> builder)
         {

@@ -27,7 +27,7 @@ namespace Models.HomeChef
 
     }
 
-    public class HomeChefOrderMealsConfiguration : IEntityTypeConfiguration<HomeChefOrderMeal>
+    public class HomeChefOrderMealConfiguration : IEntityTypeConfiguration<HomeChefOrderMeal>
     {
         public void Configure(EntityTypeBuilder<HomeChefOrderMeal> builder)
         {

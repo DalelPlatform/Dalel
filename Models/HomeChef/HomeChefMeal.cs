@@ -48,7 +48,7 @@ namespace Models.HomeChef
     }
 
 
-    public class HomeChefMealsConfiguration : IEntityTypeConfiguration<HomeChefMeal>
+    public class HomeChefMealConfiguration : IEntityTypeConfiguration<HomeChefMeal>
     {
         public void Configure(EntityTypeBuilder<HomeChefMeal> builder)
         {

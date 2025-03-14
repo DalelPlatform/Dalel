@@ -32,7 +32,7 @@ namespace Models.HomeChef
 
     }
 
-    public class ReviewHomeChefOrdersConfiguration : IEntityTypeConfiguration<ReviewHomeChefOrder>
+    public class ReviewHomeChefOrderConfiguration : IEntityTypeConfiguration<ReviewHomeChefOrder>
     {
         public void Configure(EntityTypeBuilder<ReviewHomeChefOrder> builder)
         {

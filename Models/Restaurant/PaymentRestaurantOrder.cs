@@ -37,7 +37,7 @@ namespace Models.Restaurant
     }
 
 
-    public class PaymentRestaurantOrdersConfiguration : IEntityTypeConfiguration<PaymentRestaurantOrder>
+    public class PaymentRestaurantOrderConfiguration : IEntityTypeConfiguration<PaymentRestaurantOrder>
     {
         public void Configure(EntityTypeBuilder<PaymentRestaurantOrder> builder)
         {

@@ -17,10 +17,12 @@ namespace Models.Property
         public DateTime ModificationDateTime { get; set; }
         public string ClientId { get; set; } // fk Client.UserId
         public int BookingPropertyId { get; set; } // fk BookingProperties.Id
+        public bool IsDeleted { get; set; }
+
 
         //relations
-        public Clients Clients { get; set; }
-        public BookingProperties BookingProperties { get; set; }
+        public virtual Client? Client { get; set; }
+        public virtual BookingProperties BookingProperties { get; set; }
     }
 
     public class ReviewPropertiesConfiguration : IEntityTypeConfiguration<ReviewProperties>
@@ -31,7 +33,7 @@ namespace Models.Property
             builder.Property(rp => rp.Rating).HasColumnType("decimal(18,2)");
             builder.Property(rp => rp.Comments).HasMaxLength(500);
             //relations
-            builder.HasOne(rp => rp.Clients)
+            builder.HasOne(rp => rp.Client)
                 .WithMany(c => c.ReviewProperties)
                 .HasForeignKey(rp => rp.ClientId);
             builder.HasOne(rp => rp.BookingProperties)

@@ -21,7 +21,7 @@ namespace Models.Restaurant
     }
 
 
-    public class RestaurantMenuItemImagesConfiguration : IEntityTypeConfiguration<RestaurantMenuItemImage>
+    public class RestaurantMenuItemImageConfiguration : IEntityTypeConfiguration<RestaurantMenuItemImage>
     {
         public void Configure(EntityTypeBuilder<RestaurantMenuItemImage> builder)
         {

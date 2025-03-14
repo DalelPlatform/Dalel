@@ -38,7 +38,7 @@ namespace Models.HomeChef
         public virtual HomeChefOrder HomeChefOrder { get; set; }
      }
 
-    public class PaymentHomeChefOrdersConfiguration : IEntityTypeConfiguration<PaymentHomeChefOrder>
+    public class PaymentHomeChefOrderConfiguration : IEntityTypeConfiguration<PaymentHomeChefOrder>
     {
         public void Configure(EntityTypeBuilder<PaymentHomeChefOrder> builder)
         {

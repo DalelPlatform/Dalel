@@ -15,11 +15,11 @@ namespace Models.User
 
 
         //Relations :
-        public AppUser AppUser { get; set; }
-        public Restaurant Restaurant { get; set; }
+        public virtual AppUser AppUser { get; set; }
+        public virtual Restaurant.Restaurant Restaurant { get; set; }
     }
 
-    public class RestaurantOwnersConfiguration : IEntityTypeConfiguration<RestaurantOwner>
+    public class RestaurantOwnerConfiguration : IEntityTypeConfiguration<RestaurantOwner>
     {
         public void Configure(EntityTypeBuilder<RestaurantOwner> builder)
         {

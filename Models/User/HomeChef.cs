@@ -34,7 +34,7 @@ namespace Models.User
         public virtual ICollection<HomeChefOrder> HomeChefOrder { get; set; }
     }
 
-    public class HomeChefsConfiguration : IEntityTypeConfiguration<HomeChef>
+    public class HomeChefConfiguration : IEntityTypeConfiguration<HomeChef>
     {
         public void Configure(EntityTypeBuilder<HomeChef> builder)
         {

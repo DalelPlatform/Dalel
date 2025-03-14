@@ -36,7 +36,7 @@ namespace Models.Restaurant
     }
 
 
-    public class ReviewRestaurantOrdersConfiguration : IEntityTypeConfiguration<ReviewRestaurantOrder>
+    public class ReviewRestaurantOrderConfiguration : IEntityTypeConfiguration<ReviewRestaurantOrder>
     {
         public void Configure(EntityTypeBuilder<ReviewRestaurantOrder> builder)
         {

@@ -20,10 +20,12 @@ namespace Models.Property
         public DateTime TransactionDateTime { get; set; }
         public string ClientId { get; set; } // fk client.userid
         public int BookingPropertyId { get; set; } // fk BookingProperties.Id
+        public bool IsDeleted { get; set; }
+
 
         //relations
-        public Clients Clients { get; set; }
-        public BookingProperties BookingProperties { get; set; }
+        public virtual Client? Client { get; set; }
+        public virtual BookingProperties BookingProperties { get; set; }
     }
 
     public class PaymentPropertiesConfiguration : IEntityTypeConfiguration<PaymentProperties>
@@ -33,12 +35,15 @@ namespace Models.Property
             builder.HasKey(pp => pp.Id);
             builder.Property(pp => pp.Amount).HasColumnType("decimal(18,2)");
             //relations
-            builder.HasOne(pp => pp.Clients)
+            builder.HasOne(pp => pp.Client)
                 .WithMany(c => c.PaymentProperties)
-                .HasForeignKey(pp => pp.ClientId);
+                .HasForeignKey(pp => pp.ClientId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             builder.HasOne(pp => pp.BookingProperties)
                 .WithMany(bp => bp.PaymentProperties)
-                .HasForeignKey(pp => pp.BookingPropertyId);
+                .HasForeignKey(pp => pp.BookingPropertyId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

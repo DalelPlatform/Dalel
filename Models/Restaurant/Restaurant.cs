@@ -59,7 +59,7 @@ namespace Models.Restaurant
 
     }
 
-    public class RestaurantsConfiguration : IEntityTypeConfiguration<Restaurant>
+    public class RestaurantConfiguration : IEntityTypeConfiguration<Restaurant>
     {
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Restaurant> builder)
         {

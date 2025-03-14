@@ -29,7 +29,7 @@ namespace Models.Restaurant
         public virtual ICollection<RestaurantMenuItemImage> RestaurantMenuItemImage { get; set; }
     }
 
-    public class RestaurantMenuItemsConfiguration : IEntityTypeConfiguration<RestaurantMenuItem>
+    public class RestaurantMenuItemConfiguration : IEntityTypeConfiguration<RestaurantMenuItem>
     {
         public void Configure(EntityTypeBuilder<RestaurantMenuItem> builder)
         {

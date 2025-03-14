@@ -20,12 +20,14 @@ namespace Models.Property
         public BookingStatus Status { get; set; } // int
         public int PropertyId { get; set; } // fk Properties
         public int ClientId { get; set; } // fk Clients.userid 
+        public bool IsDeleted { get; set; }
+
 
         //relations
-        public Properties Properties { get; set; }
-        public Clients Clients { get; set; }
-        public ICollection<PaymentProperties> PaymentProperties { get; set; }
-        public ICollection<ReviewProperties> ReviewProperties { get; set; }
+        public virtual Properties Properties { get; set; }
+        public virtual Client? Client { get; set; }
+        public virtual ICollection<PaymentProperties> PaymentProperties { get; set; }
+        public virtual ICollection<ReviewProperties> ReviewProperties { get; set; }
     }
 
     public class BookingPropertiesConfiguration : IEntityTypeConfiguration<BookingProperties>
@@ -40,7 +42,7 @@ namespace Models.Property
                 .WithMany(p => p.BookingProperties)
                 .HasForeignKey(bp => bp.PropertyId);
 
-            builder.HasOne(bp => bp.Clients)
+            builder.HasOne(bp => bp.Client)
                 .WithMany(c => c.BookingProperties)
                 .HasForeignKey(bp => bp.ClientId);
 

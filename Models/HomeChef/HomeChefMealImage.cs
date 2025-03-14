@@ -23,7 +23,7 @@ namespace Models.HomeChef
     }
 
 
-    public class HomeChefMealImagesConfiguration : IEntityTypeConfiguration<HomeChefMealImage>
+    public class HomeChefMealImageConfiguration : IEntityTypeConfiguration<HomeChefMealImage>
     {
         public void Configure(EntityTypeBuilder<HomeChefMealImage> builder)
         {
