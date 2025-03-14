@@ -8,8 +8,8 @@ namespace Models.Property.Enums
 {
     public enum BookingStatus
     {
-        panding,
-        confirmed,
-        rejected
+        Panding,
+        Confirmed,
+        Rejected
     }
 }

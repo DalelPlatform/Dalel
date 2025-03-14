@@ -10,20 +10,22 @@ using Models.Property;
 
 namespace Models.User
 {
-    public class PropertyOwners
+    public class PropertyOwner
     {
         public string UserId { get; set; } //fk & pk
-        public AspDotNetUsers AspDotNetUsers { get; set; }
+        public AppUser AppUser { get; set; }
+
+        //Relation
         public Properties Properties { get; set; }
 
         
     }
 
-    public class PropertyOwnersConfiguration : IEntityTypeConfiguration<PropertyOwners>
+    public class PropertyOwnerConfiguration : IEntityTypeConfiguration<PropertyOwner>
     {
-        public void Configure(EntityTypeBuilder<PropertyOwners> builder)
+        public void Configure(EntityTypeBuilder<PropertyOwner> builder)
         {
-            builder.HasKey(PropertyOwners => PropertyOwners.UserId);
+            builder.HasKey(PropertyOwner => PropertyOwner.UserId);
 
 
         }

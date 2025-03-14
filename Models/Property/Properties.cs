@@ -29,11 +29,12 @@ namespace Models.Property
         public float CancelationCharges { get; set; }
         public DateTime ModificationDate { get; set; }
         public string OwnerId { get; set; } // fk PropertyOwners.userId
+        public bool IsDeleted { get; set; }
 
         //relations
-        public PropertyOwners PropertyOwners { get; set; }
-        public ICollection<PropertyImages> PropertyImages { get; set; }
-        public ICollection<BookingProperties> BookingProperties { get; set; }
+        public virtual PropertyOwner PropertyOwner { get; set; }
+        public virtual ICollection<PropertyImages> PropertyImages { get; set; }
+        public virtual ICollection<BookingProperties> BookingProperties { get; set; }
     }
 
     public class PropertiesConfigiruation : IEntityTypeConfiguration<Properties>
@@ -50,13 +51,14 @@ namespace Models.Property
 
             //relations
 
-            builder.HasOne(p => p.PropertyOwners)
+            builder.HasOne(p => p.PropertyOwner)
                 .WithOne(po => po.Properties)
                 .HasForeignKey<Properties>(p => p.OwnerId);
 
             builder.HasMany(p => p.PropertyImages)
                 .WithOne(pi => pi.Properties)
-                .HasForeignKey(pi => pi.PropertyId);
+                .HasForeignKey(pi => pi.PropertyId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

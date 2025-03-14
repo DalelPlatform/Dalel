@@ -26,10 +26,10 @@ namespace Models.User
 
 
         //Relations :
-        public Client? Client { get; set; }
+        public virtual Client? Client { get; set; }
         public Drivers? drivers { get; set; }
         public HotelOwners? hotelOwners { get; set; }
-        public PropertyOwners? propertyOwners { get; set; }
+        public PropertyOwner? propertyOwner { get; set; }
         public RestaurantOwners? restaurantOwners { get; set; }
         public HomeChefs? homeChefs { get; set; }
         public Agency? agency { get; set; }
@@ -37,7 +37,7 @@ namespace Models.User
 
     }
 
-    public class AspDotNetUsersConfiguration : IEntityTypeConfiguration<AppUser>
+    public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
     {
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
@@ -64,9 +64,9 @@ namespace Models.User
                  .WithOne(usr => usr.AspDotNetUsers)
                  .HasForeignKey<HotelOwners>(hotelowners => hotelowners.UserId);
 
-            builder.HasOne(proOwner => proOwner.propertyOwners)
-                .WithOne(usr => usr.AspDotNetUsers)
-                .HasForeignKey<PropertyOwners>(proOwner => proOwner.UserId);
+            builder.HasOne(proOwner => proOwner.propertyOwner)
+                .WithOne(usr => usr.AppUser)
+                .HasForeignKey<PropertyOwner>(proOwner => proOwner.UserId);
 
             builder.HasOne(restaurantOwners => restaurantOwners.restaurantOwners)
                 .WithOne(usr => usr.AspDotNetUsers)
