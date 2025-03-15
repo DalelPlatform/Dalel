@@ -5,6 +5,8 @@ using Models.HomeService;
 using Models.Driver;
 using Models.Property;
 using Models.Restaurant;
+using System.Collections;
+using Models.Agency;
 
 namespace Models.User
 {
@@ -63,9 +65,10 @@ namespace Models.User
         public ICollection<ServiceProviderReview> serviceProviderReviews { get; set; }
 
         #endregion
-
-
-
+        #region Agency
+        public ICollection <PackageBooking> PackageBookings { get; set; }
+        public ICollection <Agency_CustomerInquiry> Agency_CustomerInquiries { get; set; }
+        #endregion
 
 
         public ICollection<ServiceQuaries> ServiceQuaries { get; set; }
