@@ -140,10 +140,7 @@ namespace Models.User
                 .WithOne(client => client.Client).HasForeignKey(bookingvehicle => bookingvehicle.ClientId);
 
             // relation between Clients & ServiceRequest (one to many)
-            builder.HasOne(sb => sb.Client)
-               .WithMany(c => c.ServiceRequests)
-               .HasForeignKey(sb => sb.ClientId)
-               .OnDelete(DeleteBehavior.NoAction);
+           
 
 
         }
