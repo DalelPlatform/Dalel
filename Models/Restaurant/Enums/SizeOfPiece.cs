@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.Restaurant.Enums
 {
-    public enum enSizeOfPiece
+    public enum SizeOfPiece
     {
         small,
         medium,

@@ -11,7 +11,7 @@ namespace Models.User
     public class Agency
     {
         public string UserId { get; set; } //fk & pk
-        public AspDotNetUsers AspDotNetUsers { get; set; }
+        public AppUser AppUser { get; set; }
     }
 
     public class AgencyConfiguration : IEntityTypeConfiguration<Agency>
