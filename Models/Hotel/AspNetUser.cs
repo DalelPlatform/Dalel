@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace Models.Hotel
+namespace Hotel
+   
 {
     public class AspNetUser
     {
@@ -21,18 +21,33 @@ namespace Models.Hotel
         public string ModificationBy { get; set; }
         public DateTime ModificationDate { get; set; }
         public bool IsDeleted { get; set; }
+
+        // Navigation properties for one-to-one relationships
+        public HotelOwner HotelOwner { get; set; }
+      
+
+        // Navigation properties for related bookings, payments, reviews, etc.
+        public ICollection<BookingHotelRoom> BookingHotelRooms { get; set; }
+       
+        public ICollection<ReviewHotelRoom> ReviewHotelRooms { get; set; }
+        
+        public ICollection<PaymentHotelRoom> PaymentHotelRoom {  get; set; }
     }
 
-
-    //AspNetUser configuration
     public class AspNetUserConfiguration : IEntityTypeConfiguration<AspNetUser>
     {
         public void Configure(EntityTypeBuilder<AspNetUser> builder)
         {
+            builder.ToTable("AspNetUsers");
             builder.HasKey(u => u.Id);
-            builder.Property(u => u.UserName).HasMaxLength(256);
-            builder.Property(u => u.Email).HasMaxLength(256);
-            builder.Property(u => u.PhoneNumber).HasMaxLength(50);
+            builder.Property(u => u.Id)
+                   .IsRequired()
+                   .HasMaxLength(450);
+            builder.Property(u => u.UserName)
+                   .HasMaxLength(256);
+            builder.Property(u => u.Email)
+                   .HasMaxLength(256);
+            // Additional configuration as needed.
         }
     }
 

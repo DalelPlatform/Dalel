@@ -3,9 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-
-namespace Models.Hotel
+namespace Hotel
 {
     public class HotelPolicy
     {
@@ -13,23 +14,28 @@ namespace Models.Hotel
         public int HotelId { get; set; }
         public int PolicyId { get; set; }
 
-        // Navigation Properties
+        // Navigation properties
         public Hotel Hotel { get; set; }
+        public Policy Policy { get; set; }
     }
 
-    //Hotel Policy configuration
-public class HotelPolicyConfiguration : IEntityTypeConfiguration<HotelPolicy>
+
+    public class HotelPolicyConfiguration : IEntityTypeConfiguration<HotelPolicy>
     {
         public void Configure(EntityTypeBuilder<HotelPolicy> builder)
         {
+            builder.ToTable("HotelPolicies");
             builder.HasKey(hp => hp.Id);
 
             builder.HasOne(hp => hp.Hotel)
-                   .WithMany()
+                   .WithMany(h => h.HotelPolicies)
                    .HasForeignKey(hp => hp.HotelId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(hp => hp.Policy)
+                   .WithMany() // Optionally, if Policy had a collection, use .WithMany(p => p.HotelPolicies)
+                   .HasForeignKey(hp => hp.PolicyId)
                    .OnDelete(DeleteBehavior.Cascade);
         }
     }
-
-
 }

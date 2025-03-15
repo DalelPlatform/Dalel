@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Models.Hotel
+namespace Hotel
 {
     public class Hotel
     {
@@ -14,38 +16,35 @@ namespace Models.Hotel
         public string City { get; set; }
         public string Street { get; set; }
         public string Address { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public float Latitude { get; set; }
+        public float Longitude { get; set; }
         public string PhoneNumber { get; set; }
         public bool CancelationOptions { get; set; }
-        public double CancelationCharges { get; set; }
+        public float CancelationCharges { get; set; }
         public string OwnerId { get; set; }
 
-        // Navigation Properties
+        // Navigation properties
         public HotelOwner Owner { get; set; }
+        public ICollection<HotelPolicy> HotelPolicies { get; set; }
         public ICollection<HotelService> HotelServices { get; set; }
         public ICollection<HotelImage> HotelImages { get; set; }
+        public ICollection<RoomType> RoomTypes { get; set; }
     }
 
 
-    //Hotel configurations
-
-public class HotelConfiguration : IEntityTypeConfiguration<Hotel>
+    public class HotelConfiguration : IEntityTypeConfiguration<Hotel>
     {
         public void Configure(EntityTypeBuilder<Hotel> builder)
         {
+            builder.ToTable("Hotels");
             builder.HasKey(h => h.Id);
-            builder.Property(h => h.Name).IsRequired().HasMaxLength(255);
-            builder.Property(h => h.Description).HasMaxLength(1000);
-            builder.Property(h => h.City).HasMaxLength(255);
-            builder.Property(h => h.PhoneNumber).HasMaxLength(50);
+            builder.Property(h => h.Name).IsRequired();
 
+            // One-to-one: HotelOwner -> Hotel
             builder.HasOne(h => h.Owner)
-                   .WithOne()
+                   .WithOne(o => o.Hotel)
                    .HasForeignKey<Hotel>(h => h.OwnerId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
-
-
 }

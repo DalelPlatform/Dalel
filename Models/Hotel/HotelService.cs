@@ -5,27 +5,26 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Models.Hotel
+namespace Hotel
 {
     public class HotelService
     {
         public int Id { get; set; }
-        public double Price { get; set; }
+        public float Price { get; set; }
         public int HotelId { get; set; }
         public int ServicesId { get; set; }
 
-        // Navigation Properties
+        // Navigation properties
         public Hotel Hotel { get; set; }
         public Service Service { get; set; }
     }
 
-    //hotel Services Configuration
     public class HotelServiceConfiguration : IEntityTypeConfiguration<HotelService>
     {
         public void Configure(EntityTypeBuilder<HotelService> builder)
         {
+            builder.ToTable("HotelServices");
             builder.HasKey(hs => hs.Id);
-
             builder.Property(hs => hs.Price).HasDefaultValue(0);
 
             builder.HasOne(hs => hs.Hotel)
@@ -34,10 +33,9 @@ namespace Models.Hotel
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(hs => hs.Service)
-                   .WithMany()
+                   .WithMany() // If Service had a collection, use .WithMany(s => s.HotelServices)
                    .HasForeignKey(hs => hs.ServicesId)
                    .OnDelete(DeleteBehavior.Cascade);
         }
     }
-
 }
