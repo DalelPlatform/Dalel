@@ -11,7 +11,7 @@ using Models.User;
 
 namespace Models.Restaurant
 {
-    public class PaymentRestaurantOrders
+    public class PaymentRestaurantOrder
     {
         public int Id { get; set; }
         public float Amount { get; set; }  
@@ -32,14 +32,14 @@ namespace Models.Restaurant
 
         //Relations : 
 
-        public Clients clients { get; set; }
-        public Restaurants restaurants { get; set; }
+        public virtual Client Client { get; set; }
+        public virtual Restaurant Restaurant { get; set; }
     }
 
 
-    public class PaymentRestaurantOrdersConfiguration : IEntityTypeConfiguration<PaymentRestaurantOrders>
+    public class PaymentRestaurantOrderConfiguration : IEntityTypeConfiguration<PaymentRestaurantOrder>
     {
-        public void Configure(EntityTypeBuilder<PaymentRestaurantOrders> builder)
+        public void Configure(EntityTypeBuilder<PaymentRestaurantOrder> builder)
         {
             builder.HasKey(payrestorder => payrestorder.Id);
             builder.Property(payrestorder => payrestorder.CodeApplied).HasColumnType("NVARCHAR(50)");

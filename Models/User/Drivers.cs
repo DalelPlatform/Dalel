@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Models.Driver;
 
 namespace Models.User
 {
@@ -16,7 +17,10 @@ namespace Models.User
         public bool Availability { get; set; }
 
 
-        public AspDotNetUsers AspDotNetUsers { get; set; }
+        public AppUser AppUser { get; set; }
+
+        public Vehicle vehicles { get; set; }
+       public  ICollection <CarProposal> proposals { get; set; }
 
     }
 

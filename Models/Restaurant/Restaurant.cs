@@ -9,7 +9,7 @@ using Models.User;
 
 namespace Models.Restaurant
 {
-    public class Restaurants
+    public class Restaurant
     {
         public int Id { get; set; }
         public string Description { get; set; }
@@ -39,29 +39,32 @@ namespace Models.Restaurant
 
         public DateTime ModificationDate { get; set; }
 
+        public bool IsDeleted {  get; set; }
+
         public string OwnerId { get; set; } //fk
 
 
         //Relations :
 
-        public RestaurantOwners restaurantOwners { get; set; }
-        public ICollection<RestaurantImages> restaurantImages { get; set; }
+        public virtual RestaurantOwner RestaurantOwner { get; set; }
+        public virtual ICollection<RestaurantImage> RestaurantImage { get; set; }
 
-        public ICollection<RestaurantMenuItems> restaurantMenuItems { get; set; }
+        public virtual ICollection<RestaurantMenuItem> RestaurantMenuItem { get; set; }
 
-        public ICollection<RestaurantOrders> restaurantOrders { get; set; }
+        public virtual ICollection<RestaurantOrder> RestaurantOrder { get; set; }
 
-        public ICollection<PaymentRestaurantOrders> paymentRestaurantOrders { get; set; }
+        public virtual ICollection<PaymentRestaurantOrder> PaymentRestaurantOrder { get; set; }
 
-        public ICollection<RestaurantReervations> restaurantReervations { get; set; }
+        public virtual ICollection<RestaurantReervation> RestaurantReervation { get; set; }
 
     }
 
-    public class RestaurantsConfiguration : IEntityTypeConfiguration<Restaurants>
+    public class RestaurantConfiguration : IEntityTypeConfiguration<Restaurant>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Restaurants> builder)
+        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Restaurant> builder)
         {
             builder.HasKey(rest => rest.Id);
+            builder.Property(rest => rest.IsDeleted).HasDefaultValue(false);
             builder.Property(rest =>rest.Description).HasColumnType("NVARCHAR(250)").HasDefaultValue("empty");
             builder.Property(rest => rest.NumberOfRooms).IsRequired();
             builder.Property(rest => rest.BuildingNo).IsRequired();
@@ -76,39 +79,42 @@ namespace Models.Restaurant
 
 
             //Relation between Restaurants & RestaurantOwners (one to one) 
-            builder.HasOne(restowner => restowner.restaurantOwners)
-                .WithOne(rest => rest.restaurants)
-                .HasForeignKey<Restaurants> (rest => rest.OwnerId);
+            builder.HasOne(restowner => restowner.RestaurantOwner)
+                .WithOne(rest => rest.Restaurant)
+                .HasForeignKey<Restaurant> (rest => rest.OwnerId);
 
             //Relation between Restaurants & RestaurantImages (one to many)
-            builder.HasMany(restimg => restimg.restaurantImages)
-                .WithOne(rest => rest.restaurants)
-                .HasForeignKey(restimg => restimg.RestaurantId);
+            builder.HasMany(restimg => restimg.RestaurantImage)
+                .WithOne(rest => rest.Restaurant)
+                .HasForeignKey(restimg => restimg.RestaurantId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //Relation between Restaurants & RestaurantMenuItems (one to many)
-            builder.HasMany(restmenuitem => restmenuitem.restaurantMenuItems)
-                .WithOne(rest => rest.restaurants)
-                .HasForeignKey(restmenuitem => restmenuitem.RestaurantId);
+            builder.HasMany(restmenuitem => restmenuitem.RestaurantMenuItem)
+                .WithOne(rest => rest.Restaurant)
+                .HasForeignKey(restmenuitem => restmenuitem.RestaurantId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             //Relation between Restaurants & RestaurantOrders (one to many)
-            builder.HasMany(restorder => restorder.restaurantOrders)
-                .WithOne(rest => rest.restaurants)
+            builder.HasMany(restorder => restorder.RestaurantOrder)
+                .WithOne(rest => rest.Restaurant)
                 .HasForeignKey(restorder => restorder.RestaurantId);
 
 
 
             //Relation between Restaurants & PaymentRestaurantOrders  (one to many)
-            builder.HasMany(payrestorder => payrestorder.paymentRestaurantOrders)
-                .WithOne(rest => rest.restaurants)
-                .HasForeignKey(payrestorder => payrestorder.ClientId);
+            builder.HasMany(payrestorder => payrestorder.PaymentRestaurantOrder)
+                .WithOne(rest => rest.Restaurant)
+                .HasForeignKey(payrestorder => payrestorder.ClientId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             //Relation between Restaurants & RestaurantReervations  (one to many)
-            builder.HasMany(restreervation => restreervation.restaurantReervations)
-                .WithOne(rest => rest.restaurants)
-                .HasForeignKey(restreervation => restreervation.RestaurantId);
-
+            builder.HasMany(restreervation => restreervation.RestaurantReervation)
+                .WithOne(rest => rest.Restaurant)
+                .HasForeignKey(restreervation => restreervation.RestaurantId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
         }

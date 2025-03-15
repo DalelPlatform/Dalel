@@ -13,7 +13,7 @@ namespace Models.Property
         public int Id { get; set; }
         public string Image { get; set; }
         public int PropertyId { get; set; } // fk With Properties
-        public Properties Properties { get; set; }
+        public virtual Properties Properties { get; set; }
     }
 
     public class PropertyImagesConfiguration : IEntityTypeConfiguration<PropertyImages>

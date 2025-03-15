@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Models.HomeChef.Enums
 {
-    public enum CategoryOfFood
+    public enum HomeChefPaymentType
     {
-        Drink,
-        Snacks,
-        Meal,
-        Other
+        Cash,
+        Paypal,
+        Stripe
     }
 }

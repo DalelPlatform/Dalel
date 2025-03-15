@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Models.HomeChef.Enums
 {
-    public enum CategoryOfFood
+    public enum HomeChefOrderStatus
     {
-        Drink,
-        Snacks,
-        Meal,
-        Other
+        panding,
+        confirmed,
+        rejected,
+        preparing,
+        ontheway
     }
 }

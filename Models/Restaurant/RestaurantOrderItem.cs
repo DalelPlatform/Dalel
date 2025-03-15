@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Models.Restaurant
 {
-    public class RestaurantOrderItems
+    public class RestaurantOrderItem
     {
         public int Id { get; set; }
 
@@ -16,22 +16,24 @@ namespace Models.Restaurant
 
         public float Quantity { get; set; }
 
+        public bool IsDeleted {  get; set; }
+
         public int RestaurantOrderId { get; set; } //fk
 
         public int RestaurantMenuItemId { get; set; } //fk
 
         //Relations :
 
-        public RestaurantOrders restaurantOrders { get; set; }
+        public virtual RestaurantOrder RestaurantOrder { get; set; }
 
-        public RestaurantMenuItems restaurantMenuItems { get; set; }
+        public virtual RestaurantMenuItem RestaurantMenuItem { get; set; }
         
 
     }
 
-    public class RestaurantOrderItemsConfiguration : IEntityTypeConfiguration<RestaurantOrderItems>
+    public class RestaurantOrderItemConfiguration : IEntityTypeConfiguration<RestaurantOrderItem>
     {
-        public void Configure(EntityTypeBuilder<RestaurantOrderItems> builder)
+        public void Configure(EntityTypeBuilder<RestaurantOrderItem> builder)
         {
             builder.HasKey(restorderitem => restorderitem.Id);
 

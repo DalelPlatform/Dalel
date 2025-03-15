@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.HomeService
+namespace Models.HomeChef.Enums
 {
-    class test
+    public enum HomeChefStatusOfPaymentOrder
     {
+        panding,
+        completed
     }
 }
