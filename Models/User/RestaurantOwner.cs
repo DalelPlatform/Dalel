@@ -9,19 +9,19 @@ using Models.Restaurant;
 
 namespace Models.User
 {
-    public class RestaurantOwners
+    public class RestaurantOwner
     {
         public string UserId { get; set; } //fk & pk
 
 
         //Relations :
-        public AspDotNetUsers AspDotNetUsers { get; set; }
-        public Restaurants restaurants { get; set; }
+        public virtual AppUser AppUser { get; set; }
+        public virtual Restaurant.Restaurant Restaurant { get; set; }
     }
 
-    public class RestaurantOwnersConfiguration : IEntityTypeConfiguration<RestaurantOwners>
+    public class RestaurantOwnerConfiguration : IEntityTypeConfiguration<RestaurantOwner>
     {
-        public void Configure(EntityTypeBuilder<RestaurantOwners> builder)
+        public void Configure(EntityTypeBuilder<RestaurantOwner> builder)
         {
             builder.HasKey(RestaurantOwners => RestaurantOwners.UserId);
 

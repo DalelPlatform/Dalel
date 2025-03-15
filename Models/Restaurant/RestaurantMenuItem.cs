@@ -9,7 +9,7 @@ using Models.Restaurant.Enums;
 
 namespace Models.Restaurant
 {
-    public class RestaurantMenuItems
+    public class RestaurantMenuItem
     {
         public int Id { get; set; }
 
@@ -25,13 +25,13 @@ namespace Models.Restaurant
 
 
         //Relations :
-        public Restaurants restaurants { get; set; }
-        public ICollection<RestaurantMenuItemImages> restaurantMenuItemImages { get; set; }
+        public virtual Restaurant Restaurant { get; set; }
+        public virtual ICollection<RestaurantMenuItemImage> RestaurantMenuItemImage { get; set; }
     }
 
-    public class RestaurantMenuItemsConfiguration : IEntityTypeConfiguration<RestaurantMenuItems>
+    public class RestaurantMenuItemConfiguration : IEntityTypeConfiguration<RestaurantMenuItem>
     {
-        public void Configure(EntityTypeBuilder<RestaurantMenuItems> builder)
+        public void Configure(EntityTypeBuilder<RestaurantMenuItem> builder)
         {
             builder.HasKey(restmenuitem => restmenuitem.Id);
             builder.Property(restmenuitem => restmenuitem.FoodCategory).HasDefaultValue("drink");
@@ -41,10 +41,12 @@ namespace Models.Restaurant
             builder.Property(restmenuitem => restmenuitem.Name).IsRequired(false).HasColumnType("NVARCHAR(50)");
             builder.Property(restmenuitem => restmenuitem.Name).IsRequired();
 
-            //Relation between RestuarantMenuItems & restaurantMenuItemImages one to many
-            builder.HasMany(restmenuitemimg => restmenuitemimg.restaurantMenuItemImages)
-                .WithOne(restmenuitem => restmenuitem.RestaurantMenuItems)
-                .HasForeignKey(restmenuitemimg => restmenuitemimg.RestaurantMenuItemId);
+            //Relation between RestuarantMenuItems & RestaurantMenuItemImage one to many
+            builder.HasMany(restmenuitemimg => restmenuitemimg.RestaurantMenuItemImage)
+                .WithOne(restmenuitem => restmenuitem.RestaurantMenuItem)
+                .HasForeignKey(restmenuitemimg => restmenuitemimg.RestaurantMenuItemId)
+                .OnDelete(DeleteBehavior.NoAction);
+
 
 
 

@@ -8,26 +8,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Models.HomeChef
 {
-    public class HomeChefOrderMeals
+    public class HomeChefOrderMeal
     {
         public int Id { get; set; }
-        public double SupPrice { get; set; }
+        public float SupPrice { get; set; }
 
-        public int Quantity { get; set; }
+        public float Quantity { get; set; }
+
+        public bool IsDeleted { get; set; }
 
         public int HomeChefOrdersId { get; set; }//fk
         public int HomeChefMealsId { get; set; }//fk
 
 
         //Relations : 
-        public HomeChefOrders homeChefOrders { get; set; }
-        public HomeChefMeals homeChefMeals { get; set; }
+        public virtual HomeChefOrder HomeChefOrder { get; set; }
+        public virtual HomeChefMeal HomeChefMeal { get; set; }
 
     }
 
-    public class HomeChefOrderMealsConfiguration : IEntityTypeConfiguration<HomeChefOrderMeals>
+    public class HomeChefOrderMealConfiguration : IEntityTypeConfiguration<HomeChefOrderMeal>
     {
-        public void Configure(EntityTypeBuilder<HomeChefOrderMeals> builder)
+        public void Configure(EntityTypeBuilder<HomeChefOrderMeal> builder)
         {
             builder.HasKey(homechefordermeal => homechefordermeal.Id);
             builder.Property(homechefordermeal => homechefordermeal.SupPrice).HasColumnType("MONEY");

@@ -26,18 +26,21 @@ namespace Models.User
 
 
         //Relations :
-        public Client? Client { get; set; }
-        public Drivers? drivers { get; set; }
-        public HotelOwners? hotelOwners { get; set; }
-        public PropertyOwners? propertyOwners { get; set; }
-        public RestaurantOwners? restaurantOwners { get; set; }
-        public HomeChefs? homeChefs { get; set; }
-        public Agency? agency { get; set; }
-        public ServiceProvider? ServiceProvider { get; set; }    
+        public virtual Client? Client { get; set; }
+        public virtual Drivers? drivers { get; set; }
+        public virtual HotelOwners? hotelOwners { get; set; }
+        
+        public virtual RestaurantOwner? RestaurantOwner { get; set; }
+        
+        public virtual PropertyOwner? PropertyOwner { get; set; }
+        
+        public virtual HomeChef? HomeChef { get; set; }
+        public virtual Agency? agency { get; set; }
+        public virtual ServiceProvider? ServiceProvider { get; set; }    
 
     }
 
-    public class AspDotNetUsersConfiguration : IEntityTypeConfiguration<AppUser>
+    public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
     {
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
@@ -64,20 +67,23 @@ namespace Models.User
                  .WithOne(usr => usr.AspDotNetUsers)
                  .HasForeignKey<HotelOwners>(hotelowners => hotelowners.UserId);
 
-            builder.HasOne(proOwner => proOwner.propertyOwners)
-                .WithOne(usr => usr.AspDotNetUsers)
-                .HasForeignKey<PropertyOwners>(proOwner => proOwner.UserId);
+            builder.HasOne(proOwner => proOwner.PropertyOwner)
+                .WithOne(usr => usr.AppUser)
+                .HasForeignKey<PropertyOwner>(proOwner => proOwner.UserId);
+            
+            #region Osama
+            builder.HasOne(restaurantOwners => restaurantOwners.RestaurantOwner)
+                .WithOne(usr => usr.AppUser)
+                .HasForeignKey<RestaurantOwner>(restaurantOwners => restaurantOwners.UserId);
 
-            builder.HasOne(restaurantOwners => restaurantOwners.restaurantOwners)
-                .WithOne(usr => usr.AspDotNetUsers)
-                .HasForeignKey<RestaurantOwners>(restaurantOwners => restaurantOwners.UserId);
-
-            builder.HasOne(homeChefs => homeChefs.homeChefs)
+            builder.HasOne(homeChefs => homeChefs.HomeChef)
                .WithOne(usr => usr.AppUser)
-               .HasForeignKey<HomeChefs>(homeChefs => homeChefs.UserId);
+               .HasForeignKey<HomeChef>(homeChefs => homeChefs.UserId);
+            #endregion
+
 
             builder.HasOne(agency => agency.agency)
-               .WithOne(usr => usr.AspDotNetUsers)
+               .WithOne(usr => usr.AppUser)
                .HasForeignKey<Agency>(agency => agency.UserId);
 
             builder.HasOne(serviceProvider => serviceProvider.ServiceProvider)

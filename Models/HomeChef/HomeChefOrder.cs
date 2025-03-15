@@ -10,7 +10,7 @@ using Models.User;
 
 namespace Models.HomeChef
 {
-    public class HomeChefOrders
+    public class HomeChefOrder
     {
         public int Id { get; set; }
         public DateTime OrderDate { get; set; }
@@ -23,21 +23,21 @@ namespace Models.HomeChef
 
         //Relations : 
 
-        public HomeChefs homeChefs { get; set; }
-        public Clients clients { get; set; }
+        public virtual User.HomeChef HomeChef { get; set; }
+        public virtual Client Client { get; set; }
 
-        public ICollection<HomeChefOrderMeals>  homeChefOrderMeals { get; set; }
+        public virtual ICollection<HomeChefOrderMeal>  HomeChefOrderMeal { get; set; }
 
-        public ICollection<PaymentHomeChefOrders> paymentHomeChefOrders { get; set; }
+        public virtual ICollection<PaymentHomeChefOrder> PaymentHomeChefOrder { get; set; }
 
-        public ICollection<ReviewHomeChefOrders> reviewHomeChefOrders { get; set; }
+        public virtual ICollection<ReviewHomeChefOrder> ReviewHomeChefOrder { get; set; }
 
 
     }
 
-    public class HomeChefOrdersConfiguration : IEntityTypeConfiguration<HomeChefOrders>
+    public class HomeChefOrderConfiguration : IEntityTypeConfiguration<HomeChefOrder>
     {
-        public void Configure(EntityTypeBuilder<HomeChefOrders> builder)
+        public void Configure(EntityTypeBuilder<HomeChefOrder> builder)
         {
             builder.HasKey(homecheforder => homecheforder.Id);
             builder.Property(homecheforder => homecheforder.OrderDate).HasDefaultValue("GETDATE()");
@@ -45,21 +45,22 @@ namespace Models.HomeChef
 
 
             //relation between HomeChefOrders & HomeChefOrderMeals (one to many)
-            builder.HasMany(homechefordermeal => homechefordermeal.homeChefOrderMeals)
-                .WithOne(homecheforder => homecheforder.homeChefOrders)
+            builder.HasMany(homechefordermeal => homechefordermeal.HomeChefOrderMeal)
+                .WithOne(homecheforder => homecheforder.HomeChefOrder)
                 .HasForeignKey(homecheforder => homecheforder.HomeChefOrdersId);
 
 
             //relation between HomeChefOrders & PaymentHomeChefOrders (one to many)
-            builder.HasMany(payhomecheforder => payhomecheforder.paymentHomeChefOrders)
-                .WithOne(homecheforder => homecheforder.homeChefOrders)
-                .HasForeignKey(homecheforder => homecheforder.HomeChefOrderId);
+            builder.HasMany(payhomecheforder => payhomecheforder.PaymentHomeChefOrder)
+                .WithOne(homecheforder => homecheforder.HomeChefOrder)
+                .HasForeignKey(homecheforder => homecheforder.HomeChefOrderId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
 
             //relation between HomeChefOrders & ReviewHomeChefOrders (one to many)
-            builder.HasMany(reviewhomecheforder => reviewhomecheforder.reviewHomeChefOrders)
-                .WithOne(homecheforder => homecheforder.homeChefOrders)
+            builder.HasMany(reviewhomecheforder => reviewhomecheforder.ReviewHomeChefOrder)
+                .WithOne(homecheforder => homecheforder.HomeChefOrder)
                 .HasForeignKey(reviewhomecheforder => reviewhomecheforder.HomeChefOrderId);
 
 
