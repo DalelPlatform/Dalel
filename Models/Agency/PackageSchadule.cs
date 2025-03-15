@@ -31,7 +31,8 @@ public class PackageSchaduleConfigration : IEntityTypeConfiguration<PackageSchad
         modelBuilder.HasKey(PackgeSchadule => PackgeSchadule.Id);
         modelBuilder.HasOne(PackgeSchadule => PackgeSchadule.AgencyPackage)
         .WithMany(agencyPacge => agencyPacge.PackageSchadules)
-        .HasForeignKey(PackgeSchadule => PackgeSchadule.PackageId);
+        .HasForeignKey(PackgeSchadule => PackgeSchadule.PackageId)
+        .OnDelete(DeleteBehavior.NoAction);
 
     }
 }

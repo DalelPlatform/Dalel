@@ -9,6 +9,7 @@ using Models.Agency;
 using Models.Agency.Enums;
 using Models.Driver;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Models.User;
 
 namespace Models.Agency
 {
@@ -35,8 +36,8 @@ public class PackageBookingConfigration : IEntityTypeConfiguration<PackageBookin
     public void Configure(EntityTypeBuilder<PackageBooking> modelBuilder)
     {
         modelBuilder.HasKey(PackageBooking => PackageBooking.Id);
-        modelBuilder.HasOne(PackageBooking => PackageBooking.Client)
-        .WithMany(client => client.packageBookings)
+        modelBuilder.HasOne(c =>c.Client)
+        .WithMany(packg => packg.PackageBookings)
         .HasForeignKey(PackageBooking => PackageBooking.ClientId);
 
         modelBuilder.HasOne(PackageBooking => PackageBooking.PackageSchadule)

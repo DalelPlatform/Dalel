@@ -28,7 +28,8 @@ public class PackageBookingReviewConfigration : IEntityTypeConfiguration<Package
         modelBuilder.HasKey(Review => Review.Id);
         modelBuilder.HasOne(Review => Review.PackageBooking)
         .WithMany(booking => booking.Review)
-        .HasForeignKey(Review => Review.BookingId);
+        .HasForeignKey(Review => Review.BookingId)
+        .OnDelete(DeleteBehavior.NoAction);
 
     }
 }

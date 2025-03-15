@@ -28,7 +28,8 @@ public class PackageStepConfigration : IEntityTypeConfiguration<PackageStep>
         modelBuilder.HasKey(PackgeStep => PackgeStep.Id);
         modelBuilder.HasOne(PackgeStep => PackgeStep.AgencyPackage)
         .WithMany(agencyPacge => agencyPacge.PackageSteps)
-        .HasForeignKey(PackgeStep => PackgeStep.PackageId);
+        .HasForeignKey(PackgeStep => PackgeStep.PackageId)
+
 
     }
 }

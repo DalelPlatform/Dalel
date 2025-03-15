@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Models.Agency;
 using Models.Driver;
+using Models.User;
 
 namespace Models.Agency
 {
@@ -34,8 +35,8 @@ public class Agency_CustomerInquiryConfigration : IEntityTypeConfiguration<Agenc
         .WithMany(agency_Awn => agency_Awn.Inquiry)
         .HasForeignKey(CustomerInquiry => CustomerInquiry.AgencyId);
 
-        modelBuilder.HasOne(CustomerInquiry => CustomerInquiry.Client)
-       .WithMany(client => client.AgencyInquiry)
+        modelBuilder.HasOne(c => c.Client)
+       .WithMany(cus => cus.Agency_CustomerInquiries)
        .HasForeignKey(CustomerInquiry => CustomerInquiry.ClientId);
 
     }

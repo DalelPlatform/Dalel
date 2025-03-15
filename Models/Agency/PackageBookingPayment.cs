@@ -36,7 +36,8 @@ public class PackageBookingPaymentConfigration : IEntityTypeConfiguration<Packag
         modelBuilder.Property(payment => payment.CodeApplied).HasColumnType("NVARCHAR(20)");
         modelBuilder.HasOne(payment => payment.PackageBooking)
         .WithMany(booking => booking.Payment)
-        .HasForeignKey(payment => payment.BookingId);
+        .HasForeignKey(payment => payment.BookingId)
+        .OnDelete(DeleteBehavior.NoAction);
 
     }
 }
