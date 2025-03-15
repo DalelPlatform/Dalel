@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.HomeService.ENUMS
 {
-    public enum BookingStatus
+    public enum RequestStatusEnum
     {
         Pending = 1,
         Accepted = 2,

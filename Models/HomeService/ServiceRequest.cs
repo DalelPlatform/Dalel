@@ -12,10 +12,12 @@ namespace Models.HomeService
 {
     public class ServiceRequest
     {
+        //aprove proposal
+        
         public int Id { get; set; }
         public int ClientId { get; set; }
         public DateTime Date { get; set; }
-        public BookingStatus Status { get; set; }
+        public RequestStatusEnum Status { get; set; }
         public double StartPrice { get; set; }
         public string Description { get; set; }
         public string Address { get; set; }
