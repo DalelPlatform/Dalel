@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using Models.Agency;
 
 namespace Models.Agency
 {
@@ -17,7 +20,19 @@ namespace Models.Agency
         public int AgencyId { get; set; }
         public TravelAgencies Agency { get; set; }
         public ICollection<PackageStep> PackageSteps { get; set; }
-        public ICollection<PackageSchadule> PackageSchadules { get; set;
+        public ICollection<PackageSchadule> PackageSchadules { get; set; }
+
+    }
+}
+
+public class AgencyPackageConfigration : IEntityTypeConfiguration<AgencyPackage>
+{
+    public void Configure(EntityTypeBuilder<AgencyPackage> modelBuilder)
+    { 
+    modelBuilder.HasKey(Packge => Packge.Id);
+        modelBuilder.HasOne(packge => packge.Agency)
+        .WithMany(agency => agency.AgencyPackages)
+        .HasForeignKey(agency => agency.AgencyId);
 
     }
 }

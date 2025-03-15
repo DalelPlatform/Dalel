@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using Models.Agency;
 
 namespace Models.Agency
 {
@@ -15,5 +18,17 @@ namespace Models.Agency
         public string Image { get; set; }
         public int PackageId { get; set; }
         public AgencyPackage AgencyPackage { get; set; }
+    }
+}
+
+public class PackageStepConfigration : IEntityTypeConfiguration<PackageStep>
+{
+    public void Configure(EntityTypeBuilder<PackageStep> modelBuilder)
+    {
+        modelBuilder.HasKey(PackgeStep => PackgeStep.Id);
+        modelBuilder.HasOne(PackgeStep => PackgeStep.AgencyPackage)
+        .WithMany(agencyPacge => agencyPacge.PackageSteps)
+        .HasForeignKey(PackgeStep => PackgeStep.PackageId);
+
     }
 }
