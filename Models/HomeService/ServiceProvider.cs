@@ -14,7 +14,7 @@ namespace Models.HomeService
         public string UserId { get; set; }
         public AppUser AppUser { get; set; }
         public string Image { get; set; }
-        public List<string> Skills { get; set; } = new List<string>();
+        public List<string> Skills { get; set; }
         public DateTime StartProfisionalAt { get; set; }
         public DateTime AvailableFrom { get; set; }
         public DateTime AvailableTo { get; set; }
@@ -23,9 +23,10 @@ namespace Models.HomeService
         public string Certificate { get; set; }
         public int CategoryServicesId { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
-        public virtual ICollection<ServiceProviderProject> Projects { get; set; } = new List<ServiceProviderProject>();
-        public virtual ICollection<ServiceRequest> Requests { get; set; } = new List<ServiceProviderBooking>();
-        public virtual ICollection<ServiceProviderReview> Reviews { get; set; } = new List<ServiceProviderReview>();
+        public virtual ICollection<ServiceProviderProject> Projects { get; set; }
+        public virtual ICollection<ServiceRequest> Requests { get; set; }
+        public virtual ICollection<ServiceProviderReview> Reviews { get; set; }
+        public ServiceProviderPropsal Propsals { get; internal set; }
     }
     public class ServiceProviderConfiguration : IEntityTypeConfiguration<ServiceProvider>
     {
@@ -55,10 +56,7 @@ namespace Models.HomeService
                 .HasForeignKey(pp => pp.ServiceProviderId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(sp => sp.Bookings)
-                .WithOne(sb => sb.ServiceProvider)
-                .HasForeignKey(sb => sb.ServiceProviderId)
-                .OnDelete(DeleteBehavior.Cascade);
+
 
             builder.HasMany(sp => sp.Reviews)
                 .WithOne(sr => sr.ServiceProvider)

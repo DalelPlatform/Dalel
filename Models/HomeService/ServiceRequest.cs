@@ -20,40 +20,35 @@ namespace Models.HomeService
         public string Description { get; set; }
         public string Address { get; set; }
         public string? Image { get; set; }
-        public virtual Client Client { get; set; }
-        //relation with cat
 
+        //relation with cat
+        public virtual Client Client { get; set; }
         public virtual ICollection<ServiceProviderPropsal> Propsals { get; set; } 
-        public virtual ServiceProviderReview Review { get; set; }
-        public virtual ServiceProviderPayment Payment { get; set; } 
+        
     }
     public class ServiceProviderBookingConfiguration : IEntityTypeConfiguration<ServiceRequest>
     {
         public void Configure(EntityTypeBuilder<ServiceRequest> builder)
         {
-            builder.HasKey(sb => sb.Id);
-            builder.Property(sb => sb.BookingType)
-                .HasMaxLength(50);
-            builder.Property(sb => sb.BookingDescription)
-                .HasMaxLength(1000);
-            builder.Property(sb => sb.BookingAddress)
+            builder.HasKey(sr => sr.Id);
+
+            builder.Property(sr => sr.Description)
+                .HasMaxLength(500);
+
+            builder.Property(sr => sr.Address)
                 .HasMaxLength(255);
-            builder.HasOne(sb => sb.ServiceProvider)
-                .WithMany(sp => sp.Bookings)
-                .HasForeignKey(sb => sb.ServiceProviderId)
-                .OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(sb => sb.Reviews)
-                .WithOne(sr => sr.ServiceProviderBooking)
-                .HasForeignKey(sb => sb.Id)
-                .OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(sb => sb.Payments)
-                .WithOne(sp => sp.ServiceProviderBooking)
-                .HasForeignKey(sb => sb.Id)
-                .OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(sb => sb.Client)
-                .WithMany(c => c.serviceProviderBookings)
-                .HasForeignKey(sb => sb.ClientId)
-                .OnDelete(DeleteBehavior.Cascade);
+
+           builder.HasOne(c=>c.Client)
+                .WithMany(sr => sr.ServiceRequests)
+                .HasForeignKey(c => c.ClientId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany(sb => sb.Propsals)
+                .WithOne(sp => sp.ServiceRequest)
+                .HasForeignKey(sp => sp.ServiceRequestId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
         }
     }
 }

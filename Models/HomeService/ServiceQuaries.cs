@@ -18,7 +18,7 @@ namespace Models.HomeService
         public DateTime QuestionDate { get; set; }
         public DateTime AnswerDate { get; set; }
         public int CategoryServicesId { get; set; }
-        public virtual User.Clients Client { get; set; }
+        public virtual User.Client Client { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
         public virtual ServiceProvider ServiceProvider { get; set; }
     }

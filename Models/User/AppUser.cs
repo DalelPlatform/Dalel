@@ -80,6 +80,12 @@ namespace Models.User
                .WithOne(usr => usr.AspDotNetUsers)
                .HasForeignKey<Agency>(agency => agency.UserId);
 
+            builder.HasOne(serviceProvider => serviceProvider.ServiceProvider)
+                .WithOne(usr => usr.AppUser)
+                .HasForeignKey<ServiceProvider>(serviceProvider => serviceProvider.UserId);
+
+
+
         }
     }
 }

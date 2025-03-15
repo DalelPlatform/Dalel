@@ -14,7 +14,7 @@ namespace Models.HomeService
         public string ProjectName { get; set; }
         public string ProjectDescription { get; set; }
         public string ProjectImage { get; set; }
-        public int ServiceProviderId { get; set; }
+        public string ServiceProviderId { get; set; }
         public virtual ServiceProvider ServiceProvider { get; set; }
     }
     public class ServiceProviderProjectConfiguration : IEntityTypeConfiguration<ServiceProviderProject>
