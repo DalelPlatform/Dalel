@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Models.Restaurant
@@ -27,6 +22,10 @@ namespace Models.Restaurant
         {
             builder.HasKey(restmenuitemimgs => restmenuitemimgs.Id);
             builder.Property(restmenuitemimgs => restmenuitemimgs.Image).HasColumnType("NVARCHAR(max)");
+
+            builder.HasOne(i => i.RestaurantMenuItem)
+                .WithMany(i => i.RestaurantMenuItemImages)
+                .HasForeignKey(i => i.RestaurantMenuItemId);
 
         }
     }

@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.User;
+using Models.Enums;
 
-namespace Hotel
+namespace Models.Hotel
 {
     public class BookingHotelRoom
     {
@@ -15,16 +12,14 @@ namespace Hotel
         public DateTime Checkout { get; set; }
         public float Price { get; set; }
         public int NumberOfGuests { get; set; }
-        public bool isConfirmed { get; set; }
+        public BookingStatus BookingStatus { get; set; }
         public string ClientId { get; set; }
         public int RoomId { get; set; }
-
-        // Navigation properties
-        public AspNetUser Client { get; set; }
-        public Room Room { get; set; }
-        public ICollection<BookingGuestInRoom> BookingGuestsInRooms { get; set; }
-        public ICollection<PaymentHotelRoom> PaymentHotelRooms { get; set; }
-        public ICollection<ReviewHotelRoom> ReviewHotelRooms { get; set; }
+        public virtual Client Client { get; set; }
+        public virtual Room Room { get; set; }
+        public virtual ICollection<BookingGuestInRoom> BookingGuestsInRooms { get; set; }
+        public virtual PaymentHotelRoom PaymentHotelRoom { get; set; }
+        public virtual ReviewHotelRoom ReviewHotelRoom { get; set; }
     }
 
     public class BookingHotelRoomConfiguration : IEntityTypeConfiguration<BookingHotelRoom>

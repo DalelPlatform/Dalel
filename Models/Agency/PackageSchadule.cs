@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Models.Agency;
-using Models.Agency.Enums;
+using Models.Enums;
 
 namespace Models.Agency
 {
@@ -15,11 +10,10 @@ namespace Models.Agency
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public int SlotsAvailable { get; set; }
-        public VerificationStatus Status { get; set; }
         public int PackageId { get; set; }
-        public AgencyPackage AgencyPackage { get; set; }
+        public virtual AgencyPackage AgencyPackage { get; set; }
 
-        public ICollection <PackageBooking> PabckageBookings { get; set; }
+        public virtual ICollection <PackageBooking> PabckageBookings { get; set; }
 
     }
 }

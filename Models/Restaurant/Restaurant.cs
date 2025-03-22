@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Models.Restaurant.Enums;
+﻿using Microsoft.EntityFrameworkCore;
+using Models.Enums;
 using Models.User;
 
 namespace Models.Restaurant
@@ -35,7 +30,7 @@ namespace Models.Restaurant
 
         public float CancelationCharges     { get; set; }
 
-        public StatusOfRestaurantAcceptance RestaurantStatus { get; set; } //int 
+        public VerificationStatus VerificationStatus { get; set; } //int 
 
         public DateTime ModificationDate { get; set; }
 
@@ -47,15 +42,13 @@ namespace Models.Restaurant
         //Relations :
 
         public virtual RestaurantOwner RestaurantOwner { get; set; }
-        public virtual ICollection<RestaurantImage> RestaurantImage { get; set; }
+        public virtual ICollection<RestaurantImage> RestaurantImages { get; set; }
 
         public virtual ICollection<RestaurantMenuItem> RestaurantMenuItem { get; set; }
 
-        public virtual ICollection<RestaurantOrder> RestaurantOrder { get; set; }
+        public virtual ICollection<RestaurantOrder> RestaurantOrders { get; set; }
 
-        public virtual ICollection<PaymentRestaurantOrder> PaymentRestaurantOrder { get; set; }
-
-        public virtual ICollection<RestaurantReervation> RestaurantReervation { get; set; }
+        public virtual ICollection<RestaurantReservation> RestaurantReservations { get; set; }
 
     }
 
@@ -73,49 +66,14 @@ namespace Models.Restaurant
             builder.Property(rest => rest.Region).HasDefaultValue("empty").HasColumnType("NVARCHAR(50)");
             builder.Property(rest => rest.Street).HasDefaultValue("empty").HasColumnType("NVARCHAR(50)");
             builder.Property(rest => rest.PhoneNumber).HasDefaultValue("empty").HasColumnType("NVARCHAR(50)");
-            builder.Property(rest => rest.CancelationOptions).HasDefaultValue("false");
-            builder.Property(rest => rest.RestaurantStatus).HasColumnType("NVARCHAR(50)").HasDefaultValue("pending");
-            builder.Property(rest => rest.OwnerId).HasColumnType("NVARCHAR(150)");
-
+            builder.Property(rest => rest.CancelationOptions).HasDefaultValue(false);
+            builder.Property(rest => rest.VerificationStatus).HasDefaultValue(VerificationStatus.Panding);
+          
 
             //Relation between Restaurants & RestaurantOwners (one to one) 
             builder.HasOne(restowner => restowner.RestaurantOwner)
                 .WithOne(rest => rest.Restaurant)
                 .HasForeignKey<Restaurant> (rest => rest.OwnerId);
-
-            //Relation between Restaurants & RestaurantImages (one to many)
-            builder.HasMany(restimg => restimg.RestaurantImage)
-                .WithOne(rest => rest.Restaurant)
-                .HasForeignKey(restimg => restimg.RestaurantId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            //Relation between Restaurants & RestaurantMenuItems (one to many)
-            builder.HasMany(restmenuitem => restmenuitem.RestaurantMenuItem)
-                .WithOne(rest => rest.Restaurant)
-                .HasForeignKey(restmenuitem => restmenuitem.RestaurantId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-
-            //Relation between Restaurants & RestaurantOrders (one to many)
-            builder.HasMany(restorder => restorder.RestaurantOrder)
-                .WithOne(rest => rest.Restaurant)
-                .HasForeignKey(restorder => restorder.RestaurantId);
-
-
-
-            //Relation between Restaurants & PaymentRestaurantOrders  (one to many)
-            builder.HasMany(payrestorder => payrestorder.PaymentRestaurantOrder)
-                .WithOne(rest => rest.Restaurant)
-                .HasForeignKey(payrestorder => payrestorder.ClientId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-
-            //Relation between Restaurants & RestaurantReervations  (one to many)
-            builder.HasMany(restreervation => restreervation.RestaurantReervation)
-                .WithOne(rest => rest.Restaurant)
-                .HasForeignKey(restreervation => restreervation.RestaurantId)
-                .OnDelete(DeleteBehavior.NoAction);
-
 
         }
     }

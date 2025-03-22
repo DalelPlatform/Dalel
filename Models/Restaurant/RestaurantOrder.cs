@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Models.Driver;
-using Models.Restaurant.Enums;
+using Models.Enums;
 using Models.User;
 
 namespace Models.Restaurant
@@ -19,9 +13,7 @@ namespace Models.Restaurant
 
         public float TotalPrice { get; set; }
 
-        public StatusOfOrder OrderStatus { get; set; }
-
-        public bool IsDeleted { get; set; } 
+        public OrderStatus OrderStatus { get; set; } 
 
         public int RestaurantId { get; set; } //fk
 
@@ -32,9 +24,10 @@ namespace Models.Restaurant
         public virtual Restaurant Restaurant { get; set; }
         public virtual Client Client { get; set; }
 
-        public virtual ICollection<RestaurantOrderItem> RestaurantOrderItem { get; set; }
+        public virtual ICollection<RestaurantOrderItem> RestaurantOrderItems { get; set; }
 
-        public virtual ICollection<ReviewRestaurantOrder> ReviewRestaurantOrder { get; set; }
+        public virtual ReviewRestaurantOrder ReviewRestaurantOrder { get; set; }
+        public virtual PaymentRestaurantOrder PaymentRestaurantOrder { get; set; }
 
         
     }
@@ -45,21 +38,18 @@ namespace Models.Restaurant
         public void Configure(EntityTypeBuilder<RestaurantOrder> builder)
         {
             builder.HasKey(restorder => restorder.Id);
-            builder.Property(restorder => restorder.Date).HasDefaultValue("GETDATE()");
-            builder.Property(restorder => restorder.OrderStatus).HasDefaultValue("panding");
+            builder.Property(restorder => restorder.Date).HasDefaultValueSql("GETDATE()");
+            builder.Property(restorder => restorder.OrderStatus).HasDefaultValue(OrderStatus.Panding);
 
-            //Relation between RestaurantOrders & RestaurantOrderItems  (one to many)
-            builder.HasMany(restorderitem => restorderitem.RestaurantOrderItem)
-                .WithOne(restorder => restorder.RestaurantOrder)
-                .HasForeignKey(restorderitem => restorderitem.RestaurantOrderId);
-                
+            builder.HasOne(p => p.Client)
+            .WithMany(p => p.RestaurantOrders)
+            .HasForeignKey(p => p.ClientId)
+            .OnDelete(DeleteBehavior.NoAction);
 
-
-            //Relation between ReviewRestaurantOrder & RestaurantOrders  (one to many)
-            builder.HasMany(reviewrestorder => reviewrestorder.ReviewRestaurantOrder)
-                .WithOne(restorder => restorder.RestaurantOrder)
-                .HasForeignKey(reviewrestorder => reviewrestorder.RestaurantOrderId);
-           
+            builder.HasOne(p => p.Restaurant)
+            .WithMany(p => p.RestaurantOrders)
+            .HasForeignKey(p => p.RestaurantId)
+            .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

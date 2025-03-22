@@ -5,8 +5,8 @@ using Models.HomeService;
 using Models.Driver;
 using Models.Property;
 using Models.Restaurant;
-using System.Collections;
 using Models.Agency;
+using Models.Hotel;
 
 namespace Models.User
 {
@@ -18,64 +18,35 @@ namespace Models.User
         //Relations 
 
         #region Restaurant
-
-        public virtual ICollection<RestaurantOrder> RestaurantOrder { get; set; }
-        public virtual ICollection<PaymentRestaurantOrder> PaymentRestaurantOrder { get; set; }
-        public virtual ICollection<RestaurantReervation> RestaurantReervations { get; set; }
-        public virtual ReviewRestaurantOrder ReviewRestaurantOrder { get; set; }
+        public virtual ICollection<RestaurantOrder> RestaurantOrders { get; set; }
+        public virtual ICollection<RestaurantReservation> RestaurantReservations { get; set; }
         #endregion
 
         #region Property
-
-        public ICollection<BookingProperties> BookingProperties { get; set; }
-        public ICollection<PaymentProperties> PaymentProperties { get; set; }
-        public ICollection<ReviewProperties> ReviewProperties { get; set; }
-        public ICollection<RestaurantOrders> restaurantOrders { get; set; }
-        public ICollection<PaymentRestaurantOrders> paymentRestaurantOrders { get; set; }
-
+        public virtual ICollection<BookingProperties> BookingProperties { get; set; }
         #endregion
 
-        public ICollection<RestaurantReervations> restaurantReervations { get; set; }
-        #region HomeChef
-        public virtual ICollection<HomeChefOrder> HomeChefOrder { get; set; }
-
-        public virtual ICollection<PaymentHomeChefOrder> PaymentHomeChefOrder { get; set; }
-
-        public virtual ReviewHomeChefOrder ReviewHomeChefOrder { get;set; }
+        #region Hotel
+        public virtual ICollection<BookingHotelRoom> BookingHotelRooms { get; set; }
         #endregion
 
         #region HomeChef
-        public ICollection<HomeChefOrders> homeChefOrders { get; set; }
-        public ICollection<PaymentHomeChefOrders> paymentHomeChefOrders { get; set; }
-        public ReviewHomeChefOrders reviewHomeChefOrders { get; set; }
+        public virtual ICollection<HomeChefOrder> HomeChefOrders { get; set; }
         #endregion
-
-
 
         #region Driver
-        public ICollection<BookingVehicle> bookingVehicles { get; set; }
-        public ICollection<PaymentVehicle> paymentVehicles { get; set; }
-        public ReviewVehicle reviewVehicle { get; set; }
+        public virtual ICollection<BookingVehicle> BookingVehicles { get; set; }
         #endregion
 
         #region HomeService
-        public ICollection<ServiceQuaries> serviceQuaries { get; set; }
-        public ICollection<ServiceProviderPayment> serviceProviderPayments { get; set; }
-        public ICollection<ServiceRequest> ServiceRequests { get; set; }
-        public ICollection<ServiceProviderReview> serviceProviderReviews { get; set; }
-
+        public virtual ICollection<ServiceQuaries> ServiceQuaries { get; set; }
+        public virtual ICollection<ServiceRequest> ServiceRequests { get; set; }
         #endregion
+
         #region Agency
-        public ICollection <PackageBooking> PackageBookings { get; set; }
-        public ICollection <Agency_CustomerInquiry> Agency_CustomerInquiries { get; set; }
+        public virtual ICollection <PackageBooking> PackageBookings { get; set; }
+        public virtual ICollection <AgencyCustomerInquiry> Inquiries { get; set; }
         #endregion
-
-
-        public ICollection<ServiceQuaries> ServiceQuaries { get; set; }
-        public ICollection<ServiceProviderPayment> ServiceProviderPayments { get; set; }
-
-        public ICollection<ServiceProviderReview> ServiceProviderReviews { get; set; }
-
 
     }
 
@@ -85,64 +56,10 @@ namespace Models.User
         public void Configure(EntityTypeBuilder<Client> builder)
         {
             builder.HasKey(Client => Client.UserId);
-
-
-
-            #region Restaurant
-            //Relation between Clients & RestaurantOrders  one to many
-            builder.HasMany(restorder => restorder.RestaurantOrder)
-                .WithOne(client => client.Client)
-                .HasForeignKey(restorder => restorder.ClientId);
-
-            //Relation between Clients & PaymentRestaurantOrders  one to many
-            builder.HasMany(payrestorder => payrestorder.PaymentRestaurantOrder)
-                .WithOne(client => client.Client)
-                .HasForeignKey(payrestorder => payrestorder.ClientId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            //Relation between Clients & RestaurantReervations  one to many
-            builder.HasMany(restreervation => restreervation.RestaurantReervations)
-                .WithOne(client => client.Client)
-                .HasForeignKey(restreervation => restreervation.ClientId);
-
-
-
-
-            //Relation between Clients & ReviewRestaurantOrders  (one to many)
-            builder.HasOne(reviewrestorder => reviewrestorder.ReviewRestaurantOrder)
-                .WithOne(client => client.Client)
-                .HasForeignKey<ReviewRestaurantOrder>(reviewrestorder => reviewrestorder.ClientId);
-
-            #endregion
-
-            #region HomeChef
-            //Relation between Clients & HomeChefOrders (one to many)
-            builder.HasMany(homecheforder => homecheforder.HomeChefOrder)
-                .WithOne(client => client.Client)
-                .HasForeignKey(homecheforder => homecheforder.ClientId);
-
-            //Relation between Clients & PaymentHomeChefOrders (one to many)
-            builder.HasMany(payhomecheforder => payhomecheforder.PaymentRestaurantOrder)
-                .WithOne(client => client.Client)
-                .HasForeignKey(payhomecheforder => payhomecheforder.ClientId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            //Relation between Clients & ReviewHomeChefOrders (one to one)
-            builder.HasOne(reviewhomecheforder => reviewhomecheforder.ReviewHomeChefOrder)
-                .WithOne(client => client.Client)
-                .HasForeignKey<ReviewHomeChefOrder>(reviewhomecheforder => reviewhomecheforder.ClientId);
-
-
-            #endregion
-
-            // relation between Clients & BookingVehicle (one to many)  
-            builder.HasMany(bookingvehicle => bookingvehicle.bookingVehicles)
-                .WithOne(client => client.Client).HasForeignKey(bookingvehicle => bookingvehicle.ClientId);
-
-            // relation between Clients & ServiceRequest (one to many)
-           
-
-
+            builder
+                .HasOne(a => a.User)
+                .WithOne(a => a.Client)
+                .HasForeignKey<Client>(a => a.UserId);
         }
     }
 }

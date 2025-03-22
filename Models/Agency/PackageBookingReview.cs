@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Models.Agency;
 
@@ -14,9 +9,9 @@ namespace Models.Agency
         public int Id { get; set; }
         public DateTime date { get; set; }
         public int Rating { get; set; }
-   public string Comment { get; set; }
+        public string Comment { get; set; }
         public int BookingId { get; set; }
-        public PackageBooking PackageBooking { get; set; }
+        public virtual PackageBooking PackageBooking { get; set; }
     }
 }
 
@@ -27,8 +22,8 @@ public class PackageBookingReviewConfigration : IEntityTypeConfiguration<Package
 
         modelBuilder.HasKey(Review => Review.Id);
         modelBuilder.HasOne(Review => Review.PackageBooking)
-        .WithMany(booking => booking.Review)
-        .HasForeignKey(Review => Review.BookingId)
+        .WithOne(booking => booking.Review)
+        .HasForeignKey<PackageBookingReview>(Review => Review.BookingId)
         .OnDelete(DeleteBehavior.NoAction);
 
     }

@@ -2,11 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Models.User;
 using Models.WeddingPlaces.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.WeddingPlaces
 {
@@ -19,8 +14,8 @@ namespace Models.WeddingPlaces
         public DateTime SubmissionDate { get; set; }
 
         //Relations 
-        public Venues venues { get; set; }
-        public Clients clients { get; set; }
+        //public Venues Venues { get; set; }
+        public Client clients { get; set; }
 
     }
 
@@ -34,7 +29,7 @@ namespace Models.WeddingPlaces
             builder.Property(vi => vi.Status).HasColumnType("NVARCHAR(50)").HasDefaultValue(InquiryStatus.Pending);
             builder.Property(vi => vi.SubmissionDate).HasColumnType("DATETIME").HasDefaultValue(DateTime.Now);
 
-            builder.HasMany(vi => vi.Status);
+           
 
 
         }

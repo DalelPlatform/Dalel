@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.User;
+using Models.Enums;
 
-namespace Hotel
+namespace Models.Hotel
 {
     public class Hotel
     {
@@ -22,13 +19,15 @@ namespace Hotel
         public bool CancelationOptions { get; set; }
         public float CancelationCharges { get; set; }
         public string OwnerId { get; set; }
+        public VerificationStatus VerificationStatus { get; set; }
+        public bool IsDeleted { get; set; }
 
         // Navigation properties
-        public HotelOwner Owner { get; set; }
-        public ICollection<HotelPolicy> HotelPolicies { get; set; }
-        public ICollection<HotelService> HotelServices { get; set; }
-        public ICollection<HotelImage> HotelImages { get; set; }
-        public ICollection<RoomType> RoomTypes { get; set; }
+        public virtual HotelOwners Owner { get; set; }
+        public virtual ICollection<HotelPolicy> HotelPolicies { get; set; }
+        public virtual ICollection<HotelService> HotelServices { get; set; }
+        public virtual ICollection<HotelImage> HotelImages { get; set; }
+        public virtual ICollection<RoomType> RoomTypes { get; set; }
     }
 
 

@@ -1,13 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Models.Property.Enums;
+using Models.Enums;
 using Models.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.Property
 {
@@ -19,15 +13,13 @@ namespace Models.Property
         public float Price { get; set; }
         public BookingStatus Status { get; set; } // int
         public int PropertyId { get; set; } // fk Properties
-        public int ClientId { get; set; } // fk Clients.userid 
-        public bool IsDeleted { get; set; }
-
+        public string ClientId { get; set; } // fk Clients.userid 
 
         //relations
         public virtual Properties Properties { get; set; }
-        public virtual Client? Client { get; set; }
-        public virtual ICollection<PaymentProperties> PaymentProperties { get; set; }
-        public virtual ICollection<ReviewProperties> ReviewProperties { get; set; }
+        public virtual Client Client { get; set; }
+        public virtual PaymentProperties PaymentProperties { get; set; }
+        public virtual ReviewProperties ReviewProperties { get; set; }
     }
 
     public class BookingPropertiesConfiguration : IEntityTypeConfiguration<BookingProperties>

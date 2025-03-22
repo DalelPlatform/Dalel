@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Models.Driver;
 
@@ -17,10 +12,10 @@ namespace Models.User
         public bool Availability { get; set; }
 
 
-        public AppUser AppUser { get; set; }
+        public virtual AppUser AppUser { get; set; }
 
-        public Vehicle vehicles { get; set; }
-       public  ICollection <CarProposal> proposals { get; set; }
+        public virtual Vehicle Vehicle { get; set; }
+        public virtual ICollection <CarProposal> Proposals { get; set; }
 
     }
 
@@ -32,7 +27,10 @@ namespace Models.User
             builder.Property(driver => driver.LicenseNumber).IsRequired();
             builder.Property(driver => driver.LicenseNumber).HasDefaultValue(true).IsRequired();
 
-
+            builder
+                .HasOne(a => a.AppUser)
+                .WithOne(a => a.Driver)
+                .HasForeignKey<Drivers>(a => a.UserId);
         }
     }
 }

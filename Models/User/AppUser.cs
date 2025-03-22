@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.AspNetCore.Identity;
-using Models.HomeService;
+using System.Reflection.Emit;
 
 namespace Models.User
 {
@@ -27,17 +27,13 @@ namespace Models.User
 
         //Relations :
         public virtual Client? Client { get; set; }
-        public virtual Drivers? drivers { get; set; }
-        public virtual HotelOwners? hotelOwners { get; set; }
-        
+        public virtual Drivers? Driver { get; set; }
+        public virtual HotelOwners? HotelOwner { get; set; }
         public virtual RestaurantOwner? RestaurantOwner { get; set; }
-        
         public virtual PropertyOwner? PropertyOwner { get; set; }
-        
         public virtual HomeChef? HomeChef { get; set; }
-        public virtual Agency? agency { get; set; }
+        public virtual TravelAgencyOwners? TravelAgencyOwner { get; set; }
         public virtual ServiceProvider? ServiceProvider { get; set; }    
-
     }
 
     public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
@@ -45,53 +41,13 @@ namespace Models.User
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
             builder.Property(asp => asp.NationalId).HasColumnType("NVARCHAR(14)").IsRequired();
-            builder.HasIndex(asp => asp.NationalId);
-            builder.Property(asp => asp.Location).HasColumnType("NVARCHAR(50)").HasDefaultValue("empty");
-            builder.Property(asp => asp.Address).HasColumnType("NVARCHAR(50)").HasDefaultValue("empty");
-            builder.Property(asp => asp.City).HasColumnType("NVARCHAR(50)").HasDefaultValue("empty");
-            builder.Property(asp => asp.ProfileImg).HasColumnType("NVARCHAR(50)").HasDefaultValue("empty");
-            builder.Property(asp => asp.ModificationBy).HasColumnType("NVARCHAR(50)").HasDefaultValue("empty");
-            builder.Property(asp => asp.Address).HasDefaultValue(false);
-            
-           
-            builder.HasOne(client => client.Client)
-                .WithOne(usr => usr.User)
-                .HasForeignKey<Client>(client => client.UserId);
+            builder.HasIndex(asp => asp.NationalId).IsUnique();
+            builder.Property(p => p.ModificationDate).HasDefaultValueSql("GetDate()");
 
-          
-            builder.HasOne(drivers => drivers.drivers)
-                .WithOne(usr => usr.AppUser)
-                .HasForeignKey<Drivers>(drivers => drivers.UserId);
-
-            builder.HasOne(hotelowners => hotelowners.hotelOwners)
-                 .WithOne(usr => usr.AspDotNetUsers)
-                 .HasForeignKey<HotelOwners>(hotelowners => hotelowners.UserId);
-
-            builder.HasOne(proOwner => proOwner.PropertyOwner)
-                .WithOne(usr => usr.AppUser)
-                .HasForeignKey<PropertyOwner>(proOwner => proOwner.UserId);
-            
-            #region Osama
-            builder.HasOne(restaurantOwners => restaurantOwners.RestaurantOwner)
-                .WithOne(usr => usr.AppUser)
-                .HasForeignKey<RestaurantOwner>(restaurantOwners => restaurantOwners.UserId);
-
-            builder.HasOne(homeChefs => homeChefs.HomeChef)
-               .WithOne(usr => usr.AppUser)
-               .HasForeignKey<HomeChef>(homeChefs => homeChefs.UserId);
-            #endregion
-
-
-            builder.HasOne(agency => agency.agency)
-               .WithOne(usr => usr.AppUser)
-               .HasForeignKey<Agency>(agency => agency.UserId);
-
-            builder.HasOne(serviceProvider => serviceProvider.ServiceProvider)
-                .WithOne(usr => usr.AppUser)
-                .HasForeignKey<ServiceProvider>(serviceProvider => serviceProvider.UserId);
-
-
-
+            builder.Property(asp => asp.Location).HasColumnType("NVARCHAR(500)").HasDefaultValue("empty");
+            builder.Property(asp => asp.Address).HasColumnType("NVARCHAR(500)").HasDefaultValue("empty");
+            builder.Property(asp => asp.City).HasColumnType("NVARCHAR(500)").HasDefaultValue("empty");
+            builder.Property(asp => asp.ProfileImg).HasColumnType("NVARCHAR(500)").HasDefaultValue("empty");
         }
     }
 }

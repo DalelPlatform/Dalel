@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Hotel
+namespace Models.Hotel
 {
     public class HotelPolicy
     {
@@ -14,9 +9,8 @@ namespace Hotel
         public int HotelId { get; set; }
         public int PolicyId { get; set; }
 
-        // Navigation properties
-        public Hotel Hotel { get; set; }
-        public Policy Policy { get; set; }
+        public virtual Hotel Hotel { get; set; }
+        public virtual Policy Policy { get; set; }
     }
 
 
@@ -33,7 +27,7 @@ namespace Hotel
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(hp => hp.Policy)
-                   .WithMany() // Optionally, if Policy had a collection, use .WithMany(p => p.HotelPolicies)
+                   .WithMany(a=>a.HotelPolicies) // Optionally, if Policy had a collection, use .WithMany(p => p.HotelPolicies)
                    .HasForeignKey(hp => hp.PolicyId)
                    .OnDelete(DeleteBehavior.Cascade);
         }

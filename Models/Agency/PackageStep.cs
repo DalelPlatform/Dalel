@@ -14,10 +14,10 @@ namespace Models.Agency
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public float Duration { get; set; }
-        public string Image { get; set; }
+        public float? Duration { get; set; }
+        public string? Image { get; set; }
         public int PackageId { get; set; }
-        public AgencyPackage AgencyPackage { get; set; }
+        public virtual AgencyPackage AgencyPackage { get; set; }
     }
 }
 
@@ -28,7 +28,7 @@ public class PackageStepConfigration : IEntityTypeConfiguration<PackageStep>
         modelBuilder.HasKey(PackgeStep => PackgeStep.Id);
         modelBuilder.HasOne(PackgeStep => PackgeStep.AgencyPackage)
         .WithMany(agencyPacge => agencyPacge.PackageSteps)
-        .HasForeignKey(PackgeStep => PackgeStep.PackageId)
+        .HasForeignKey(PackgeStep => PackgeStep.PackageId);
 
 
     }

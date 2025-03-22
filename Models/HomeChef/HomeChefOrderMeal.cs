@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 
 namespace Models.HomeChef
@@ -15,13 +10,9 @@ namespace Models.HomeChef
 
         public float Quantity { get; set; }
 
-        public bool IsDeleted { get; set; }
-
         public int HomeChefOrdersId { get; set; }//fk
         public int HomeChefMealsId { get; set; }//fk
 
-
-        //Relations : 
         public virtual HomeChefOrder HomeChefOrder { get; set; }
         public virtual HomeChefMeal HomeChefMeal { get; set; }
 
@@ -34,9 +25,15 @@ namespace Models.HomeChef
             builder.HasKey(homechefordermeal => homechefordermeal.Id);
             builder.Property(homechefordermeal => homechefordermeal.SupPrice).HasColumnType("MONEY");
 
+            builder.HasOne(p => p.HomeChefOrder)
+                .WithMany(p => p.HomeChefOrderMeals)
+                .HasForeignKey(p => p.HomeChefOrdersId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-
-
+            builder.HasOne(p => p.HomeChefMeal)
+             .WithMany(p => p.HomeChefOrderMeals)
+             .HasForeignKey(p => p.HomeChefMealsId)
+             .OnDelete(DeleteBehavior.NoAction);
 
         }
     }

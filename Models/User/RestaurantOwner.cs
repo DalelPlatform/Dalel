@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Models.Restaurant;
 
 namespace Models.User
 {
     public class RestaurantOwner
     {
         public string UserId { get; set; } //fk & pk
-
 
         //Relations :
         public virtual AppUser AppUser { get; set; }
@@ -24,7 +17,10 @@ namespace Models.User
         public void Configure(EntityTypeBuilder<RestaurantOwner> builder)
         {
             builder.HasKey(RestaurantOwners => RestaurantOwners.UserId);
-
+            builder
+                .HasOne(a => a.AppUser)
+                .WithOne(a => a.RestaurantOwner)
+                .HasForeignKey<RestaurantOwner>(a => a.UserId);
 
         }
     }

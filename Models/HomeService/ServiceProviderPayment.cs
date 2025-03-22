@@ -1,18 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Models.Property.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.Enums;
 
 namespace Models.HomeService
 {
     public class ServiceProviderPayment
     {
         public int Id { get; set; }
-        public PaymentType Payment { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
         public int RequestId { get; set; }
         public virtual ServiceRequest ServiceRequest { get; set; }
     }
@@ -24,7 +20,7 @@ namespace Models.HomeService
             builder.HasOne(sp => sp.ServiceRequest)
                 .WithOne(sb => sb.Payment)
                 .HasForeignKey<ServiceProviderPayment>(sp => sp.RequestId )
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

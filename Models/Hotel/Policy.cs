@@ -1,16 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Models.Enums;
 
-namespace Hotel
+namespace Models.Hotel
 {
     public class Policy
     {
         public int Id { get; set; }
         public string Value { get; set; }
-        public int Type { get; set; }  // Enum as int
+        public PolicyType Type { get; set; }  // Enum as int
+
+        public virtual ICollection<HotelPolicy> HotelPolicies { get; set; }
+
     }
 
 
@@ -23,4 +24,5 @@ namespace Hotel
             // Further configuration as needed.
         }
     }
+
 }

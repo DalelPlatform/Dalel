@@ -1,39 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Models.Driver;
-using Models.Restaurant.Enums;
-using Models.User;
+using Models.Enums;
 
 namespace Models.Restaurant
 {
     public class PaymentRestaurantOrder
     {
         public int Id { get; set; }
+
         public float Amount { get; set; }  
+
         public decimal AmountPaid { get; set; }
 
-        public decimal CommissionDeducted { get; set; }
+        public decimal? CommissionDeducted { get; set; }
 
-        public string CodeApplied { get; set; }
-        public TypeOfPayment PaymentType { get; set; }
+        public string? CodeApplied { get; set; }
 
-        public StatusOfPaymentOrder PaymentOrderStatus { get; set; }
+        public PaymentMethod PaymentType { get; set; }
+
+        public PaymentStatus PaymentStatus { get; set; }
 
         public DateTime TransactionDateTime { get; set; }
 
-        public string ClientId { get; set; } //fk
-
         public int RestaurantOrderId { get; set; } //fk
 
-        //Relations : 
-
-        public virtual Client Client { get; set; }
-        public virtual Restaurant Restaurant { get; set; }
+        public virtual RestaurantOrder RestaurantOrder { get; set; }
     }
 
 
@@ -42,14 +33,15 @@ namespace Models.Restaurant
         public void Configure(EntityTypeBuilder<PaymentRestaurantOrder> builder)
         {
             builder.HasKey(payrestorder => payrestorder.Id);
-            builder.Property(payrestorder => payrestorder.CodeApplied).HasColumnType("NVARCHAR(50)");
-            builder.Property(payrestorder => payrestorder.PaymentType).HasDefaultValue("paypal");
-            builder.Property(payrestorder => payrestorder.PaymentOrderStatus).HasDefaultValue("panding");
+            builder.Property(payrestorder => payrestorder.CodeApplied).IsRequired(false);
+            builder.Property(payrestorder => payrestorder.CommissionDeducted).IsRequired(false);
+            builder.Property(payrestorder => payrestorder.PaymentType).HasDefaultValue(PaymentMethod.Cash);
+            builder.Property(payrestorder => payrestorder.PaymentStatus).HasDefaultValue(PaymentStatus.Pending);
 
-
-
-
-
+            builder.HasOne(p => p.RestaurantOrder)
+            .WithOne(p => p.PaymentRestaurantOrder)
+            .HasForeignKey<PaymentRestaurantOrder>(p => p.RestaurantOrderId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         }
     }

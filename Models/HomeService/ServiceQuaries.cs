@@ -1,18 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.User;
 
 namespace Models.HomeService
 {
     public class ServiceQuaries
     {
         public int Id { get; set; }
-        public int ServiceProviderId { get; set; }
-        public int ClientId { get; set; }
+        public string ServiceProviderId { get; set; }
+        public string ClientId { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
         public DateTime QuestionDate { get; set; }
@@ -41,17 +37,17 @@ namespace Models.HomeService
             builder.HasOne(sq => sq.CategoryServices)
                 .WithMany(cs => cs.Quaries)
                 .HasForeignKey(sq => sq.CategoryServicesId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(sq => sq.ServiceProvider)
                 .WithMany()
                 .HasForeignKey(sq => sq.ServiceProviderId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(sc => sc.Client)
-                .WithMany(sq => sq.serviceQuaries)
+                .WithMany(sq => sq.ServiceQuaries)
                 .HasForeignKey(sq => sq.ClientId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Models.Agency;
-using Models.Agency.Enums;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Models.Enums;
 
 namespace Models.Agency
 {
@@ -15,10 +9,11 @@ namespace Models.Agency
     {
         public int Id { get; set; }
         public float DiscountPercentage { get; set; }
-   public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; } //null untill owner deactive it
         public VerificationStatus status { get; set; }
         public int AgencyId { get; set; }
-        public TravelAgencies Agency { get; set; }
+        public virtual TravelAgencies Agency { get; set; }
     }
 }
 
@@ -28,6 +23,8 @@ public class AgencyPromotionConfigration : IEntityTypeConfiguration<AgencyPromot
     {
 
         modelBuilder.HasKey(promot => promot.Id);
+        modelBuilder.Property(p => p.StartDate).HasDefaultValueSql("GetDate()");
+        modelBuilder.Property(p => p.EndDate).IsRequired(false);
         modelBuilder.HasOne(verify => verify.Agency)
         .WithMany(agency => agency.agencyPromotions)
         .HasForeignKey(promot => promot.AgencyId);

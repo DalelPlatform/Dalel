@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Hotel
+namespace Models.Hotel
 {
     public class HotelImage
     {
@@ -15,7 +10,7 @@ namespace Hotel
         public int HotelId { get; set; }
 
         // Navigation property
-        public Hotel Hotel { get; set; }
+        public virtual Hotel Hotel { get; set; }
     }
 
 

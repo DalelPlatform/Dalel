@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Models.Enums;
 using Models.User;
 
 namespace Models.Driver
@@ -14,26 +8,14 @@ namespace Models.Driver
     public class CarProposal
     {
         public int Id { get; set; }
-
-
         public decimal Price { get; set; }
-
-
-        public int Status { get; set; }
-
+        public ProposalStatus ProposalStatus { get; set; }
         public bool IsAccepted { get; set; }
-
         public decimal SuggestedPrice { get; set; }
-
-
         public DateTime StartedDateTime { get; set; }
-
-
         public string DriverId { get; set; }
-        public virtual Drivers Driver { get; set; }
-
-
         public int BookingVehicleId { get; set; }
+        public virtual Drivers Driver { get; set; }
         public virtual BookingVehicle BookingVehicle { get; set; }
     }
 
@@ -48,17 +30,17 @@ namespace Models.Driver
 
             // Relation with Driver (One-to-Many)
             builder.HasOne(cp => cp.Driver)
-                   .WithMany(d => d.proposals)
+                   .WithMany(d => d.Proposals)
                    .HasForeignKey(cp => cp.DriverId)
                    .IsRequired()
-                   .OnDelete(DeleteBehavior.Restrict); // منع الحذف التلقائي
+                   .OnDelete(DeleteBehavior.NoAction); // منع الحذف التلقائي
 
             // Relationship with BookingVehicle (One-to-Many)
             builder.HasOne(cp => cp.BookingVehicle)
                    .WithMany(bv => bv.CarProposals)
                    .HasForeignKey(cp => cp.BookingVehicleId)
                    .IsRequired()
-                   .OnDelete(DeleteBehavior.Restrict); // منع الحذف التلقائي
+                   .OnDelete(DeleteBehavior.NoAction); // منع الحذف التلقائي
         }
     }
 

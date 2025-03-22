@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Models.Restaurant
@@ -16,19 +11,13 @@ namespace Models.Restaurant
 
         public float Quantity { get; set; }
 
-        public bool IsDeleted {  get; set; }
-
         public int RestaurantOrderId { get; set; } //fk
 
         public int RestaurantMenuItemId { get; set; } //fk
 
-        //Relations :
-
         public virtual RestaurantOrder RestaurantOrder { get; set; }
 
         public virtual RestaurantMenuItem RestaurantMenuItem { get; set; }
-        
-
     }
 
     public class RestaurantOrderItemConfiguration : IEntityTypeConfiguration<RestaurantOrderItem>
@@ -37,6 +26,15 @@ namespace Models.Restaurant
         {
             builder.HasKey(restorderitem => restorderitem.Id);
 
+            builder.HasOne(p => p.RestaurantOrder)
+            .WithMany(p => p.RestaurantOrderItems)
+            .HasForeignKey(p => p.RestaurantOrderId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(p => p.RestaurantMenuItem)
+            .WithMany(p => p.RestaurantOrderItems)
+            .HasForeignKey(p => p.RestaurantMenuItemId)
+            .OnDelete(DeleteBehavior.NoAction);
 
 
         }

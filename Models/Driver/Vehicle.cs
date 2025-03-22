@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Models.User;
 
 namespace Models.Driver
 {
-
     public class Vehicle
     {
         public int Id { get; set; }
@@ -49,15 +41,15 @@ namespace Models.Driver
 
             // ضبط العلاقة Many-to-One مع Driver
             builder.HasOne(v => v.Driver)
-                   .WithOne(d => d.vehicles) // Driver لديه سيارة واحدة فقط
+                   .WithOne(d => d.Vehicle) // Driver لديه سيارة واحدة فقط
                    .HasForeignKey<Vehicle>(v => v.DriverId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.NoAction);
 
             // ضبط العلاقة One-to-Many مع VehicleImage
             builder.HasMany(v => v.VehicleImages)
                    .WithOne(vi => vi.Vehicle)
                    .HasForeignKey(vi => vi.VehicleId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

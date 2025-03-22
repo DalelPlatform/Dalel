@@ -1,24 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.Enums;
 
-namespace Hotel
+namespace Models.Hotel
 {
 
     public class Room
     {
         public int Id { get; set; }
-        public bool Availability { get; set; }
+        public AvaliabilityStatus Availability { get; set; }
         public int RoomTypeId { get; set; }
 
         // Navigation property
-        public RoomType RoomType { get; set; }
+        public virtual RoomType RoomType { get; set; }
         // To support the inverse of BookingHotelRoom, add:
-        public ICollection<BookingHotelRoom> BookingHotelRooms { get; set; }
+        public virtual ICollection<BookingHotelRoom> BookingHotelRooms { get; set; }
     }
 
 

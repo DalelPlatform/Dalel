@@ -1,22 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Models.Property.Enums;
+using Models.Enums;
 using Models.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.Property
 {
     public class Properties
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Description { get; set; }
+        public string Amenities { get; set; } 
         public int NumberOfRooms { get; set; }
         public int BuildingNo { get; set; }
+        public int FloorNo { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
         public string Region { get; set; }
@@ -25,7 +21,8 @@ namespace Models.Property
         public float Longitude { get; set; }
         public string PhoneNumber { get; set; }
         public bool CancelationOptions { get; set; }
-        public PropertyStatus Status { get; set; } // int
+        public bool IsForRent { get; set; } 
+        public VerificationStatus VerificationStatus { get; set; }
         public float CancelationCharges { get; set; }
         public DateTime ModificationDate { get; set; }
         public string OwnerId { get; set; } // fk PropertyOwners.userId
@@ -52,8 +49,8 @@ namespace Models.Property
             //relations
 
             builder.HasOne(p => p.PropertyOwner)
-                .WithOne(po => po.Properties)
-                .HasForeignKey<Properties>(p => p.OwnerId);
+                .WithMany(po => po.Properties)
+                .HasForeignKey(p => p.OwnerId);
 
             builder.HasMany(p => p.PropertyImages)
                 .WithOne(pi => pi.Properties)

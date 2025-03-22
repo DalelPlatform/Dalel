@@ -33,7 +33,7 @@ namespace Models.Driver
             builder.HasOne(vi => vi.Vehicle)
                    .WithMany(v => v.VehicleImages) // يجب التأكد من أن `Vehicle` يحتوي على قائمة `VehicleImages`
                    .HasForeignKey(vi => vi.VehicleId)
-                   .OnDelete(DeleteBehavior.Cascade); // عند حذف الـ Vehicle، يتم حذف الصور المرتبطة به
+                   .OnDelete(DeleteBehavior.NoAction); // عند حذف الـ Vehicle، يتم حذف الصور المرتبطة به
         }
     }
 }

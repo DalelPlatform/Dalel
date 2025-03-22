@@ -1,17 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.Enums;
 
-namespace Hotel
+namespace Models.Hotel
 {
     public class RoomType
     {
         public int Id { get; set; }
-        public int Type { get; set; } // e.g., single, double, triple, suite
+        public HotelRoomType Type { get; set; } 
         public string Description { get; set; }
         public int NumberOfRooms { get; set; }
         public int NumberOfBeds { get; set; }
@@ -19,9 +15,9 @@ namespace Hotel
         public int HotelId { get; set; }
 
         // Navigation properties
-        public Hotel Hotel { get; set; }
-        public ICollection<Room> Rooms { get; set; }
-        public ICollection<RoomTypeImage> RoomTypeImages { get; set; }
+        public virtual Hotel Hotel { get; set; }
+        public virtual ICollection<Room> Rooms { get; set; }
+        public virtual ICollection<RoomTypeImage> RoomTypeImages { get; set; }
     }
 
     public class RoomTypeConfiguration : IEntityTypeConfiguration<RoomType>

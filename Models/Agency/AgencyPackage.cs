@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Models.Agency;
+using Models.Enums;
 
 namespace Models.Agency
 {
@@ -14,13 +10,14 @@ namespace Models.Agency
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public float Duration { get; set; }
+        public float? Duration { get; set; }
         public string Price { get; set; }
         public string TermsPolicies { get; set; }
         public int AgencyId { get; set; }
-        public TravelAgencies Agency { get; set; }
-        public ICollection<PackageStep> PackageSteps { get; set; }
-        public ICollection<PackageSchadule> PackageSchadules { get; set; }
+        public virtual VerificationStatus VerificationStatus { get; set; }
+        public virtual TravelAgencies Agency { get; set; }
+        public virtual ICollection<PackageStep> PackageSteps { get; set; }
+        public virtual ICollection<PackageSchadule> PackageSchadules { get; set; }
 
     }
 }

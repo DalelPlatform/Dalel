@@ -1,18 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Models.HomeService.ENUMS;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.Enums;
+using Models.User;
 
 namespace Models.HomeService
 {
     public class ServiceProviderPropsal
     {
         public int Id { get; set; }
-        public int ServiceProviderId { get; set; }
+        public string ServiceProviderId { get; set; }
         public virtual ServiceProvider ServiceProvider { get; set; }
         public double SuggestedPrice { get; set; }
         public string Description { get; set; }
@@ -33,6 +29,11 @@ namespace Models.HomeService
             builder.HasOne(sp => sp.ServiceRequest)
                 .WithMany(sr => sr.Propsals)
                 .HasForeignKey(sp => sp.ServiceRequestId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(sp => sp.ServiceProvider)
+                .WithMany(sr => sr.Propsals)
+                .HasForeignKey(sp => sp.ServiceProviderId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Property(sp => sp.SuggestedPrice)

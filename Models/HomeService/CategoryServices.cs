@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.User;
 
 namespace Models.HomeService
 {
@@ -34,15 +30,6 @@ namespace Models.HomeService
             builder.Property(cs => cs.Description)
                 .HasMaxLength(500);
 
-            builder.HasMany(cs => cs.ServiceProviders)
-                .WithOne(sp => sp.CategoryServices)
-                .HasForeignKey(sp => sp.CategoryServicesId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(cs => cs.Quaries)
-                .WithOne(sq => sq.CategoryServices)
-                .HasForeignKey(sq => sq.CategoryServicesId)
-                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

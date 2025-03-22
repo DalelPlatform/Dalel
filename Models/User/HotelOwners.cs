@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 
 namespace Models.User
@@ -12,7 +7,9 @@ namespace Models.User
     {
         public string UserId { get; set; } // fk & pk
 
-        public AspDotNetUsers AspDotNetUsers { get; set; }
+        public virtual AppUser AppUser { get; set; }
+         
+        public virtual Hotel.Hotel Hotel { get; set; }
     }
 
     public class HotelOwnersConfiguration : IEntityTypeConfiguration<HotelOwners>
@@ -21,7 +18,9 @@ namespace Models.User
         {
             builder.HasKey(hotelowners => hotelowners.UserId);
 
-
+            builder.HasOne(b => b.AppUser)
+                .WithOne(a => a.HotelOwner)
+                .HasForeignKey<HotelOwners>(o => o.UserId);
         }
     }
 }

@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Models.User;
+using Models.Enums;
 
 
 namespace Models.Driver
@@ -15,20 +8,10 @@ namespace Models.Driver
     public class PaymentVehicle
     {
         public int Id { get; set; }
-
         public decimal Amount { get; set; }
-
-        public int Type { get; set; }
-
-        public int Status { get; set; }
-
+        public PaymentMethod PaymentMethod { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
         public DateTime TransactionDateTime { get; set; }
-
-        // علاقة Many-to-One مع Client
-        public string ClientId { get; set; }
-        public virtual Clients Client { get; set; }
-
-        // علاقة One-to-One مع BookingVehicle
         public int BookingVehicleId { get; set; }
         public virtual BookingVehicle BookingVehicle { get; set; }
     }
@@ -41,19 +24,13 @@ namespace Models.Driver
 
             // ضبط خصائص الحقول
             builder.Property(pv => pv.Amount).HasColumnType("decimal(18,2)").IsRequired();
-            builder.Property(pv => pv.TransactionDateTime).IsRequired();
-
-            // ضبط العلاقة Many-to-One مع Client
-            builder.HasOne(pv => pv.Client)
-                   .WithMany(c=>c.paymentVehicles)
-                   .HasForeignKey(pv => pv.ClientId)
-                   .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(pv => pv.TransactionDateTime).HasDefaultValueSql("GetDate()");
 
             // ضبط العلاقة One-to-One مع BookingVehicle
             builder.HasOne(pv => pv.BookingVehicle)
                    .WithOne(bv => bv.Payment) // BookingVehicle لديه فقط Payment واحد
                    .HasForeignKey<PaymentVehicle>(pv => pv.BookingVehicleId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
