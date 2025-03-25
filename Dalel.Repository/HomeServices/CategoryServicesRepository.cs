@@ -12,7 +12,7 @@ namespace Dalel.Repository
     {
         public CategoryServicesRepository(DelelContext context) : base(context) { }
 
-        public IQueryable<CategoryServices> GetPopularCategories(int count = 5)
+        public IQueryable<CategoryServices> GetPopularCategories(int count)
         {
             return GetList()
                 .OrderByDescending(c => c.ServiceProviders.Count)
