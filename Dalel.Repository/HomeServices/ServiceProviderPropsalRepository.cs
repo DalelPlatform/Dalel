@@ -11,10 +11,10 @@ namespace Dalel.Repository
 {
     public class ServiceProviderPropsalRepository : BaseRepository<ServiceProviderPropsal>
     {
-        private readonly DelelContext _context;
+
         public ServiceProviderPropsalRepository(DelelContext context) : base(context)
         {
-            _context = context;
+
         }
 
         public IQueryable<ServiceProviderPropsal> GetProviderProposals(string providerId)
@@ -26,7 +26,7 @@ namespace Dalel.Repository
 
         public void AcceptProposal(int proposalId)
         {
-            var proposal = _context.ServiceProviderPropsals.Find(proposalId);
+            var proposal = base.GetList(i => i.Id == proposalId).FirstOrDefault();
             if (proposal != null)
             {
                 proposal.Status = ProposalStatus.Accepted;

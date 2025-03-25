@@ -12,19 +12,20 @@ namespace Dalel.Repository
 {
     public class RestaurantRepository : BaseRepository<Restaurant>
     {
-        private readonly DelelContext _context;
         public RestaurantRepository(DelelContext dbContext) : base(dbContext)
         {
-            _context = dbContext;
+
         }
-        public IQueryable<Restaurant> SearchRestaurants(
+
+        
+        public IQueryable<Restaurant> SearchRestaurants( // IQueryable<RestaurantDetailsViewModel>
           string city = null,
           string searchText = "",
           //double? minRating = null,
           string sortBy = "Name",
           bool descending = false)
         {
-            var query = _context.Restaurants.Where(r => !r.IsDeleted);
+            var query = base.GetList(r => !r.IsDeleted);
 
             //  Filter by city
             if (!string.IsNullOrEmpty(city))
