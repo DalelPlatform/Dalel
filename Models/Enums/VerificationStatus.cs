@@ -4,6 +4,8 @@
     {
         Panding,
         Confirmed, 
-        Rejected
+        Rejected,
+        Verified,
+        Pending
     }
 }

@@ -10,7 +10,7 @@ namespace Dalel.Repository
     {
         #region Properties
         private readonly DelelContext Context;
-        private  DbSet<T> Table;
+        protected DbSet<T> Table;
 
         //protected IDbFactory DbFactory
         //{
