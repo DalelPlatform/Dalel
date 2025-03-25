@@ -21,7 +21,6 @@
     <Folder Include="HomeService\" />
     <Folder Include="Agency\" />
     <Folder Include="Property\" />
-    <Folder Include="Restaurant\" />
   </ItemGroup>
 
 </Project>
