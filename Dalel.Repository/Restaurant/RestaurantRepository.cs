@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Models.Driver;
 using Models.Enums;
 using Models.Restaurant;
 
@@ -21,29 +24,54 @@ namespace Dalel.Repository
         public IQueryable<Restaurant> SearchRestaurants( // IQueryable<RestaurantDetailsViewModel>
           string city = null,
           string searchText = "",
+         // int pageSize = 4,
+         // int pageIndex = 1,
           //double? minRating = null,
           string sortBy = "Name",
           bool descending = false)
         {
-            var query = base.GetList(r => !r.IsDeleted);
+
+            var builder = PredicateBuilder.New<Restaurant>();
+
+            var old = builder;
 
             //  Filter by city
             if (!string.IsNullOrEmpty(city))
-                query = query.Where(r => r.City == city);
+                builder = builder.And(r => r.City.Contains(city));
 
             //  Search by restaurant Description
             if (!string.IsNullOrEmpty(searchText))
-                query = query.Where(r => r.Description.Contains(searchText));
+                builder = builder.And(r => r.Description.Contains(searchText));
 
 
             //if (minRating.HasValue)
             //    query = query.Where(r => r.AverageRating >= minRating.Value);
 
+            builder = builder.And(r => r.IsDeleted == false);
+
+            var count = base.GetList(builder).Count();
+
+            var query = base.GetList(builder);
+
             query = SortRestaurants(query, sortBy, descending);
 
             return query;
+
+            /*    
+              var resultAfterPagination = base.Get(
+                  filter: builder,
+                  pageSize: pageSize,
+                  pageNumber: pageIndex).Select(p => p.ToDetailsVModel()).ToList();
+
+            return new PaginationViewModel<ProductDetailsViewModel>
+              {
+                  Data = resultAfterPagination,
+                  PageNumber = pageNumber,
+                  PageSize = pageSize,
+                  Total = count
+              }; */
         }
-        public IQueryable<Restaurant> GetRestaurantsPaginated(
+        public IQueryable<Restaurant> SearchRestaurantsPaginated(
            int pageNumber, int pageSize,
            string city = null,
            string searchText = "",
@@ -65,8 +93,8 @@ namespace Dalel.Repository
               //  "rating" => descending ? query.OrderByDescending(r => r.AverageRating) : query.OrderBy(r => r.AverageRating),
                 "Id" => descending ? query.OrderByDescending(r => r.Id) : query.OrderBy(r => r.Id) // Default sort by Id
             };
-        }
-
+        } 
+     
 
         /*
         public IQueryable<Restaurant> GetRestaurantsByCity(string city)
