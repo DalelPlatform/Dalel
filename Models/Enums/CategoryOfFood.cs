@@ -2,7 +2,7 @@
 {
     public enum FoodCategory
     {
-        Drink,
+        Drink ,
         Snacks,
         Meal,
         Other
