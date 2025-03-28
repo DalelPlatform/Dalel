@@ -21,9 +21,9 @@ namespace Dalel.Reopsitory
         }
 
         
-        public IQueryable<Vehicle> GetVehiclesByType(string type)
+        public IQueryable<VehicleDetailsViewModel> GetVehiclesByType(string type)
         {
-            return GetList(v => v.Type == type);
+            return GetList(v => v.Type == type).Select(v => v.ToDetailsViewModel());
         }
 
         

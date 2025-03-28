@@ -19,9 +19,9 @@ namespace Dalel.Repository
             return proposal?.ToDetailsViewModel();
         }
 
-        public IQueryable<CarProposal> GetProposalsByBooking(int bookingId)
+        public IQueryable<CarProposalDetailsViewModel> GetProposalsByBooking(int bookingId)
         {
-            return GetList(cp => cp.BookingVehicleId == bookingId);
+            return GetList(cp => cp.BookingVehicleId == bookingId).Select(cp => cp.ToDetailsViewModel());
         }
 
         public IQueryable<CarProposalDetailsViewModel> Search(string searchTerm)

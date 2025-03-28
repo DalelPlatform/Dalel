@@ -8,9 +8,9 @@ using System.Linq.Expressions;
 
 namespace Dalel.Reopsitory
 {
-    public class PaymentVehicleManager : BaseRepository<PaymentVehicle>
+    public class PaymentVehicleRepository : BaseRepository<PaymentVehicle>
     {
-        public PaymentVehicleManager(DelelContext context) : base(context)
+        public PaymentVehicleRepository(DelelContext context) : base(context)
         {
         }
 
@@ -37,10 +37,10 @@ namespace Dalel.Reopsitory
         }
 
        
-        public IQueryable<PaymentVehicle> Search(string searchTerm)
+        public IQueryable<PaymentVehicleDetailsViewModel> Search(string searchTerm)
         {
             if (string.IsNullOrEmpty(searchTerm))
-                return base.GetList();
+                return base.GetList().Select(b => b.ToDetailsViewModel());
 
             searchTerm = searchTerm.ToLower();
 
@@ -50,7 +50,7 @@ namespace Dalel.Reopsitory
                     p.BookingVehicle.Client.User.UserName.ToLower().Contains(searchTerm) ||
                     p.BookingVehicle.Client.User.Email.ToLower().Contains(searchTerm) ||
                     p.Id.ToString().Contains(searchTerm)
-                );
+                ).Select(b => b.ToDetailsViewModel());
         }
     }
 }

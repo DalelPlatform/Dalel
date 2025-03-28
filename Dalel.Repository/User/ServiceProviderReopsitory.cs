@@ -1,4 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Models;
+using Models.Enums;
+using Models.User;
 
 namespace Dalel.Repository
 {

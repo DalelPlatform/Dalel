@@ -19,15 +19,15 @@ namespace Dalel.Reopsitory
             return booking?.ToDetailsViewModel();
         }
 
-        public IQueryable<BookingVehicle> GetBookingsByStatus(BookingStatus status)
+        public IQueryable<BookingVehicleDetailsViewModel> GetBookingsByStatus(BookingStatus status)
         {
-            return GetList(b => b.BookingStatus == status);
+            return GetList(b => b.BookingStatus == status).Select(b => b.ToDetailsViewModel());
         }
 
-        public IQueryable<BookingVehicle> Search(string searchTerm)
+        public IQueryable<BookingVehicleDetailsViewModel> Search(string searchTerm)
         {
             if (string.IsNullOrEmpty(searchTerm))
-                return base.GetList();
+                return base.GetList().Select(b => b.ToDetailsViewModel());
 
             searchTerm = searchTerm.ToLower();
 
@@ -39,7 +39,7 @@ namespace Dalel.Reopsitory
                     b.PickupLocation.ToLower().Contains(searchTerm) ||
                     b.DropoffLocation.ToLower().Contains(searchTerm) ||
                     b.Id.ToString().Contains(searchTerm)
-                );
+                ).Select(b => b.ToDetailsViewModel());
         }
     }
 }
