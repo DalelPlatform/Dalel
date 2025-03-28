@@ -26,11 +26,11 @@
   <ItemGroup>
     <Folder Include="Hotel\" />
     <Folder Include="HomeChef\" />
-<<<<<<< HEAD
+
     <Folder Include="HomeService\" />
-=======
+
     <Folder Include="Agency\" />
->>>>>>> 4fa1d9fd2174186e3ac3644f97e6b945d77f9eec
+
     <Folder Include="Property\" />
   </ItemGroup>
 
