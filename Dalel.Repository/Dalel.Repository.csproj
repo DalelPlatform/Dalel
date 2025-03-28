@@ -22,7 +22,6 @@
     <Folder Include="HomeChef\" />
     <Folder Include="HomeService\" />
     <Folder Include="Agency\" />
-    <Folder Include="Property\" />
   </ItemGroup>
 
 </Project>
