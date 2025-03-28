@@ -8,10 +8,11 @@ namespace Dalel.Repository
 {
     public class BaseRepository<T> where T : class
     {
-        #region Properties
-        private readonly DelelContext Context;
-        private  DbSet<T> Table;
 
+        private readonly DelelContext Context;
+        private DbSet<T> Table;
+
+        #region Properties
         //protected IDbFactory DbFactory
         //{
         //    get;
@@ -24,7 +25,7 @@ namespace Dalel.Repository
         //}
         #endregion
 
-        protected BaseRepository(DelelContext dbContext)
+        public BaseRepository(DelelContext dbContext)
         {
             Context = dbContext;
             Table = dbContext.Set<T>();

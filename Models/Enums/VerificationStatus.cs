@@ -2,7 +2,7 @@
 {
     public enum VerificationStatus
     {
-        Panding,
+        Pending,
         Confirmed, 
         Rejected
     }
