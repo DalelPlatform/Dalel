@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models;
+using Models.Restaurant;
 
 namespace Dalel.Repository
 {
@@ -26,13 +28,13 @@ namespace Dalel.Repository
         {
             return GetList(reservation => reservation.ClientId == clientId).Select(reservation => reservation.ToDetailsViewModel());
         }
-
+        
         public RestaurantReservationDetailsVM GetReservationDetails(int reservationId)
         {
             return GetList(reservation => reservation.Id == reservationId).Select(reservation => reservation.ToDetailsViewModel())
                 .FirstOrDefault();
         }
-
+        
         public void UpdateReservationStatus(int reservationId, StatusOfReservations newStatus)
         {
             var reservation = GetList(res => res.Id == reservationId).FirstOrDefault();
@@ -41,6 +43,6 @@ namespace Dalel.Repository
                 reservation.ReervationStatus = newStatus;
                 Update(reservation);
             }
-        }
+        } 
     }
 }

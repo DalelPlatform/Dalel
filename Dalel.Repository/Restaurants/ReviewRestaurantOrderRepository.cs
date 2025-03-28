@@ -18,7 +18,7 @@ namespace Dalel.Repository
             return GetList(review => review.RestaurantOrderId == orderId).Select(review => review.ToDetailsViewModel())
                 .FirstOrDefault();
         }
-
+        
         public IQueryable<ReviewRestaurantOrderDetailsVM> GetReviewsByRating(float rating)
         {
             return GetList(review => review.Rating == rating).Select(review => review.ToDetailsViewModel());
@@ -28,11 +28,11 @@ namespace Dalel.Repository
         {
             return GetList(review => review.RestaurantOrder.RestaurantId == restaurantId).Select(review => review.ToDetailsViewModel());
         }
-
+         
         public void AddReview(ReviewRestaurantOrder review)
         {
             Add(review);
-        }
+    }
 
         public void RemoveReview(int reviewId)
         {
