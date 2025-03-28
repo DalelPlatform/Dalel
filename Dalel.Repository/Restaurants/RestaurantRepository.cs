@@ -13,7 +13,7 @@ using Models.Restaurant;
 
 namespace Dalel.Repository
 {
-    public class RestaurantRepository : BaseRepository<Restaurant>
+    public class RestaurantRepository : BaseRepository<Models.Restaurant.Restaurant>
     {
         public RestaurantRepository(DelelContext dbContext) : base(dbContext)
         {
@@ -21,7 +21,7 @@ namespace Dalel.Repository
         }
 
         
-        public IQueryable<Restaurant> SearchRestaurants( // IQueryable<RestaurantDetailsViewModel>
+        public IQueryable<Models.Restaurant.Restaurant> SearchRestaurants( // IQueryable<RestaurantDetailsViewModel>
           string city = null,
           string searchText = "",
          // int pageSize = 4,
@@ -31,7 +31,7 @@ namespace Dalel.Repository
           bool descending = false)
         {
 
-            var builder = PredicateBuilder.New<Restaurant>();
+            var builder = PredicateBuilder.New<Models.Restaurant.Restaurant>();
 
             var old = builder;
 
@@ -71,7 +71,7 @@ namespace Dalel.Repository
                   Total = count
               }; */
         }
-        public IQueryable<Restaurant> SearchRestaurantsPaginated(
+        public IQueryable<Models.Restaurant.Restaurant> SearchRestaurantsPaginated(
            int pageNumber, int pageSize,
            string city = null,
            string searchText = "",
@@ -83,7 +83,7 @@ namespace Dalel.Repository
             return query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
         }
 
-        private IQueryable<Restaurant> SortRestaurants(IQueryable<Restaurant> query, string sortBy, bool descending)
+        private IQueryable<Models.Restaurant.Restaurant> SortRestaurants(IQueryable<Models.Restaurant.Restaurant> query, string sortBy, bool descending)
         {
             return sortBy.ToLower() switch
             {

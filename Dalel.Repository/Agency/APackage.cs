@@ -5,49 +5,47 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Models.Agency;
 using Models.Enums;
 
 namespace Dalel.Repository.Agency
 {
-    public class AgencyPackage : BaseRepository<AgencyPackage>
+    public class APackage : BaseRepository<AgencyPackage>
     {
         //Get Packages by Agency ID
-        private DelelContext delelContext;
-
-        public AgencyPackage (DelelContext _delelContext) : 
+    
+        public APackage (DelelContext _delelContext) : 
             base(_delelContext)
         {
-           
-            delelContext = _delelContext;
            
         }
         public IQueryable<AgencyPackage> getAgencyPackage(int pckg_id)
         {
-            return delelContext.AgencyPackages
-                .Where(agenc => agenc.AgencyId == pckg_id);
+            return base.GetList(agenc => agenc.AgencyId == pckg_id);
+               ;
 
         }
         //Search Packages by Name
-        public async Task<IQueryable<AgencyPackage>> searchAgencyPackage(string pckg_name)
+        public  IQueryable<AgencyPackage> searchAgencyPackage(string pckg_name)
         {
-            return await delelContext.AgencyPackages
-                .Select(agenc => agenc.Name.Contains(pckg_name)).ToList();
+            return base.GetList(agenc => agenc.Name.Contains(pckg_name));
+                
 
         }
         //Get Verified Packages
-        public async Task<IQueryable<AgencyPackage>> GetVerifiedPackages()
+        public  IQueryable<AgencyPackage> GetVerifiedStatusPackages(VerificationStatus status)
         {
-            return await delelContext.AgencyPackages
-                .Select(agenc => agenc.VerificationStatus ==
-                VerificationStatus.Confirmed).ToList();
+            return base.GetList(agenc => agenc.VerificationStatus ==
+                status);
+             ;
 
         }
         //Get Cheapest Packages
-        public Task<IQueryable<AgencyPackage>> GetCheapestPackages()
+        public IQueryable<AgencyPackage> GetCheapestPackages(int cheapPackg)
         {
-            return delelContext.AgencyPackages
+            return base.GetList()
                 .OrderBy(p => Convert.ToDecimal(p.Price))
-                .Take(5).ToList();
+                .Take(cheapPackg);
                 ;
 
         }
