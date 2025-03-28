@@ -11,8 +11,13 @@ using Models.Hotel;
 
 namespace Models
 {
+
     public class DelelContext : IdentityDbContext<AppUser>
     {
+        public DelelContext(DbContextOptions options):base(options:options) {
+            
+
+        }
         public  DbSet<Client> Client { get; set; }
         public  DbSet<Drivers> Drivers { get; set; }
         public  DbSet<User.HomeChef> HomeChefs { get; set; }
@@ -97,13 +102,7 @@ namespace Models
 
         //
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            // add string connection
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("");
-            base.OnConfiguring(optionsBuilder);
-        }
-
+      
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // User & Client Configuration

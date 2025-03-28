@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dalel.Repository.Agency
 {
-    internal class APayment
+    internal class PackageStepRepo
     {
     }
 }

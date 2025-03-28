@@ -10,9 +10,9 @@ using Models.Enums;
 
 namespace Dalel.Repository.Agency
 {
-    public class Pbooking:BaseRepository<PackageBooking>
+    public class PackagebookingRepo : BaseRepository<PackageBooking>
     {
-        public Pbooking(DelelContext _delelContext) :
+        public PackagebookingRepo(DelelContext _delelContext) :
             base(_delelContext)
         {
 
@@ -20,25 +20,22 @@ namespace Dalel.Repository.Agency
         //Get All Bookings for a Client
         public IQueryable<PackageBooking> GetBookingsByClient(string clientId)
         {
-            return GetList(
-                booking => booking.ClientId == clientId
-                ).Include(booking => booking.PackageSchadule)
-                .Include(booking => booking.Review)
-                .Include(booking => booking.Payment)
+            return GetList(booking => booking.ClientId == clientId)
                 .OrderByDescending(booking=>booking.Date);
 
         }
         public IQueryable<PackageBooking> GetCompletedBookings(string clientId)
-        { return GetList(booking => booking.ClientId == clientId && booking.PackageSchadule.Date <= DateTime.Now).
-                Include(booking => booking.Review)
-                   .OrderByDescending(booking => booking.PackageSchadule.Date);
+        { return GetList(booking => booking.ClientId == clientId && 
+        booking.PackageSchadule.Date <= DateTime.Now).
+               OrderByDescending(booking => booking.PackageSchadule.Date);
 
 
 
         }
         public bool CancelBooking(int bookingId)
         {
-            var booking = GetList(b => b.Id == bookingId).Include(b=>b.PackageSchadule)
+            var booking = GetList(b => b.Id == bookingId)
+             
                 .FirstOrDefault();
                 
             if (booking == null || booking.PackageSchadule.Date <= DateTime.UtcNow) {

@@ -8,9 +8,9 @@ using Models.Agency;
 
 namespace Dalel.Repository.Agency
 {
-    public class APromotion : BaseRepository<AgencyPromotion>
+    public class AgencyPromotionRepo : BaseRepository<AgencyPromotion>
     {
-        public APromotion(DelelContext _delelContext) :
+        public AgencyPromotionRepo(DelelContext _delelContext) :
             base(_delelContext)
         {
 

@@ -1,19 +1,27 @@
+using Dalel.Repository.Agency;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Models;
+using Models.User;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<DelelContext>(i =>
+i.UseLazyLoadingProxies()
+.UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<DelelContext>();
+//DI 
+builder.Services.AddScoped(typeof(PackagebookingRepo));
+builder.Services.AddScoped(typeof(AgencyPackageRepo));
+builder.Services.AddScoped(typeof(AgencyPaymentRepo));
+builder.Services.AddScoped(typeof(AgencyPromotionRepo));
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
