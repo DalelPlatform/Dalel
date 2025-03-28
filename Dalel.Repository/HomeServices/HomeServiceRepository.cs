@@ -18,7 +18,7 @@ namespace Dalel.Repository
 
         public IQueryable<ServiceProvider> GetWithDetails(string userId = null)
         {
-            var query = _context.ServiceProviders.AsQueryable();
+            var query = base.GetList();
 
             if (!string.IsNullOrEmpty(userId))
                 query = query.Where(x => x.UserId == userId);

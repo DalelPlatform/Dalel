@@ -26,7 +26,7 @@ namespace Dalel.Repository
 
         public void AcceptProposal(int proposalId)
         {
-            var proposal = _context.ServiceProviderPropsals.Find(proposalId);
+            var proposal = base.GetList(i => i.Id == proposalId).FirstOrDefault();
             if (proposal != null)
             {
                 proposal.Status = ProposalStatus.Accepted;
