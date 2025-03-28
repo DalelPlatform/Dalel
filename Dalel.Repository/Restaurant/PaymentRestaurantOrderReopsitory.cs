@@ -12,21 +12,22 @@ namespace Dalel.Repository
 {
     public class PaymentRestaurantOrderReopsitory : BaseRepository<PaymentRestaurantOrder>
     {
-        private readonly DelelContext _context;
         public PaymentRestaurantOrderReopsitory(DelelContext dbcontext) 
             : base(dbcontext)
         {
-            _context = dbcontext;
+
         }
 
+
+      //  public IQueryable<PaymentRestaurantOrder> 
         public IQueryable<PaymentRestaurantOrder> GetPaymentRestaurantOrderByID(int id)
         {
-            return _context.PaymentRestaurantOrders.Where(p => p.Id == id);
+            return base.GetList(p => p.Id == id);
         }
 
         public IQueryable<PaymentRestaurantOrder> GetPaymentByStatus(PaymentStatus status)
         {
-            return _context.PaymentRestaurantOrders.Where(p => p.PaymentStatus == status);
+            return base.GetList(p => p.PaymentStatus == status);
         }
 
     }

@@ -11,10 +11,10 @@ namespace Dalel.Repository
 {
     public class ServiceProviderPropsalRepository : BaseRepository<ServiceProviderPropsal>
     {
-        private readonly DelelContext _context;
+
         public ServiceProviderPropsalRepository(DelelContext context) : base(context)
         {
-            _context = context;
+
         }
 
         public IQueryable<ServiceProviderPropsal> GetProviderProposals(string providerId)
