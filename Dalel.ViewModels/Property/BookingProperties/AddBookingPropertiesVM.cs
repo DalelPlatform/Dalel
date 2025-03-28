@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.Repository
+namespace Dalel.ViewModels
 {
-    public class VehicleReopsitory
+    public class AddBookingPropertiesVM
     {
     }
 }

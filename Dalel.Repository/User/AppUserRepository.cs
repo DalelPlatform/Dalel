@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.Repository.User
+namespace Dalel.Repository
 {
     public class AppUserRepository : BaseRepository<AppUser>
     {

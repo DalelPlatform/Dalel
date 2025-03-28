@@ -41,7 +41,7 @@ namespace Dalel.Repository.Agency
             if (booking == null || booking.PackageSchadule.Date <= DateTime.UtcNow) {
                 return false;
             }
-            booking.BookingStatus = BookingStatus.Cancel;
+            booking.BookingStatus = BookingStatus.Rejected;
             Update(booking);
             return true;
         }
