@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Dalel.Repository
 {
-    public class HomeChefReopsitory : BaseRepository<HomeChef>
+    public class HomeChefReopsitory : BaseRepository<Models.User.HomeChef>
     {
         public HomeChefReopsitory(DelelContext context) : base(context) { }
 

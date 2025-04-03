@@ -32,11 +32,11 @@ namespace Models.Property
             //relations
             builder.HasOne(bp => bp.Properties)
                 .WithMany(p => p.BookingProperties)
-                .HasForeignKey(bp => bp.PropertyId);
+                .HasForeignKey(bp => bp.PropertyId).OnDelete(DeleteBehavior.NoAction); ;
 
             builder.HasOne(bp => bp.Client)
                 .WithMany(c => c.BookingProperties)
-                .HasForeignKey(bp => bp.ClientId);
+                .HasForeignKey(bp => bp.ClientId).OnDelete(DeleteBehavior.NoAction); ;
 
 
         }

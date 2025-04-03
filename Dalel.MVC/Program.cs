@@ -36,6 +36,10 @@ builder.Services.AddScoped(typeof(PaymentPropertiesRepository));
 builder.Services.AddScoped(typeof(ReviewPropertiesRepository));
 
 
+//HomeServices
+builder.Services.AddScoped(typeof(CategoryServicesRepository));
+
+
 var app = builder.Build();
 
 
