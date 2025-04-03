@@ -12,15 +12,11 @@ i.UseLazyLoadingProxies()
 .UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<DelelContext>();
-#region DI 
+//DI 
 builder.Services.AddScoped(typeof(PackagebookingRepo));
 builder.Services.AddScoped(typeof(AgencyPackageRepo));
 builder.Services.AddScoped(typeof(AgencyPaymentRepo));
 builder.Services.AddScoped(typeof(AgencyPromotionRepo));
-builder.Services.AddScoped(typeof(AgencyCustomerInquiryRepo));
-
-
-#endregion
 
 
 var app = builder.Build();
