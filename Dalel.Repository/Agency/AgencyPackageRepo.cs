@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
 using Microsoft.EntityFrameworkCore;
 using Models;
@@ -20,9 +21,10 @@ namespace Dalel.Repository.Agency
         {
            
         }
-        public IQueryable<AgencyPackage> GetAgencyPackage(int pckg_id)
+        public IQueryable<AgencyPackageDetails> GetAgencyPackage(int pckg_id)
         {
-            return base.GetList(agenc => agenc.AgencyId == pckg_id);
+            return base.GetList(agenc => agenc.AgencyId == pckg_id)
+                .Select(i=>i.ToDetailsModels());
                
 
         }

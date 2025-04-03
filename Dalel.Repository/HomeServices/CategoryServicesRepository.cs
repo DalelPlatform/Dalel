@@ -11,34 +11,32 @@ namespace Dalel.Repository
 {
     public class CategoryServicesRepository : BaseRepository<CategoryServices>
     {
-        private readonly DelelContext context;
+       
         public CategoryServicesRepository(DelelContext _context) : base(_context) 
         {
-            context = _context;
+            
         }
 
 
 
-        public async Task<CategoryServices> GetCategoryWithServiceProvidersAsync(int categoryId)
+        public CategoryServices GetCategoryWithServiceProvidersAsync(int categoryId)
         {
-            return await context.CategoryServices
-                .Include(c => c.ServiceProviders)
-                .FirstOrDefaultAsync(c => c.Id == categoryId);
+            return  base.GetList(c => c.Id == categoryId).FirstOrDefault();
         }
 
         public async Task<CategoryServices> GetCategoryWithQueriesAsync(int categoryId)
         {
             return await context.CategoryServices
-                .Include(c => c.Quaries)
+                
                 .FirstOrDefaultAsync(c => c.Id == categoryId);
         }
 
-        public async Task<IEnumerable<CategoryServices>> GetPopularCategoriesAsync(int count)
+        public IQueryable<CategoryServices> GetPopularCategoriesAsync(int count)
         {
-            return await context.CategoryServices
+            return context.CategoryServices
                 .OrderByDescending(c => c.ServiceProviders.Count)
-                .Take(count)
-                .ToListAsync();
+                .Take(count);
+           
         }
 
         public async Task<bool> CategoryExistsAsync(string name)
