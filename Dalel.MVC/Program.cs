@@ -1,3 +1,4 @@
+using Dalel.Repository;
 using Dalel.Repository.Agency;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,27 @@ i.UseLazyLoadingProxies()
 .UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<DelelContext>();
-//DI 
+
+//Agency Repos
 builder.Services.AddScoped(typeof(PackagebookingRepo));
 builder.Services.AddScoped(typeof(AgencyPackageRepo));
 builder.Services.AddScoped(typeof(AgencyPaymentRepo));
 builder.Services.AddScoped(typeof(AgencyPromotionRepo));
+
+//Restaurant Repos
+builder.Services.AddScoped(typeof(RestaurantRepository));
+builder.Services.AddScoped(typeof(PaymentRestaurantOrderReopsitory));
+builder.Services.AddScoped(typeof(RestaurantMenuItemRepository));
+builder.Services.AddScoped(typeof(RestaurantOrderRepository));
+builder.Services.AddScoped(typeof(RestaurantOrderItemRepository));
+builder.Services.AddScoped(typeof(RestaurantReservationRepository));
+builder.Services.AddScoped(typeof(ReviewRestaurantOrderRepository));
+
+//Property Repos
+builder.Services.AddScoped(typeof(PropertiesRepository));
+builder.Services.AddScoped(typeof(BookingPropertiesRepository));
+builder.Services.AddScoped(typeof(PaymentPropertiesRepository));
+builder.Services.AddScoped(typeof(ReviewPropertiesRepository));
 
 
 var app = builder.Build();
