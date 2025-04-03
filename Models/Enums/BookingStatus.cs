@@ -4,6 +4,7 @@
     {
         Panding,
         Confirmed,
-        Rejected
+        Rejected,
+        Cancel ////recend added
     }
 }
