@@ -1,50 +1,106 @@
-﻿using Models.HomeService;
+﻿using Microsoft.EntityFrameworkCore;
 using Models;
+using Models.HomeService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Dalel.Repository
 {
     public class CategoryServicesRepository : BaseRepository<CategoryServices>
     {
-        private readonly DelelContext context;
-        public CategoryServicesRepository(DelelContext _context) : base(_context) 
+        public CategoryServicesRepository(DelelContext context) : base(context)
         {
-            context = _context;
         }
-
-
 
         public async Task<CategoryServices> GetCategoryWithServiceProvidersAsync(int categoryId)
         {
-            return await context.CategoryServices
-                .Include(c => c.ServiceProviders)
-                .FirstOrDefaultAsync(c => c.Id == categoryId);
+            try
+            {
+                var category = await base.GetList()
+                    .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+                if (category == null)
+                    throw new KeyNotFoundException($"Category with ID {categoryId} not found");
+
+                var providers = category.ServiceProviders?.ToList();
+                return category;
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException(
+                    $"Error retrieving category with service providers (ID: {categoryId})",
+                    ex);
+            }
         }
 
         public async Task<CategoryServices> GetCategoryWithQueriesAsync(int categoryId)
         {
-            return await context.CategoryServices
-                .Include(c => c.Quaries)
-                .FirstOrDefaultAsync(c => c.Id == categoryId);
+            try
+            {
+                var category = await base.GetList()
+                    .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+                if (category == null)
+                    throw new KeyNotFoundException($"Category with ID {categoryId} not found");
+
+                // Trigger lazy loading
+                var queries = category.Quaries?.ToList();
+                return category;
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException(
+                    $"Error retrieving category with queries (ID: {categoryId})",
+                    ex);
+            }
         }
 
         public async Task<IEnumerable<CategoryServices>> GetPopularCategoriesAsync(int count)
         {
-            return await context.CategoryServices
-                .OrderByDescending(c => c.ServiceProviders.Count)
-                .Take(count)
-                .ToListAsync();
+            try
+            {
+                if (count <= 0)
+                    throw new ArgumentException("Count must be greater than zero", nameof(count));
+
+                var categories = await base.GetList()
+                    .OrderByDescending(c => c.ServiceProviders.Count)
+                    .Take(count)
+                    .ToListAsync();
+
+                foreach (var category in categories)
+                {
+                    _ = category.ServiceProviders?.ToList();
+                    _ = category.Quaries?.ToList();
+                }
+
+                return categories;
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException(
+                    $"Error retrieving {count} popular categories",
+                    ex);
+            }
         }
 
         public async Task<bool> CategoryExistsAsync(string name)
         {
-            return await context.CategoryServices
-                .AnyAsync(c => c.Name == name);
+            try
+            {
+                if (string.IsNullOrWhiteSpace(name))
+                    throw new ArgumentException("Category name cannot be empty", nameof(name));
+
+                return await base.GetList()
+                    .AnyAsync(c => c.Name == name);
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException(
+                    $"Error checking if category exists (Name: {name})",
+                    ex);
+            }
         }
 
         public async Task<PagedResult<CategoryServices>> GetPagedCategoriesAsync(
@@ -53,101 +109,92 @@ namespace Dalel.Repository
             bool includeServiceProviders = false,
             bool includeQueries = false)
         {
-            var query = context.CategoryServices.AsQueryable();
-
-            if (!string.IsNullOrEmpty(searchTerm))
+            try
             {
-                query = query.Where(c => c.Name.Contains(searchTerm) ||
-                                 c.Description.Contains(searchTerm));
+                if (pageNumber < 1)
+                    throw new ArgumentException("Page number must be greater than zero", nameof(pageNumber));
+
+                if (pageSize < 1)
+                    throw new ArgumentException("Page size must be greater than zero", nameof(pageSize));
+
+                var query = base.GetList();
+
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    query = query.Where(c => c.Name.Contains(searchTerm) ||
+                                         c.Description.Contains(searchTerm));
+                }
+
+                var result = new PagedResult<CategoryServices>
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = await query.CountAsync()
+                };
+
+                var categories = await query
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                // Lazy load if requested
+                if (includeServiceProviders || includeQueries)
+                {
+                    foreach (var category in categories)
+                    {
+                        if (includeServiceProviders)
+                            _ = category.ServiceProviders?.ToList();
+                        if (includeQueries)
+                            _ = category.Quaries?.ToList();
+                    }
+                }
+
+                result.Items = categories;
+                return result;
             }
-
-            if (includeServiceProviders)
+            catch (Exception ex)
             {
-                query = query.Include(c => c.ServiceProviders);
+                throw new RepositoryException(
+                    $"Error retrieving paged categories (Page: {pageNumber}, Size: {pageSize})",
+                    ex);
             }
-
-            if (includeQueries)
-            {
-                query = query.Include(c => c.Quaries);
-            }
-
-            var result = new PagedResult<CategoryServices>
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalCount = await query.CountAsync()
-            };
-
-            result.Items = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            return result;
         }
 
-        public async Task<PagedResult<CategoryServices>> FilterCategoriesAsync(
-            string name = null,
-            bool? hasServiceProviders = null,
-            bool? hasQueries = null,
-            int pageNumber = 1,
-            int pageSize = 10,
-            string sortBy = "Name",
-            bool ascending = true)
+        public async Task<IEnumerable<CategoryServices>> GetPopularCategories(int count)
         {
-            var query = context.CategoryServices.AsQueryable();
-
-            if (!string.IsNullOrEmpty(name))
+            try
             {
-                query = query.Where(c => c.Name.Contains(name));
+                if (count <= 0)
+                    throw new ArgumentException("Count must be greater than zero", nameof(count));
+
+                var categories = await base.GetList()
+                    .OrderByDescending(c => c.ServiceProviders.Count)
+                    .Take(count)
+                    .ToListAsync();
+
+                // Trigger lazy loading
+                foreach (var category in categories)
+                {
+                    _ = category.ServiceProviders?.ToList();
+                    _ = category.Quaries?.ToList();
+                }
+
+                return categories;
             }
-
-            if (hasServiceProviders.HasValue)
+            catch (Exception ex)
             {
-                query = hasServiceProviders.Value
-                    ? query.Where(c => c.ServiceProviders.Any())
-                    : query.Where(c => !c.ServiceProviders.Any());
+                throw new RepositoryException(
+                    $"Error retrieving {count} popular categories",
+                    ex);
             }
-
-            if (hasQueries.HasValue)
-            {
-                query = hasQueries.Value
-                    ? query.Where(c => c.Quaries.Any())
-                    : query.Where(c => !c.Quaries.Any());
-            }
-
-            // Sorting
-            query = sortBy switch
-            {
-                "Name" => ascending ? query.OrderBy(c => c.Name) : query.OrderByDescending(c => c.Name),
-                "Id" => ascending ? query.OrderBy(c => c.Id) : query.OrderByDescending(c => c.Id),
-                _ => query.OrderBy(c => c.Name)
-            };
-
-            var result = new PagedResult<CategoryServices>
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalCount = await query.CountAsync()
-            };
-
-            result.Items = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            return result;
         }
+    }
 
-
-
-
-        public IQueryable<CategoryServices> GetPopularCategories(int count)
+    public class RepositoryException : Exception
+    {
+        public RepositoryException(string message, Exception innerException)
+            : base(message, innerException)
         {
-            return GetList()
-                .OrderByDescending(c => c.ServiceProviders.Count)
-                .Take(count);
         }
-
     }
 }
