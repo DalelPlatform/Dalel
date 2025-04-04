@@ -78,6 +78,9 @@ namespace Models
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<RoomTypeImage> RoomTypeImages { get; set; }
+        public DbSet<PaymentHotelRoom> PaymentHotelRoom { get; set; }
+        public DbSet<BookingGuestInRoom> BookingGuestInRoom { get; set; }
+
         public DbSet<Service> Services { get; set; }
 
         //Property
