@@ -12,8 +12,8 @@ using Models;
 namespace Models.Migrations
 {
     [DbContext(typeof(DelelContext))]
-    [Migration("20250322040542_init")]
-    partial class init
+    [Migration("20250403104528_init2")]
+    partial class init2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2558,7 +2558,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.TravelAgencyOwners", "AgencyOwners")
                         .WithMany("Inquiries")
                         .HasForeignKey("AgencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Models.User.Client", "Client")
@@ -3097,13 +3097,13 @@ namespace Models.Migrations
                     b.HasOne("Models.User.Client", "Client")
                         .WithMany("BookingProperties")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Models.Property.Properties", "Properties")
                         .WithMany("BookingProperties")
                         .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Client");

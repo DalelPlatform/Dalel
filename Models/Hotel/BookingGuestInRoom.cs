@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Models.Hotel;
 
 namespace Models.Hotel
 {
@@ -8,11 +9,13 @@ namespace Models.Hotel
         public int Id { get; set; }
         public string FullName { get; set; }
         public string NationalID { get; set; }
+        public string NationalId { get; set; }
         public string NationalIDImage { get; set; }
 
         // Navigation property
         public int BookingHotelRoomId { get; set; }
         public virtual BookingHotelRoom BookingHotelRoom { get; set; }
+        public int BookingId { get; set; }
     }
 
     public class BookingGuestInRoomConfiguration : IEntityTypeConfiguration<BookingGuestInRoom>

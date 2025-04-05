@@ -10,8 +10,8 @@ namespace Models.HomeService
         public string Name { get; set; }
         public string Image { get; set; }
         public string Description { get; set; }
-        public virtual ICollection<ServiceProvider> ServiceProviders { get; set; }
-        public virtual ICollection<ServiceQuaries> Quaries { get; set; }
+        public virtual ICollection<ServiceProvider>? ServiceProviders { get; set; }
+        public virtual ICollection<ServiceQuaries>? Quaries { get; set; }
     }
 
     public class CategoryServicesConfiguration : IEntityTypeConfiguration<CategoryServices>

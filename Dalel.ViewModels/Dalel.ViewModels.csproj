@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Property\PaymentProperties\**" />
+    <EmbeddedResource Remove="Property\PaymentProperties\**" />
+    <None Remove="Property\PaymentProperties\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
   </ItemGroup>
 

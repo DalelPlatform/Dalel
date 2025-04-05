@@ -16,6 +16,9 @@ namespace Models.Hotel
         public DateTime TransactionDateTime { get; set; }
         public int BookingHotelRoomId { get; set; }
         public virtual BookingHotelRoom BookingHotelRoom { get; set; }
+        public string Status { get; set; }
+        public int ClientId { get; set; }
+        public int HotelId { get; set; }
     }
 
     public class PaymentHotelRoomConfiguration : IEntityTypeConfiguration<PaymentHotelRoom>

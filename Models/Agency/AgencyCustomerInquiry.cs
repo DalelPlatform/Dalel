@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Models.User;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Agency
 {
@@ -20,7 +21,7 @@ namespace Models.Agency
     {
         public void Configure(EntityTypeBuilder<AgencyCustomerInquiry> builder)
         {
-            builder.HasOne(a => a.AgencyOwners).WithMany(q => q.Inquiries).HasForeignKey(a => a.AgencyId);
+            builder.HasOne(a => a.AgencyOwners).WithMany(q => q.Inquiries).HasForeignKey(a => a.AgencyId).OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(a => a.Client).WithMany(q => q.Inquiries).HasForeignKey(a => a.ClientId);
             builder.Property(a => a.Date).HasDefaultValueSql("GetDate()");
         }
