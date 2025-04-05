@@ -8,9 +8,9 @@ namespace Dalel.MVC.Controllers
     [Area("Admin")]
     public class CategoryServicesController : Controller
     {
-        private CategoryServicesRepository repository;
+        private CategoryServicesRepo repository;
 
-        public CategoryServicesController(CategoryServicesRepository repository)
+        public CategoryServicesController(CategoryServicesRepo repository)
         {
             this.repository = repository;
         }
