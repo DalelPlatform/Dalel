@@ -1,3 +1,5 @@
+using Dalel.Repository;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -17,7 +19,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
-
+// Add this to your Program.cs
+builder.Services.AddScoped<ServiceProviderProjectRepository>();
+builder.Services.AddScoped<ServiceProviderPropsalRepository>();
+builder.Services.AddScoped<ServiceProviderScheduleRepository>();
 app.MapControllers();
 
 app.Run();
