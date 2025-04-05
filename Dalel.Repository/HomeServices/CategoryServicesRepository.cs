@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.HomeService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace Dalel.Repository
 {
@@ -58,7 +54,7 @@ namespace Dalel.Repository
             }
         }
 
-        public async Task<IEnumerable<CategoryServices>> GetPopularCategoriesAsync(int count)
+        public async Task<IQueryable<CategoryServices>> GetPopularCategoriesAsync(int count)
         {
             try
             {
@@ -76,7 +72,7 @@ namespace Dalel.Repository
                     _ = category.Quaries?.ToList();
                 }
 
-                return categories;
+                return (IQueryable<CategoryServices>)categories;
             }
             catch (Exception ex)
             {
@@ -128,7 +124,7 @@ namespace Dalel.Repository
 
                 var result = new PagedResult<CategoryServices>
                 {
-                    PageNumber = pageNumber,
+                    pageNumber = pageNumber,
                     PageSize = pageSize,
                     TotalCount = await query.CountAsync()
                 };
@@ -234,8 +230,8 @@ namespace Dalel.Repository
         //        .AnyAsync(c => c.Name == name);
         //}
 
-        
-        
+
+
         //public async Task<PagedResult<CategoryServices>> GetPagedCategoriesAsync(
         //    int pageNumber, int pageSize,
         //    string searchTerm = null,
@@ -340,7 +336,7 @@ namespace Dalel.Repository
         #endregion
 
 
-     
+
 
     }
 

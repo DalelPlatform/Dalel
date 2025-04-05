@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dalel.Repository\Dalel.Repository.csproj" />
+    <ProjectReference Include="..\Dalel.ViewModels\Dalel.ViewModels.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 
