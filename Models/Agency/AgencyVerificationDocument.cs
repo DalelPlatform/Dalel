@@ -25,7 +25,7 @@ public class AgencyVerificationDocumentConfigration : IEntityTypeConfiguration<A
         modelBuilder.HasKey(verify => verify.Id);
         modelBuilder.HasOne(verify => verify.Agency)
         .WithMany(agency => agency.AgencyVerificationDocuments)
-        .HasForeignKey(verify => verify.AgencyId);
+        .HasForeignKey(verify => verify.AgencyId).OnDelete(DeleteBehavior.NoAction);
 
     }
 }

@@ -46,12 +46,12 @@ namespace Models.User
             builder.HasOne(sp => sp.CategoryServices)
                 .WithMany(cs => cs.ServiceProviders)
                 .HasForeignKey(sp => sp.CategoryServicesId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(sp => sp.AppUser)
                 .WithOne(cs => cs.ServiceProvider)
                 .HasForeignKey<ServiceProvider>(sp => sp.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
 
         }
