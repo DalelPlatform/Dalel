@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dalel.API", "Dalel.API\Dale
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dalel.Services", "Services\Dalel.Services.csproj", "{F45570A7-2D72-4F05-8274-CF2E80F63394}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{BECBAB31-9B1B-4906-89E0-1849BF3A17CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{F45570A7-2D72-4F05-8274-CF2E80F63394}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F45570A7-2D72-4F05-8274-CF2E80F63394}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F45570A7-2D72-4F05-8274-CF2E80F63394}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BECBAB31-9B1B-4906-89E0-1849BF3A17CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BECBAB31-9B1B-4906-89E0-1849BF3A17CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BECBAB31-9B1B-4906-89E0-1849BF3A17CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BECBAB31-9B1B-4906-89E0-1849BF3A17CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

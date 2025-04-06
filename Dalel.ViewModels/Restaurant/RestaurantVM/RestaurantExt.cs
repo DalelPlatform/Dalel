@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using Models.Restaurant;
 using Models.Enums;
 
-namespace Dalel.ViewModels.Restaurant.RestaurantVM
+namespace Dalel.ViewModels
 {
     public static class RestaurantExt
     {
 
-        public static Models.Restaurant.Restaurant AddToList(this AddRestaurantVM restaurantVM)
+        public static Models.Restaurant.Restaurant ToModel(this AddRestaurantVM restaurantVM)
         {
             return new Models.Restaurant.Restaurant
             {
@@ -32,7 +32,7 @@ namespace Dalel.ViewModels.Restaurant.RestaurantVM
         } 
 
 
-        public static RestaurantDetailsVM PrintDetails (this Models.Restaurant.Restaurant restaurant)
+        public static RestaurantDetailsVM ToDetailsViewModel(this Models.Restaurant.Restaurant restaurant)
         {
             return new RestaurantDetailsVM
             {

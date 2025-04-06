@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Models.Enums;
 
-namespace Dalel.ViewModels.Restaurant.RestaurantVM
+namespace Dalel.ViewModels
 {
     public class RestaurantDetailsVM
     {

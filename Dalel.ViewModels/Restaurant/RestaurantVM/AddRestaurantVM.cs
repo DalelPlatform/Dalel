@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Models.Enums;
 
-namespace Dalel.ViewModels.Restaurant.RestaurantVM
+namespace Dalel.ViewModels
 {
     public class AddRestaurantVM
     {

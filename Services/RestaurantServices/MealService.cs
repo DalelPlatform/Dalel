@@ -1,37 +1,30 @@
-﻿using System;
+﻿using Dalel.Repository;
+using Models.Restaurant;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dalel.Repository;
-using Models.HomeService;
-using Models.Restaurant;
 using Utilities;
 
 namespace Dalel.Services
 {
-    public class RestaurantService 
-
+    public class MealService
     {
-        public readonly RestaurantRepository _RestaurantRepo; 
-
-
-        public RestaurantService(RestaurantRepository restaurantRepo)
+        private readonly RestaurantMenuItemRepository menuItemRepository;
+        public MealService(RestaurantMenuItemRepository menuItemRepository)
         {
-            _RestaurantRepo = restaurantRepo;
+            this.menuItemRepository = menuItemRepository;
         }
-
-
-
-        public async Task<ServiceResult> CreateRestaurant(Restaurant restaurant)
+        public async Task<ServiceResult> CreateMeal(RestaurantMenuItem meal)
         {
             try
             {
-                 _RestaurantRepo.Add(restaurant); // again, assuming async manager method
+                menuItemRepository.Add(meal);
                 return new ServiceResult
                 {
                     Success = true,
-                    Message = "Restaurant added successfully."
+                    Message = "Meal added successfully."
                 };
             }
             catch (Exception ex)
@@ -43,16 +36,15 @@ namespace Dalel.Services
                 };
             }
         }
-
-        public async Task<ServiceResult> EditRestaurant(Restaurant restaurant)
+        public async Task<ServiceResult> EditMeal(RestaurantMenuItem meal)
         {
             try
             {
-                _RestaurantRepo.Update(restaurant); // again, assuming async manager method
+                menuItemRepository.Update(meal);
                 return new ServiceResult
                 {
                     Success = true,
-                    Message = "Restaurant updated successfully."
+                    Message = "Meal updated successfully."
                 };
             }
             catch (Exception ex)
@@ -64,18 +56,18 @@ namespace Dalel.Services
                 };
             }
         }
-        public async Task<ServiceResult> DeleteMeal(int restaurantId)
+        public async Task<ServiceResult> DeleteMeal(int mealId)
         {
             try
             {
-                var restaurant = _RestaurantRepo.GetList(r => r.Id == restaurantId).FirstOrDefault();
-                if (restaurant != null)
+                var meal = menuItemRepository.GetList(m => m.Id == mealId).FirstOrDefault();
+                if (meal != null)
                 {
-                    _RestaurantRepo.Delete(restaurant);
+                    menuItemRepository.Delete(meal);
                     return new ServiceResult
                     {
                         Success = true,
-                        Message = "Restaurant deleted successfully."
+                        Message = "Meal deleted successfully."
                     };
                 }
                 else
@@ -83,7 +75,7 @@ namespace Dalel.Services
                     return new ServiceResult
                     {
                         Success = false,
-                        Message = "Restaurant not found."
+                        Message = "Meal not found."
                     };
                 }
             }
@@ -96,8 +88,5 @@ namespace Dalel.Services
                 };
             }
         }
-
-
-
     }
 }
