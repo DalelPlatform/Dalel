@@ -19,13 +19,13 @@ public class ServiceProviderProjectsController : ControllerBase
     [HttpGet("provider/{providerId}")]
     public async Task<ActionResult> GetByProvider(string providerId)
     {
-        var res = await _repository.GetProjectsByProviderAsync(providerId);
+        var res = await _service.GetProjectsByProviderAsync(providerId);
         return new JsonResult(res);
     }
 
     // GET: api/ServiceProviderProjects
     [HttpGet]
-    public ActionResult<IEnumerable<ServiceProviderProject>> Get(
+    public ActionResult<ServiceProviderProject> Get(
         [FromQuery] int pageSize = 4,
         [FromQuery] int pageNumber = 1)
     {

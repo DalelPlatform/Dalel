@@ -33,12 +33,12 @@ namespace Models.Hotel
             builder.HasOne(bhr => bhr.Client)
                    .WithMany(u => u.BookingHotelRooms)
                    .HasForeignKey(bhr => bhr.ClientId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(bhr => bhr.Room)
                    .WithMany(r => r.BookingHotelRooms)
                    .HasForeignKey(bhr => bhr.RoomId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Models.HomeService
             builder.HasOne(pp => pp.ServiceProvider)
                 .WithMany(sp => sp.Projects)
                 .HasForeignKey(pp => pp.ServiceProviderId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
