@@ -76,6 +76,14 @@ app.UseAuthentication();
 app.UseAuthorization();
 // Add this to your Program.cs
 
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=index}");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{area=admin}/{controller=Home}/{action=Index}");
+
 app.MapControllers();
 
 app.Run();
