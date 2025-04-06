@@ -1,26 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Dalel.Repository;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
 using Models.HomeService;
+using Dalel.Repository;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ServiceProviderProposalsController : ControllerBase
 {
-    private readonly ServiceProviderPropsalRepository _repository;
+    private readonly ServiceProviderProposalService _service;
 
-    public ServiceProviderProposalsController(ServiceProviderPropsalRepository repository)
+    public ServiceProviderProposalsController(ServiceProviderProposalService service)
     {
-        _repository = repository;
+        _service = service;
     }
 
     // GET: api/ServiceProviderProposals/request/{requestId}
     [HttpGet("request/{requestId}")]
     public async Task<ActionResult<IEnumerable<ServiceProviderPropsal>>> GetByRequest(int requestId)
     {
-        var proposals = await _repository.GetProposalsByRequestAsync(requestId);
+        var proposals = await _service.GetProposalsByRequestAsync(requestId);
         return Ok(proposals);
     }
 
@@ -28,7 +27,7 @@ public class ServiceProviderProposalsController : ControllerBase
     [HttpGet("provider/{providerId}")]
     public async Task<ActionResult<IEnumerable<ServiceProviderPropsal>>> GetByProvider(string providerId)
     {
-        var proposals = await _repository.GetProposalsByProviderAsync(providerId);
+        var proposals = await _service.GetProposalsByProviderAsync(providerId);
         return Ok(proposals);
     }
 
@@ -38,15 +37,15 @@ public class ServiceProviderProposalsController : ControllerBase
         [FromQuery] int pageSize = 4,
         [FromQuery] int pageNumber = 1)
     {
-        var proposals = _repository.Get(null, pageSize, pageNumber);
-        return Ok(proposals.ToList());
+        var proposals = _service.GetProposals(pageSize, pageNumber);
+        return Ok(proposals);
     }
 
     // GET: api/ServiceProviderProposals/{id}
     [HttpGet("{id}")]
     public ActionResult<ServiceProviderPropsal> GetById(int id)
     {
-        var proposal = _repository.GetList(p => p.Id == id).FirstOrDefault();
+        var proposal = _service.GetProposalById(id);
         if (proposal == null) return NotFound();
         return proposal;
     }
@@ -55,7 +54,7 @@ public class ServiceProviderProposalsController : ControllerBase
     [HttpGet("{id}/details")]
     public async Task<ActionResult<ServiceProviderPropsal>> GetWithDetails(int id)
     {
-        var proposal = await _repository.GetProposalWithDetailsAsync(id);
+        var proposal = await _service.GetProposalWithDetailsAsync(id);
         if (proposal == null) return NotFound();
         return proposal;
     }
@@ -66,22 +65,22 @@ public class ServiceProviderProposalsController : ControllerBase
         [FromQuery] int requestId,
         [FromQuery] string providerId)
     {
-        return await _repository.HasProviderProposedAsync(requestId, providerId);
+        return await _service.HasProviderProposedAsync(requestId, providerId);
     }
 
     // POST: api/ServiceProviderProposals
     [HttpPost]
     public IActionResult Create(ServiceProviderPropsal proposal)
     {
-        _repository.Add(proposal);
-        return CreatedAtAction(nameof(GetById), new { id = proposal.Id }, proposal);
+        var createdProposal = _service.CreateProposal(proposal);
+        return CreatedAtAction(nameof(GetById), new { id = createdProposal.Id }, createdProposal);
     }
 
     // PUT: api/ServiceProviderProposals/{id}/accept
     [HttpPut("{id}/accept")]
     public async Task<IActionResult> AcceptProposal(int id)
     {
-        await _repository.AcceptProposalAsync(id);
+        await _service.AcceptProposalAsync(id);
         return NoContent();
     }
 
@@ -89,7 +88,7 @@ public class ServiceProviderProposalsController : ControllerBase
     [HttpPut("{id}/reject")]
     public async Task<IActionResult> RejectProposal(int id)
     {
-        await _repository.RejectProposalAsync(id);
+        await _service.RejectProposalAsync(id);
         return NoContent();
     }
 
@@ -98,7 +97,7 @@ public class ServiceProviderProposalsController : ControllerBase
     public IActionResult Update(int id, ServiceProviderPropsal proposal)
     {
         if (id != proposal.Id) return BadRequest();
-        _repository.Update(proposal);
+        _service.UpdateProposal(proposal);
         return NoContent();
     }
 
@@ -106,10 +105,10 @@ public class ServiceProviderProposalsController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var proposal = _repository.GetList(p => p.Id == id).FirstOrDefault();
+        var proposal = _service.GetProposalById(id);
         if (proposal == null) return NotFound();
 
-        _repository.Delete(proposal);
+        _service.DeleteProposal(id);
         return NoContent();
     }
 }

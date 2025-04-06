@@ -1,19 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Dalel.Repository;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
 using Models.HomeService;
+using Dalel.Services.ServiceProvicerService;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ServiceProviderProjectsController : ControllerBase
 {
-    private readonly ServiceProviderProjectRepository _repository;
+    private readonly ServiceProviderProjectsService _service;
 
-    public ServiceProviderProjectsController(ServiceProviderProjectRepository repository)
+    public ServiceProviderProjectsController(ServiceProviderProjectsService service)
     {
-        _repository = repository;
+        _service = service;
     }
 
     // GET: api/ServiceProviderProjects/provider/{providerId}
@@ -30,15 +29,15 @@ public class ServiceProviderProjectsController : ControllerBase
         [FromQuery] int pageSize = 4,
         [FromQuery] int pageNumber = 1)
     {
-        var projects = _repository.Get(null, pageSize, pageNumber);
-        return Ok(projects.ToList());
+        var projects = _service.GetProjects(pageSize, pageNumber);
+        return Ok(projects);
     }
 
     // GET: api/ServiceProviderProjects/{id}
     [HttpGet("{id}")]
     public ActionResult<ServiceProviderProject> GetById(int id)
     {
-        var project = _repository.GetList(p => p.Id == id).FirstOrDefault();
+        var project = _service.GetProjectById(id);
         if (project == null) return NotFound();
         return project;
     }
@@ -49,20 +48,15 @@ public class ServiceProviderProjectsController : ControllerBase
         [FromBody] ServiceProviderProject project,
         [FromQuery] string imagePath = null)
     {
-        if (!string.IsNullOrEmpty(imagePath))
-        {
-            project.Image = imagePath;
-        }
-
-        _repository.Add(project);
-        return CreatedAtAction(nameof(GetById), new { id = project.Id }, project);
+        var createdProject = _service.CreateProject(project, imagePath);
+        return CreatedAtAction(nameof(GetById), new { id = createdProject.Id }, createdProject);
     }
 
     // PUT: api/ServiceProviderProjects/{id}/image
     [HttpPut("{id}/image")]
     public async Task<IActionResult> UpdateImage(int id, [FromQuery] string newImagePath)
     {
-        await _repository.UpdateProjectImageAsync(id, newImagePath);
+        await _service.UpdateProjectImageAsync(id, newImagePath);
         return NoContent();
     }
 
@@ -71,7 +65,7 @@ public class ServiceProviderProjectsController : ControllerBase
     public IActionResult Update(int id, ServiceProviderProject project)
     {
         if (id != project.Id) return BadRequest();
-        _repository.Update(project);
+        _service.UpdateProject(project);
         return NoContent();
     }
 
@@ -79,10 +73,10 @@ public class ServiceProviderProjectsController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var project = _repository.GetList(p => p.Id == id).FirstOrDefault();
+        var project = _service.GetProjectById(id);
         if (project == null) return NotFound();
 
-        _repository.Delete(project);
+        _service.DeleteProject(id);
         return NoContent();
     }
 }
