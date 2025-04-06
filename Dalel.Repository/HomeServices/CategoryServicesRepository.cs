@@ -6,12 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace Dalel.Repository
 {
     public class CategoryServicesRepository : BaseRepository<CategoryServices>
     {
-       
+        
         public CategoryServicesRepository(DelelContext _context) : base(_context) 
         {
             
@@ -19,32 +20,45 @@ namespace Dalel.Repository
 
 
 
-        public CategoryServices GetCategoryWithServiceProvidersAsync(int categoryId)
+        public CategoryServices GetCategoryWithServiceProviders(int categoryId)
         {
-            return  base.GetList(c => c.Id == categoryId).FirstOrDefault();
+            var category = base.GetList(c => c.Id == categoryId).FirstOrDefault();
+
+            if (category != null)
+            {
+                return category;
+            }
+
+            throw new Exception($"Category with ID {categoryId} not found.");
         }
 
-        public async Task<CategoryServices> GetCategoryWithQueriesAsync(int categoryId)
-        {
-            return await context.CategoryServices
-                
-                .FirstOrDefaultAsync(c => c.Id == categoryId);
-        }
 
-        public IQueryable<CategoryServices> GetPopularCategoriesAsync(int count)
-        {
-            return context.CategoryServices
-                .OrderByDescending(c => c.ServiceProviders.Count)
-                .Take(count);
-           
-        }
+        #region Reem
 
-        public async Task<bool> CategoryExistsAsync(string name)
-        {
-            return await context.CategoryServices
-                .AnyAsync(c => c.Name == name);
-        }
 
+        //public <CategoryServices> GetCategoryWithQueriesAsync(int categoryId)
+        //{
+        //    return await context.CategoryServices
+        //        .Include(c => c.Quaries)
+        //        .FirstOrDefaultAsync(c => c.Id == categoryId);
+        //}
+
+        //public async Task<IEnumerable<CategoryServices>> GetPopularCategoriesAsync(int count)
+        //{
+        //    return await context.CategoryServices
+        //        .OrderByDescending(c => c.ServiceProviders.Count)
+        //        .Take(count)
+        //        .ToListAsync();
+        //}
+
+        //public async Task<bool> CategoryExistsAsync(string name)
+        //{
+        //    return await context.CategoryServices
+        //        .AnyAsync(c => c.Name == name);
+        //}
+
+        
+        
         public async Task<PagedResult<CategoryServices>> GetPagedCategoriesAsync(
             int pageNumber, int pageSize,
             string searchTerm = null,
@@ -146,6 +160,10 @@ namespace Dalel.Repository
                 .OrderByDescending(c => c.ServiceProviders.Count)
                 .Take(count);
         }
+        #endregion
+
+
+     
 
     }
 }
