@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Dalel.Repository.Hotel.Non_GenericRepository
 {
-    public class PaymentHotelRoomRepository : GenericHotelRepo<PaymentHotelRoom>, IGenericHotelRepo<PaymentHotelRoom>
+    public class PaymentHotelRoomRepository : GenericHotelRepo<PaymentHotelRoom>
     {
         private readonly DelelContext _context;
 

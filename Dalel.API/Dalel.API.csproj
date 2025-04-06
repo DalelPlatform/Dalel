@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
   <ItemGroup>
@@ -17,5 +18,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dalel.Repository\Dalel.Repository.csproj" />
+    <ProjectReference Include="..\Services\Dalel.Services.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\Hotel\" />
   </ItemGroup>
 </Project>

@@ -3,12 +3,13 @@ using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Dalel.Repository.GenericHotelRepo
 {
-    internal class GenericHotelRepo<T> : IGenericHotelRepo<T> where T : class
+    public class GenericHotelRepo<T> : IGenericHotelRepo<T> where T : class
     {
         private DelelContext _context = null;
 
@@ -30,6 +31,11 @@ namespace Dalel.Repository.GenericHotelRepo
         public T GetById(object id)
         {
             return table.Find(id);
+        }
+        // Get entities by condition
+        public IEnumerable<T> GetByCondition(Expression<Func<T, bool>> expression)
+        {
+            return table.Where(expression).ToList();
         }
 
         public void Insert(T obj)

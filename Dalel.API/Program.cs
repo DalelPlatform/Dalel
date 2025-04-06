@@ -1,4 +1,9 @@
 using Dalel.Repository;
+using Dalel.Repository.Hotel.Non_GenericRepository;
+using Dalel.Services.HotelService;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Models.Hotel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +16,22 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ServiceProviderProjectRepository>();
 builder.Services.AddScoped<ServiceProviderPropsalRepository>();
 builder.Services.AddScoped<ServiceProviderScheduleRepository>();
+// Enable automatic FluentValidation integration and scan for
+// validators in the assembly
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+
+// Register Repositories
+builder.Services.AddScoped<BookingHotelRoomRepository>();
+builder.Services.AddScoped<HotelRepository>();
+builder.Services.AddScoped<RoomTypeRepository>();
+
+// Register Services
+builder.Services.AddScoped<IBookingHotelRoomService, BookingHotelRoomService>();
+builder.Services.AddScoped<IHotelService, Dalel.Services.HotelService.HotelService>();
+builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
 
 var app = builder.Build();
 
