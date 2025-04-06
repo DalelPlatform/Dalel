@@ -6,9 +6,9 @@ using System.Linq.Dynamic.Core;
 
 namespace Dalel.Repository
 {
-    public class CategoryServicesRepo : BaseRepository<CategoryServices>
+    public class CategoryServicesRepository : BaseRepository<CategoryServices>
     {
-        public CategoryServicesRepo(DelelContext delelContext) : base(delelContext)
+        public CategoryServicesRepository(DelelContext delelContext) : base(delelContext)
         {
         }
 

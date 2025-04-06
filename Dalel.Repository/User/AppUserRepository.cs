@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Dalel.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Models;
 using Models.User;
 using System;
@@ -21,7 +22,7 @@ namespace Dalel.Repository
             signInManager = _signInManager;
         }
 
-      /*  public async Task<IdentityResult> Register(AccountRegisterVM accountRegister)
+        public async Task<IdentityResult> Register(UserRegisterVM accountRegister)
         {
             //return await userManager.CreateAsync(accountRegister.ToModel(),
             //    accountRegister.Password);
@@ -29,24 +30,17 @@ namespace Dalel.Repository
                 accountRegister.Password);
             if (res.Succeeded)
             {
-                Account account = await userManager.FindByNameAsync(accountRegister.UserName);
+                AppUser account = await userManager.FindByNameAsync(accountRegister.UserName);
 
                 res = await userManager.AddToRoleAsync(account, accountRegister.Role);
 
-                if (accountRegister.Role == "Teacher")
-                {
-                    //
-                }
-                else if (accountRegister.Role == "Student")
-                {
-                    //
-                }
+
             }
             return res;
 
         }
-      */
-     /*   public async Task<SignInResult> Login(AccountLoginVM accountLogin)
+      
+       public async Task<SignInResult> Login(UserLoginVM accountLogin)
         {
             var User = await userManager.FindByEmailAsync(accountLogin.UserNameOrEmail);
 
@@ -59,6 +53,31 @@ namespace Dalel.Repository
                 return await signInManager.PasswordSignInAsync(accountLogin.UserNameOrEmail, accountLogin.Password, true, true);
             }
         }
-     */
+        public async Task<AppUser> FindByUserName(string userName)
+        {
+            return await userManager.FindByNameAsync(userName);
+        }
+        public async Task<AppUser> FindByEmail(string email)
+        {
+            return await userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<IList<string>> GetUserRoles(AppUser user)
+        {
+            return await userManager.GetRolesAsync(user);
+        }
+
+        public async Task<IdentityResult> AsignUserToRole(AppUser user, string newrole)
+        {
+            return await userManager.AddToRoleAsync(user, newrole);
+        }
+
+
+        public async Task Signout()
+        {
+            await signInManager.SignOutAsync();
+        }
+
+
     }
 }
