@@ -8,9 +8,9 @@ using Dalel.Services.ServiceProvicerService;
 [Route("api/[controller]")]
 public class ServiceProviderProjectsController : ControllerBase
 {
-    private readonly ServiceProviderProjectsService _service;
+    private readonly HomeServicesService _service;
 
-    public ServiceProviderProjectsController(ServiceProviderProjectsService service)
+    public ServiceProviderProjectsController(HomeServicesService service)
     {
         _service = service;
     }
@@ -19,7 +19,7 @@ public class ServiceProviderProjectsController : ControllerBase
     [HttpGet("provider/{providerId}")]
     public async Task<ActionResult> GetByProvider(string providerId)
     {
-        var res = await _repository.GetProjectsByProviderAsync(providerId);
+        var res = await _service.GetProjectsByProviderAsync(providerId);
         return new JsonResult(res);
     }
 

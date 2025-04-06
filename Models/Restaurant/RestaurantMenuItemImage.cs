@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Models.Restaurant
 {
-    public class RestaurantMenuItemImage
+    public class ProjectImages
     {
         public int Id { get; set; } //pk
 
@@ -16,9 +16,9 @@ namespace Models.Restaurant
     }
 
 
-    public class RestaurantMenuItemImageConfiguration : IEntityTypeConfiguration<RestaurantMenuItemImage>
+    public class RestaurantMenuItemImageConfiguration : IEntityTypeConfiguration<ProjectImages>
     {
-        public void Configure(EntityTypeBuilder<RestaurantMenuItemImage> builder)
+        public void Configure(EntityTypeBuilder<ProjectImages> builder)
         {
             builder.HasKey(restmenuitemimgs => restmenuitemimgs.Id);
             builder.Property(restmenuitemimgs => restmenuitemimgs.Image).HasColumnType("NVARCHAR(max)");

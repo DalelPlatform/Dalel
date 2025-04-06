@@ -9,7 +9,7 @@ namespace Dalel.ViewModels.HomeServices.CategoryServices
 {
     public class AddCategoryServicesVM
     {
-        [Required]
+        [Required(ErrorMessage = "Please Provide valid Category Name")]
         [StringLength(100)]
         public string Name { get; set; }
 
@@ -17,6 +17,7 @@ namespace Dalel.ViewModels.HomeServices.CategoryServices
         public string Image { get; set; }
 
         [StringLength(500)]
+        [Required(ErrorMessage = "Please Provide valid Description")]
         public string Description { get; set; }
     }
 }

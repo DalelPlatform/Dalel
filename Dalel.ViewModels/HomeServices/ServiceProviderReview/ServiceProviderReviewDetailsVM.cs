@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Dalel.ViewModels.HomeServices.ServiceProviderReview
 {
-    class ServiceProviderReviewDetailsVM
+    public class ServiceProviderReviewDetailsVM
     {
+        public int Id { get; set; }
+        public string ClientName { get; set; }
+        public string Review { get; set; }
+        public int Rating { get; set; }
+        public string ReviewDate { get; set; }
     }
 }

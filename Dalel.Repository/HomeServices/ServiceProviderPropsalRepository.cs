@@ -17,43 +17,31 @@ namespace Dalel.Repository
 
         public ServiceProviderPropsalRepository(DelelContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task<IEnumerable<ServiceProviderPropsal>> GetProposalsByRequestAsync(int requestId)
+        public async Task<IQueryable<ServiceProviderPropsal>> GetProposalsByRequestAsync(int requestId)
         {
-            return await _context.ServiceProviderPropsals
-                .Include(p => p.ServiceProvider)
-                .Include(p => p.ServiceRequest)
-                .Where(p => p.ServiceRequestId == requestId)
-                .ToListAsync();
+            return base.GetList(p => p.ServiceRequestId == requestId).OrderByDescending(p => p.Id);
         }
 
-        public async Task<IEnumerable<ServiceProviderPropsal>> GetProposalsByProviderAsync(string providerId)
+        public async Task<IQueryable<ServiceProviderPropsal>> GetProposalsByProviderAsync(string providerId)
         {
-            return await _context.ServiceProviderPropsals
-                .Include(p => p.ServiceRequest)
-                .Where(p => p.ServiceProviderId == providerId)
-                .ToListAsync();
+            return base.GetList(p => p.ServiceProviderId == providerId).OrderByDescending(p => p.Id);
         }
 
         public async Task<ServiceProviderPropsal> GetProposalWithDetailsAsync(int proposalId)
         {
-            return await _context.ServiceProviderPropsals
-                .Include(p => p.ServiceProvider)
-                .Include(p => p.ServiceRequest)
-                .FirstOrDefaultAsync(p => p.Id == proposalId);
+            return base.Get(p => p.Id == proposalId).FirstOrDefault();
         }
 
         public async Task<bool> HasProviderProposedAsync(int requestId, string providerId)
         {
-            return await _context.ServiceProviderPropsals
-                .AnyAsync(p => p.ServiceRequestId == requestId && p.ServiceProviderId == providerId);
+            return base.Get(p => p.ServiceRequestId == requestId && p.ServiceProviderId == providerId).Any();
         }
 
         public async Task AcceptProposalAsync(int proposalId)
         {
-            var proposal = await _context.ServiceProviderPropsals.FindAsync(proposalId);
+            var proposal = await base.Get(p => p.Id == proposalId).FirstOrDefaultAsync();
             if (proposal != null)
             {
                 proposal.Status = ProposalStatus.Accepted;
@@ -67,7 +55,7 @@ namespace Dalel.Repository
 
         public async Task RejectProposalAsync(int proposalId)
         {
-            var proposal = await _context.ServiceProviderPropsals.FindAsync(proposalId);
+            var proposal = await base.Get(p => p.Id == proposalId).FirstOrDefaultAsync();
             if (proposal != null)
             {
                 proposal.Status = ProposalStatus.Rejected;

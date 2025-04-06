@@ -65,6 +65,7 @@ namespace Models
         public DbSet<ServiceProviderSchedule> ServiceProviderSchedules { get; set; }
         public DbSet<ServiceQuaries> ServiceQuaries { get; set; }
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
+        public DbSet<ServiceProviderProjectImages> ServiceProviderProjectImages { get; set; }
 
         //Hotel
         public DbSet<BookingGuestInRoom> BookingGuestInRooms { get; set; }
@@ -97,7 +98,7 @@ namespace Models
         public DbSet<Restaurant.Restaurant> Restaurants { get; set; }
         public DbSet<RestaurantImage> RestaurantImages { get; set; }
         public DbSet<RestaurantMenuItem> RestaurantMenuItems { get; set; }
-        public DbSet<RestaurantMenuItemImage> RestaurantMenuItemImages { get; set; }
+        public DbSet<ProjectImages> RestaurantMenuItemImages { get; set; }
         public DbSet<RestaurantOrder> RestaurantOrders { get; set; }
         public DbSet<RestaurantOrderItem> RestaurantOrderItems { get; set; }
         public DbSet<RestaurantReservation> RestaurantReservations { get; set; }
@@ -159,6 +160,7 @@ namespace Models
             builder.ApplyConfiguration(new ServiceProviderScheduleConfigration());
             builder.ApplyConfiguration(new ServiceQuariesConfiguration());
             builder.ApplyConfiguration(new ServiceRequestConfiguration());
+            builder.ApplyConfiguration(new ServiceProviderProjectImagesConfiguration());
             #endregion
 
             #region Hotel

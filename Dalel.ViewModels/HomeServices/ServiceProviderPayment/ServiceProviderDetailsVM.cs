@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Dalel.ViewModels.HomeServices.ServiceProviderPayment
 {
-    class ServiceProviderDetailsVM
+    public class ServiceProviderDetailsVM
     {
+        public string PaymentMethod { get; set; }
+        public string PaymentStatus { get; set; }
     }
 }

@@ -78,7 +78,7 @@ namespace Dalel.Repository
             if (booking != null)
             {
                 booking.Status = status;
-                Update(booking);
+                Update(booking); 
             }
         }
         public void CancelBooking(int bookingId)
