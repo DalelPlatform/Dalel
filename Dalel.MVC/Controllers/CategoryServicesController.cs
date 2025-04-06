@@ -9,7 +9,6 @@ namespace Dalel.MVC.Controllers
     public class CategoryServicesController : Controller
     {
         private CategoryServicesRepository repository;
-
         public CategoryServicesController(CategoryServicesRepository repository)
         {
             this.repository = repository;
