@@ -1,26 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Dalel.Repository;
-using System.Threading.Tasks;
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using Models.HomeService;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ServiceProviderSchedulesController : ControllerBase
 {
-    private readonly ServiceProviderScheduleRepository _repository;
+    private readonly ServiceProviderScheduleService _service;
 
-    public ServiceProviderSchedulesController(ServiceProviderScheduleRepository repository)
+    public ServiceProviderSchedulesController(ServiceProviderScheduleService service)
     {
-        _repository = repository;
+        _service = service;
     }
 
     // GET: api/ServiceProviderSchedules/provider/{providerId}
     [HttpGet("provider/{providerId}")]
     public async Task<ActionResult<IEnumerable<ServiceProviderSchedule>>> GetByProvider(string providerId)
     {
-        var schedules = await _repository.GetSchedulesByProviderAsync(providerId);
+        var schedules = await _service.GetSchedulesByProviderAsync(providerId);
         return Ok(schedules);
     }
 
@@ -31,7 +30,8 @@ public class ServiceProviderSchedulesController : ControllerBase
         [FromQuery] DateTime date,
         [FromQuery] TimeOnly time)
     {
-        return Ok(await _repository.IsProviderAvailableAsync(providerId, date, time));
+        var isAvailable = await _service.IsProviderAvailableAsync(providerId, date, time);
+        return Ok(isAvailable);
     }
 
     // GET: api/ServiceProviderSchedules
@@ -40,15 +40,15 @@ public class ServiceProviderSchedulesController : ControllerBase
         [FromQuery] int pageSize = 4,
         [FromQuery] int pageNumber = 1)
     {
-        var schedules = _repository.Get(null, pageSize, pageNumber);
-        return Ok(schedules.ToList());
+        var schedules = _service.GetSchedules(pageSize, pageNumber);
+        return Ok(schedules);
     }
 
     // GET: api/ServiceProviderSchedules/{id}
     [HttpGet("{id}")]
     public ActionResult<ServiceProviderSchedule> GetById(int id)
     {
-        var schedule = _repository.GetList(s => s.Id == id).FirstOrDefault();
+        var schedule = _service.GetScheduleById(id);
         if (schedule == null) return NotFound();
         return schedule;
     }
@@ -57,8 +57,8 @@ public class ServiceProviderSchedulesController : ControllerBase
     [HttpPost]
     public IActionResult Create(ServiceProviderSchedule schedule)
     {
-        _repository.Add(schedule);
-        return CreatedAtAction(nameof(GetById), new { id = schedule.Id }, schedule);
+        var createdSchedule = _service.CreateSchedule(schedule);
+        return CreatedAtAction(nameof(GetById), new { id = createdSchedule.Id }, createdSchedule);
     }
 
     // PUT: api/ServiceProviderSchedules/provider/{providerId}
@@ -67,7 +67,7 @@ public class ServiceProviderSchedulesController : ControllerBase
         string providerId,
         [FromBody] IEnumerable<ServiceProviderSchedule> schedules)
     {
-        await _repository.UpdateProviderScheduleAsync(providerId, schedules);
+        await _service.UpdateProviderScheduleAsync(providerId, schedules);
         return NoContent();
     }
 
@@ -76,7 +76,7 @@ public class ServiceProviderSchedulesController : ControllerBase
     public IActionResult Update(int id, ServiceProviderSchedule schedule)
     {
         if (id != schedule.Id) return BadRequest();
-        _repository.Update(schedule);
+        _service.UpdateSchedule(schedule);
         return NoContent();
     }
 
@@ -84,10 +84,10 @@ public class ServiceProviderSchedulesController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var schedule = _repository.GetList(s => s.Id == id).FirstOrDefault();
+        var schedule = _service.GetScheduleById(id);
         if (schedule == null) return NotFound();
 
-        _repository.Delete(schedule);
+        _service.DeleteSchedule(id);
         return NoContent();
     }
 }
