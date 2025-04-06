@@ -46,70 +46,70 @@ namespace Dalel.Repository
             }
         }
 
-        public async Task<PagedResult<ServiceProviderProject>> FilterProjectsAsync(
-            string providerId = null,
-            int? categoryId = null,
-            string searchTerm = null,
-            bool? hasImage = null,
-            int pageNumber = 1,
-            int pageSize = 10,
-            string sortBy = "Name",
-            bool ascending = true)
-        {
-            var query = _context.ServiceProviderProjects
-                .Include(p => p.ServiceProvider)
-                .ThenInclude(sp => sp.CategoryServices)
-                .AsQueryable();
+        //public async Task<PagedResult<ServiceProviderProject>> FilterProjectsAsync(
+        //    string providerId = null,
+        //    int? categoryId = null,
+        //    string searchTerm = null,
+        //    bool? hasImage = null,
+        //    int pageNumber = 1,
+        //    int pageSize = 10,
+        //    string sortBy = "Name",
+        //    bool ascending = true)
+        //{
+        //    var query = _context.ServiceProviderProjects
+        //        .Include(p => p.ServiceProvider)
+        //        .ThenInclude(sp => sp.CategoryServices)
+        //        .AsQueryable();
 
-            if (!string.IsNullOrEmpty(providerId))
-            {
-                query = query.Where(p => p.ServiceProviderId == providerId);
-            }
+        //    if (!string.IsNullOrEmpty(providerId))
+        //    {
+        //        query = query.Where(p => p.ServiceProviderId == providerId);
+        //    }
 
-            if (categoryId.HasValue)
-            {
-               query = query.Where(p => p.ServiceProvider.CategoryServicesId == categoryId.Value);
-            }
+        //    if (categoryId.HasValue)
+        //    {
+        //       query = query.Where(p => p.ServiceProvider.CategoryServicesId == categoryId.Value);
+        //    }
 
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                query = query.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm));
-            }
+        //    if (!string.IsNullOrEmpty(searchTerm))
+        //    {
+        //        query = query.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm));
+        //    }
 
-            if (hasImage.HasValue)
-            {
-                query = hasImage.Value 
-                    ? query.Where(p => !string.IsNullOrEmpty(p.Image))
-                    : query.Where(p => string.IsNullOrEmpty(p.Image));
-            }
+        //    if (hasImage.HasValue)
+        //    {
+        //        query = hasImage.Value 
+        //            ? query.Where(p => !string.IsNullOrEmpty(p.Image))
+        //            : query.Where(p => string.IsNullOrEmpty(p.Image));
+        //    }
 
-            // Sorting
-            query = sortBy switch
-            {
-                "Name" => ascending 
-                    ? query.OrderBy(p => p.Name) 
-                    : query.OrderByDescending(p => p.Name),
-                "Date" => ascending
-                    ? query.OrderBy(p => p.Id)
-                    : query.OrderByDescending(p => p.Id),
-                _ => query.OrderBy(p => p.Name)
-            };
+        //    // Sorting
+        //    query = sortBy switch
+        //    {
+        //        "Name" => ascending 
+        //            ? query.OrderBy(p => p.Name) 
+        //            : query.OrderByDescending(p => p.Name),
+        //        "Date" => ascending
+        //            ? query.OrderBy(p => p.Id)
+        //            : query.OrderByDescending(p => p.Id),
+        //        _ => query.OrderBy(p => p.Name)
+        //    };
 
-            return await GetPagedAsync(
-                pageNumber: pageNumber,
-                pageSize: pageSize,
-                filter: query,
-                orderBy: ascending ? (Func<IQueryable<ServiceProviderProject>, IOrderedQueryable<ServiceProviderProject>>)(q => q.OrderBy(p => p.Name)) 
-                          : q => q.OrderByDescending(p => p.Name));
-        }
+        //    return await GetPagedAsync(
+        //        pageNumber: pageNumber,
+        //        pageSize: pageSize,
+        //        filter: query,
+        //        orderBy: ascending ? (Func<IQueryable<ServiceProviderProject>, IOrderedQueryable<ServiceProviderProject>>)(q => q.OrderBy(p => p.Name)) 
+        //                  : q => q.OrderByDescending(p => p.Name));
+        //}
 
-        public async Task<IEnumerable<ServiceProviderProject>> GetFeaturedProjectsAsync(int count)
-        {
-            return await _context.ServiceProviderProjects
-                .Where(p => !string.IsNullOrEmpty(p.Image))
-                .OrderByDescending(p => p.Id)
-                .Take(count)
-                .ToListAsync();
-        }
+        //public async Task<IEnumerable<ServiceProviderProject>> GetFeaturedProjectsAsync(int count)
+        //{
+        //    return await _context.ServiceProviderProjects
+        //        .Where(p => !string.IsNullOrEmpty(p.Image))
+        //        .OrderByDescending(p => p.Id)
+        //        .Take(count)
+        //        .ToListAsync();
+        //}
     }
 }

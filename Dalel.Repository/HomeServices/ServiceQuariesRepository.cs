@@ -60,91 +60,91 @@ namespace Dalel.Repository.HomeServices
             return false;
         }
 
-        public async Task<PagedResult<ServiceQuaries>> FilterQueriesAsync(
-            int? categoryId = null,
-            string providerId = null,
-            string clientId = null,
-            bool? answered = null,
-            DateTime? fromDate = null,
-            DateTime? toDate = null,
-            string searchTerm = null,
-            int pageNumber = 1,
-            int pageSize = 10,
-            string sortBy = "QuestionDate",
-            bool ascending = false)
-        {
-            var query = _context.ServiceQuaries
-                .Include(q => q.Client)
-                .Include(q => q.ServiceProvider)
-                .Include(q => q.CategoryServices)
-                .AsQueryable();
+        //public async Task<PagedResult<ServiceQuaries>> FilterQueriesAsync(
+        //    int? categoryId = null,
+        //    string providerId = null,
+        //    string clientId = null,
+        //    bool? answered = null,
+        //    DateTime? fromDate = null,
+        //    DateTime? toDate = null,
+        //    string searchTerm = null,
+        //    int pageNumber = 1,
+        //    int pageSize = 10,
+        //    string sortBy = "QuestionDate",
+        //    bool ascending = false)
+        //{
+        //    var query = _context.ServiceQuaries
+        //        .Include(q => q.Client)
+        //        .Include(q => q.ServiceProvider)
+        //        .Include(q => q.CategoryServices)
+        //        .AsQueryable();
 
-            if (categoryId.HasValue)
-            {
-                query = query.Where(q => q.CategoryServicesId == categoryId.Value);
-            }
+        //    if (categoryId.HasValue)
+        //    {
+        //        query = query.Where(q => q.CategoryServicesId == categoryId.Value);
+        //    }
 
-            if (!string.IsNullOrEmpty(providerId))
-            {
-                query = query.Where(q => q.ServiceProviderId == providerId);
-            }
+        //    if (!string.IsNullOrEmpty(providerId))
+        //    {
+        //        query = query.Where(q => q.ServiceProviderId == providerId);
+        //    }
 
-            if (!string.IsNullOrEmpty(clientId))
-            {
-                query = query.Where(q => q.ClientId == clientId);
-            }
+        //    if (!string.IsNullOrEmpty(clientId))
+        //    {
+        //        query = query.Where(q => q.ClientId == clientId);
+        //    }
 
-            if (answered.HasValue)
-            {
-                query = answered.Value
-                    ? query.Where(q => !string.IsNullOrEmpty(q.Answer))
-                    : query.Where(q => string.IsNullOrEmpty(q.Answer));
-            }
+        //    if (answered.HasValue)
+        //    {
+        //        query = answered.Value
+        //            ? query.Where(q => !string.IsNullOrEmpty(q.Answer))
+        //            : query.Where(q => string.IsNullOrEmpty(q.Answer));
+        //    }
 
-            if (fromDate.HasValue)
-            {
-                query = query.Where(q => q.QuestionDate >= fromDate.Value);
-            }
+        //    if (fromDate.HasValue)
+        //    {
+        //        query = query.Where(q => q.QuestionDate >= fromDate.Value);
+        //    }
 
-            if (toDate.HasValue)
-            {
-                query = query.Where(q => q.QuestionDate <= toDate.Value);
-            }
+        //    if (toDate.HasValue)
+        //    {
+        //        query = query.Where(q => q.QuestionDate <= toDate.Value);
+        //    }
 
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                query = query.Where(q => q.Question.Contains(searchTerm) ||
-                                     (q.Answer != null && q.Answer.Contains(searchTerm)));
-            }
+        //    if (!string.IsNullOrEmpty(searchTerm))
+        //    {
+        //        query = query.Where(q => q.Question.Contains(searchTerm) ||
+        //                             (q.Answer != null && q.Answer.Contains(searchTerm)));
+        //    }
 
-            // Sorting
-            query = sortBy switch
-            {
-                "QuestionDate" => ascending
-                    ? query.OrderBy(q => q.QuestionDate)
-                    : query.OrderByDescending(q => q.QuestionDate),
-                "AnswerDate" => ascending
-                    ? query.OrderBy(q => q.AnswerDate)
-                    : query.OrderByDescending(q => q.AnswerDate),
-                "Category" => ascending
-                    ? query.OrderBy(q => q.CategoryServices.Name)
-                    : query.OrderByDescending(q => q.CategoryServices.Name),
-                _ => query.OrderByDescending(q => q.QuestionDate)
-            };
+        //    // Sorting
+        //    query = sortBy switch
+        //    {
+        //        "QuestionDate" => ascending
+        //            ? query.OrderBy(q => q.QuestionDate)
+        //            : query.OrderByDescending(q => q.QuestionDate),
+        //        "AnswerDate" => ascending
+        //            ? query.OrderBy(q => q.AnswerDate)
+        //            : query.OrderByDescending(q => q.AnswerDate),
+        //        "Category" => ascending
+        //            ? query.OrderBy(q => q.CategoryServices.Name)
+        //            : query.OrderByDescending(q => q.CategoryServices.Name),
+        //        _ => query.OrderByDescending(q => q.QuestionDate)
+        //    };
 
-            var result = new PagedResult<ServiceQuaries>
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalCount = await query.CountAsync()
-            };
+        //    var result = new PagedResult<ServiceQuaries>
+        //    {
+        //        PageNumber = pageNumber,
+        //        PageSize = pageSize,
+        //        TotalCount = await query.CountAsync()
+        //    };
 
-            result.Items = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+        //    result.Items = await query
+        //        .Skip((pageNumber - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .ToListAsync();
 
-            return result;
-        }
+        //    return result;
+        //}
     }
 }

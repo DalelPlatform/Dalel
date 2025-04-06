@@ -2555,7 +2555,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.TravelAgencyOwners", "AgencyOwners")
                         .WithMany("Inquiries")
                         .HasForeignKey("AgencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Models.User.Client", "Client")
@@ -3094,13 +3094,13 @@ namespace Models.Migrations
                     b.HasOne("Models.User.Client", "Client")
                         .WithMany("BookingProperties")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Models.Property.Properties", "Properties")
                         .WithMany("BookingProperties")
                         .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Client");

@@ -20,6 +20,7 @@ namespace Models.Hotel
         public virtual ICollection<BookingGuestInRoom> BookingGuestsInRooms { get; set; }
         public virtual PaymentHotelRoom PaymentHotelRoom { get; set; }
         public virtual ReviewHotelRoom ReviewHotelRoom { get; set; }
+        public bool IsAvailable { get; set; }
     }
 
     public class BookingHotelRoomConfiguration : IEntityTypeConfiguration<BookingHotelRoom>

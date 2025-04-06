@@ -17,9 +17,9 @@ namespace Dalel.Repository.HomeChef
 
 
         //Get Meals by Chef ID 
-        public HomeChefMealDetailsVM GetMealsByChefId(int chefId)
-        {
+        //public HomeChefMealDetailsVM GetMealsByChefId(int chefId)
+        //{
 
-        }
+        //}
     }
 }

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Dalel.Repository
 {
-    class PropertiesRepository : BaseRepository<Properties>
+    public class PropertiesRepository : BaseRepository<Properties>
     {
         public PropertiesRepository(DelelContext dbContext) : base(dbContext)
         {
