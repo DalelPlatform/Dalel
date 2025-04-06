@@ -16,6 +16,10 @@ namespace Dalel.Repository
         {
 
         }
+        public PaymentProperties GetPaymentsByID(int paymentPropertyId)
+        {
+            return GetList(p => p.Id == paymentPropertyId).FirstOrDefault();
+        }
         public IQueryable<PaymentPropertiesDetailsVM> GetPaymentsByBookingProperty(int bookingPropertyId)
         {
             return GetList(p => p.BookingPropertyId == bookingPropertyId).Select(p=>p.ToDetailsViewModel());

@@ -18,10 +18,10 @@ public class ServiceProviderProjectsController : ControllerBase
 
     // GET: api/ServiceProviderProjects/provider/{providerId}
     [HttpGet("provider/{providerId}")]
-    public async Task<ActionResult<IEnumerable<ServiceProviderProject>>> GetByProvider(string providerId)
+    public async Task<ActionResult> GetByProvider(string providerId)
     {
-        var projects = await _repository.GetProjectsByProviderAsync(providerId);
-        return Ok(projects);
+        var res = await _repository.GetProjectsByProviderAsync(providerId);
+        return new JsonResult(res);
     }
 
     // GET: api/ServiceProviderProjects

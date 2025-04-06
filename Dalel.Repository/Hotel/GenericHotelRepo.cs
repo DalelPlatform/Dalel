@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Dalel.Repository.GenericHotelRepo
 {
-    internal class GenericHotelRepo<T> : IGenericHotelRepo<T> where T : class
+    public class GenericHotelRepo<T> : IGenericHotelRepo<T> where T : class
     {
         private DelelContext _context = null;
 
