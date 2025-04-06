@@ -1,6 +1,7 @@
 using Dalel.Repository;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Models.User;
 using Dalel.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -13,8 +14,11 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
+
 builder.Services.AddDbContext<DelelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
+
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DelelContext>
     (i => i.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));

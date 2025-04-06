@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Dalel.ViewModels.HomeServices.ServiceProviderProjectVM
+namespace Dalel.ViewModels
 {
     public class AddServiceProviderProjectVM
     {

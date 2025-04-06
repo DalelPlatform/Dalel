@@ -20,7 +20,7 @@ namespace Models.Restaurant
         public bool IsDeleted { get; set; }
 
         public virtual Restaurant Restaurant { get; set; }
-        public virtual ICollection<ProjectImages> RestaurantMenuItemImages { get; set; }
+        public virtual ICollection<RestaurantMenuItemImage> RestaurantMenuItemImages { get; set; }
         public virtual ICollection<RestaurantOrderItem> RestaurantOrderItems { get; set; }
     }
 

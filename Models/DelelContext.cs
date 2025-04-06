@@ -98,7 +98,7 @@ namespace Models
         public DbSet<Restaurant.Restaurant> Restaurants { get; set; }
         public DbSet<RestaurantImage> RestaurantImages { get; set; }
         public DbSet<RestaurantMenuItem> RestaurantMenuItems { get; set; }
-        public DbSet<ProjectImages> RestaurantMenuItemImages { get; set; }
+        public DbSet<RestaurantMenuItemImage> RestaurantMenuItemImages { get; set; }
         public DbSet<RestaurantOrder> RestaurantOrders { get; set; }
         public DbSet<RestaurantOrderItem> RestaurantOrderItems { get; set; }
         public DbSet<RestaurantReservation> RestaurantReservations { get; set; }

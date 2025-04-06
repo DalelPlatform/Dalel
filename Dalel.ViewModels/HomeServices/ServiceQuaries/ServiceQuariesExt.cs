@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.ViewModels.HomeServices.ServiceQuaries
+namespace Dalel.ViewModels
 {
     public static class ServiceQuariesExt
     {

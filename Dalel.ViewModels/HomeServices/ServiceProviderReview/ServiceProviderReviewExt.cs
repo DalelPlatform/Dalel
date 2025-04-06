@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.ViewModels.HomeServices.ServiceProviderReview
+namespace Dalel.ViewModels
 {
     public static class ServiceProviderReviewExt
     {

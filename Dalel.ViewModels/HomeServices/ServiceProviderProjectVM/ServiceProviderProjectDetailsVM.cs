@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Dalel.ViewModels.HomeServices.ServiceProviderProjectVM
+namespace Dalel.ViewModels
 {
     public class ServiceProviderProjectDetailsVM
     {

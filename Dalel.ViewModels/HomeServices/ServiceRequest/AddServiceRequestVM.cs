@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.ViewModels.HomeServices.ServiceRequest
+namespace Dalel.ViewModels
 {
     public class AddServiceRequestVM
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.ViewModels.HomeServices.ServiceProviderProposal
+namespace Dalel.ViewModels
 {
     public class AddServiceProviderProposalVM
     {

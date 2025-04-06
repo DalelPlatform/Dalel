@@ -3,7 +3,7 @@ using Models.Restaurant;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Dalel.ViewModels.HomeServices.ServiceProviderProjectVM
+namespace Dalel.ViewModels
 {
     public static class ServiceProviderProjectExt
     {
