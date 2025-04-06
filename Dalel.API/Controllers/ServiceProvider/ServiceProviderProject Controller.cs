@@ -17,7 +17,7 @@ public class ServiceProviderProjectsController : ControllerBase
 
     // GET: api/ServiceProviderProjects/provider/{providerId}
     [HttpGet("provider/{providerId}")]
-    public async Task<ActionResult<IEnumerable<ServiceProviderProject>>> GetByProvider(string providerId)
+    public async Task<ActionResult<IQueryable<ServiceProviderProject>>> GetByProvider(string providerId)
     {
         var projects = await _service.GetProjectsByProviderAsync(providerId);
         return Ok(projects);
@@ -25,7 +25,7 @@ public class ServiceProviderProjectsController : ControllerBase
 
     // GET: api/ServiceProviderProjects
     [HttpGet]
-    public ActionResult<IEnumerable<ServiceProviderProject>> Get(
+    public ActionResult<IQueryable<ServiceProviderProject>> Get(
         [FromQuery] int pageSize = 4,
         [FromQuery] int pageNumber = 1)
     {

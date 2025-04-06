@@ -17,9 +17,9 @@ namespace Dalel.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<ServiceProviderProject>> GetProjectsByProviderAsync(string providerId)
+        public async Task<IQueryable<ServiceProviderProject>> GetProjectsByProviderAsync(string providerId)
         {
-            return await _context.ServiceProviderProjects
+            return (IQueryable<ServiceProviderProject>)await _context.ServiceProviderProjects
                 .Where(p => p.ServiceProviderId == providerId)
                 .OrderByDescending(p => p.Id)
                 .ToListAsync();
