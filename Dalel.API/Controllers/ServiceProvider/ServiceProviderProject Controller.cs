@@ -25,7 +25,7 @@ public class ServiceProviderProjectsController : ControllerBase
 
     // GET: api/ServiceProviderProjects
     [HttpGet]
-    public ActionResult<ServiceProviderProject> Get(
+    public ActionResult<IQueryable<ServiceProviderProject>> Get(
         [FromQuery] int pageSize = 4,
         [FromQuery] int pageNumber = 1)
     {
