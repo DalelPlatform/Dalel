@@ -1,8 +1,6 @@
 using Dalel.Repository;
-<<<<<<< HEAD
 using Microsoft.EntityFrameworkCore;
 using Models;
-=======
 using Dalel.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -12,17 +10,11 @@ using Models;
 using Models.User;
 using System.Text;
 using System.Text.Json.Serialization;
->>>>>>> 199ce5c4ec46c22468c8479132f3f279b934cb6a
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-<<<<<<< HEAD
-
 builder.Services.AddDbContext<DelelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
-=======
->>>>>>> 199ce5c4ec46c22468c8479132f3f279b934cb6a
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DelelContext>
     (i => i.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
@@ -36,11 +28,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ServiceProviderProjectRepository>();
 builder.Services.AddScoped<ServiceProviderPropsalRepository>();
 builder.Services.AddScoped<ServiceProviderScheduleRepository>();
-<<<<<<< HEAD
 builder.Services.AddScoped<ServiceProviderProjectRepository>();
 builder.Services.AddScoped<ServiceProviderPropsalRepository>();
 builder.Services.AddScoped<ServiceProviderScheduleRepository>();
-=======
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<AppUserRepository>();
 builder.Services.AddScoped<ClientRepository>();
@@ -77,7 +67,6 @@ builder.Services.AddAuthentication(option =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWT:PrivateKey"]))
     };
 });
->>>>>>> 199ce5c4ec46c22468c8479132f3f279b934cb6a
 
 var app = builder.Build();
 

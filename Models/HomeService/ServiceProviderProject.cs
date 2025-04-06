@@ -35,17 +35,13 @@ namespace Models.HomeService
             builder.HasOne(pp => pp.ServiceProvider)
                 .WithMany(sp => sp.Projects)
                 .HasForeignKey(pp => pp.ServiceProviderId)
-<<<<<<< HEAD
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Navigation property configuration
             builder.HasMany(pp => pp.ServiceProviderProjectImages)
                 .WithOne(i => i.ServiceProviderProject)
                 .HasForeignKey(i => i.ServiceProviderProjectId)
-                .OnDelete(DeleteBehavior.Cascade);
-=======
                 .OnDelete(DeleteBehavior.NoAction);
->>>>>>> 199ce5c4ec46c22468c8479132f3f279b934cb6a
         }
     }
 }
