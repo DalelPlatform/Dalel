@@ -75,7 +75,7 @@ namespace Models.Restaurant
             //Relation between Restaurants & RestaurantOwners (one to one) 
             builder.HasOne(restowner => restowner.RestaurantOwner)
                 .WithOne(rest => rest.Restaurant)
-                .HasForeignKey<Restaurant> (rest => rest.OwnerId);
+                .HasForeignKey<Restaurant> (rest => rest.OwnerId).OnDelete(DeleteBehavior.NoAction);
 
         }
     }

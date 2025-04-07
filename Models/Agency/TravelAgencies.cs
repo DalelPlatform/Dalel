@@ -43,6 +43,6 @@ public class TravelAgencyConfugeration : IEntityTypeConfiguration<TravelAgencies
         modelBuilder.Property(t => t.OwnerId).HasColumnType("nvarchar(450)");
         modelBuilder.HasOne(trvel => trvel.travelAgencyOwners)
             .WithMany(trvel_owner => trvel_owner.TravelAgencies)
-            .HasForeignKey(trvel => trvel.OwnerId);
+            .HasForeignKey(trvel => trvel.OwnerId).OnDelete(DeleteBehavior.NoAction);
     }
 }

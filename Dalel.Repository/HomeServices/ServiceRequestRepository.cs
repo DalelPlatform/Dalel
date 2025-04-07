@@ -16,7 +16,6 @@ namespace Dalel.Repository
 
         public ServiceRequestRepository(DelelContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<ServiceRequest> GetRequestWithDetailsAsync(int requestId)
@@ -29,25 +28,26 @@ namespace Dalel.Repository
                 .FirstOrDefaultAsync(r => r.Id == requestId);
         }
 
-        public async Task<IEnumerable<ServiceRequest>> GetRequestsByClientAsync(string clientId)
+        public async Task<IQueryable<ServiceRequest>> GetRequestsByClientAsync(string clientId)
         {
-            return await _context.ServiceRequests
-                .Where(r => r.ClientId == clientId)
+            return (IQueryable<ServiceRequest>)await base.GetList(r=>r.ClientId == clientId)
                 .OrderByDescending(r => r.Date)
                 .ToListAsync();
+     
         }
 
-        public async Task<IEnumerable<ServiceRequest>> GetRequestsByStatusAsync(RequestStatus status)
+        public async Task<IQueryable<ServiceRequest>> GetRequestsByStatusAsync(RequestStatus status)
         {
-            return await _context.ServiceRequests
-                .Where(r => r.Status == status)
+            return (IQueryable<ServiceRequest>)await base.GetList(r => r.Status == status)
+                .OrderByDescending(r => r.Date)
                 .ToListAsync();
+      
         }
 
         public async Task<bool> RequestExistsAsync(int requestId)
         {
-            return await _context.ServiceRequests
-                .AnyAsync(r => r.Id == requestId);
+            return await base.GetList(r => r.Id == requestId)
+                .AnyAsync();
         }
 
         //public async Task<PagedResult<ServiceRequest>> FilterRequestsAsync(

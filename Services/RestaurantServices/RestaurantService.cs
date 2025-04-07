@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dalel.Repository;
+using Dalel.ViewModels;
 using Models.HomeService;
 using Models.Restaurant;
 using Utilities;
@@ -23,11 +24,11 @@ namespace Dalel.Services
 
 
 
-        public async Task<ServiceResult> CreateRestaurant(Restaurant restaurant)
+        public async Task<ServiceResult> CreateRestaurant(AddRestaurantVM restaurant)
         {
             try
             {
-                 _RestaurantRepo.Add(restaurant); // again, assuming async manager method
+                 _RestaurantRepo.Add(restaurant.ToModel()); // again, assuming async manager method
                 return new ServiceResult
                 {
                     Success = true,
@@ -97,6 +98,18 @@ namespace Dalel.Services
             }
         }
 
+        public async Task<ServiceResult<List<Restaurant>>> GetAllRestaurants()
+        {
+            try
+            {
+                var list = _RestaurantRepo.GetList().ToList();
+                return ServiceResult<List<Restaurant>>.SuccessResult(list, "Restaurants fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<Restaurant>>.FailureResult("Error: " + ex.Message);
+            }
+        }
 
 
     }

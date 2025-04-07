@@ -69,14 +69,22 @@ namespace Dalel.Repository
             Table.Remove(row);
             Context.SaveChanges();
         }
+
+        public void Save()
+        {
+            Context.SaveChanges();
+        }
+
+       
+
         #endregion
 
 
 
 
-       
 
-      
+
+
 
 
     }

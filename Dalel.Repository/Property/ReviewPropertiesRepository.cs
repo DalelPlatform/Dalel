@@ -14,9 +14,15 @@ namespace Dalel.Repository
         public ReviewPropertiesRepository(DelelContext context) : base(context)
         {
         }
-        public IQueryable<ReviewPropertiesDetailsVM> GetReviewByBookingProperty(int bookingPropertyId)
+
+        public ReviewProperties GetReviewByID(int reviewPropertyId)
         {
-            return GetList(rp => rp.BookingPropertyId == bookingPropertyId).Select(rp => rp.ToDetailsViewModel());
+            return GetList(rp => rp.Id == reviewPropertyId).FirstOrDefault();
+
+        }
+        public IQueryable<ReviewProperties> GetReviewByBookingProperty(int bookingPropertyId)
+        {
+            return GetList(rp => rp.BookingPropertyId == bookingPropertyId);
         }
 
         public IQueryable<ReviewPropertiesDetailsVM> GetReviewsByRating(float rating)

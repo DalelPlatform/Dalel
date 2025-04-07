@@ -22,7 +22,7 @@ namespace Models.Agency
         public void Configure(EntityTypeBuilder<AgencyCustomerInquiry> builder)
         {
             builder.HasOne(a => a.AgencyOwners).WithMany(q => q.Inquiries).HasForeignKey(a => a.AgencyId).OnDelete(DeleteBehavior.NoAction);
-            builder.HasOne(a => a.Client).WithMany(q => q.Inquiries).HasForeignKey(a => a.ClientId);
+            builder.HasOne(a => a.Client).WithMany(q => q.Inquiries).HasForeignKey(a => a.ClientId).OnDelete(DeleteBehavior.NoAction);
             builder.Property(a => a.Date).HasDefaultValueSql("GetDate()");
         }
     }

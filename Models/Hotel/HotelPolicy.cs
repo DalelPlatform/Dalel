@@ -24,12 +24,12 @@ namespace Models.Hotel
             builder.HasOne(hp => hp.Hotel)
                    .WithMany(h => h.HotelPolicies)
                    .HasForeignKey(hp => hp.HotelId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(hp => hp.Policy)
                    .WithMany(a=>a.HotelPolicies) // Optionally, if Policy had a collection, use .WithMany(p => p.HotelPolicies)
                    .HasForeignKey(hp => hp.PolicyId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

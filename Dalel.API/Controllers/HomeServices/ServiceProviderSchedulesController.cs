@@ -65,7 +65,7 @@ public class ServiceProviderSchedulesController : ControllerBase
     [HttpPut("provider/{providerId}")]
     public async Task<IActionResult> UpdateProviderSchedule(
         string providerId,
-        [FromBody] IEnumerable<ServiceProviderSchedule> schedules)
+        [FromBody] IQueryable<ServiceProviderSchedule> schedules)
     {
         await _service.UpdateProviderScheduleAsync(providerId, schedules);
         return NoContent();

@@ -17,6 +17,7 @@ namespace Dalel.ViewModels
                 // Add all properties here
             };
         }
+        
         public static PropertiesDetailsVM ToDetailsViewModel(this Properties property)
         {
             return new PropertiesDetailsVM

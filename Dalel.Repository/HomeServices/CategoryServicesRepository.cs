@@ -6,9 +6,9 @@ using System.Linq.Dynamic.Core;
 
 namespace Dalel.Repository
 {
-    public class CategoryServicesRepo : BaseRepository<CategoryServices>
+    public class CategoryServicesRepository : BaseRepository<CategoryServices>
     {
-        public CategoryServicesRepo(DelelContext delelContext) : base(delelContext)
+        public CategoryServicesRepository(DelelContext delelContext) : base(delelContext)
         {
         }
 
@@ -84,14 +84,14 @@ namespace Dalel.Repository
         }
 
         // Get all queries for a specific category
-        public IEnumerable<ServiceQuaries> GetQueriesForCategory(int categoryId)
+        public IQueryable<ServiceQuaries> GetQueriesForCategory(int categoryId)
         {
             var category = GetCategoryById(categoryId);
-            return category?.Quaries?.ToList() ?? new List<ServiceQuaries>();
+            return (IQueryable<ServiceQuaries>)(category?.Quaries?.ToList() ?? new List<ServiceQuaries>());
         }
 
         // Get paginated queries for a category
-        public IEnumerable<ServiceQuaries> GetPaginatedQueries(
+        public IQueryable<ServiceQuaries> GetPaginatedQueries(
             int categoryId,
             int pageSize = 10,
             int pageNumber = 1)
@@ -110,7 +110,7 @@ namespace Dalel.Repository
             }
 
             int skip = (pageNumber - 1) * pageSize;
-            return queries.OrderByDescending(q => q.QuestionDate)
+            return (IQueryable<ServiceQuaries>)queries.OrderByDescending(q => q.QuestionDate)
                         .Skip(skip)
                         .Take(pageSize)
                         .ToList();
@@ -142,9 +142,9 @@ namespace Dalel.Repository
         }
 
         // Get categories with most service providers
-        public IEnumerable<CategoryServices> GetPopularCategories(int count)
+        public IQueryable<CategoryServices> GetPopularCategories(int count)
         {
-            return GetList()
+            return (IQueryable<CategoryServices>)GetList()
                   .OrderByDescending(c => c.ServiceProviders.Count)
                   .Take(count)
                   .ToList();

@@ -27,7 +27,7 @@ public class AgencyPromotionConfigration : IEntityTypeConfiguration<AgencyPromot
         modelBuilder.Property(p => p.EndDate).IsRequired(false);
         modelBuilder.HasOne(verify => verify.Agency)
         .WithMany(agency => agency.agencyPromotions)
-        .HasForeignKey(promot => promot.AgencyId);
+        .HasForeignKey(promot => promot.AgencyId).OnDelete(DeleteBehavior.NoAction);
 
     }
 }
