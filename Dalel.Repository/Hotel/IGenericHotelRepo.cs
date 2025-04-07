@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dalel.Repository.GenericHotelRepo
 {
-    internal interface IGenericHotelRepo<T> where T : class
+    public interface IGenericHotelRepo<T> where T : class
     {
         IEnumerable<T> GetAll();
         T GetById(object id);

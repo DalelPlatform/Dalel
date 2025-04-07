@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -19,8 +19,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Dalel.Repository\Dalel.Repository.csproj" />
     <ProjectReference Include="..\Services\Dalel.Services.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\Hotel\" />
   </ItemGroup>
 </Project>

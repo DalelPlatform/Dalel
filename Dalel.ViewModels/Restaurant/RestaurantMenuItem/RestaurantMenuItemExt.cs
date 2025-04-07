@@ -9,9 +9,6 @@ namespace Dalel.ViewModels
 {
     public static class RestaurantMenuItemExt
     {
-
-
-
         public static RestaurantMenuItem ToModel(this AddRestaurantMenuItemVM menuItemVM)
         {
 
@@ -30,8 +27,6 @@ namespace Dalel.ViewModels
 
             };
         }
-
-
         public static RestaurantMenuItemDetailsVM ToDetailsViewModel (this RestaurantMenuItem menuItem)
         {
             return new RestaurantMenuItemDetailsVM
