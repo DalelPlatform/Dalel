@@ -24,7 +24,7 @@ namespace Models.Hotel
             builder.HasOne(rhr => rhr.BookingHotelRoom)
                    .WithOne(bhr => bhr.ReviewHotelRoom)
                    .HasForeignKey< ReviewHotelRoom>(rhr => rhr.BookingHotelRoomId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

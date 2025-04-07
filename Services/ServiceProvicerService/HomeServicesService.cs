@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Dalel.Services.ServiceProvicerService
 {
-    public class ServiceProviderProjectsService
+    public class HomeServicesService
     {
         private readonly ServiceProviderProjectRepository _repository;
-        public ServiceProviderProjectsService(ServiceProviderProjectRepository repository)
+        public HomeServicesService(ServiceProviderProjectRepository repository)
         {
             _repository = repository;
         }
@@ -35,7 +35,7 @@ namespace Dalel.Services.ServiceProvicerService
         {
             if (!string.IsNullOrEmpty(imagePath))
             {
-                project.Image = imagePath;
+                project.ProjectImages = imagePath;
             }
 
             _repository.Add(project);

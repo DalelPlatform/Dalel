@@ -39,7 +39,7 @@ public class ServiceProviderScheduleService
         return schedule;
     }
 
-    public async Task UpdateProviderScheduleAsync(string providerId, IEnumerable<ServiceProviderSchedule> schedules)
+    public async Task UpdateProviderScheduleAsync(string providerId, IQueryable<ServiceProviderSchedule> schedules)
     {
         await _repository.UpdateProviderScheduleAsync(providerId, schedules);
     }

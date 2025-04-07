@@ -32,7 +32,7 @@ namespace Models.Hotel
             builder.HasOne(rt => rt.Hotel)
                    .WithMany(h => h.RoomTypes)
                    .HasForeignKey(rt => rt.HotelId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

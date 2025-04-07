@@ -29,7 +29,7 @@ public class AgencyPackageConfigration : IEntityTypeConfiguration<AgencyPackage>
     modelBuilder.HasKey(Packge => Packge.Id);
         modelBuilder.HasOne(packge => packge.Agency)
         .WithMany(agency => agency.AgencyPackages)
-        .HasForeignKey(agency => agency.AgencyId);
+        .HasForeignKey(agency => agency.AgencyId).OnDelete(DeleteBehavior.NoAction);
 
     }
 }

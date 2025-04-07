@@ -14,26 +14,22 @@ namespace Dalel.Repository
 
         public ServiceProviderProjectRepository(DelelContext context) : base(context)
         {
-            _context = context;
+
         }
 
         public async Task<IQueryable<ServiceProviderProject>> GetProjectsByProviderAsync(string providerId)
         {
-            return (IQueryable<ServiceProviderProject>)await _context.ServiceProviderProjects
-                .Where(p => p.ServiceProviderId == providerId)
-                .OrderByDescending(p => p.Id)
-                .ToListAsync();
+            return base.GetList(p => p.ServiceProviderId == providerId).OrderByDescending(p => p.Id);
         }
 
         public async Task AddProjectAsync(ServiceProviderProject project, string imagePath = null)
         {
             if (!string.IsNullOrEmpty(imagePath))
             {
-                project.Image = imagePath;
+                project.ProjectImages = imagePath;
             }
+            base.Add(project);
 
-            await _context.ServiceProviderProjects.AddAsync(project);
-            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateProjectImageAsync(int projectId, string newImagePath)
@@ -41,7 +37,7 @@ namespace Dalel.Repository
             var project = await _context.ServiceProviderProjects.FindAsync(projectId);
             if (project != null)
             {
-                project.Image = newImagePath;
+                project.ProjectImages = newImagePath;
                 await _context.SaveChangesAsync();
             }
         }

@@ -113,6 +113,7 @@ namespace Dalel.API.Controllers
 
         }
 
+        [HttpPost("Signout")]
         public async Task<IActionResult> Signout()
         {
             await accountService.Signout();

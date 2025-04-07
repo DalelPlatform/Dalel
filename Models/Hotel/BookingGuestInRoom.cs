@@ -8,7 +8,6 @@ namespace Models.Hotel
     {
         public int Id { get; set; }
         public string FullName { get; set; }
-        public string NationalID { get; set; }
         public string NationalId { get; set; }
         public string NationalIDImage { get; set; }
 
@@ -28,7 +27,7 @@ namespace Models.Hotel
             builder.HasOne(bgir => bgir.BookingHotelRoom)
                    .WithMany(bhr => bhr.BookingGuestsInRooms)
                    .HasForeignKey(bgir => bgir.BookingHotelRoomId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -15,42 +15,38 @@ namespace Dalel.Repository.HomeServices
 
         public ServiceQuariesRepository(DelelContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task<IEnumerable<ServiceQuaries>> GetQueriesByCategoryAsync(int categoryId)
+        public async Task<IQueryable<ServiceQuaries>> GetQueriesByCategoryAsync(int categoryId)
         {
-            return await _context.ServiceQuaries
-                .Include(q => q.Client)
-                .Include(q => q.ServiceProvider)
-                .Where(q => q.CategoryServicesId == categoryId)
-                .OrderByDescending(q => q.QuestionDate)
-                .ToListAsync();
+
+            var queries = await base.GetList(q => q.CategoryServicesId == categoryId)
+                          .OrderByDescending(q => q.QuestionDate)
+                          .ToListAsync();
+
+            return (IQueryable<ServiceQuaries>)queries;
         }
 
-        public async Task<IEnumerable<ServiceQuaries>> GetQueriesByClientAsync(string clientId)
+        public async Task<IQueryable<ServiceQuaries>> GetQueriesByClientAsync(string clientId)
         {
-            return await _context.ServiceQuaries
-                .Include(q => q.CategoryServices)
-                .Include(q => q.ServiceProvider)
-                .Where(q => q.ClientId == clientId)
-                .OrderByDescending(q => q.QuestionDate)
-                .ToListAsync();
+            return (IQueryable<ServiceQuaries>)await base.GetList(q => q.ClientId == clientId)
+                          .OrderByDescending(q => q.QuestionDate)
+                          .ToListAsync();
+
         }
 
-        public async Task<IEnumerable<ServiceQuaries>> GetQueriesByProviderAsync(string providerId)
+        public async Task<IQueryable<ServiceQuaries>> GetQueriesByProviderAsync(string providerId)
         {
-            return await _context.ServiceQuaries
-                .Include(q => q.Client)
-                .Include(q => q.CategoryServices)
-                .Where(q => q.ServiceProviderId == providerId)
-                .OrderByDescending(q => q.QuestionDate)
-                .ToListAsync();
+
+            return (IQueryable<ServiceQuaries>)await _context.ServiceQuaries
+                         .Where(q => q.ServiceProviderId == providerId)
+                         .OrderByDescending(q => q.QuestionDate)
+                         .ToListAsync();
         }
 
         public async Task<bool> AnswerQueryAsync(int queryId, string answer)
         {
-            var query = await _context.ServiceQuaries.FindAsync(queryId);
+            var query = await base.GetList(q => q.Id == queryId).FirstOrDefaultAsync();
             if (query != null)
             {
                 query.Answer = answer;

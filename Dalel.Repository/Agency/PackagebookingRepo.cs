@@ -21,11 +21,12 @@ namespace Dalel.Repository.Agency
         public IQueryable<PackageBooking> GetBookingsByClient(string clientId)
         {
             return GetList(booking => booking.ClientId == clientId)
-                .OrderByDescending(booking=>booking.Date);
+                .OrderByDescending(booking => booking.Date);
 
         }
         public IQueryable<PackageBooking> GetCompletedBookings(string clientId)
-        { return GetList(booking => booking.ClientId == clientId && 
+        {
+            return GetList(booking => booking.ClientId == clientId &&
         booking.PackageSchadule.Date <= DateTime.Now).
                OrderByDescending(booking => booking.PackageSchadule.Date);
 
@@ -35,10 +36,11 @@ namespace Dalel.Repository.Agency
         public bool CancelBooking(int bookingId)
         {
             var booking = GetList(b => b.Id == bookingId)
-             
+
                 .FirstOrDefault();
-                
-            if (booking == null || booking.PackageSchadule.Date <= DateTime.UtcNow) {
+
+            if (booking == null || booking.PackageSchadule.Date <= DateTime.UtcNow)
+            {
                 return false;
             }
             booking.BookingStatus = BookingStatus.Rejected;

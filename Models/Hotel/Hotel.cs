@@ -43,7 +43,7 @@ namespace Models.Hotel
             builder.HasOne(h => h.Owner)
                    .WithOne(o => o.Hotel)
                    .HasForeignKey<Hotel>(h => h.OwnerId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
