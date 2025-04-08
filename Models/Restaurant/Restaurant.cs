@@ -7,6 +7,8 @@ namespace Models.Restaurant
     public class Restaurant
     {
         public int Id { get; set; }
+
+        public string Name { get; set; }
         public string Description { get; set; }
 
         public int NumberOfRooms { get; set; }
@@ -73,10 +75,7 @@ namespace Models.Restaurant
             //Relation between Restaurants & RestaurantOwners (one to one) 
             builder.HasOne(restowner => restowner.RestaurantOwner)
                 .WithOne(rest => rest.Restaurant)
-                .HasForeignKey<Restaurant>(rest => rest.OwnerId)
-                .OnDelete(DeleteBehavior.NoAction);
-                
-                 
+                .HasForeignKey<Restaurant> (rest => rest.OwnerId).OnDelete(DeleteBehavior.NoAction);
 
         }
     }

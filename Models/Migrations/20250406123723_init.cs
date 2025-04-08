@@ -119,7 +119,7 @@ namespace Models.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -140,7 +140,7 @@ namespace Models.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -160,7 +160,7 @@ namespace Models.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -178,13 +178,13 @@ namespace Models.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,7 +204,7 @@ namespace Models.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -220,8 +220,7 @@ namespace Models.Migrations
                         name: "FK_Client_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -239,8 +238,7 @@ namespace Models.Migrations
                         name: "FK_Drivers_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -261,7 +259,7 @@ namespace Models.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -277,8 +275,7 @@ namespace Models.Migrations
                         name: "FK_HotelOwners_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -294,8 +291,7 @@ namespace Models.Migrations
                         name: "FK_PropertyOwners_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -311,8 +307,7 @@ namespace Models.Migrations
                         name: "FK_RestaurantOwners_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -328,8 +323,7 @@ namespace Models.Migrations
                         name: "FK_TravelAgencyOwners_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -355,14 +349,12 @@ namespace Models.Migrations
                         name: "FK_ServiceProviders_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ServiceProviders_CategoryServices_CategoryServicesId",
                         column: x => x.CategoryServicesId,
                         principalTable: "CategoryServices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -465,8 +457,7 @@ namespace Models.Migrations
                         name: "FK_HomeChefMeals_HomeChefs_HomeChefId",
                         column: x => x.HomeChefId,
                         principalTable: "HomeChefs",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -493,8 +484,7 @@ namespace Models.Migrations
                         name: "FK_HomeChefOrders_HomeChefs_HomeChefId",
                         column: x => x.HomeChefId,
                         principalTable: "HomeChefs",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -524,8 +514,7 @@ namespace Models.Migrations
                         name: "FK_Hotels_HotelOwners_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "HotelOwners",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -562,7 +551,7 @@ namespace Models.Migrations
                         column: x => x.OwnerId,
                         principalTable: "PropertyOwners",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -571,6 +560,7 @@ namespace Models.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "NVARCHAR(250)", nullable: false, defaultValue: "empty"),
                     NumberOfRooms = table.Column<int>(type: "int", nullable: false),
                     BuildingNo = table.Column<int>(type: "int", nullable: false),
@@ -595,8 +585,7 @@ namespace Models.Migrations
                         name: "FK_Restaurants_RestaurantOwners_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "RestaurantOwners",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -618,8 +607,7 @@ namespace Models.Migrations
                         name: "FK_AgencyCustomerInquiries_Client_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Client",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "UserId");
                     table.ForeignKey(
                         name: "FK_AgencyCustomerInquiries_TravelAgencyOwners_AgencyId",
                         column: x => x.AgencyId,
@@ -655,8 +643,7 @@ namespace Models.Migrations
                         name: "FK_TravelAgencies_TravelAgencyOwners_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "TravelAgencyOwners",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -677,8 +664,7 @@ namespace Models.Migrations
                         name: "FK_ServiceProviderProjects_ServiceProviders_ServiceProviderId",
                         column: x => x.ServiceProviderId,
                         principalTable: "ServiceProviders",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -699,8 +685,7 @@ namespace Models.Migrations
                         name: "FK_ServiceProviderSchedules_ServiceProviders_ServiceProviderId",
                         column: x => x.ServiceProviderId,
                         principalTable: "ServiceProviders",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -1025,7 +1010,7 @@ namespace Models.Migrations
                         column: x => x.HotelId,
                         principalTable: "Hotels",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1044,14 +1029,12 @@ namespace Models.Migrations
                         name: "FK_HotelPolicies_Hotels_HotelId",
                         column: x => x.HotelId,
                         principalTable: "Hotels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_HotelPolicies_Policy_PolicyId",
                         column: x => x.PolicyId,
                         principalTable: "Policy",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1071,14 +1054,12 @@ namespace Models.Migrations
                         name: "FK_HotelServices_Hotels_HotelId",
                         column: x => x.HotelId,
                         principalTable: "Hotels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_HotelServices_Services_ServicesId",
                         column: x => x.ServicesId,
                         principalTable: "Services",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1101,8 +1082,7 @@ namespace Models.Migrations
                         name: "FK_RoomTypes_Hotels_HotelId",
                         column: x => x.HotelId,
                         principalTable: "Hotels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1125,14 +1105,12 @@ namespace Models.Migrations
                         name: "FK_BookingProperties_Client_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Client",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "UserId");
                     table.ForeignKey(
                         name: "FK_BookingProperties_Properties_PropertyId",
                         column: x => x.PropertyId,
                         principalTable: "Properties",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1171,7 +1149,7 @@ namespace Models.Migrations
                         column: x => x.RestaurantId,
                         principalTable: "Restaurants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1278,8 +1256,7 @@ namespace Models.Migrations
                         name: "FK_AgencyPackages_TravelAgencies_AgencyId",
                         column: x => x.AgencyId,
                         principalTable: "TravelAgencies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1301,8 +1278,7 @@ namespace Models.Migrations
                         name: "FK_AgencyPromotions_TravelAgencies_AgencyId",
                         column: x => x.AgencyId,
                         principalTable: "TravelAgencies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1323,8 +1299,7 @@ namespace Models.Migrations
                         name: "FK_AgencyVerificationDocuments_TravelAgencies_AgencyId",
                         column: x => x.AgencyId,
                         principalTable: "TravelAgencies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1343,8 +1318,7 @@ namespace Models.Migrations
                         name: "FK_Rooms_RoomTypes_RoomTypeId",
                         column: x => x.RoomTypeId,
                         principalTable: "RoomTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1364,7 +1338,7 @@ namespace Models.Migrations
                         column: x => x.RoomTypeId,
                         principalTable: "RoomTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1410,8 +1384,7 @@ namespace Models.Migrations
                         name: "FK_ReviewProperties_BookingProperties_BookingPropertyId",
                         column: x => x.BookingPropertyId,
                         principalTable: "BookingProperties",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1431,7 +1404,7 @@ namespace Models.Migrations
                         column: x => x.RestaurantMenuItemId,
                         principalTable: "RestaurantMenuItems",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1547,7 +1520,7 @@ namespace Models.Migrations
                         column: x => x.AgencyPackageId,
                         principalTable: "AgencyPackages",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1562,7 +1535,8 @@ namespace Models.Migrations
                     NumberOfGuests = table.Column<int>(type: "int", nullable: false),
                     BookingStatus = table.Column<int>(type: "int", nullable: false),
                     ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoomId = table.Column<int>(type: "int", nullable: false)
+                    RoomId = table.Column<int>(type: "int", nullable: false),
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1571,14 +1545,12 @@ namespace Models.Migrations
                         name: "FK_BookingHotelRooms_Client_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Client",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "UserId");
                     table.ForeignKey(
                         name: "FK_BookingHotelRooms_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1601,14 +1573,12 @@ namespace Models.Migrations
                         name: "FK_PackageBookings_Client_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Client",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "UserId");
                     table.ForeignKey(
                         name: "FK_PackageBookings_PackageSchadules_PackageSchaduleId",
                         column: x => x.PackageSchaduleId,
                         principalTable: "PackageSchadules",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1618,9 +1588,10 @@ namespace Models.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NationalID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NationalId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NationalIDImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BookingHotelRoomId = table.Column<int>(type: "int", nullable: false)
+                    BookingHotelRoomId = table.Column<int>(type: "int", nullable: false),
+                    BookingId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1629,8 +1600,7 @@ namespace Models.Migrations
                         name: "FK_BookingGuestsInRooms_BookingHotelRooms_BookingHotelRoomId",
                         column: x => x.BookingHotelRoomId,
                         principalTable: "BookingHotelRooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1646,7 +1616,10 @@ namespace Models.Migrations
                     PaymentMethod = table.Column<int>(type: "int", nullable: false),
                     PaymentStatus = table.Column<int>(type: "int", nullable: false),
                     TransactionDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BookingHotelRoomId = table.Column<int>(type: "int", nullable: false)
+                    BookingHotelRoomId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ClientId = table.Column<int>(type: "int", nullable: false),
+                    HotelId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1655,8 +1628,7 @@ namespace Models.Migrations
                         name: "FK_PaymentHotelRooms_BookingHotelRooms_BookingHotelRoomId",
                         column: x => x.BookingHotelRoomId,
                         principalTable: "BookingHotelRooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1677,8 +1649,7 @@ namespace Models.Migrations
                         name: "FK_ReviewHotelRooms_BookingHotelRooms_BookingHotelRoomId",
                         column: x => x.BookingHotelRoomId,
                         principalTable: "BookingHotelRooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

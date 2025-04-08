@@ -20,9 +20,7 @@ namespace Models.User
             builder
                 .HasOne(a => a.AppUser)
                 .WithOne(a => a.RestaurantOwner)
-                .HasForeignKey<RestaurantOwner>(a => a.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-
+                .HasForeignKey<RestaurantOwner>(a => a.UserId).OnDelete(DeleteBehavior.NoAction);
 
         }
     }

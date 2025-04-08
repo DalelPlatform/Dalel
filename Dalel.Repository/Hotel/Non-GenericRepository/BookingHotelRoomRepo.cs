@@ -11,7 +11,7 @@ namespace Dalel.Repository.Hotel.Non_GenericRepository
 {
 
 
-    public class BookingHotelRoomRepository : GenericHotelRepo<BookingHotelRoom>, IGenericHotelRepo<BookingHotelRoom>
+    public class BookingHotelRoomRepository : GenericHotelRepo<BookingHotelRoom>
     {
         private readonly DelelContext _context;
 
@@ -34,7 +34,7 @@ namespace Dalel.Repository.Hotel.Non_GenericRepository
                            .ToList();
         }
 
-        public List<BookingHotelRoom> GetAvailableBookings()
+        public List<BookingHotelRoom> GetAvailableRoom()
         {
             return _context.BookingHotelRooms
                            .Where(b => b.IsAvailable)

@@ -41,7 +41,7 @@ namespace Dalel.Repository.Agency
                 return false;
 
             payment.CodeApplied = discountCode;
-            base.Update(payment);
+            base.Update(payment); // Fix: Pass both parameters
             return true;
         }
         //Get Total Revenue from Paid Bookings

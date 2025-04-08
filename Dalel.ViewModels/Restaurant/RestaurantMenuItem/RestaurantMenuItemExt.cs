@@ -9,19 +9,24 @@ namespace Dalel.ViewModels
 {
     public static class RestaurantMenuItemExt
     {
-        
+        public static RestaurantMenuItem ToModel(this AddRestaurantMenuItemVM menuItemVM)
+        {
 
+            return new RestaurantMenuItem
+            {
+                Name = menuItemVM.Name,
+                Description = menuItemVM.Description,
+                Price = menuItemVM.Price,
+                DietaryTags = menuItemVM.DietaryTags,
+                FoodCategory = menuItemVM.FoodCategory,
+                PieceSize = menuItemVM.PieceSize,
+                Duration = menuItemVM.Duration,
+                RestaurantId = menuItemVM.RestaurantId,
+                RestaurantMenuItemImages = menuItemVM.Paths.Select(path => new RestaurantMenuItemImage() { Image = path }).ToList(),
+                IsDeleted = false
 
-        //public static RestaurantMenuItem ToModel(this AddRestaurantMenuItemVM menuItemVM )
-        //{
-
-        //    return new RestaurantMenuItem
-        //    {
-        //        Id = menuItemVM.
-        //    }
-        //}
-
-
+            };
+        }
         public static RestaurantMenuItemDetailsVM ToDetailsViewModel (this RestaurantMenuItem menuItem)
         {
             return new RestaurantMenuItemDetailsVM
@@ -35,8 +40,8 @@ namespace Dalel.ViewModels
                 Price = menuItem.Price,
                 PieceSize = menuItem.PieceSize,
                 //VendorName = viewModel.Vendor.User.UserName ?? "Not Provided",
-                RestaurantName = menuItem.Restaurant.RestaurantOwner.AppUser.UserName ?? "Not Provided",
-                Images = menuItem.RestaurantMenuItemImages.Select(i => i.Image).ToList()
+                RestaurantName = menuItem.Restaurant.Name ?? "Not Provided",
+                Images = menuItem.RestaurantMenuItemImages.Select(i => i.Image).ToList() ?? new List<string>()
 
             };
         }

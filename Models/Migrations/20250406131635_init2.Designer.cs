@@ -12,8 +12,8 @@ using Models;
 namespace Models.Migrations
 {
     [DbContext(typeof(DelelContext))]
-    [Migration("20250403094011_init")]
-    partial class init
+    [Migration("20250406131635_init2")]
+    partial class init2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1277,15 +1277,18 @@ namespace Models.Migrations
                     b.Property<int>("BookingHotelRoomId")
                         .HasColumnType("int");
 
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NationalID")
+                    b.Property<string>("NationalIDImage")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NationalIDImage")
+                    b.Property<string>("NationalId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -1316,6 +1319,9 @@ namespace Models.Migrations
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
 
                     b.Property<int>("NumberOfGuests")
                         .HasColumnType("int");
@@ -1487,17 +1493,27 @@ namespace Models.Migrations
                     b.Property<int>("BookingHotelRoomId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CodeApplied")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("CommissionDeducted")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
 
                     b.Property<int>("PaymentStatus")
                         .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TransactionDateTime")
                         .HasColumnType("datetime2");
@@ -1968,6 +1984,10 @@ namespace Models.Migrations
                     b.Property<DateTime>("ModificationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("NumberOfRooms")
                         .HasColumnType("int");
 
@@ -2250,13 +2270,11 @@ namespace Models.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("NVARCHAR(500)")
                         .HasDefaultValue("empty");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("NVARCHAR(500)")
                         .HasDefaultValue("empty");
@@ -2272,11 +2290,10 @@ namespace Models.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("NVARCHAR(500)")
                         .HasDefaultValue("empty");
@@ -2288,10 +2305,9 @@ namespace Models.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("ModificationBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModificationDate")
+                    b.Property<DateTime?>("ModificationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GetDate()");
@@ -2318,7 +2334,6 @@ namespace Models.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfileImg")
-                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("NVARCHAR(500)")
                         .HasDefaultValue("empty");
@@ -2564,7 +2579,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.Client", "Client")
                         .WithMany("Inquiries")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AgencyOwners");
@@ -2577,7 +2592,7 @@ namespace Models.Migrations
                     b.HasOne("Models.Agency.TravelAgencies", "Agency")
                         .WithMany("AgencyPackages")
                         .HasForeignKey("AgencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Agency");
@@ -2588,7 +2603,7 @@ namespace Models.Migrations
                     b.HasOne("Models.Agency.TravelAgencies", "Agency")
                         .WithMany("agencyPromotions")
                         .HasForeignKey("AgencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Agency");
@@ -2599,7 +2614,7 @@ namespace Models.Migrations
                     b.HasOne("Models.Agency.TravelAgencies", "Agency")
                         .WithMany("AgencyVerificationDocuments")
                         .HasForeignKey("AgencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Agency");
@@ -2610,13 +2625,13 @@ namespace Models.Migrations
                     b.HasOne("Models.User.Client", "Client")
                         .WithMany("PackageBookings")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Models.Agency.PackageSchadule", "PackageSchadule")
                         .WithMany("PabckageBookings")
                         .HasForeignKey("PackageSchaduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -2673,7 +2688,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.TravelAgencyOwners", "travelAgencyOwners")
                         .WithMany("TravelAgencies")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("travelAgencyOwners");
@@ -2769,7 +2784,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.HomeChef", "HomeChef")
                         .WithMany("HomeChefMeal")
                         .HasForeignKey("HomeChefId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("HomeChef");
@@ -2797,7 +2812,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.HomeChef", "HomeChef")
                         .WithMany("HomeChefOrder")
                         .HasForeignKey("HomeChefId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -2862,7 +2877,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.ServiceProvider", "ServiceProvider")
                         .WithMany("Projects")
                         .HasForeignKey("ServiceProviderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ServiceProvider");
@@ -2903,7 +2918,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.ServiceProvider", "ServiceProvider")
                         .WithMany("Schedules")
                         .HasForeignKey("ServiceProviderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ServiceProvider");
@@ -2952,7 +2967,7 @@ namespace Models.Migrations
                     b.HasOne("Models.Hotel.BookingHotelRoom", "BookingHotelRoom")
                         .WithMany("BookingGuestsInRooms")
                         .HasForeignKey("BookingHotelRoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("BookingHotelRoom");
@@ -2963,13 +2978,13 @@ namespace Models.Migrations
                     b.HasOne("Models.User.Client", "Client")
                         .WithMany("BookingHotelRooms")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Models.Hotel.Room", "Room")
                         .WithMany("BookingHotelRooms")
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -2982,7 +2997,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.HotelOwners", "Owner")
                         .WithOne("Hotel")
                         .HasForeignKey("Models.Hotel.Hotel", "OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -3004,13 +3019,13 @@ namespace Models.Migrations
                     b.HasOne("Models.Hotel.Hotel", "Hotel")
                         .WithMany("HotelPolicies")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Models.Hotel.Policy", "Policy")
                         .WithMany("HotelPolicies")
                         .HasForeignKey("PolicyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -3023,13 +3038,13 @@ namespace Models.Migrations
                     b.HasOne("Models.Hotel.Hotel", "Hotel")
                         .WithMany("HotelServices")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Models.Hotel.Service", "Service")
                         .WithMany("HotelServices")
                         .HasForeignKey("ServicesId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -3042,7 +3057,7 @@ namespace Models.Migrations
                     b.HasOne("Models.Hotel.BookingHotelRoom", "BookingHotelRoom")
                         .WithOne("PaymentHotelRoom")
                         .HasForeignKey("Models.Hotel.PaymentHotelRoom", "BookingHotelRoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("BookingHotelRoom");
@@ -3053,7 +3068,7 @@ namespace Models.Migrations
                     b.HasOne("Models.Hotel.BookingHotelRoom", "BookingHotelRoom")
                         .WithOne("ReviewHotelRoom")
                         .HasForeignKey("Models.Hotel.ReviewHotelRoom", "BookingHotelRoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("BookingHotelRoom");
@@ -3064,7 +3079,7 @@ namespace Models.Migrations
                     b.HasOne("Models.Hotel.RoomType", "RoomType")
                         .WithMany("Rooms")
                         .HasForeignKey("RoomTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("RoomType");
@@ -3075,7 +3090,7 @@ namespace Models.Migrations
                     b.HasOne("Models.Hotel.Hotel", "Hotel")
                         .WithMany("RoomTypes")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -3097,13 +3112,13 @@ namespace Models.Migrations
                     b.HasOne("Models.User.Client", "Client")
                         .WithMany("BookingProperties")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Models.Property.Properties", "Properties")
                         .WithMany("BookingProperties")
                         .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -3149,7 +3164,7 @@ namespace Models.Migrations
                     b.HasOne("Models.Property.BookingProperties", "BookingProperties")
                         .WithOne("ReviewProperties")
                         .HasForeignKey("Models.Property.ReviewProperties", "BookingPropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("BookingProperties");
@@ -3171,7 +3186,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.RestaurantOwner", "RestaurantOwner")
                         .WithOne("Restaurant")
                         .HasForeignKey("Models.Restaurant.Restaurant", "OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("RestaurantOwner");
@@ -3283,7 +3298,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.AppUser", "User")
                         .WithOne("Client")
                         .HasForeignKey("Models.User.Client", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -3294,7 +3309,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.AppUser", "AppUser")
                         .WithOne("Driver")
                         .HasForeignKey("Models.User.Drivers", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -3316,7 +3331,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.AppUser", "AppUser")
                         .WithOne("HotelOwner")
                         .HasForeignKey("Models.User.HotelOwners", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -3327,7 +3342,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.AppUser", "AppUser")
                         .WithOne("PropertyOwner")
                         .HasForeignKey("Models.User.PropertyOwner", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -3338,7 +3353,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.AppUser", "AppUser")
                         .WithOne("RestaurantOwner")
                         .HasForeignKey("Models.User.RestaurantOwner", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -3349,13 +3364,13 @@ namespace Models.Migrations
                     b.HasOne("Models.HomeService.CategoryServices", "CategoryServices")
                         .WithMany("ServiceProviders")
                         .HasForeignKey("CategoryServicesId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Models.User.AppUser", "AppUser")
                         .WithOne("ServiceProvider")
                         .HasForeignKey("Models.User.ServiceProvider", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -3368,7 +3383,7 @@ namespace Models.Migrations
                     b.HasOne("Models.User.AppUser", "AppUser")
                         .WithOne("TravelAgencyOwner")
                         .HasForeignKey("Models.User.TravelAgencyOwners", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AppUser");

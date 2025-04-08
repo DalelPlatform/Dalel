@@ -11,6 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dalel.ViewModels", "Dalel.V
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dalel.MVC", "Dalel.MVC\Dalel.MVC.csproj", "{30A6091B-FB44-C563-9920-71C0008B9201}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dalel.API", "Dalel.API\Dalel.API.csproj", "{41311C96-2315-4173-91A0-920F54F7E638}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dalel.Services", "Services\Dalel.Services.csproj", "{F45570A7-2D72-4F05-8274-CF2E80F63394}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{BECBAB31-9B1B-4906-89E0-1849BF3A17CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -28,11 +28,11 @@ namespace Models.Agency
             modelBuilder.HasKey(PackageBooking => PackageBooking.Id);
             modelBuilder.HasOne(c => c.Client)
             .WithMany(packg => packg.PackageBookings)
-            .HasForeignKey(PackageBooking => PackageBooking.ClientId);
+            .HasForeignKey(PackageBooking => PackageBooking.ClientId).OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.HasOne(PackageBooking => PackageBooking.PackageSchadule)
             .WithMany(Schadule => Schadule.PabckageBookings)
-            .HasForeignKey(PackageBooking => PackageBooking.PackageSchaduleId);
+            .HasForeignKey(PackageBooking => PackageBooking.PackageSchaduleId).OnDelete(DeleteBehavior.NoAction);
 
         }
     }

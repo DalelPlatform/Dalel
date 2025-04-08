@@ -59,9 +59,7 @@ namespace Models.User
             builder
                 .HasOne(a => a.User)
                 .WithOne(a => a.Client)
-                .HasForeignKey<Client>(a => a.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-
+                .HasForeignKey<Client>(a => a.UserId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

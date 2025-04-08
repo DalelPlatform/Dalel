@@ -24,7 +24,7 @@ namespace Models.Property
             
             builder.HasOne(rp => rp.BookingProperties)
                 .WithOne(bp => bp.ReviewProperties)
-                .HasForeignKey<ReviewProperties>(rp => rp.BookingPropertyId);
+                .HasForeignKey<ReviewProperties>(rp => rp.BookingPropertyId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

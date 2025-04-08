@@ -5,6 +5,7 @@ using System.Security.Claims;
 
 namespace Dalel.MVC.Controllers
 {
+    [Area("Admin")]
     public class CategoryServicesController : Controller
     {
         private CategoryServicesRepository repository;
@@ -24,13 +25,11 @@ namespace Dalel.MVC.Controllers
             return View();
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Add(CategoryServices category)
         {
             if (ModelState.IsValid)
-            { 
-            
+            {
                 repository.Add(category);
                 return RedirectToAction("index");
             }
@@ -56,6 +55,5 @@ namespace Dalel.MVC.Controllers
             repository.Delete(classroom);
             return RedirectToAction("index");
         }
-
     }
 }

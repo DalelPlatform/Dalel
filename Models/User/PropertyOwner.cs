@@ -22,9 +22,7 @@ namespace Models.User
             builder
                 .HasOne(a => a.AppUser)
                 .WithOne(a => a.PropertyOwner)
-                .HasForeignKey<PropertyOwner>(a => a.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-
+                .HasForeignKey<PropertyOwner>(a => a.UserId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
