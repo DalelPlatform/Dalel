@@ -51,7 +51,7 @@ namespace Models.User
             builder.HasOne(sp => sp.AppUser)
                 .WithOne(cs => cs.ServiceProvider)
                 .HasForeignKey<ServiceProvider>(sp => sp.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
 
         }

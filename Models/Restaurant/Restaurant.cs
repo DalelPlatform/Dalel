@@ -68,12 +68,15 @@ namespace Models.Restaurant
             builder.Property(rest => rest.PhoneNumber).HasDefaultValue("empty").HasColumnType("NVARCHAR(50)");
             builder.Property(rest => rest.CancelationOptions).HasDefaultValue(false);
             builder.Property(rest => rest.VerificationStatus).HasDefaultValue(VerificationStatus.Pending);
-          
+
 
             //Relation between Restaurants & RestaurantOwners (one to one) 
             builder.HasOne(restowner => restowner.RestaurantOwner)
                 .WithOne(rest => rest.Restaurant)
-                .HasForeignKey<Restaurant> (rest => rest.OwnerId);
+                .HasForeignKey<Restaurant>(rest => rest.OwnerId)
+                .OnDelete(DeleteBehavior.NoAction);
+                
+                 
 
         }
     }

@@ -38,7 +38,9 @@ namespace Models.User
             //relation between HomeChef & HomeChefOrder (one to many)
             builder.HasMany(homecheforder => homecheforder.HomeChefOrder)
                 .WithOne(homechef => homechef.HomeChef)
-                .HasForeignKey(homechefmeal => homechefmeal.HomeChefId);
+                .HasForeignKey(homechefmeal => homechefmeal.HomeChefId)
+                .OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 }

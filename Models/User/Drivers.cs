@@ -30,7 +30,9 @@ namespace Models.User
             builder
                 .HasOne(a => a.AppUser)
                 .WithOne(a => a.Driver)
-                .HasForeignKey<Drivers>(a => a.UserId);
+                .HasForeignKey<Drivers>(a => a.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 }

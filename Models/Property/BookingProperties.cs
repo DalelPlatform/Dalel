@@ -36,7 +36,7 @@ namespace Models.Property
 
             builder.HasOne(bp => bp.Client)
                 .WithMany(c => c.BookingProperties)
-                .HasForeignKey(bp => bp.ClientId).OnDelete(DeleteBehavior.NoAction); ;
+                .HasForeignKey(bp => bp.ClientId).OnDelete(DeleteBehavior.NoAction);
 
 
         }
