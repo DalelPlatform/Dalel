@@ -1,55 +1,31 @@
 ﻿using Dalel.ViewModels.Hotel_DTO;
 using FluentValidation;
-using Dalel.Core.Contracts; // Assuming repository interfaces are in Core
 
-namespace Dalel.API.Validators
+namespace Dalel.Validations.Hotel
 {
     public class BookingGuestInRoomDTOValidator : AbstractValidator<BookingGuestInRoomDTO>
     {
-       
-
         public BookingGuestInRoomDTOValidator()
         {
-            
-
-            // Use regions to organize validation rules
-            #region Basic Information Validation
             RuleFor(x => x.FullName)
-                .NotEmpty()
-                .WithMessage("Guest name is required")
-                .MaximumLength(100)
-                .WithMessage("Name cannot exceed 100 characters")
-                .Matches(@"^[\p{L} \.'\-]+$")
-                .WithMessage("Name contains invalid characters");
+                .NotEmpty().WithMessage("Full name is required")
+                .MaximumLength(100).WithMessage("Full name cannot exceed 100 characters");
 
             RuleFor(x => x.NationalID)
-                .NotEmpty()
-                .WithMessage("National ID is required")
-                .Length(10, 20)
-                .WithMessage("National ID must be between 10-20 characters")
-                .Matches(@"^\d+$")
-                .WithMessage("National ID must contain only numbers");
-            #endregion
+                .NotEmpty().WithMessage("National ID is required")
+                .Length(10, 20).WithMessage("National ID must be between 10 and 20 characters");
 
-            #region Document Validation
             RuleFor(x => x.NationalIDImage)
-                .NotEmpty()
-                .WithMessage("ID image is required")
-                .Must(BeAValidImagePath)
-                .WithMessage("Invalid image file format")
-                .When(x => !string.IsNullOrEmpty(x.NationalIDImage));
-            #endregion
+                .NotEmpty().WithMessage("National ID image is required")
+                .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
+                .When(x => !string.IsNullOrEmpty(x.NationalIDImage))
+                .WithMessage("National ID image must be a valid URL");
 
-           
-        }
+            RuleFor(x => x.BookingHotelRoomId)
+                .GreaterThan(0).WithMessage("Invalid booking reference");
 
-        // Custom validation method for image path
-        private bool BeAValidImagePath(string path)
-        {
-            if (string.IsNullOrWhiteSpace(path)) return false;
-
-            var validExtensions = new[] { ".jpg", ".jpeg", ".png", ".pdf" };
-            return validExtensions.Contains(Path.GetExtension(path).ToLower());
+            RuleFor(x => x.BookingId)
+                .GreaterThan(0).WithMessage("Invalid booking ID");
         }
     }
 }
