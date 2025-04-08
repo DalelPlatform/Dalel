@@ -4,64 +4,58 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Dalel.Repository.GenericHotelRepo
 {
     public class GenericHotelRepo<T> : IGenericHotelRepo<T> where T : class
     {
-        private DelelContext _context = null;
-
-
-        
-        private DbSet<T> table = null;
+        private readonly DelelContext _context;
+        private readonly DbSet<T> _table;
 
         public GenericHotelRepo(DelelContext context)
         {
-          _context = context;
-            table = context.Set<T>();
+            _context = context;
+            _table = context.Set<T>();
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return table.ToList();
+            return await _table.ToListAsync();
         }
 
-        public T GetById(object id)
+        public async Task<T> GetByIdAsync(object id)
         {
-            return table.Find(id);
-        }
-        // Get entities by condition
-        public IEnumerable<T> GetByCondition(Expression<Func<T, bool>> expression)
-        {
-            return table.Where(expression).ToList();
+            return await _table.FindAsync(id);
         }
 
-        public void Insert(T obj)
+        public async Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> expression)
         {
-           
-            table.Add(obj);
+            return await _table.Where(expression).ToListAsync();
         }
 
-        public void Update(T obj)
+        public async Task InsertAsync(T obj)
         {
-           
-            table.Attach(obj);
-           
+            await _table.AddAsync(obj);
+        }
+
+        public async Task UpdateAsync(T obj)
+        {
+            _table.Attach(obj);
             _context.Entry(obj).State = EntityState.Modified;
+            await Task.CompletedTask;
         }
 
-        public void Delete(object id)
+        public async Task DeleteAsync(object id)
         {
-            T existing = table.Find(id);
-
-            table.Remove(existing);
+            T existing = await _table.FindAsync(id);
+            if (existing != null)
+                _table.Remove(existing);
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

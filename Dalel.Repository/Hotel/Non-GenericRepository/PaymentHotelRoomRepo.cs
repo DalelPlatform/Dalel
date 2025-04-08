@@ -3,6 +3,7 @@ using Models;
 using Models.Hotel;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,25 +19,26 @@ namespace Dalel.Repository.Hotel.Non_GenericRepository
             _context = context;
         }
 
-        public List<PaymentHotelRoom> GetPaymentsByStatus(string status)
+        public async Task<List<PaymentHotelRoom>> GetPaymentsByStatusAsync(string status)
         {
-            return _context.PaymentHotelRoom
-                           .Where(p => p.Status == status)
-                           .ToList();
+            return await _context.PaymentHotelRoom
+                                 .Where(p => p.Status == status)
+                                 .ToListAsync();
         }
 
-        public List<PaymentHotelRoom> GetPaymentsForHotel(int hotelId)
+        public async Task<List<PaymentHotelRoom>> GetPaymentsForHotelAsync(int hotelId)
         {
-            return _context.PaymentHotelRoom
-                           .Where(p => p.HotelId == hotelId)
-                           .ToList();
+            return await _context.PaymentHotelRoom
+                                 .Where(p => p.HotelId == hotelId)
+                                 .ToListAsync();
         }
 
-        public List<PaymentHotelRoom> GetPaymentsForClient(int clientId)
+        public async Task<List<PaymentHotelRoom>> GetPaymentsForClientAsync(int clientId)
         {
-            return _context.PaymentHotelRoom
-                           .Where(p => p.ClientId == clientId)
-                           .ToList();
+            return await _context.PaymentHotelRoom
+                                 .Where(p => p.ClientId == clientId)
+                                 .ToListAsync();
         }
+
     }
 }

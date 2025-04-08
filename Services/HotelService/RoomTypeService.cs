@@ -1,12 +1,11 @@
-﻿
-using Dalel.Repository.Hotel.Non_GenericRepository;
+﻿using Dalel.Repository.Hotel.Non_GenericRepository;
 using Models.Hotel;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 
 namespace Dalel.Services.HotelService
 {
-    public class RoomTypeService : IRoomTypeService
+    public class RoomTypeService  
     {
         private readonly RoomTypeRepository _repository;
 
@@ -15,39 +14,39 @@ namespace Dalel.Services.HotelService
             _repository = repository;
         }
 
-        public void AddRoomType(RoomType roomType)
+        public async Task AddRoomType(RoomType roomType)
         {
-            _repository.Insert(roomType);
+            await _repository.InsertAsync(roomType);
         }
 
-        public void UpdateRoomType(RoomType roomType)
+        public async Task UpdateRoomType(RoomType roomType)
         {
-            _repository.Update(roomType);
+            await _repository.UpdateAsync(roomType);
         }
 
-        public void DeleteRoomType(int id)
+        public async Task DeleteRoomType(int id)
         {
-            _repository.Delete(id);
+            await _repository.DeleteAsync(id);
         }
 
-        public RoomType GetRoomTypeById(int id)
+        public async Task<RoomType> GetRoomTypeById(int id)
         {
-            return _repository.GetById(id);
+            return await _repository.GetByIdAsync(id);
         }
 
-        public IEnumerable<RoomType> GetAllRoomTypes()
+        public async Task<IEnumerable<RoomType>> GetAllRoomTypes()
         {
-            return _repository.GetAll();
+            return await _repository.GetAllAsync();
         }
 
-        public IEnumerable<RoomType> GetRoomTypesByHotelId(int hotelId)
+        public Task<IEnumerable<RoomType>> GetRoomTypesByHotelId(int hotelId)
         {
-            return _repository.GetRoomTypesByHotelId(hotelId);
+            return _repository.GetRoomTypesByHotelIdAsync(hotelId); 
         }
 
-        public IEnumerable<RoomType> GetExpensiveRoomTypes(float priceThreshold)
+        public Task<IEnumerable<RoomType>> GetExpensiveRoomTypes(float priceThreshold)
         {
-            return _repository.GetExpensiveRoomTypes(priceThreshold);
+            return _repository.GetExpensiveRoomTypesAsync(priceThreshold); 
         }
     }
 }

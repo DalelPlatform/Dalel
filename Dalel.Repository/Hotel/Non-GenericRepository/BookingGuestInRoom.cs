@@ -3,6 +3,7 @@ using Models;
 using Models.Hotel;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,17 +19,18 @@ namespace Dalel.Repository.Hotel.Non_GenericRepository
             _context = context;
         }
 
-        public List<BookingGuestInRoom> GetGuestsByBookingId(int bookingId)
+        public async Task<List<BookingGuestInRoom>> GetGuestsByBookingIdAsync(int bookingId)
         {
-            return _context.BookingGuestInRooms
-                           .Where(g => g.BookingId == bookingId)
-                           .ToList();
+            return await _context.BookingGuestInRooms
+                                 .Where(g => g.BookingId == bookingId)
+                                 .ToListAsync();
         }
 
-        public BookingGuestInRoom GetGuestByNationalId(string nationalId)
+        public async Task<BookingGuestInRoom> GetGuestByNationalIdAsync(string nationalId)
         {
-            return _context.BookingGuestInRoom
-                           .FirstOrDefault(g => g.NationalId == nationalId);
+            return await _context.BookingGuestInRoom
+                                 .FirstOrDefaultAsync(g => g.NationalId == nationalId);
         }
+
     }
 }

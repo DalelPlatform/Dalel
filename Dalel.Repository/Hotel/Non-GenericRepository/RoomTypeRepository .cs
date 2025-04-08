@@ -19,15 +19,15 @@ namespace Dalel.Repository.Hotel.Non_GenericRepository
         }
 
         // Specific method to get room types by hotel ID
-        public IEnumerable<RoomType> GetRoomTypesByHotelId(int hotelId)
+        public async Task<IEnumerable<RoomType>> GetRoomTypesByHotelIdAsync(int hotelId)
         {
-            return GetByCondition(rt => rt.HotelId == hotelId);
+            return (IEnumerable<RoomType>)await Task.FromResult(GetByConditionAsync(rt => rt.HotelId == hotelId));
         }
 
-        // Specific method to get room types with price greater than a certain value
-        public IEnumerable<RoomType> GetExpensiveRoomTypes(float priceThreshold)
+        public async Task<IEnumerable<RoomType>> GetExpensiveRoomTypesAsync(float priceThreshold)
         {
-            return GetByCondition(rt => rt.Price > priceThreshold);
+            return (IEnumerable<RoomType>)await Task.FromResult(GetByConditionAsync(rt => rt.Price > priceThreshold));
         }
+
     }
 }

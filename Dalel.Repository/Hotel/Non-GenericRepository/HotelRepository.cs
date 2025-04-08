@@ -3,6 +3,7 @@ using Models;
 using Models.Hotel;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,15 +21,16 @@ namespace Dalel.Repository.Hotel.Non_GenericRepository
         }
 
         // Specific method to get hotels by city
-        public IEnumerable<Models.Hotel.Hotel> GetHotelsByCity(string city)
+        public async Task<IEnumerable<Models.Hotel.Hotel>> GetHotelsByCityAsync(string city)
         {
-            return GetByCondition(h => h.City == city && !h.IsDeleted);
+            return (IEnumerable<Models.Hotel.Hotel>)await Task.FromResult(GetByConditionAsync(h => h.City == city && !h.IsDeleted));
         }
 
-        // Specific method to get a hotel by its owner
-        public Models.Hotel.Hotel GetHotelByOwnerId(string ownerId)
+        public async Task<Models.Hotel.Hotel> GetHotelByOwnerIdAsync(string ownerId)
         {
-            return _context.Set<Models.Hotel.Hotel>().FirstOrDefault(h => h.OwnerId == ownerId);
+            return await _context.Set<Models.Hotel.Hotel>()
+                                 .FirstOrDefaultAsync(h => h.OwnerId == ownerId);
         }
+
     }
 }
