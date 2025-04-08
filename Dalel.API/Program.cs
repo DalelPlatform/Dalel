@@ -11,6 +11,12 @@ using Models;
 using Models.User;
 using System.Text;
 using System.Text.Json.Serialization;
+using Dalel.Repository.Hotel.Non_GenericRepository;
+using Dalel.Services.HotelService;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Models.Hotel;
+using Dalel.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +24,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DelelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
+// Register AutoMapper
+builder.Services.AddAutoMapper(typeof(HotelMappingProfile));
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DelelContext>

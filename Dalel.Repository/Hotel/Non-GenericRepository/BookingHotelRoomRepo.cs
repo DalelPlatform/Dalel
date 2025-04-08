@@ -3,6 +3,7 @@ using Models;
 using Models.Hotel;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace Dalel.Repository.Hotel.Non_GenericRepository
 {
 
 
-    public class BookingHotelRoomRepository : GenericHotelRepo<BookingHotelRoom>, IGenericHotelRepo<BookingHotelRoom>
+    public class BookingHotelRoomRepository : GenericHotelRepo<BookingHotelRoom>
     {
         private readonly DelelContext _context;
 
@@ -20,26 +21,27 @@ namespace Dalel.Repository.Hotel.Non_GenericRepository
             _context = context;
         }
 
-        public List<BookingHotelRoom> GetBookingsByClientId(int clientId)
+        public async Task<List<BookingHotelRoom>> GetBookingsByClientIdAsync(int clientId)
         {
-            return _context.BookingHotelRooms
-                           .Where(b => b.ClientId == clientId.ToString())
-                           .ToList();
+            return await _context.BookingHotelRooms
+                                 .Where(b => b.ClientId == clientId.ToString())
+                                 .ToListAsync();
         }
 
-        public List<BookingHotelRoom> GetBookingsByDateRange(DateTime checkIn, DateTime checkOut)
+        public async Task<List<BookingHotelRoom>> GetBookingsByDateRangeAsync(DateTime checkIn, DateTime checkOut)
         {
-            return _context.BookingHotelRooms
-                           .Where(b => b.Checkin >= checkIn && b.Checkout <= checkOut)
-                           .ToList();
+            return await _context.BookingHotelRooms
+                                 .Where(b => b.Checkin >= checkIn && b.Checkout <= checkOut)
+                                 .ToListAsync();
         }
 
-        public List<BookingHotelRoom> GetAvailableBookings()
+        public async Task<List<BookingHotelRoom>> GetAvailableRoomAsync()
         {
-            return _context.BookingHotelRooms
-                           .Where(b => b.IsAvailable)
-                           .ToList();
+            return await _context.BookingHotelRooms
+                                 .Where(b => b.IsAvailable)
+                                 .ToListAsync();
         }
+
     }
 
 }
