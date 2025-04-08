@@ -29,6 +29,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
+    <Folder Include="Areas\Account\Controllers\" />
+    <Folder Include="Areas\Agency\Controllers\" />
     <Folder Include="Areas\Driver\Controllers\" />
+    <Folder Include="Areas\HomeChef\Controllers\" />
+    <Folder Include="Areas\Hotel\Controllers\" />
+    <Folder Include="Areas\Property\Controllers\" />
+    <Folder Include="Areas\Restaurant\Controllers\" />
+    <Folder Include="Areas\SerivceProvider\Controllers\" />
   </ItemGroup>
 </Project>
