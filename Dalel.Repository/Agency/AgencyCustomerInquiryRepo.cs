@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.Core.Resource;
+using Dalel.ViewModels;
+using Dalel.ViewModels.Agency.AgencyCustomerInquiry;
 using Models;
 using Models.Agency;
 
@@ -20,17 +22,17 @@ namespace Dalel.Repository.Agency
 
         }
         //customer inquiries
-        public IQueryable<AgencyCustomerInquiry> GetagencyCustomerInquiries(string agencyId)
+        public IQueryable<AgencyCustomerInquiryDetails> GetagencyCustomerInquiries(string agencyId)
         {
             return GetList(cus =>cus.AgencyId == agencyId)
-                .OrderByDescending(cus =>cus.Date);
+                .OrderByDescending(cus =>cus.Date).Select(i => i.ToDetailsModels());
         }
 
         //Get Inquiries for a Specific Client 
-        public IQueryable<AgencyCustomerInquiry> GetInquiryClient(string clientId)
+        public IQueryable<AgencyCustomerInquiryDetails> GetInquiryClient(string clientId)
         {
             return GetList(c=>c.ClientId == clientId)
-                 .OrderByDescending(c => c.Date);
+                 .OrderByDescending(c => c.Date).Select(i => i.ToDetailsModels());
         }
         //Submit a New Customer Inquiry
         public bool SubmitInquiry(string clientId, string agencyId, string message)

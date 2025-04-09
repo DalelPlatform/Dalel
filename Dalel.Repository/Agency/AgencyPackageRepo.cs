@@ -29,26 +29,26 @@ namespace Dalel.Repository.Agency
 
         }
         //Search Packages by Name
-        public  IQueryable<AgencyPackage> searchAgencyPackage(string pckg_name)
+        public  IQueryable<AgencyPackageDetails> searchAgencyPackage(string pckg_name)
         {
-            return base.GetList(agenc => agenc.Name.Contains(pckg_name));
+            return base.GetList(agenc => agenc.Name.Contains(pckg_name)).Select(i=>i.ToDetailsModels());
                 
 
         }
         //Get Verified Packages
-        public  IQueryable<AgencyPackage> GetVerifiedStatusPackages(VerificationStatus status)
+        public  IQueryable<AgencyPackageDetails> GetVerifiedStatusPackages(VerificationStatus status)
         {
             return base.GetList(agenc => agenc.VerificationStatus ==
-                status);
+                status).Select(i => i.ToDetailsModels());
              ;
 
         }
         //Get Cheapest Packages
-        public IQueryable<AgencyPackage> GetCheapestPackages(int cheapPackg)
+        public IQueryable<AgencyPackageDetails> GetCheapestPackages(int cheapPackg)
         {
             return base.GetList()
                 .OrderBy(p => Convert.ToDecimal(p.Price))
-                .Take(cheapPackg);
+                .Take(cheapPackg).Select(i => i.ToDetailsModels());
                 ;
 
         }

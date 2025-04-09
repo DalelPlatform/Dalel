@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Models.Agency;
 using Models;
 using Models.Enums;
+using Dalel.ViewModels.Agency.PackageBookingPayment;
+using Dalel.ViewModels;
+using Dalel.ViewModels.Agency.AgencyPackage;
 
 namespace Dalel.Repository.Agency
 {
@@ -18,10 +21,11 @@ namespace Dalel.Repository.Agency
 
         }
         //Get Payment Details
-        public IQueryable<PackageBookingPayment> GetPaymentByBookingId(int bookingId)
+        public IQueryable<AgencyPaymentDetails> GetPaymentByBookingId(int bookingId)
         {
-            return base.GetList(payment => payment.BookingId == bookingId);
-       
+            return base.GetList(payment => payment.BookingId == bookingId)
+                .Select(i => i.ToDetailsModels());
+
         }
         public bool UpdatePaymentStatus(int paymentId, PaymentStatus newStatus){
 
@@ -50,6 +54,7 @@ namespace Dalel.Repository.Agency
             return  base.GetList(payment => payment.PaymentStatus == PaymentStatus.Completed)
        .Sum(payment => payment.AmountPaid);
         }
+      
     }
 
 

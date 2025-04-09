@@ -48,5 +48,43 @@ namespace Dalel.Services.Agency
                 Message = "deleted successfully."
             };
         }
+        public List<AgencyPackageDetails> GetAllAgencyPackage(int id)
+        {
+            return AgencyPackageRepo.GetAgencyPackage(id).ToList();
+        }
+        //Agency payment 
+
+        //public ServiceResult CreateAgencyPackage(PackageBookingPayment agency)
+        //{
+        //    AgencyPaymentRepo.Add(agency);
+        //    return new ServiceResult
+        //    {
+        //        Success = true,
+        //        Message = "added successfully."
+        //    };
+        //}
+        //public ServiceResult UpdateAgencyPackage(PackageBookingPayment agency)
+        //{
+        //    AgencyPaymentRepo.Update(agency);
+        //    return new ServiceResult
+        //    {
+        //        Success = true,
+        //        Message = "update successfully."
+        //    };
+        //}
+        //public ServiceResult deleteAgencyPackage(int agencyId)
+        //{
+        //    var _agencyPackage = AgencyPaymentRepo.GetList(i => i.Id == agencyId).FirstOrDefault();
+        //    if (_agencyPackage != null)
+        //    {
+        //        AgencyPaymentRepo.Delete(_agencyPackage);
+        //    }
+
+        //    return new ServiceResult
+        //    {
+        //        Success = true,
+        //        Message = "deleted successfully."
+        //    };
+        //}
     }
 }
