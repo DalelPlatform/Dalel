@@ -1,12 +1,11 @@
-﻿
-using Dalel.Repository.Hotel.Non_GenericRepository;
+﻿using Dalel.Repository.Hotel.Non_GenericRepository;
 using Models.Hotel;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 
 namespace Dalel.Services.HotelService
 {
-    public class HotelService : IHotelService
+    public class HotelService 
     {
         private readonly HotelRepository _repository;
 
@@ -15,39 +14,39 @@ namespace Dalel.Services.HotelService
             _repository = repository;
         }
 
-        public void AddHotel(Hotel hotel)
+        public async Task AddHotel(Hotel hotel)
         {
-            _repository.Insert(hotel);
+            await _repository.InsertAsync(hotel);
         }
 
-        public void UpdateHotel(Hotel hotel)
+        public async Task UpdateHotel(Hotel hotel)
         {
-            _repository.Update(hotel);
+            await _repository.UpdateAsync(hotel);
         }
 
-        public void DeleteHotel(int id)
+        public async Task DeleteHotel(int id)
         {
-            _repository.Delete(id);
+            await _repository.DeleteAsync(id);
         }
 
-        public Hotel GetHotelById(int id)
+        public async Task<Hotel> GetHotelById(int id)
         {
-            return _repository.GetById(id);
+            return await _repository.GetByIdAsync(id);
         }
 
-        public IEnumerable<Hotel> GetAllHotels()
+        public async Task<IEnumerable<Hotel>> GetAllHotels()
         {
-            return _repository.GetAll();
+            return await _repository.GetAllAsync();
         }
 
-        public IEnumerable<Hotel> GetHotelsByCity(string city)
+        public Task<IEnumerable<Hotel>> GetHotelsByCity(string city)
         {
-            return _repository.GetHotelsByCity(city);
+            return _repository.GetHotelsByCityAsync(city); 
         }
 
-        public Hotel GetHotelByOwnerId(string ownerId)
+        public Task<Hotel> GetHotelByOwnerId(string ownerId)
         {
-            return _repository.GetHotelByOwnerId(ownerId);
+            return _repository.GetHotelByOwnerIdAsync(ownerId); 
         }
     }
 }

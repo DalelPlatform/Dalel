@@ -13,7 +13,7 @@ namespace Dalel.ViewModels.Hotel_DTO
         public string Description { get; set; }
         public int NumberOfRooms { get; set; }
         public int NumberOfBeds { get; set; }
-        public float Price { get; set; }
+        public decimal Price { get; set; }
         public ICollection<RoomDTO> Rooms { get; set; }
     }
 

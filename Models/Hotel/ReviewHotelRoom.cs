@@ -8,7 +8,7 @@ namespace Models.Hotel
         public int Id { get; set; }
         public string Comments { get; set; }
         public float Rating { get; set; }
-        public DateTime ModificationDateTime { get; set; }
+        public DateTime ReviewDate { get; set; }
         public int BookingHotelRoomId { get; set; }
 
         public virtual BookingHotelRoom BookingHotelRoom { get; set; }

@@ -38,7 +38,8 @@ namespace Models.Hotel
             builder.ToTable("Hotels");
             builder.HasKey(h => h.Id);
             builder.Property(h => h.Name).IsRequired();
-
+            builder.HasIndex(h => h.City);
+            builder.HasIndex(h => h.VerificationStatus);
             // One-to-one: HotelOwner -> Hotel
             builder.HasOne(h => h.Owner)
                    .WithOne(o => o.Hotel)

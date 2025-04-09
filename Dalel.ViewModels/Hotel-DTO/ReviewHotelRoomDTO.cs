@@ -11,7 +11,7 @@ namespace Dalel.ViewModels.Hotel_DTO
         public int Id { get; set; }
         public string Comments { get; set; }
         public float Rating { get; set; }
-        public DateTime ModificationDateTime { get; set; }
+        public DateTime ReviewDate { get; set; }
     }
 
 }

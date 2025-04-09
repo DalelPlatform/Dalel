@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Dalel.Services.HotelService
 {
-    public class BookingHotelRoomService : IBookingHotelRoomService
+    public class BookingHotelRoomService 
     {
         private readonly BookingHotelRoomRepository _repository;
 
@@ -17,42 +17,42 @@ namespace Dalel.Services.HotelService
             _repository = repository;
         }
 
-        public void AddBooking(BookingHotelRoom booking)
+        public async Task AddBookingAsync(BookingHotelRoom booking)
         {
-            _repository.Insert(booking);
+            await _repository.InsertAsync(booking);
         }
 
-        public void UpdateBooking(BookingHotelRoom booking)
+        public async Task UpdateBookingAsync(BookingHotelRoom booking)
         {
-            _repository.Update(booking);
+            await _repository.UpdateAsync(booking);
         }
 
-        public void DeleteBooking(int id)
+        public async Task DeleteBookingAsync(int id)
         {
-            _repository.Delete(id);
+            await _repository.DeleteAsync(id);
         }
 
-        public BookingHotelRoom GetBookingById(int id)
+        public async Task<BookingHotelRoom> GetBookingByIdAsync(int id)
         {
-            return _repository.GetById(id);
+            return await _repository.GetByIdAsync(id);
         }
 
-        public IEnumerable<BookingHotelRoom> GetAllBookings()
+        public async Task<IEnumerable<BookingHotelRoom>> GetAllBookingsAsync()
         {
-            return _repository.GetAll();
+            return await _repository.GetAllAsync();
         }
 
-        public IEnumerable<BookingHotelRoom> GetBookingsByClientId(int clientId)
+        public async Task<IEnumerable<BookingHotelRoom>> GetBookingsByClientIdAsync(int clientId)
         {
-            return _repository.GetBookingsByClientId(clientId);
+            return await _repository.GetBookingsByClientIdAsync(clientId);
         }
 
-        public IEnumerable<BookingHotelRoom> GetAvailableBookings()
+        public async Task<IEnumerable<BookingHotelRoom>> GetAvailableBookingsAsync()
         {
-            return _repository.GetAvailableRoom();
+            return await _repository.GetAvailableRoomAsync();
         }
 
-        public IEnumerable<BookingHotelRoom> GetBookingsByClientId(string clientId)
+        public async Task<IEnumerable<BookingHotelRoom>> GetBookingsByClientIdAsync(string clientId)
         {
             throw new NotImplementedException();
         }
