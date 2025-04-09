@@ -1,7 +1,7 @@
 ﻿using Models.Hotel;
 using System.Collections.Generic;
 
-namespace Dalel.Services.HotelService
+namespace Dalel.Services.HomeService
 {
     public interface IBookingHotelRoomService
     {

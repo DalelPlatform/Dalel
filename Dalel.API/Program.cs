@@ -12,7 +12,7 @@ using Models.User;
 using System.Text;
 using System.Text.Json.Serialization;
 using Dalel.Repository.Hotel.Non_GenericRepository;
-using Dalel.Services.HotelService;
+using Dalel.Services.HomeService;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using Models.Hotel;

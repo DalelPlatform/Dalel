@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.Services.HotelService
+namespace Dalel.Services.HomeService
 {
     public class BookingHotelRoomService 
     {

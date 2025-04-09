@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Dalel.ViewModels.HomeServices.ServiceQuaries;
+using Models.HomeService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,30 +10,20 @@ namespace Dalel.ViewModels
 {
     public static class ServiceQuariesExt
     {
-        public static Models.HomeService.ServiceQuaries ToModel(this AddServiceQuariesVM vm)
+        public static ServiceQuaries ToModel(this AddAnswerQueryVM vm, ServiceQuaries existingQuery)
         {
-            return new Models.HomeService.ServiceQuaries
-            {
-                ServiceProviderId = vm.ServiceProviderId,
-                ClientId = vm.ClientId,
-                Question = vm.Question,
-                CategoryServicesId = vm.CategoryServicesId,
-                QuestionDate = DateTime.UtcNow
-            };
+            existingQuery.Answer = vm.Answer;
+            existingQuery.AnswerDate = DateTime.Now;
+            return existingQuery;
         }
 
-        public static ServiceQuariesDetailsVM ToDetailsModel(this Models.HomeService.ServiceQuaries model)
+        public static ServiceQuariesDetailsVM ToDetailsModel(this ServiceQuaries model)
         {
             return new ServiceQuariesDetailsVM
             {
                 Id = model.Id,
-                ClientName = model.Client?.User.UserName ?? string.Empty,
-                ProviderName = model.ServiceProvider?.AppUser.UserName ?? string.Empty,
-                CategoryName = model.CategoryServices?.Name ?? string.Empty,
                 Question = model.Question,
-                Answer = model.Answer,
-                QuestionDate = model.QuestionDate.ToString("yyyy-MM-dd"),
-                AnswerDate = model.AnswerDate.ToString("yyyy-MM-dd")
+                Answer = model.Answer
             };
         }
     }
