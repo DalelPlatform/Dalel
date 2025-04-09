@@ -1,0 +1,26 @@
+﻿using Dalel.Services.Agency;
+using Dalel.ViewModels;
+using Dalel.ViewModels.Agency.AgencyPackage;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Dalel.API.Controllers.Agency
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AgencyPackageController : ControllerBase
+    {
+        private readonly AgencyPakageService _pakageService;
+        AgencyPackageController(AgencyPakageService _service)
+        {
+            _pakageService = _service;
+        }
+        [HttpGet]
+        public IActionResult GetAgencyPackage(AddAgencyPackageVM packageAgency) {
+
+           var res= _pakageService.CreateAgencyPackage(packageAgency.ToModel());
+            return new JsonResult(res);
+        }
+
+    }
+}
