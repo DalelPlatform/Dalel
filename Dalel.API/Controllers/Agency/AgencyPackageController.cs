@@ -16,11 +16,29 @@ namespace Dalel.API.Controllers.Agency
             _pakageService = _service;
         }
         [HttpGet]
-        public IActionResult GetAgencyPackage(AddAgencyPackageVM packageAgency) {
+        public IActionResult GetAllAgencyPackage(int id)
+        {
+
+            var res = _pakageService.GetAllAgencyPackage(id);
+            return new JsonResult(res);
+        }
+        [HttpPost]
+        public IActionResult createAgencyPackage(AddAgencyPackageVM packageAgency) {
 
            var res= _pakageService.CreateAgencyPackage(packageAgency.ToModel());
             return new JsonResult(res);
         }
+        [HttpPut]
+        public IActionResult UpdateAgecyPackage(AddAgencyPackageVM packageAgency) 
+        {
+            var res = _pakageService.UpdateAgencyPackage(packageAgency.ToModel());
+            return new JsonResult(res);
+        }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteAgecyPackage(int id) {
+            var res = _pakageService.deleteAgencyPackage(id);
+            return new JsonResult(res);
 
+        }
     }
 }

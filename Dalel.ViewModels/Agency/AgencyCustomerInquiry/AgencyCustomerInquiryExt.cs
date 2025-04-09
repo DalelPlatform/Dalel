@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dalel.ViewModels.Agency.AgencyPackage;
+using Dalel.ViewModels.Agency.AgencyCustomerInquiry;
 using Models.Agency;
 namespace Dalel.ViewModels
 {

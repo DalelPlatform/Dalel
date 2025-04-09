@@ -5,14 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Models.Enums;
 using Models;
-namespace Dalel.ViewModels.Agency.AgencyPackage
+namespace Dalel.ViewModels.Agency.PackageBookingPayment
 {
-    public class AgencyPackageDetails
+    public class AgencyPaymentDetails
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Price { get; set; }
-        public int AgencyId { get; set; }
-        public virtual VerificationStatus VerificationStatus { get; set; }
+        public int id { get; set; }
+        public decimal Amount { get; set; }
+        public decimal AmountPaid { get; set; }
+        public decimal? CommissionDeducted { get; set; }
+        public string? CodeApplied { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
+        public DateTime Date { get; set; }
     }
 }

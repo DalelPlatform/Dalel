@@ -3,33 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dalel.ViewModels.Agency.AgencyPackage;
+using Dalel.ViewModels.Agency.PackageBookingPayment;
 using Models.Agency;
 namespace Dalel.ViewModels
 {
-    public static class AgencyPackageExt
+    public static class AgencyPaymentExt
     {
-        public static Models.Agency.AgencyPackage ToModel(this AddAgencyPackageVM packageVM)
+        public static Models.Agency.PackageBookingPayment
+            ToModel(this AddAgencyPaymentVM packageVM)
         {
-            return new AgencyPackage
+            return new PackageBookingPayment
             {
-                Name = packageVM.Name,
-                Price = packageVM.Price,
-                Description = packageVM.Description
-
-
+            
+                Amount = packageVM.Amount,
+                AmountPaid = packageVM.AmountPaid,
+                CommissionDeducted = packageVM.CommissionDeducted,
+                CodeApplied = packageVM.CodeApplied,
             };
 
 
         }
-        public static AgencyPackageDetails ToDetailsModels(this AgencyPackage package)
+        public static AgencyPaymentDetails 
+            ToDetailsModels(this PackageBookingPayment package)
         {
-            return new AgencyPackageDetails
+            return new AgencyPaymentDetails
             {
-                Id = package.Id,
-                Price = package.Price,
-                Name = package.Name,
-                VerificationStatus= package.VerificationStatus ///???
+                id = package.Id,
+                Amount = package.Amount,
+                AmountPaid = package.AmountPaid,
+                CommissionDeducted = package.CommissionDeducted,
+                CodeApplied = package.CodeApplied,
 
             };
         }

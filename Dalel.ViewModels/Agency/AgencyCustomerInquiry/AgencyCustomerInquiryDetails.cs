@@ -5,14 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Models.Enums;
 using Models;
-namespace Dalel.ViewModels.Agency.AgencyPackage
+namespace Dalel.ViewModels.Agency.AgencyCustomerInquiry
 {
-    public class AgencyPackageDetails
+    public class AgencyCustomerInquiryDetails
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Price { get; set; }
-        public int AgencyId { get; set; }
-        public virtual VerificationStatus VerificationStatus { get; set; }
+        public string Message { get; set; }
+        public string Response { get; set; }
+        public DateTime Date { get; set; }
     }
 }

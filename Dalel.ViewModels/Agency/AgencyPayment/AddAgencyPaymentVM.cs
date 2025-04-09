@@ -5,28 +5,23 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Enums;
 
-namespace Dalel.ViewModels.Agency.AgencyPackage
+namespace Dalel.ViewModels.Agency.PackageBookingPayment
 {
-    public class AddAgencyPackageVM
+    public class AddAgencyPaymentVM
     {
-        [Required(ErrorMessage = "Please Provide valid Agency Name")]
-        [StringLength(100, MinimumLength = 3, ErrorMessage = "Agency name must contain at least 3 letter and max 100 letter")]
-        public string Name { get; set; }
+        [Required(ErrorMessage = "Please Provide Amount")]
 
-        [StringLength(1000, MinimumLength = 10, ErrorMessage = "Agency Description must contain at least 10 letter and max 1000 letter")]
-      
-        public string Description { get; set; }
-
-
-
-
-        [Required(ErrorMessage = "Please Provide valid Agency Price Start from 5")]
-     
-        public string Price { get; set; }
-
-
-
+        public decimal Amount { get; set; }
+        [Required(ErrorMessage = "Please Provide AmountPaid")]
+        public decimal AmountPaid { get; set; }
+        [Required(ErrorMessage = "Please Provide CommissionDeducted")]
+        public decimal? CommissionDeducted { get; set; }
+        [Required(ErrorMessage = "Please Provide CodeApplied")]
+        public string? CodeApplied { get; set; }
+        [Required(ErrorMessage = "Please Provide Date")]
+        public DateTime Date { get; set; }
 
     }
 }
