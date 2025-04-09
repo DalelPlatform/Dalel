@@ -25,7 +25,9 @@ namespace Models.Restaurant
 
             builder.HasOne(i => i.Restaurant)
                 .WithMany(r => r.RestaurantImages)
-                .HasForeignKey(i => i.RestaurantId);
+                .HasForeignKey(i => i.RestaurantId)
+                .OnDelete(DeleteBehavior.NoAction);
+            
 
         }
     }

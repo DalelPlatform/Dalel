@@ -1,4 +1,5 @@
-﻿using Dalel.ViewModels.Hotel_DTO;
+﻿using Dalel.API.Vlidators;
+using Dalel.ViewModels.Hotel_DTO;
 using FluentValidation;
 
 namespace Dalel.Validations.Hotel
