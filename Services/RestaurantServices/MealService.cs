@@ -16,7 +16,7 @@ namespace Dalel.Services
         {
             this.menuItemRepository = menuItemRepository;
         }
-        public async Task<ServiceResult> CreateMeal(RestaurantMenuItem meal)
+        public async Task<ServiceResult> AddMeal(RestaurantMenuItem meal)
         {
             try
             {
