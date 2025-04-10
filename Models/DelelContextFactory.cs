@@ -16,7 +16,7 @@ namespace Models
         public DelelContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<DelelContext>();
-            optionsBuilder.UseSqlServer("Server=REEM-ASHRAF;Database=DeleDB;Trusted_Connection=True;TrustServerCertificate=True;",
+            optionsBuilder.UseSqlServer("Data source = REEM-ASHRAF; Initial catalog = DaleLDB; Integrated security= true; trustservercertificate = true;MultipleActiveResultSets=True",
                 b => b.MigrationsAssembly(typeof(DelelContext).Assembly.FullName));
 
             return new DelelContext(optionsBuilder.Options);
