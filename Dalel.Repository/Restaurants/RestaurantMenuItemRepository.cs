@@ -18,76 +18,83 @@ namespace Dalel.Repository
 
         }
 
-
-
-        public PaginationViewModel<RestaurantMenuItemDetailsVM> SearchMenuItem( // IQueryable<RMenuItemVM>
-        
-         string searchText = "", //Name - Description ,
-         FoodCategory ? category = null,
-         AvaliabilityStatus status = AvaliabilityStatus.Available,
-          int pageSize = 4,
-          int pageIndex = 1,
-         string sortBy = "Name",
-         bool descending = false)
+        public PaginationViewModel<RestaurantMenuItemDetailsVM> SearchMenuItem(
+           string searchText = "",
+           FoodCategory? category = null,
+           AvaliabilityStatus status = AvaliabilityStatus.Available,
+           float? minPrice = null,
+           float? maxPrice = null,
+           int pageSize = 4,
+           int pageIndex = 1,
+           string sortBy = "Name",
+           bool descending = false)
         {
+            var predicate = PredicateBuilder.New<RestaurantMenuItem>(true);
 
-            var builder = PredicateBuilder.New<RestaurantMenuItem>();
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                predicate = predicate.And(r =>
+                    r.Name.Contains(searchText) || r.Description.Contains(searchText));
+            }
 
-            var old = builder;
-
-            #region filterd by 
-            //  Filter by Name
-            if (!string.IsNullOrEmpty(searchText))
-                builder = builder.And(r => r.Name.Contains(searchText));
-
-            //  Search by restaurant Description
-            if (!string.IsNullOrEmpty(searchText))
-                builder = builder.And(r => r.Description.Contains(searchText));
-
-            //  Search by restaurant Category>>>  is this method will create in indivual method  ?
             if (category.HasValue)
-                builder = builder.And(r => r.FoodCategory == category);
+            {
+                predicate = predicate.And(r => r.FoodCategory == category);
+            }
 
-            //  Search by restaurant status>>>  is this method will create in indivual method  ?
             if (status != AvaliabilityStatus.Available)
-                builder = builder.And(r => r.AvailabilityStatus == status);
+            {
+                predicate = predicate.And(r => r.AvailabilityStatus == status);
+            }
 
-            builder = builder.And(r => r.IsDeleted == false);
+            if (minPrice.HasValue)
+            {
+                predicate = predicate.And(r => r.Price >= minPrice.Value);
+            }
 
-      
+            if (maxPrice.HasValue)
+            {
+                predicate = predicate.And(r => r.Price <= maxPrice.Value);
+            }
 
-            #endregion
+            predicate = predicate.And(r => !r.IsDeleted);
 
+            var query = base.GetList(predicate);
 
+            var totalCount = query.Count();
 
+            query = sortBy.ToLower() switch
+            {
+                "price" => descending ? query.OrderByDescending(r => r.Price) : query.OrderBy(r => r.Price),
+                "category" => descending ? query.OrderByDescending(r => r.FoodCategory) : query.OrderBy(r => r.FoodCategory),
+                _ => descending ? query.OrderByDescending(r => r.Name) : query.OrderBy(r => r.Name)
+            };
 
-            var count = base.GetList(builder).Count();
-
-            var query = base.GetList(builder);
-
-            //query = SortRestaurants(query, sortBy, descending);
-
-
-
-               
-              var resultAfterPagination = base.Get(
-                  filter: builder,
-                  pageSize: pageSize,
-                  pageNumber: pageIndex).Select(p => p.ToDetailsViewModel()).ToList();
+            var items = query
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .Select(p => p.ToDetailsViewModel())
+                .ToList();
 
             return new PaginationViewModel<RestaurantMenuItemDetailsVM>
-              {
-                  Data = resultAfterPagination,
-                  PageNumber = pageIndex,
-                  PageSize = pageSize,
-                TotalCount = count
-              }; 
+            {
+                Data = items,
+                PageNumber = pageIndex,
+                PageSize = pageSize,
+                TotalCount = totalCount
+            };
         }
 
+        public List<RestaurantMenuItemDetailsVM> GetMealsByRestaurantId(int restaurantId)
+        {
+            return base.GetList(m => m.RestaurantId == restaurantId && !m.IsDeleted)
+                .Select(m => m.ToDetailsViewModel())
+                .ToList();
+        }
 
-
-
-
-
+        public RestaurantMenuItem? GetMealById(int mealId)
+        {
+            return base.GetList(m => m.Id == mealId && !m.IsDeleted).FirstOrDefault();
+        }
     }
 }
