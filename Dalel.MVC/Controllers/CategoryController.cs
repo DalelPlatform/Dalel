@@ -1,134 +1,88 @@
-﻿//using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNetCore.Mvc;
-//using Dalel.Services.HomeService;
-//using Dalel.ViewModels.HomeServices.CategoryServices;
-//using Utilities;
-//using Dalel.Services.ServiceProvicerService;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Dalel.Services;
+using Dalel.ViewModels.HomeServices.CategoryServices;
+using Dalel.Services.HomeService;
+using Dalel.Services.ServiceProvicerService;
 
-//namespace Controllers
-//{
-//    [Authorize(Roles = "Admin")]
-//    public class Category : Controller
-//    {
-//        private readonly Services _service;
+namespace Controllers
+{
+    //[Authorize(Roles = "Admin")]
+    public class CategoryController : Controller
+    {
+        private readonly Services _service;
 
-//        public Category(Services service)
-//        {
-//            _service = service;
-//        }
+        public CategoryController(Services service)
+        {
+            _service = service;
+        }
 
-//        public IActionResult Index()
-//        {
-//            var result = _service.GetCategories();
-//            if (!result.Success)
-//            {
-//                TempData["Error"] = result.Message;
-//                return View(new List<CategoryServicesDetailsVM>());
-//            }
-//            var categories = result.Data.ToList();
-//            return View(categories);
-//        }
+        public IActionResult Index()
+        {
+            var categories = _service.GetCategories();
+            return View(categories.Data);
+        }
 
-//        public IActionResult Details(int id)
-//        {
-//            var result = _service.GetCategoryById(id);
-//            if (!result.Success)
-//            {
-//                TempData["Error"] = result.Message;
-//                return result.StatusCode switch
-//                {
-//                    404 => NotFound(),
-//                    _ => RedirectToAction("Index")
-//                };
-//            }
-//            return View(result.Data);
-//        }
+        public IActionResult Details(int id)
+        {
+            var categoryResult = _service.GetCategoryById(id);
 
-//        public IActionResult Create()
-//        {
-//            return View(new AddCategoryServicesVM());
-//        }
+            if (!categoryResult.Success || categoryResult.Data == null)
+            {
+                TempData["Error"] = categoryResult.Message;
+                return RedirectToAction("Index"); 
+            }
 
-//        [HttpPost]
-//        public IActionResult Create(AddCategoryServicesVM vm)
-//        {
-//            if (!ModelState.IsValid)
-//            {
-//                return View(vm);
-//            }
+            return View(categoryResult.Data);
+        }
 
-//            var result = _service.AddCategory(vm);
-//            if (!result.Success)
-//            {
-//                TempData["Error"] = result.Message;
-//                return View(vm);
-//            }
+        public IActionResult Create()
+        {
+            return View(new AddCategoryServicesVM());
+        }
 
-//            TempData["Success"] = result.Message;
-//            return RedirectToAction("Index");
-//        }
+        [HttpPost]
+        public IActionResult Create(AddCategoryServicesVM vm)
+        {
+            if (ModelState.IsValid)
+            {
+                _service.AddCategory(vm);
+                return RedirectToAction("Index");
+            }
+            return View(vm);
+        }
 
-//        public IActionResult Edit(int id)
-//        {
-//            var result = _service.GetCategoryById(id);
-//            if (!result.Success)
-//            {
-//                TempData["Error"] = result.Message;
-//                return result.StatusCode switch
-//                {
-//                    404 => NotFound(),
-//                    _ => RedirectToAction("Index")
-//                };
-//            }
-//            return View(result.Data);
-//        }
+        public IActionResult Edit(int id)
+        {
+            var category = _service.GetCategoryById(id);
+            if (category == null) return NotFound();
+            return View(category.Data);
+        }
 
-//        [HttpPost]
-//        public IActionResult Edit(CategoryServicesDetailsVM vm)
-//        {
-//            if (!ModelState.IsValid)
-//            {
-//                return View(vm);
-//            }
+        [HttpPost]
+        public IActionResult Edit(CategoryServicesDetailsVM vm)
+        {
+            if (ModelState.IsValid)
+            {
+                _service.UpdateCategory(vm);
+                return RedirectToAction("Index");
+            }
+            return View(vm);
+        }
 
-//            var result = _service.UpdateCategory(vm);
-//            if (!result.Success)
-//            {
-//                TempData["Error"] = result.Message;
-//                return View(vm);
-//            }
+        public IActionResult Delete(int id)
+        {
+            var category = _service.GetCategoryById(id);
+            if (category == null) return NotFound();
+            return View(category.Data);
+        }
 
-//            TempData["Success"] = result.Message;
-//            return RedirectToAction("Index");
-//        }
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            _service.DeleteCategory(id);
+            return RedirectToAction("Index");
+        }
 
-//        public IActionResult Delete(int id)
-//        {
-//            var result = _service.GetCategoryById(id);
-//            if (!result.Success)
-//            {
-//                TempData["Error"] = result.Message;
-//                return result.StatusCode switch
-//                {
-//                    404 => NotFound(),
-//                    _ => RedirectToAction("Index")
-//                };
-//            }
-//            return View(result.Data);
-//        }
-
-//        [HttpPost, ActionName("Delete")]
-//        public IActionResult DeleteConfirmed(int id)
-//        {
-//            var result = _service.DeleteCategory(id);
-//            if (!result.Success)
-//            {
-//                TempData["Error"] = result.Message;
-//                return RedirectToAction("Index");
-//            }
-
-//            TempData["Success"] = result.Message;
-//            return RedirectToAction("Index");
-//        }
-//    }
-//}
+    }
+}

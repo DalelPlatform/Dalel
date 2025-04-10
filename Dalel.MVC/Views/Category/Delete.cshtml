@@ -15,7 +15,7 @@
     <p><strong>Name:</strong> @Model.Name</p>
     <p><strong>Description:</strong> @Model.Description</p>
 </div>
-<form asp-action="Delete" method="post">
+<form asp-controller="Category" asp-action="Delete" method="post">
     <input type="hidden" asp-for="Id" />
     <button type="submit">Delete</button>
     <a asp-action="Index">Cancel</a>

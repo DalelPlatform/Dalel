@@ -5,10 +5,11 @@
 @model Dalel.ViewModels.HomeServices.CategoryServices.CategoryServicesDetailsVM
 <h2>Category Details</h2>
 
-@if (TempData["Error"] != null)
+@if (TempData?["Error"] != null)
 {
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
+
 
 <div>
     <p><strong>Name:</strong> @Model.Name</p>
@@ -16,4 +17,4 @@
     <p><strong>Description:</strong> @Model.Description</p>
     <p><strong>Service Providers Count:</strong> @Model.ServiceProvidersCount</p>
 </div>
-<a asp-action="Index">Back to List</a>
+<a asp-controller="Category" asp-action="Details">Back to List</a>
