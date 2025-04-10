@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Models.Enums;
 using Models;
-namespace Dalel.ViewModels.Agency.AgencyCustomerInquiry
+namespace Dalel.ViewModels
 {
     public class AgencyCustomerInquiryDetails
     {

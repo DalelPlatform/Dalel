@@ -10,7 +10,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -20,22 +20,11 @@
   <ItemGroup>
 	<PackageReference Include="LinqKit" Version="1.3.8" />
 	<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
-	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
 	<PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dalel.Repository\Dalel.Repository.csproj" />
     <ProjectReference Include="..\Services\Dalel.Services.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Areas\" />
-    <Folder Include="Areas\Account\Controllers\" />
-    <Folder Include="Areas\Agency\Controllers\" />
-    <Folder Include="Areas\Driver\Controllers\" />
-    <Folder Include="Areas\HomeChef\Controllers\" />
-    <Folder Include="Areas\Hotel\Controllers\" />
-    <Folder Include="Areas\Property\Controllers\" />
-    <Folder Include="Areas\Restaurant\Controllers\" />
-    <Folder Include="Areas\SerivceProvider\Controllers\" />
   </ItemGroup>
 </Project>

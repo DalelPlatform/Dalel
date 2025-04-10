@@ -11,6 +11,8 @@ namespace Models.HomeChef
 
         public bool SelfDelivery { get; set; }
 
+        public DateTime DateTime { get; set; }
+
         public StatusOfDelivery DeliveryStatus { get; set; } //enum
         public int HomeChefOrderId { get; set; }//fk
         public virtual HomeChefOrder HomeChefOrder { get; set; }

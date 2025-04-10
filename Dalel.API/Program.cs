@@ -12,7 +12,7 @@ using Models.User;
 using System.Text;
 using System.Text.Json.Serialization;
 using Dalel.Repository.Hotel.Non_GenericRepository;
-using Dalel.Services.HotelService;
+using Dalel.Services.HomeService;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using Models.Hotel;
@@ -53,6 +53,17 @@ builder.Services.AddScoped<PropertiesRepository>();
 builder.Services.AddScoped<RestaurantOwnerReopsitory>();
 builder.Services.AddScoped<ServiceProviderRepository>();
 builder.Services.AddScoped<TravelAgencyOwnerReopsitory>();
+
+
+#region HomeChef
+builder.Services.AddScoped<HomeChefDeliveryRepository>();
+builder.Services.AddScoped<HomeChefMealRepository>();
+builder.Services.AddScoped<HomeChefOrderMealRepository>();
+builder.Services.AddScoped<HomeChefOrderRepository>();
+builder.Services.AddScoped<PaymentHomeChefOrderRepasitory>();
+builder.Services.AddScoped<ReviewHomeChefOrderRepository>();
+
+#endregion
 
 
 builder.Services.AddControllers()
