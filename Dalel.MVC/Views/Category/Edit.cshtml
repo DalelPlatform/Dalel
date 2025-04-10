@@ -11,7 +11,7 @@
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
 
-<form asp-action="Edit" method="post">
+<form asp-controller="Category" asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
     <div>
         <label asp-for="Name"></label>

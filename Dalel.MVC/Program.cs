@@ -66,6 +66,6 @@ app.UseAuthorization();
 app.MapGet("/test", () => "Hello World!");
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Category}/{action=Index}/{id?}");
 
 app.Run();
