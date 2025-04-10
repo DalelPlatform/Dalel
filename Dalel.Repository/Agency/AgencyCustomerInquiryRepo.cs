@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Castle.Core.Resource;
 using Dalel.ViewModels;
-using Dalel.ViewModels.Agency.AgencyCustomerInquiry;
 using Models;
 using Models.Agency;
 

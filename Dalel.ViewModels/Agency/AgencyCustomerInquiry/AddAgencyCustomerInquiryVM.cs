@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.ViewModels.Agency.AgencyCustomerInquiry
+namespace Dalel.ViewModels
 {
     public class AddAgencyCustomerInquiryVM
     {
