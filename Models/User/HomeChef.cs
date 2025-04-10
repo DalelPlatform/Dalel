@@ -14,6 +14,7 @@ namespace Models.User
         public virtual AppUser AppUser { get; set; }
         public virtual ICollection<HomeChefMeal> HomeChefMeal { get; set; }
         public virtual ICollection<HomeChefOrder> HomeChefOrder { get; set; }
+        public virtual ICollection<ReviewHomeChefOrder> ReviewHomeChefOrders { get; set; }
     }
 
     public class HomeChefConfiguration : IEntityTypeConfiguration<HomeChef>
