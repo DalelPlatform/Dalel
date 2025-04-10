@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.ViewModels
+namespace Dalel.ViewModels.HomeServices.ServiceQuaries
 {
-    public class ServiceQuariesDetailsVM
+    public class AddAnswerQueryVM
     {
         public int Id { get; set; }
-        public string Question { get; set; }
         public string Answer { get; set; }
     }
 }

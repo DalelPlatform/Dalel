@@ -1,9 +1,12 @@
 using Dalel.Repository;
 using Dalel.Repository.Agency;
+using Dalel.Repository.HomeServices;
+using Dalel.Services.ServiceProvicerService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.User;
+using NuGet.Protocol.Core.Types;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +14,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DelelContext>(i =>
 i.UseLazyLoadingProxies()
 .UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
+
+
 builder.Services.AddIdentity<AppUser, IdentityRole>()
-    .AddEntityFrameworkStores<DelelContext>();
+    .AddEntityFrameworkStores<DelelContext>()
+    .AddDefaultTokenProviders();
+
+
+builder.Services.AddControllersWithViews();
 
 //Agency Repos
 builder.Services.AddScoped(typeof(PackagebookingRepo));
@@ -37,8 +46,8 @@ builder.Services.AddScoped(typeof(ReviewPropertiesRepository));
 
 
 //HomeServices
-builder.Services.AddScoped(typeof(CategoryServicesRepository));
-
+builder.Services.AddScoped<HomeServiceRepository>();
+builder.Services.AddScoped<Services>();
 
 var app = builder.Build();
 
@@ -49,6 +58,12 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=CategoryController}/{action=Index}");
+
+
+app.MapGet("/test", () => "Hello World!");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

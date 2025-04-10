@@ -1,8 +1,47 @@
 ﻿@{
     Layout = "Dashboard";
 }
-@using Models.HomeService;
-@model List<CategoryServices>;
+
+
+
+
+@model IQueryable<Dalel.ViewModels.HomeServices.CategoryServices.CategoryServicesDetailsVM>
+<h2>Categories</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<a asp-action="Create">Create New</a>
+<table>
+    <tr><th>Name</th><th>Description</th><th>Service Providers</th><th>Actions</th></tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Description</td>
+            <td>@item.ServiceProvidersCount</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+
+
+
+
+
+
+@* @using Models.HomeService; *@
+@* @model List<CategoryServices>; *@
 
 @* @section styles { *@
 @*     <style> *@
@@ -13,41 +52,41 @@
 @* } *@
 
 
-<h1 class="test">category List</h1>
+@* <h1 class="test">category List</h1> *@
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Image</th>
-            <th scope="col">
-                Actions
+@* <table class="table"> *@
+@*     <thead> *@
+@*         <tr> *@
+@*             <th scope="col">#</th> *@
+@*             <th scope="col">ID</th> *@
+@*             <th scope="col">Name</th> *@
+@*             <th scope="col">Description</th> *@
+@*             <th scope="col">Image</th> *@
+@*             <th scope="col"> *@
+@*                 Actions *@
 
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var caterogy in Model)
-        {
-            <tr>
-                <th scope="row">@caterogy.Id</th>
-                <td colspan="2">@caterogy.Name</td>
-                <td colspan="2">@caterogy.Description</td>
-                <td colspan="2">@caterogy.Image</td>
+@*             </th> *@
+@*         </tr> *@
+@*     </thead> *@
+@*     <tbody> *@
+@*         @foreach (var caterogy in Model) *@
+@*         { *@
+@*             <tr> *@
+@*                 <th scope="row">@caterogy.Id</th> *@
+@*                 <td colspan="2">@caterogy.Name</td> *@
+@*                 <td colspan="2">@caterogy.Description</td> *@
+@*                 <td colspan="2">@caterogy.Image</td> *@
 
-                <td>
-                    <a asp-action="edit" asp-controller="CategoryServices" asp-route-Id="@caterogy.Id" asp-route-Name="tttt">Edit </a>
-                </td>
-                <td>
-                    <a asp-action="delete" asp-controller="CategoryServices" asp-route-Id="@caterogy.Id" asp-route-Name="tttt">Delete </a>
-                </td>
-            </tr>
+@*                 <td> *@
+@*                     <a asp-action="edit" asp-controller="CategoryServices" asp-route-Id="@caterogy.Id" asp-route-Name="tttt">Edit </a> *@
+@*                 </td> *@
+@*                 <td> *@
+@*                     <a asp-action="delete" asp-controller="CategoryServices" asp-route-Id="@caterogy.Id" asp-route-Name="tttt">Delete </a> *@
+@*                 </td> *@
+@*             </tr> *@
 
-        }
-    </tbody>
-</table>
+@*         } *@
+@*     </tbody> *@
+@* </table> *@
 
