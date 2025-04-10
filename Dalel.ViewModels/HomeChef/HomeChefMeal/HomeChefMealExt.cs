@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dalel.ViewModels.HomeChef.HomeChefMeal;
+using Dalel.ViewModels;
 using Models.HomeChef;
 
 namespace Dalel.ViewModels

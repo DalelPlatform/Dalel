@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Dalel.ViewModels.HomeChef.HomeChefOrderMeal
+namespace Dalel.ViewModels
 {
     public class AddHomeChefOrderMealVM
     {
