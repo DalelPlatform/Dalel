@@ -7,7 +7,9 @@ namespace Models.Hotel
     public class RoomType
     {
         public int Id { get; set; }
-        public HotelRoomType Type { get; set; } 
+        public HotelRoomType Type { get; set; }
+        public int MaxOccupancy { get; set; }
+        public bool HasBreakfast { get; set; }
         public string Description { get; set; }
         public int NumberOfRooms { get; set; }
         public int NumberOfBeds { get; set; }

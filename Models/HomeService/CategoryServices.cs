@@ -4,7 +4,7 @@ using Models.User;
 
 namespace Models.HomeService
 {
-    public class CategoryServices
+    public class CategoryServices //this selected
     {
         public int Id { get; set; }
         public string Name { get; set; }

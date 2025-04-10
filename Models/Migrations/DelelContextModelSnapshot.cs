@@ -17,10 +17,7 @@ namespace Models.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.2")
-                .HasAnnotation("Proxies:ChangeTracking", false)
-                .HasAnnotation("Proxies:CheckEquality", false)
-                .HasAnnotation("Proxies:LazyLoading", true)
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -1059,15 +1056,15 @@ namespace Models.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ProjectImages")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("ServiceProviderId")
                         .IsRequired()
@@ -1078,6 +1075,29 @@ namespace Models.Migrations
                     b.HasIndex("ServiceProviderId");
 
                     b.ToTable("ServiceProviderProjects");
+                });
+
+            modelBuilder.Entity("Models.HomeService.ServiceProviderProjectImages", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("ServiceProviderProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceProviderProjectId");
+
+                    b.ToTable("ServiceProviderProjectImages");
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderPropsal", b =>
@@ -1323,8 +1343,8 @@ namespace Models.Migrations
                     b.Property<int>("NumberOfGuests")
                         .HasColumnType("int");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
@@ -1358,7 +1378,7 @@ namespace Models.Migrations
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1394,8 +1414,12 @@ namespace Models.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("City");
+
                     b.HasIndex("OwnerId")
                         .IsUnique();
+
+                    b.HasIndex("VerificationStatus");
 
                     b.ToTable("Hotels", (string)null);
                 });
@@ -1558,11 +1582,11 @@ namespace Models.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModificationDateTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<float>("Rating")
                         .HasColumnType("real");
+
+                    b.Property<DateTime>("ReviewDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -1580,8 +1604,9 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Availability")
-                        .HasColumnType("int");
+                    b.Property<string>("Availability")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoomTypeId")
                         .HasColumnType("int");
@@ -1606,7 +1631,13 @@ namespace Models.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<bool>("HasBreakfast")
+                        .HasColumnType("bit");
+
                     b.Property<int>("HotelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxOccupancy")
                         .HasColumnType("int");
 
                     b.Property<int>("NumberOfBeds")
@@ -2874,10 +2905,21 @@ namespace Models.Migrations
                     b.HasOne("Models.User.ServiceProvider", "ServiceProvider")
                         .WithMany("Projects")
                         .HasForeignKey("ServiceProviderId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ServiceProvider");
+                });
+
+            modelBuilder.Entity("Models.HomeService.ServiceProviderProjectImages", b =>
+                {
+                    b.HasOne("Models.HomeService.ServiceProviderProject", "ServiceProviderProject")
+                        .WithMany("ServiceProviderProjectImages")
+                        .HasForeignKey("ServiceProviderProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ServiceProviderProject");
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderPropsal", b =>
@@ -3194,7 +3236,7 @@ namespace Models.Migrations
                     b.HasOne("Models.Restaurant.Restaurant", "Restaurant")
                         .WithMany("RestaurantImages")
                         .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Restaurant");
@@ -3216,7 +3258,7 @@ namespace Models.Migrations
                     b.HasOne("Models.Restaurant.RestaurantMenuItem", "RestaurantMenuItem")
                         .WithMany("RestaurantMenuItemImages")
                         .HasForeignKey("RestaurantMenuItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("RestaurantMenuItem");
@@ -3458,6 +3500,11 @@ namespace Models.Migrations
                     b.Navigation("Quaries");
 
                     b.Navigation("ServiceProviders");
+                });
+
+            modelBuilder.Entity("Models.HomeService.ServiceProviderProject", b =>
+                {
+                    b.Navigation("ServiceProviderProjectImages");
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceRequest", b =>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
 using Microsoft.EntityFrameworkCore;
 using Models;
@@ -20,36 +21,38 @@ namespace Dalel.Repository.Agency
         {
            
         }
-        public IQueryable<AgencyPackage> GetAgencyPackage(int pckg_id)
+        public IQueryable<AgencyPackageDetails> GetAgencyPackage(int pckg_id)
         {
-            return base.GetList(agenc => agenc.AgencyId == pckg_id);
+            return base.GetList(agenc => agenc.AgencyId == pckg_id)
+                .Select(i=>i.ToDetailsModels());
                
 
         }
         //Search Packages by Name
-        public  IQueryable<AgencyPackage> searchAgencyPackage(string pckg_name)
+        public  IQueryable<AgencyPackageDetails> searchAgencyPackage(string pckg_name)
         {
-            return base.GetList(agenc => agenc.Name.Contains(pckg_name));
+            return base.GetList(agenc => agenc.Name.Contains(pckg_name)).Select(i=>i.ToDetailsModels());
                 
 
         }
         //Get Verified Packages
-        public  IQueryable<AgencyPackage> GetVerifiedStatusPackages(VerificationStatus status)
+        public  IQueryable<AgencyPackageDetails> GetVerifiedStatusPackages(VerificationStatus status)
         {
             return base.GetList(agenc => agenc.VerificationStatus ==
-                status);
+                status).Select(i => i.ToDetailsModels());
              ;
 
         }
         //Get Cheapest Packages
-        public IQueryable<AgencyPackage> GetCheapestPackages(int cheapPackg)
+        public IQueryable<AgencyPackageDetails> GetCheapestPackages(int cheapPackg)
         {
             return base.GetList()
                 .OrderBy(p => Convert.ToDecimal(p.Price))
-                .Take(cheapPackg);
+                .Take(cheapPackg).Select(i => i.ToDetailsModels());
                 ;
 
         }
+
 
     }
 }

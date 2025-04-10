@@ -24,6 +24,7 @@ namespace Models.Hotel
         {
             builder.ToTable("Rooms");
             builder.HasKey(r => r.Id);
+            builder.Property(r => r.Availability).HasConversion<string>();
 
             builder.HasOne(r => r.RoomType)
                    .WithMany(rt => rt.Rooms)

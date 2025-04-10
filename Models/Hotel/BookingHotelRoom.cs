@@ -10,7 +10,7 @@ namespace Models.Hotel
         public int Id { get; set; }
         public DateTime Checkin { get; set; }
         public DateTime Checkout { get; set; }
-        public float Price { get; set; }
+        public decimal Price { get; set; }
         public int NumberOfGuests { get; set; }
         public BookingStatus BookingStatus { get; set; }
         public string ClientId { get; set; }

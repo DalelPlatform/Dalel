@@ -7,13 +7,19 @@ namespace Dalel.ViewModels
 {
     public static class ServiceProviderProjectExt
     {
-        public static ServiceProviderProject ToModel(this AddServiceProviderProjectVM vm)
+        public static ServiceProviderProject ToModel(this AddServiceProviderProjectVM vm, string serviceProviderId)
         {
             return new ServiceProviderProject
             {
                 Name = vm.Name,
                 Description = vm.Description,
-                ServiceProviderProjectImages = vm.Paths.Select(path => new ServiceProviderProjectImages { ImagePath = path }).ToList()
+                ProjectImages = string.Join(",", vm.ProjectImages.Select(file =>
+                {
+                    using var stream = new MemoryStream();
+                    file.CopyTo(stream);
+                    return Convert.ToBase64String(stream.ToArray());
+                })),
+                ServiceProviderId = serviceProviderId
             };
         }
 
@@ -21,9 +27,10 @@ namespace Dalel.ViewModels
         {
             return new ServiceProviderProjectDetailsVM
             {
+                Id = model.Id,
                 Name = model.Name,
                 Description = model.Description,
-                Images = model.ServiceProviderProjectImages?.Select(i => i.ImagePath).ToList() ?? new List<string>(),
+                ProjectImages = model.ProjectImages
             };
         }
     }

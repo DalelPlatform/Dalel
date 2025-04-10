@@ -17,5 +17,7 @@ namespace Dalel.ViewModels
         [StringLength(500)]
         [Required(ErrorMessage = "Please Provide valid Description")]
         public string Description { get; set; }
+        public int Id { get; set; }
+        public int ServiceRequestId { get; set; }
     }
 }

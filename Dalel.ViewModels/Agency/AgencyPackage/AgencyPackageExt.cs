@@ -9,14 +9,13 @@ namespace Dalel.ViewModels
 {
     public static class AgencyPackageExt
     {
-        public static AgencyPackage ToModel(this AgencyPackageDetails packageVM)
+        public static Models.Agency.AgencyPackage ToModel(this AddAgencyPackageVM packageVM)
         {
             return new AgencyPackage
             {
                 Name = packageVM.Name,
                 Price = packageVM.Price,
-                AgencyId = packageVM.AgencyId,
-                VerificationStatus = packageVM.VerificationStatus
+                Description = packageVM.Description
 
 
             };
