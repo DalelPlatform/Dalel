@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.ViewModels.Driver.ReviewVehicle
+namespace Dalel.ViewModels
 {
     public class AddReviewVehicle
     {

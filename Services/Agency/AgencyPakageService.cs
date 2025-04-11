@@ -12,7 +12,7 @@ using Models.Agency;
 using Models.Restaurant;
 using Utilities;
 
-namespace Dalel.Services.Agency
+namespace Dalel.Services
 {
     public class AgencyPakageService
     {

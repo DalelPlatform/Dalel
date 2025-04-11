@@ -1,15 +1,11 @@
-﻿using Dalel.Extensions;
-using Dalel.Services;
+﻿using Dalel.Services;
 using Dalel.ViewModels;
-using Dalel.ViewModels.Driver.PaymentVehicle;
-using Dalel.ViewModels.Driver.ReviewVehicle;
-using Dalel.ViewModels.Driver.Vehicle;
 using Microsoft.AspNetCore.Mvc;
 using Models.Driver;
 using Models.Enums;
 using System.Threading.Tasks;
 
-namespace Dalel.API.Areas.Driver.Controllers
+namespace Dalel.API.Areas
 {
     [Route("api/[controller]")]
     [ApiController]

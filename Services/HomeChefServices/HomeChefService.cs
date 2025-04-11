@@ -10,7 +10,7 @@ using Models.HomeChef;
 using Models.WeddingPlaces;
 using Utilities;
 
-namespace Dalel.Services.HomeChefServices
+namespace Dalel.Services
 {
     public class HomeChefService
     {

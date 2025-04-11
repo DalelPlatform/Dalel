@@ -1,4 +1,4 @@
-﻿namespace Models.ViewModels
+﻿namespace Dalel.ViewModels
 {
     public class ReviewVehicleDetailsViewModel
     {

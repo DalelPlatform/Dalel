@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.ViewModels.Driver.BookingVechile
+namespace Dalel.ViewModels
 {
     public class AddBookingVehicle
     {

@@ -1,4 +1,4 @@
-﻿using Dalel.Services.Agency;
+﻿using Dalel.Services;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
 using Dalel.ViewModels.Agency.Packagebooking;
@@ -16,6 +16,7 @@ namespace Dalel.API.Controllers.Agency
         {
             _pakageService = _service;
         }
+        [HttpPut]
         public IActionResult UpdateBooking(AddPackagebookingVM book)
         {
             var res = _pakageService.updataBooking(book.ToModel());

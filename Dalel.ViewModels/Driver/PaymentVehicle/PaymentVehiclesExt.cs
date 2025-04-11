@@ -1,6 +1,5 @@
 ﻿using Models.Driver;
 using Dalel.ViewModels;
-using Dalel.ViewModels.Driver.PaymentVehicle;
 
 namespace Dalel.ViewModels
 {

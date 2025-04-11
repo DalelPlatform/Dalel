@@ -1,5 +1,4 @@
 ﻿using Dalel.ViewModels;
-using Dalel.ViewModels.Driver.Vehicle;
 using Models.Driver;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,4 @@
 ﻿using Dalel.ViewModels;
-using Dalel.ViewModels.Driver.BookingVechile;
 using Models.Driver;
 
 namespace Dalel.ViewModels

@@ -1,8 +1,6 @@
-﻿using Dalel.ViewModels.Driver.ReviewVehicle;
-using Models.Driver;
-using Models.ViewModels;
+﻿using Models.Driver;
 
-namespace Dalel.Extensions
+namespace Dalel.ViewModels
 {
     public static class ReviewVehicleExtensions
     {
