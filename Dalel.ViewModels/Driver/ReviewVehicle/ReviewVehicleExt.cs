@@ -1,10 +1,22 @@
-﻿using Models.Driver;
+﻿using Dalel.ViewModels.Driver.ReviewVehicle;
+using Models.Driver;
 using Models.ViewModels;
 
 namespace Dalel.Extensions
 {
     public static class ReviewVehicleExtensions
     {
+
+        public static ReviewVehicle ToModel(this AddReviewVehicle vm)
+        {
+            return new ReviewVehicle
+            {
+                Comments = vm.Comments,
+                Rating = vm.Rating,
+                ModificationDateTime = DateTime.Now,
+                BookingVehicleId = vm.BookingVehicleId
+            };
+        }
         public static ReviewVehicleDetailsViewModel ToViewModel(this ReviewVehicle review)
         {
             return new ReviewVehicleDetailsViewModel

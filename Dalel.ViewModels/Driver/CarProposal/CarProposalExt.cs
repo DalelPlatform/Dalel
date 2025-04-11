@@ -1,4 +1,5 @@
 ﻿using Dalel.ViewModels;
+using Dalel.ViewModels.Driver.CarProposal;
 using Models.Driver;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,21 @@ namespace Dalel.ViewModels
 {
     public static class CarProposalExt
     {
+
+
+        public static CarProposal ToModel(this AddCarProposal vm)
+        {
+            return new CarProposal
+            {
+                Price = vm.Price,
+                ProposalStatus = vm.ProposalStatus,
+                IsAccepted = vm.IsAccepted,
+                SuggestedPrice = vm.SuggestedPrice,
+                StartedDateTime = DateTime.Now,
+                DriverId = vm.DriverId,
+                BookingVehicleId = vm.BookingVehicleId
+            };
+        }
         public static CarProposalDetailsViewModel ToDetailsViewModel(this CarProposal proposal)
         {
             return new CarProposalDetailsViewModel
