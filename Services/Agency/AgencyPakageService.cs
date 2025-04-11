@@ -128,7 +128,7 @@ namespace Dalel.Services.Agency
             };
         }
 
-        public ServiceResult<List<TravelAgenciesDetails>> GetAllTravelAgency(int id)
+        public ServiceResult<List<TravelAgenciesDetails>> GetAllTravelAgency()
         {            try
             {
                 var list = TravelAgenciesRepo.GetList().
