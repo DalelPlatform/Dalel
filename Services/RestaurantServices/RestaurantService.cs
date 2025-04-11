@@ -1,116 +1,134 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dalel.Repository;
+﻿using Dalel.Repository;
 using Dalel.ViewModels;
-using Models.HomeService;
+using Models.Enums;
 using Models.Restaurant;
 using Utilities;
 
 namespace Dalel.Services
 {
-    public class RestaurantService 
-
+    public class RestaurantService
     {
-        public readonly RestaurantRepository _RestaurantRepo; 
-
+        private readonly RestaurantRepository _restaurantRepo;
 
         public RestaurantService(RestaurantRepository restaurantRepo)
         {
-            _RestaurantRepo = restaurantRepo;
+            _restaurantRepo = restaurantRepo;
         }
 
-
-
-        public async Task<ServiceResult> CreateRestaurant(AddRestaurantVM restaurant)
+        public async Task<ServiceResult> CreateRestaurant(AddRestaurantVM vm)
         {
             try
             {
-                 _RestaurantRepo.Add(restaurant.ToModel()); // again, assuming async manager method
-                return new ServiceResult
-                {
-                    Success = true,
-                    Message = "Restaurant added successfully."
-                };
+                var model = vm.ToModel();
+                _restaurantRepo.Add(model);
+                return ServiceResult.SuccessResult("Restaurant added successfully.");
             }
             catch (Exception ex)
             {
-                return new ServiceResult
-                {
-                    Success = false,
-                    Message = ex.Message
-                };
+                return ServiceResult.FailureResult("Error: " + ex.Message);
             }
         }
 
-        public async Task<ServiceResult> EditRestaurant(Restaurant restaurant)
+        public async Task<ServiceResult> EditRestaurant(AddRestaurantVM model)
         {
             try
             {
-                _RestaurantRepo.Update(restaurant); // again, assuming async manager method
-                return new ServiceResult
-                {
-                    Success = true,
-                    Message = "Restaurant updated successfully."
-                };
+                _restaurantRepo.Update(model.ToModel());
+                return ServiceResult.SuccessResult("Restaurant updated successfully.");
             }
             catch (Exception ex)
             {
-                return new ServiceResult
-                {
-                    Success = false,
-                    Message = ex.Message
-                };
-            }
-        }
-        public async Task<ServiceResult> DeleteMeal(int restaurantId)
-        {
-            try
-            {
-                var restaurant = _RestaurantRepo.GetList(r => r.Id == restaurantId).FirstOrDefault();
-                if (restaurant != null)
-                {
-                    _RestaurantRepo.Delete(restaurant);
-                    return new ServiceResult
-                    {
-                        Success = true,
-                        Message = "Restaurant deleted successfully."
-                    };
-                }
-                else
-                {
-                    return new ServiceResult
-                    {
-                        Success = false,
-                        Message = "Restaurant not found."
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResult
-                {
-                    Success = false,
-                    Message = ex.Message
-                };
+                return ServiceResult.FailureResult("Error: " + ex.Message);
             }
         }
 
-        public async Task<ServiceResult<List<Restaurant>>> GetAllRestaurants()
+        public async Task<ServiceResult> DeleteRestaurant(int id)
         {
             try
             {
-                var list = _RestaurantRepo.GetList().ToList();
-                return ServiceResult<List<Restaurant>>.SuccessResult(list, "Restaurants fetched successfully.");
+                var restaurant = _restaurantRepo.GetById(id);
+                if (restaurant == null)
+                    return ServiceResult.FailureResult("Restaurant not found.");
+
+                _restaurantRepo.Delete(restaurant);
+                return ServiceResult.SuccessResult("Restaurant deleted successfully.");
             }
             catch (Exception ex)
             {
-                return ServiceResult<List<Restaurant>>.FailureResult("Error: " + ex.Message);
+                return ServiceResult.FailureResult("Error: " + ex.Message);
             }
         }
 
+        public async Task<ServiceResult<List<RestaurantDetailsVM>>> GetAll()
+        {
+            try
+            {
+                var list = _restaurantRepo.GetList(r => !r.IsDeleted)
+                    .Select(r => r.ToDetailsViewModel())
+                    .ToList();
+
+                return ServiceResult<List<RestaurantDetailsVM>>.SuccessResult(list, "Restaurants retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<RestaurantDetailsVM>>.FailureResult("Error: " + ex.Message);
+            }
+        }
+
+        public ServiceResult<PaginationViewModel<RestaurantDetailsVM>> Search(
+            string searchText = "",
+            string city = null,
+            string region = null,
+            VerificationStatus? verificationStatus = null,
+            string sortBy = "Name",
+            bool descending = false,
+            int pageSize = 5,
+            int pageIndex = 1)
+        {
+            try
+            {
+                var result = _restaurantRepo.SearchRestaurants(
+                    searchText, city, region, verificationStatus,
+                    sortBy, descending, pageSize, pageIndex);
+
+                return ServiceResult<PaginationViewModel<RestaurantDetailsVM>>.SuccessResult(result, "Search completed.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<RestaurantDetailsVM>>.FailureResult("Error: " + ex.Message);
+            }
+        }
+        public async Task<ServiceResult<RestaurantDetailsVM>> GetRestaurantById(int id)
+        {
+            try
+            {
+                var restaurant = _restaurantRepo.GetById(id);
+                if (restaurant == null)
+                    return ServiceResult<RestaurantDetailsVM>.FailureResult("Restaurant not found.");
+                return ServiceResult<RestaurantDetailsVM>.SuccessResult(restaurant.ToDetailsViewModel(), "Restaurant retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<RestaurantDetailsVM>.FailureResult("Error: " + ex.Message);
+            }
+        }
+        public async Task<ServiceResult<List<RestaurantDetailsVM>>> GetRestaurantsByVerificationStatus(VerificationStatus verificationStatus)
+        {
+            try
+            {
+                var restaurants = _restaurantRepo.GetRestaurantsByVerificationStatus(verificationStatus)
+                    .ToList(); // Convert IQueryable to List to resolve the type mismatch
+
+                if (restaurants == null || !restaurants.Any())
+                    return ServiceResult<List<RestaurantDetailsVM>>.FailureResult("No restaurants found with the specified verification status.");
+
+                return ServiceResult<List<RestaurantDetailsVM>>.SuccessResult(restaurants, "Restaurants retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<RestaurantDetailsVM>>.FailureResult("Error: " + ex.Message);
+            }
+        }
 
     }
 }

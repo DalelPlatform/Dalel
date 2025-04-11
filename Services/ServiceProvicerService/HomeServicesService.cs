@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.Services.ServiceProvicerService
+namespace Dalel.Services
 {
     public class HomeServicesService
     {

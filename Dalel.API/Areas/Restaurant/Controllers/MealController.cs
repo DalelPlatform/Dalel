@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 
-namespace Dalel.API.Areas.Restaurant.Controllers
+namespace Dalel.API.Areas
 {
     [Route("api/[controller]")]
     [ApiController]
