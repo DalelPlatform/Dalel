@@ -21,7 +21,7 @@ namespace Dalel.ViewModels
                 FoodCategory = menuItemVM.FoodCategory,
                 PieceSize = menuItemVM.PieceSize,
                 Duration = menuItemVM.Duration,
-                RestaurantId = menuItemVM.RestaurantId,
+                RestaurantId = menuItemVM.RestaurantId ?? 0,
                 RestaurantMenuItemImages = menuItemVM.Paths.Select(path => new RestaurantMenuItemImage() { Image = path }).ToList(),
                 IsDeleted = false
 

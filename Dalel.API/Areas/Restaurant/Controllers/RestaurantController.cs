@@ -3,6 +3,7 @@ using Dalel.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
+using System.Security.Claims;
 
 namespace Dalel.API.Areas
 {
@@ -31,48 +32,49 @@ namespace Dalel.API.Areas
                 sortBy, descending, pageSize, pageIndex
             );
             if (!result.Success)
-                return BadRequest(result);
-            return Ok(result);
+                return new JsonResult(result);
+            return new JsonResult(result);
         }
         [HttpPost]
         public async Task<IActionResult> AddRestaurant([FromBody] AddRestaurantVM model)
         {
+            model.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = await restaurantService.CreateRestaurant(model);
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result);
+            return new JsonResult(result);
         }
         [HttpPut]
         public async Task<IActionResult> EditRestaurant([FromBody] AddRestaurantVM model)
         {
             var result = await restaurantService.EditRestaurant(model);
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRestaurant(int id)
         {
             var result = await restaurantService.DeleteRestaurant(id);
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
         [HttpGet]
         public async Task<IActionResult> GetAllRestaurants()
         {
             var result = await restaurantService.GetAll();
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRestaurantById(int id)
         {
             var result = await restaurantService.GetRestaurantById(id);
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
 
         [HttpGet("getByVerificationStatus/{status}")]
@@ -80,8 +82,8 @@ namespace Dalel.API.Areas
         {
             var result = await restaurantService.GetRestaurantsByVerificationStatus(status);
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
 
     }

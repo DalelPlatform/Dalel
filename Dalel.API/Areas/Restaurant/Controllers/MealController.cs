@@ -3,6 +3,7 @@ using Dalel.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
+using System.Security.Claims;
 
 namespace Dalel.API.Areas
 {
@@ -50,7 +51,8 @@ namespace Dalel.API.Areas
         [HttpPost]
         public async Task<IActionResult> AddMeal([FromBody] AddRestaurantMenuItemVM meal)
         {
-            var result = await mealService.CreateMeal(meal.ToModel());
+            meal.RestaurantOwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = await mealService.CreateMeal(meal);
             if (!result.Success)
                 return BadRequest(result.Message);
 

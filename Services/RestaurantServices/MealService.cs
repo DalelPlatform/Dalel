@@ -14,9 +14,11 @@ namespace Dalel.Services
     public class MealService
     {
         private readonly RestaurantMenuItemRepository menuItemRepository;
-        public MealService(RestaurantMenuItemRepository menuItemRepository)
+        private readonly RestaurantRepository restaurantRepository;
+        public MealService(RestaurantMenuItemRepository menuItemRepository, RestaurantRepository restaurantRepository)
         {
             this.menuItemRepository = menuItemRepository;
+            this.restaurantRepository = restaurantRepository;
         }
 
         public ServiceResult<PaginationViewModel<RestaurantMenuItemDetailsVM>> SearchMeals(
@@ -56,11 +58,16 @@ namespace Dalel.Services
                 );
             }
         }
-        public async Task<ServiceResult> CreateMeal(RestaurantMenuItem meal)
+        public async Task<ServiceResult> CreateMeal(AddRestaurantMenuItemVM meal)
         {
             try
             {
-                menuItemRepository.Add(meal);
+                var restaurant = restaurantRepository.GetList(r => r.OwnerId == meal.RestaurantOwnerId).FirstOrDefault();
+                if(restaurant == null)
+                    return ServiceResult.FailureResult("Restaurnt not found");
+
+                meal.RestaurantId = restaurant.Id;
+                menuItemRepository.Add(meal.ToModel());
                 return ServiceResult.SuccessResult("Meal added successfully.");
             }
             catch (Exception ex)

@@ -1,7 +1,10 @@
 ﻿using Dalel.Repository;
 using Dalel.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 using Models.Restaurant;
+using System.Security.Claims;
 using Utilities;
 
 namespace Dalel.Services
@@ -15,7 +18,8 @@ namespace Dalel.Services
             _restaurantRepo = restaurantRepo;
         }
 
-        public async Task<ServiceResult> CreateRestaurant(AddRestaurantVM vm)
+        [Authorize(Roles = "RestaurantOwner")]
+        public async Task<ServiceResult> CreateRestaurant([FromForm]AddRestaurantVM vm)
         {
             try
             {
