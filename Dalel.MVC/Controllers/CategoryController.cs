@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Dalel.Services;
 using Dalel.ViewModels.HomeServices.CategoryServices;
 using Dalel.Services.HomeService;
-using Dalel.Services.ServiceProvicerService;
 
 namespace Controllers
 {
@@ -22,6 +21,7 @@ namespace Controllers
             var categories = _service.GetCategories();
             return View(categories.Data);
         }
+
 
         public IActionResult Details(int id)
         {

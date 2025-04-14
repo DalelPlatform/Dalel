@@ -15,6 +15,7 @@ namespace Dalel.ViewModels
         {
             return new Models.Restaurant.Restaurant
             {
+                OwnerId = restaurantVM.OwnerId,
                 Name = restaurantVM.Name,
                 Description = restaurantVM.Description,
                 NumberOfRooms = restaurantVM.NumberOfRooms,

@@ -1,7 +1,7 @@
 using Dalel.Repository;
 using Dalel.Repository.Agency;
 using Dalel.Repository.HomeServices;
-using Dalel.Services.ServiceProvicerService;
+using Dalel.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Models;
@@ -20,8 +20,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<DelelContext>()
     .AddDefaultTokenProviders();
 
-
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped(typeof(RoleRepository));
 
 //Agency Repos
 builder.Services.AddScoped(typeof(PackagebookingRepo));

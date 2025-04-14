@@ -13,7 +13,12 @@ namespace Dalel.ViewModels
         {
             return new BookingProperties
             {
-                // Add all properties here
+                CheckIn = DateTime.Now, //viewModel.CheckIn,
+                CheckOut = DateTime.Now,   //viewModel.CheckOut,
+                Price = viewModel.Price,
+                Status = viewModel.Status,
+                PropertyId = viewModel.PropertyId,
+                ClientId = viewModel.ClientId
             };
         }
         public static BookingPropertiesDetailsVM ToDetailsViewModel(this BookingProperties property)

@@ -2,7 +2,6 @@ using Dalel.Repository;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.User;
-using Dalel.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +16,7 @@ using FluentValidation.AspNetCore;
 using FluentValidation;
 using Models.Hotel;
 using Dalel.Mappings;
+using Dalel.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,23 +37,43 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<ServiceProviderProjectRepository>();
-builder.Services.AddScoped<ServiceProviderPropsalRepository>();
-builder.Services.AddScoped<ServiceProviderScheduleRepository>();
-builder.Services.AddScoped<ServiceProviderProjectRepository>();
-builder.Services.AddScoped<ServiceProviderPropsalRepository>();
-builder.Services.AddScoped<ServiceProviderScheduleRepository>();
+
+#region Account
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<AppUserRepository>();
 builder.Services.AddScoped<ClientRepository>();
 builder.Services.AddScoped<DriverRepository>();
 builder.Services.AddScoped<HomeChefReopsitory>();
 builder.Services.AddScoped<HotelOwnerReopsitory>();
-builder.Services.AddScoped<PropertiesRepository>();
 builder.Services.AddScoped<RestaurantOwnerReopsitory>();
 builder.Services.AddScoped<ServiceProviderRepository>();
 builder.Services.AddScoped<TravelAgencyOwnerReopsitory>();
+#endregion
 
+#region Serviceprovider
+builder.Services.AddScoped<ServiceProviderProjectRepository>();
+builder.Services.AddScoped<ServiceProviderPropsalRepository>();
+builder.Services.AddScoped<ServiceProviderScheduleRepository>();
+builder.Services.AddScoped<ServiceProviderProjectRepository>();
+builder.Services.AddScoped<ServiceProviderPropsalRepository>();
+builder.Services.AddScoped<ServiceProviderScheduleRepository>();
+#endregion
+
+#region Property
+builder.Services.AddScoped<PropertyService>();
+builder.Services.AddScoped<PropertiesRepository>();
+builder.Services.AddScoped<BookingPropertiesRepository>();
+builder.Services.AddScoped<PaymentPropertiesRepository>();
+builder.Services.AddScoped<ReviewPropertiesRepository>();
+#endregion
+
+#region Restaurant
+builder.Services.AddScoped<RestaurantService>();
+builder.Services.AddScoped<MealService>();
+builder.Services.AddScoped<RestaurantRepository>();
+builder.Services.AddScoped<RestaurantMenuItemRepository>();
+builder.Services.AddScoped<RestaurantOrderRepository>();
+#endregion
 
 #region HomeChef
 builder.Services.AddScoped<HomeChefDeliveryRepository>();

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Models.Agency;
 using Models;
 using Models.Enums;
+using Dalel.ViewModels.Agency.AgencyVerificationDocument;
+using Dalel.ViewModels;
 
 namespace Dalel.Repository.Agency
 {
@@ -20,15 +22,18 @@ namespace Dalel.Repository.Agency
 
         }
         //Get Verification Documents
-        public IQueryable<AgencyVerificationDocument> 
+        public IQueryable<AgencyVerificationDocumentDetails> 
             GetVerificationDocuments(int agencyId)
         {
-            return base.GetList(doc => doc.AgencyId == agencyId);
+            return base.GetList(doc => doc.AgencyId == agencyId)
+                .Select(doc=>doc.ToDetailsModels())
+                ;
         }
         //documents awaiting approval
-        public IQueryable<AgencyVerificationDocument> GetPendingDocuments()
+        public IQueryable<AgencyVerificationDocumentDetails> GetPendingDocuments()
         {
-            return GetList(p=>p.status == VerificationStatus.Pending);
+            return GetList(p=>p.status == VerificationStatus.Pending)
+                .Select(doc => doc.ToDetailsModels());
 
         }
         public bool UpdateDocumentStatus(int documentId, VerificationStatus newStatus)
@@ -57,11 +62,11 @@ namespace Dalel.Repository.Agency
         }
 
         //Get Approved Documents for an Agency
-        public IQueryable<AgencyVerificationDocument> GetApprovedDocuments(int agencyId)
+        public IQueryable<AgencyVerificationDocumentDetails> GetApprovedDocuments(int agencyId)
         {
             return GetList(approve =>approve.AgencyId == agencyId && approve.status == 
             VerificationStatus.Confirmed
-            );
+            ).Select(doc => doc.ToDetailsModels());
         }
     }
 }

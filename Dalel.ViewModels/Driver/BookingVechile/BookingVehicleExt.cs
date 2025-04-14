@@ -4,7 +4,26 @@ using Models.Driver;
 namespace Dalel.ViewModels
 {
     public static class BookingVehicleExt
+
     {
+
+        public static BookingVehicle ToModel(this AddBookingVehicle vm)
+        {
+            return new BookingVehicle
+            {
+                PickupLocation = vm.PickupLocation,
+                DropoffLocation = vm.DropoffLocation,
+                SuggestedPrice = vm.SuggestedPrice,
+                BookingStatus = vm.BookingStatus,
+                IsDeleted = false,
+                PassengersNo = vm.PassengersNo,
+                StartedDateTime = vm.StartedDateTime,
+                EndedDateTime = vm.EndedDateTime,
+                ClientId = vm.ClientId
+            };
+        }
+
+
         public static BookingVehicleDetailsViewModel ToDetailsViewModel(this BookingVehicle booking)
         {
             return new BookingVehicleDetailsViewModel

@@ -1,9 +1,8 @@
-﻿using Dalel.Extensions;
-using Dalel.Repository;
+﻿using Dalel.Repository;
+using Dalel.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Driver;
-using Models.ViewModels;
 using System.Linq;
 
 namespace Dalel.Reopsitory
