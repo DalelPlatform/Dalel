@@ -14,10 +14,10 @@ namespace Utilities
 
 
         public static ServiceResult SuccessResult(string message = "Success") =>
-            new() { Success = true, Message = message };
+            new() { Success = true, Message = message , StatusCode = 200 };
 
         public static ServiceResult FailureResult(string message = "An error occurred.") =>
-            new() { Success = false, Message = message };
+            new() { Success = false, Message = message ,StatusCode = 400 };
     }
 
     public class ServiceResult<T> : ServiceResult
@@ -29,6 +29,7 @@ namespace Utilities
             {
                 Success = true,
                 Message = message,
+                StatusCode = 200,
                 Data = data
             };
 
@@ -37,6 +38,7 @@ namespace Utilities
             {
                 Success = false,
                 Message = message,
+                StatusCode = 400,
                 Data = default
             };
     }

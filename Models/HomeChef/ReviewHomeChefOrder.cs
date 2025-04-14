@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 
+
 namespace Models.HomeChef
 {
     public class ReviewHomeChefOrder
@@ -29,7 +30,7 @@ namespace Models.HomeChef
 
             builder.HasOne(Hchef => Hchef.HomeChef)
                 .WithMany(review => review.ReviewHomeChefOrders)
-                .HasForeignKey(chef => chef.HomeChefOrderId);
+                .HasForeignKey(chef => chef.HomeChefId);
         }
     }
 

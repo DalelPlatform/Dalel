@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Dalel.Repository;
 using Dalel.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 using Models.HomeChef;
 using Models.WeddingPlaces;
 using Utilities;
 
-namespace Dalel.Services.HomeChefServices
+namespace Dalel.Services
 {
     public class HomeChefService
     {
@@ -48,7 +49,7 @@ namespace Dalel.Services.HomeChefServices
 
         #region Deliveries
 
-        public ServiceResult AddOrder(AddHomeChefDeliveryVM vm)
+        public ServiceResult AddDeliveryOrder(AddHomeChefDeliveryVM vm)
         {
             try
             {
@@ -65,7 +66,7 @@ namespace Dalel.Services.HomeChefServices
         }
 
 
-        public ServiceResult UpdateOrder(AddHomeChefDeliveryVM vm)
+        public ServiceResult UpdateDeliveryOrder(AddHomeChefDeliveryVM vm)
         {
             try
             {
@@ -83,14 +84,23 @@ namespace Dalel.Services.HomeChefServices
 
 
 
-        public ServiceResult DeleteOrder(AddHomeChefDeliveryVM vm)
+        //Delete Order by id or by Dishname 
+
+        public ServiceResult DeleteDeliveryOrder(int id) // Delete Order by id
         {
             try
             {
-                var delivery = vm.ToModel();
-                _HomeChefDeliveryRepository.Delete(delivery);
+                var order = _HomeChefOrderRepository.GetList(m => m.Id == id).FirstOrDefault();
 
-                return ServiceResult.SuccessResult("Delivery Deleted Successfully!.");
+                if (order == null)
+                {
+                    return ServiceResult.FailureResult("Order not found.");
+                }
+
+
+                _HomeChefOrderRepository.Delete(order);
+
+                return ServiceResult.SuccessResult("Order Deleted Successfully!.");
             }
 
             catch (Exception ex)
@@ -99,6 +109,8 @@ namespace Dalel.Services.HomeChefServices
             }
 
         }
+
+        
 
         ///////////////////////////Method 1 /////////////////////////
 
@@ -233,12 +245,44 @@ namespace Dalel.Services.HomeChefServices
         }
 
 
+        //Delete meal by id or by Dishname 
 
-        public ServiceResult DeleteMeal (AddHomeChefMealVM vm)
+        public ServiceResult DeleteMeal (int id) // Delete meal by id
         {
             try
             {
-                var meal = vm.ToModel();
+                var meal = _HomeChefMealRepository.GetList(m => m.Id == id).FirstOrDefault();
+
+                if (meal == null)
+                {
+                    return ServiceResult.FailureResult("Meal not found.");
+                }
+
+
+                _HomeChefMealRepository.Delete(meal);
+
+                return ServiceResult.SuccessResult("Meal Deleted Successfully!.");
+            }
+
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult($"Error : {ex.Message}");
+            }
+
+        }
+
+        public ServiceResult DeleteMeal(string name) //Delete meal by Dishname
+        {
+            try
+            {
+                var meal = _HomeChefMealRepository.GetList(m => m.DishName.ToLower() == name.ToLower()).FirstOrDefault();
+
+                if (meal == null)
+                {
+                    return ServiceResult.FailureResult("Meal not found.");
+                }
+
+
                 _HomeChefMealRepository.Delete(meal);
 
                 return ServiceResult.SuccessResult("Meal Deleted Successfully!.");
@@ -356,7 +400,7 @@ namespace Dalel.Services.HomeChefServices
         ///////////////////////Method 4////////////////////////
 
 
-        public List<ServiceResult<HomeChefMealDetailsVM>> GetMealsByCategory(FoodCategory category)
+        public List<ServiceResult<HomeChefMealDetailsVM>> GetMealsByCategory(FoodCategory category , int pageNumber = 1, int pageSize = 4)
         {
             try
             {
@@ -503,12 +547,19 @@ namespace Dalel.Services.HomeChefServices
 
 
 
-        public ServiceResult DeleteOrder(AddHomeChefOrderVM vm)
+        public ServiceResult DeleteOrder(int id) // Delete Order by id
         {
             try
             {
-                var Order = vm.ToModel();
-                _HomeChefOrderRepository.Delete(Order);
+                var order = _HomeChefOrderRepository.GetList(m => m.Id == id).FirstOrDefault();
+
+                if (order == null)
+                {
+                    return ServiceResult.FailureResult("Order not found.");
+                }
+
+
+                _HomeChefOrderRepository.Delete(order);
 
                 return ServiceResult.SuccessResult("Order Deleted Successfully!.");
             }
@@ -750,14 +801,21 @@ namespace Dalel.Services.HomeChefServices
 
 
 
-        public ServiceResult DeleteOrderMeal(AddHomeChefOrderMealVM vm)
+        public ServiceResult DeleteOrderMeal(int id) // Delete meal by id
         {
             try
             {
-                var orderMeal = vm.ToModel();
-                _HomeChefOrderMealRepository.Delete(orderMeal);
+                var Ordermeal = _HomeChefOrderMealRepository.GetList(m => m.Id == id).FirstOrDefault();
 
-                return ServiceResult.SuccessResult("OrderMeal Deleted Successfully!.");
+                if (Ordermeal == null)
+                {
+                    return ServiceResult.FailureResult("Meal not found.");
+                }
+
+
+                _HomeChefOrderMealRepository.Delete(Ordermeal);
+
+                return ServiceResult.SuccessResult("Meal Deleted Successfully!.");
             }
 
             catch (Exception ex)
@@ -807,11 +865,18 @@ namespace Dalel.Services.HomeChefServices
 
 
 
-        public ServiceResult DeletePayment(AddPaymentHomeChefOrderVM vm)
+        public ServiceResult DeletePayment(int id) // Delete meal by id
         {
             try
             {
-                var payment = vm.ToModel();
+                var payment = _PaymentHomeChefOrderRepasitory.GetList(m => m.Id == id).FirstOrDefault();
+
+                if (payment == null)
+                {
+                    return ServiceResult.FailureResult("Payment not found.");
+                }
+
+
                 _PaymentHomeChefOrderRepasitory.Delete(payment);
 
                 return ServiceResult.SuccessResult("Payment Deleted Successfully!.");
@@ -848,7 +913,7 @@ namespace Dalel.Services.HomeChefServices
         }
 
 
-        public ServiceResult UpdateOrder(AddReviewHomeChefOrderVM vm)
+        public ServiceResult UpdateReview(AddReviewHomeChefOrderVM vm)
         {
             try
             {
@@ -866,14 +931,21 @@ namespace Dalel.Services.HomeChefServices
 
 
 
-        public ServiceResult DeleteOrder(AddReviewHomeChefOrderVM vm)
+        public ServiceResult DeleteReview(int id) // Delete review by id
         {
             try
             {
-                var review = vm.ToModel();
+                var review = _ReviewHomeChefOrderRepository.GetList(m => m.Id == id).FirstOrDefault();
+
+                if (review == null)
+                {
+                    return ServiceResult.FailureResult("Payment not found.");
+                }
+
+
                 _ReviewHomeChefOrderRepository.Delete(review);
 
-                return ServiceResult.SuccessResult("Review Deleted Successfully!.");
+                return ServiceResult.SuccessResult("Payment Deleted Successfully!.");
             }
 
             catch (Exception ex)
@@ -884,6 +956,28 @@ namespace Dalel.Services.HomeChefServices
         }
 
         #endregion
+
+
+
+
+     //   public IActionResult SearchRestaurants(
+     //[FromQuery] string searchText = "",
+     //[FromQuery] string city = null,
+     //[FromQuery] string region = null,
+     //[FromQuery] VerificationStatus? verificationStatus = null,
+     //[FromQuery] string sortBy = "Name",
+     //[FromQuery] bool descending = false,
+     //[FromQuery] int pageSize = 5,
+     //[FromQuery] int pageIndex = 1)
+     //   {
+     //       var result = restaurantService.Search(
+     //           searchText, city, region, verificationStatus,
+     //           sortBy, descending, pageSize, pageIndex
+     //       );
+     //       if (!result.Success)
+     //           return new JsonResult(result);
+     //       return new JsonResult(result);
+     //   }
 
     }
 

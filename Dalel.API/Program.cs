@@ -62,6 +62,7 @@ builder.Services.AddScoped<HomeChefOrderMealRepository>();
 builder.Services.AddScoped<HomeChefOrderRepository>();
 builder.Services.AddScoped<PaymentHomeChefOrderRepasitory>();
 builder.Services.AddScoped<ReviewHomeChefOrderRepository>();
+builder.Services.AddScoped<HomeChefService>();
 
 #endregion
 
@@ -99,6 +100,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();

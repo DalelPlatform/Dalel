@@ -3,7 +3,7 @@ using Models.Hotel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Dalel.Services.HomeService
+namespace Dalel.Services
 {
     public class HotelService 
     {
