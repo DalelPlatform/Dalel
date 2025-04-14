@@ -1,16 +1,17 @@
 ﻿using Models.Hotel;
 using System.Collections.Generic;
+using Utilities;
 
-namespace Dalel.Services.HomeService
+namespace Dalel.Services.HotelService
 {
     public interface IHotelService
     {
-        void AddHotel(Hotel hotel);
-        void UpdateHotel(Hotel hotel);
-        void DeleteHotel(int id);
-        Hotel GetHotelById(int id);
-        IEnumerable<Hotel> GetAllHotels();
-        IEnumerable<Hotel> GetHotelsByCity(string city);
-        Hotel GetHotelByOwnerId(string ownerId);
+        ServiceResult AddHotel(Hotel hotel);
+        ServiceResult UpdateHotel(Hotel hotel);
+        ServiceResult DeleteHotel(int id);
+        ServiceResult<Hotel> GetHotelById(int id);
+        ServiceResult<IEnumerable<Hotel>> GetAllHotels();
+        ServiceResult<IEnumerable<Hotel>> GetHotelsByCity(string city);
+        ServiceResult<Hotel> GetHotelByOwnerId(string ownerId);
     }
 }

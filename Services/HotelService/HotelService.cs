@@ -1,52 +1,117 @@
-﻿using Dalel.Repository.Hotel.Non_GenericRepository;
-using Models.Hotel;
+﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
+using Dalel.Repository.Hotel.Non_GenericRepository;
+using Models.Hotel;
+using Utilities;
 
-namespace Dalel.Services
+namespace Dalel.Services.HotelService
 {
-    public class HotelService 
+    public class HotelService : IHotelService
     {
-        private readonly HotelRepository _repository;
+        private readonly HotelRepository _hotelRepo;
 
-        public HotelService(HotelRepository repository)
+        public HotelService(HotelRepository hotelRepo)
         {
-            _repository = repository;
+            _hotelRepo = hotelRepo;
         }
 
-        public async Task AddHotel(Hotel hotel)
+        public ServiceResult AddHotel(Hotel hotel)
         {
-            await _repository.InsertAsync(hotel);
+            try
+            {
+                _hotelRepo.InsertAsync(hotel).GetAwaiter().GetResult();
+                _hotelRepo.SaveAsync().GetAwaiter().GetResult();
+                return ServiceResult.SuccessResult("Hotel added successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult("Error adding hotel: " + ex.Message);
+            }
         }
 
-        public async Task UpdateHotel(Hotel hotel)
+        public ServiceResult UpdateHotel(Hotel hotel)
         {
-            await _repository.UpdateAsync(hotel);
+            try
+            {
+                _hotelRepo.UpdateAsync(hotel).GetAwaiter().GetResult();
+                _hotelRepo.SaveAsync().GetAwaiter().GetResult();
+                return ServiceResult.SuccessResult("Hotel updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult("Error updating hotel: " + ex.Message);
+            }
         }
 
-        public async Task DeleteHotel(int id)
+        public ServiceResult DeleteHotel(int id)
         {
-            await _repository.DeleteAsync(id);
+            try
+            {
+                _hotelRepo.DeleteAsync(id).GetAwaiter().GetResult();
+                _hotelRepo.SaveAsync().GetAwaiter().GetResult();
+                return ServiceResult.SuccessResult("Hotel deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult("Error deleting hotel: " + ex.Message);
+            }
         }
 
-        public async Task<Hotel> GetHotelById(int id)
+        public ServiceResult<Hotel> GetHotelById(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            try
+            {
+                var hotel = _hotelRepo.GetByIdAsync(id).GetAwaiter().GetResult();
+                if (hotel == null)
+                    return ServiceResult<Hotel>.FailureResult("Hotel not found.");
+                return ServiceResult<Hotel>.SuccessResult(hotel, "Hotel retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<Hotel>.FailureResult("Error retrieving hotel: " + ex.Message);
+            }
         }
 
-        public async Task<IEnumerable<Hotel>> GetAllHotels()
+        public ServiceResult<IEnumerable<Hotel>> GetAllHotels()
         {
-            return await _repository.GetAllAsync();
+            try
+            {
+                var hotels = _hotelRepo.GetAllAsync().GetAwaiter().GetResult();
+                return ServiceResult<IEnumerable<Hotel>>.SuccessResult(hotels, "Hotels retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<Hotel>>.FailureResult("Error retrieving hotels: " + ex.Message);
+            }
         }
 
-        public Task<IEnumerable<Hotel>> GetHotelsByCity(string city)
+        public ServiceResult<IEnumerable<Hotel>> GetHotelsByCity(string city)
         {
-            return _repository.GetHotelsByCityAsync(city); 
+            try
+            {
+                var hotels = _hotelRepo.GetByConditionAsync(h => h.City == city && !h.IsDeleted).GetAwaiter().GetResult();
+                return ServiceResult<IEnumerable<Hotel>>.SuccessResult(hotels, "Hotels by city retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<Hotel>>.FailureResult("Error retrieving hotels by city: " + ex.Message);
+            }
         }
 
-        public Task<Hotel> GetHotelByOwnerId(string ownerId)
+        public ServiceResult<Hotel> GetHotelByOwnerId(string ownerId)
         {
-            return _repository.GetHotelByOwnerIdAsync(ownerId); 
+            try
+            {
+                var hotel = _hotelRepo.GetHotelByOwnerIdAsync(ownerId).GetAwaiter().GetResult();
+                if (hotel == null)
+                    return ServiceResult<Hotel>.FailureResult("Hotel for the owner not found.");
+                return ServiceResult<Hotel>.SuccessResult(hotel, "Hotel by owner retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<Hotel>.FailureResult("Error retrieving hotel by owner: " + ex.Message);
+            }
         }
     }
 }

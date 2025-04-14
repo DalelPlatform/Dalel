@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.ViewModels.Hotel_DTO
+namespace Dalel.ViewModels
 {
-    public class RoomTypeImageDTO
+    public class RoomCreation
     {
-        public int Id { get; set; }
-        public string Image { get; set; }
         public int RoomTypeId { get; set; }
+        public string Availability { get; set; } // Stored as string per conversion in model
     }
-
 }
+
+
