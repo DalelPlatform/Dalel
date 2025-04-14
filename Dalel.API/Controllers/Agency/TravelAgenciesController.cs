@@ -27,13 +27,13 @@ namespace Dalel.API.Controllers.Agency
         public IActionResult AddTravelAgency(addTravelAgenciesVM trvelAgency)
         {
 
-            var res = _pakageService.CreateTravelAgencies(trvelAgency.ToModel());
+            var res = _pakageService.CreateTravelAgencies(trvelAgency);
             return new JsonResult(res);
         }
         [HttpPut]
         public IActionResult UpdateTravelAgency(addTravelAgenciesVM trvelAgency)
         {
-            var res = _pakageService.UpdateTravelAgencies(trvelAgency.ToModel());
+            var res = _pakageService.UpdateTravelAgencies(trvelAgency);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]

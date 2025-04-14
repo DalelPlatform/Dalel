@@ -116,6 +116,20 @@ namespace Dalel.Services
                 return ServiceResult<RestaurantDetailsVM>.FailureResult("Error: " + ex.Message);
             }
         }
+        public ServiceResult<RestaurantDetailsVM> GetRestaurantByOwnerId(string ownerId)
+        {
+            try
+            {
+                var restaurant = _restaurantRepo.GetRestaurantByOwnerId(ownerId);
+                if (restaurant == null)
+                    return ServiceResult<RestaurantDetailsVM>.FailureResult("Restaurant not found.");
+                return ServiceResult<RestaurantDetailsVM>.SuccessResult(restaurant, "Restaurant retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<RestaurantDetailsVM>.FailureResult("Error: " + ex.Message);
+            }
+        }
         public async Task<ServiceResult<List<RestaurantDetailsVM>>> GetRestaurantsByVerificationStatus(VerificationStatus verificationStatus)
         {
             try

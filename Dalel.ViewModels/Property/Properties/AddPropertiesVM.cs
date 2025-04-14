@@ -69,10 +69,8 @@ namespace Dalel.ViewModels
         public float CancelationCharges { get; set; }
 
         public List<string> Paths { get; set; } = new();
-        public IFormFileCollection PropertyImages { get; set; }
-
-        [Required(ErrorMessage = "OwnerId is required.")]
-        public string OwnerId { get; set; }
+        public IFormFileCollection? PropertyImages { get; set; }
+        public string? OwnerId { get; set; }
     }
 
 }

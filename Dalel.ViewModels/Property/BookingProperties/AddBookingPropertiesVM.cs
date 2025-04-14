@@ -26,8 +26,7 @@ namespace Dalel.ViewModels
         [Required(ErrorMessage = "PropertyId is required.")]
         public int PropertyId { get; set; }
 
-        [Required(ErrorMessage = "ClientId is required.")]
-        public string ClientId { get; set; }
+        public string? ClientId { get; set; }
     }
 
 }

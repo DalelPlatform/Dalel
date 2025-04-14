@@ -14,7 +14,23 @@ namespace Dalel.ViewModels
         {
             return new Properties
             {
-                // Add all properties here
+                Description = viewModel.Description,
+                Amenities = viewModel.Amenities,
+                NumberOfRooms = viewModel.NumberOfRooms,
+                BuildingNo = viewModel.BuildingNo,
+                FloorNo = viewModel.FloorNo,
+                Address = viewModel.Address,
+                City = viewModel.City,
+                Region = viewModel.Region,
+                Street = viewModel.Street,
+                Latitude = viewModel.Latitude,
+                Longitude = viewModel.Longitude,
+                PhoneNumber = viewModel.PhoneNumber,
+                CancelationCharges = viewModel.CancelationCharges,
+                CancelationOptions = viewModel.CancelationOptions,
+                IsForRent = viewModel.IsForRent,
+                VerificationStatus = viewModel.VerificationStatus,
+                OwnerId = viewModel.OwnerId
             };
         }
         
