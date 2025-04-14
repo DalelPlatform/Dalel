@@ -12,11 +12,10 @@ using Models.User;
 using System.Text;
 using System.Text.Json.Serialization;
 using Dalel.Repository.Hotel.Non_GenericRepository;
-using Dalel.Services.HomeService;
-using FluentValidation.AspNetCore;
-using FluentValidation;
+using Dalel.Services.HotelService;
 using Models.Hotel;
-using Dalel.Mappings;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +24,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DelelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
 // Register AutoMapper
-builder.Services.AddAutoMapper(typeof(HotelMappingProfile));
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DelelContext>
@@ -54,6 +52,18 @@ builder.Services.AddScoped<RestaurantOwnerReopsitory>();
 builder.Services.AddScoped<ServiceProviderRepository>();
 builder.Services.AddScoped<TravelAgencyOwnerReopsitory>();
 
+// Register repository classes (Scoped lifetime is recommended)
+builder.Services.AddScoped<BookingHotelRoomRepository>();
+builder.Services.AddScoped<HotelRepository>();
+builder.Services.AddScoped<RoomTypeRepository>();
+builder.Services.AddScoped<PaymentHotelRoomRepository>();
+builder.Services.AddScoped<BookingGuestInRoomRepository>(); // if you use it in services
+
+// Register service classes using interfaces
+builder.Services.AddScoped<IBookingHotelRoomService, BookingHotelRoomService>();
+builder.Services.AddScoped<IHotelService, Dalel.Services.HotelService.HotelService>();
+builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
+builder.Services.AddScoped<IPaymentHotelRoomService, PaymentHotelRoomService>();
 
 #region HomeChef
 builder.Services.AddScoped<HomeChefDeliveryRepository>();

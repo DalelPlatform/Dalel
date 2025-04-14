@@ -1,17 +1,17 @@
 ﻿using Models.Hotel;
 using System.Collections.Generic;
+using Utilities;
 
-
-namespace Dalel.Services.HomeService
+namespace Dalel.Services.HotelService
 {
     public interface IRoomTypeService
     {
-        void AddRoomType(RoomType roomType);
-        void UpdateRoomType(RoomType roomType);
-        void DeleteRoomType(int id);
-        RoomType GetRoomTypeById(int id);
-        IEnumerable<RoomType> GetAllRoomTypes();
-        IEnumerable<RoomType> GetRoomTypesByHotelId(int hotelId);
-        IEnumerable<RoomType> GetExpensiveRoomTypes(float priceThreshold);
+        ServiceResult AddRoomType(RoomType roomType);
+        ServiceResult UpdateRoomType(RoomType roomType);
+        ServiceResult DeleteRoomType(int id);
+        ServiceResult<RoomType> GetRoomTypeById(int id);
+        ServiceResult<IEnumerable<RoomType>> GetAllRoomTypes();
+        ServiceResult<IEnumerable<RoomType>> GetRoomTypesByHotelId(int hotelId);
+        ServiceResult<IEnumerable<RoomType>> GetExpensiveRoomTypes(float priceThreshold);
     }
 }

@@ -5,56 +5,114 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 
-namespace Dalel.Services.HomeService
+namespace Dalel.Services.HotelService
 {
-    public class BookingHotelRoomService 
+    public class BookingHotelRoomService : IBookingHotelRoomService
     {
-        private readonly BookingHotelRoomRepository _repository;
+        private readonly BookingHotelRoomRepository _bookingRepo;
 
-        public BookingHotelRoomService(BookingHotelRoomRepository repository)
+        public BookingHotelRoomService(BookingHotelRoomRepository bookingRepo)
         {
-            _repository = repository;
+            _bookingRepo = bookingRepo;
         }
 
-        public async Task AddBookingAsync(BookingHotelRoom booking)
+        public ServiceResult AddBooking(BookingHotelRoom booking)
         {
-            await _repository.InsertAsync(booking);
+            try
+            {
+                _bookingRepo.InsertAsync(booking).GetAwaiter().GetResult();
+                _bookingRepo.SaveAsync().GetAwaiter().GetResult();
+                return ServiceResult.SuccessResult("Booking added successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult("Error adding booking: " + ex.Message);
+            }
         }
 
-        public async Task UpdateBookingAsync(BookingHotelRoom booking)
+        public ServiceResult UpdateBooking(BookingHotelRoom booking)
         {
-            await _repository.UpdateAsync(booking);
+            try
+            {
+                _bookingRepo.UpdateAsync(booking).GetAwaiter().GetResult();
+                _bookingRepo.SaveAsync().GetAwaiter().GetResult();
+                return ServiceResult.SuccessResult("Booking updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult("Error updating booking: " + ex.Message);
+            }
         }
 
-        public async Task DeleteBookingAsync(int id)
+        public ServiceResult DeleteBooking(int id)
         {
-            await _repository.DeleteAsync(id);
+            try
+            {
+                _bookingRepo.DeleteAsync(id).GetAwaiter().GetResult();
+                _bookingRepo.SaveAsync().GetAwaiter().GetResult();
+                return ServiceResult.SuccessResult("Booking deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult("Error deleting booking: " + ex.Message);
+            }
         }
 
-        public async Task<BookingHotelRoom> GetBookingByIdAsync(int id)
+        public ServiceResult<BookingHotelRoom> GetBookingById(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            try
+            {
+                var booking = _bookingRepo.GetByIdAsync(id).GetAwaiter().GetResult();
+                if (booking == null)
+                    return ServiceResult<BookingHotelRoom>.FailureResult("Booking not found.");
+
+                return ServiceResult<BookingHotelRoom>.SuccessResult(booking, "Booking retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<BookingHotelRoom>.FailureResult("Error retrieving booking: " + ex.Message);
+            }
         }
 
-        public async Task<IEnumerable<BookingHotelRoom>> GetAllBookingsAsync()
+        public ServiceResult<IEnumerable<BookingHotelRoom>> GetAllBookings()
         {
-            return await _repository.GetAllAsync();
+            try
+            {
+                var bookings = _bookingRepo.GetAllAsync().GetAwaiter().GetResult();
+                return ServiceResult<IEnumerable<BookingHotelRoom>>.SuccessResult(bookings, "Bookings retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<BookingHotelRoom>>.FailureResult("Error retrieving bookings: " + ex.Message);
+            }
         }
 
-        public async Task<IEnumerable<BookingHotelRoom>> GetBookingsByClientIdAsync(int clientId)
+        public ServiceResult<IEnumerable<BookingHotelRoom>> GetBookingsByClientId(string clientId)
         {
-            return await _repository.GetBookingsByClientIdAsync(clientId);
+            try
+            {
+                var bookings = _bookingRepo.GetByConditionAsync(b => b.ClientId == clientId).GetAwaiter().GetResult();
+                return ServiceResult<IEnumerable<BookingHotelRoom>>.SuccessResult(bookings, "Bookings for client retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<BookingHotelRoom>>.FailureResult("Error retrieving client bookings: " + ex.Message);
+            }
         }
 
-        public async Task<IEnumerable<BookingHotelRoom>> GetAvailableBookingsAsync()
+        public ServiceResult<IEnumerable<BookingHotelRoom>> GetAvailableBookings()
         {
-            return await _repository.GetAvailableRoomAsync();
-        }
-
-        public async Task<IEnumerable<BookingHotelRoom>> GetBookingsByClientIdAsync(string clientId)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                var bookings = _bookingRepo.GetByConditionAsync(b => b.IsAvailable).GetAwaiter().GetResult();
+                return ServiceResult<IEnumerable<BookingHotelRoom>>.SuccessResult(bookings, "Available bookings retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<BookingHotelRoom>>.FailureResult("Error retrieving available bookings: " + ex.Message);
+            }
         }
     }
 }

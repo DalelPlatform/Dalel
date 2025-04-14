@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Dalel.ViewModels.Hotel_DTO
+namespace Dalel.ViewModels
 {
-    public class HotelDTO
+    public class HotelDetails
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -19,10 +16,8 @@ namespace Dalel.ViewModels.Hotel_DTO
         public string PhoneNumber { get; set; }
         public bool CancelationOptions { get; set; }
         public float CancelationCharges { get; set; }
-        public string VerificationStatus { get; set; } // Enum can be mapped to string for simplicity
-        public bool IsDeleted { get; set; }
-        public ICollection<HotelImageDTO> HotelImages { get; set; }
-        public ICollection<RoomTypeDTO> RoomTypes { get; set; }
+        public string OwnerId { get; set; }
+        public string VerificationStatus { get; set; }
+        public List<string> Images { get; set; }
     }
-
 }
