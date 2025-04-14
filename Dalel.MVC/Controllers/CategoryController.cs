@@ -23,6 +23,7 @@ namespace Controllers
             return View(categories.Data);
         }
 
+
         public IActionResult Details(int id)
         {
             var categoryResult = _service.GetCategoryById(id);

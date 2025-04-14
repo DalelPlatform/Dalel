@@ -1,5 +1,5 @@
 ﻿using System;
-using Dalel.ViewModels.HomeChef.HomeChefOrder;
+using Dalel.ViewModels.HomeChef.HomeChefOrderMeal;
 using Models.HomeChef;
 
 namespace Dalel.ViewModels
