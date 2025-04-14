@@ -1,5 +1,6 @@
 ﻿using Dalel.Services;
 using Dalel.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
@@ -36,6 +37,7 @@ namespace Dalel.API.Areas
             return new JsonResult(result);
         }
         [HttpPost]
+        [Authorize(Roles ="RestaurantOwner")]
         public async Task<IActionResult> AddRestaurant([FromBody] AddRestaurantVM model)
         {
             model.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -44,7 +46,9 @@ namespace Dalel.API.Areas
                 return new JsonResult(result);
             return new JsonResult(result);
         }
+
         [HttpPut]
+        [Authorize(Roles = "RestaurantOwner")]
         public async Task<IActionResult> EditRestaurant([FromBody] AddRestaurantVM model)
         {
             var result = await restaurantService.EditRestaurant(model);
@@ -52,6 +56,7 @@ namespace Dalel.API.Areas
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRestaurant(int id)
         {

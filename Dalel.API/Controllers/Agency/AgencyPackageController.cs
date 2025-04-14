@@ -1,4 +1,5 @@
 ﻿using Dalel.Services;
+using Dalel.Services.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
@@ -34,7 +35,7 @@ namespace Dalel.API.Controllers.Agency
         [HttpPut]
         public IActionResult UpdateDoc(addAgencyVerificationDocumentVM doc) 
         {
-            var res = _pakageService.UpdateDocument(doc.ToModel());
+            var res = _pakageService.UpdateDocument(doc);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]

@@ -20,8 +20,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<DelelContext>()
     .AddDefaultTokenProviders();
 
-
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped(typeof(RoleRepository));
 
 //Agency Repos
 builder.Services.AddScoped(typeof(PackagebookingRepo));

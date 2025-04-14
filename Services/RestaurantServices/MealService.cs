@@ -58,7 +58,7 @@ namespace Dalel.Services
                 );
             }
         }
-        public async Task<ServiceResult> CreateMeal(AddRestaurantMenuItemVM meal)
+        public ServiceResult CreateMeal(AddRestaurantMenuItemVM meal)
         {
             try
             {
