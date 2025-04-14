@@ -5,16 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Dalel.Repository;
 using Dalel.ViewModels;
-using Dalel.ViewModels.HomeChef.HomeChefDelivery;
-using Dalel.ViewModels.HomeChef.HomeChefMeal;
-using Dalel.ViewModels.HomeChef.HomeChefOrderMeal;
-using Dalel.ViewModels.HomeChef.ReviewHomeChefOrder;
 using Models.Enums;
 using Models.HomeChef;
 using Models.WeddingPlaces;
 using Utilities;
 
-namespace Dalel.Services.HomeChefServices
+namespace Dalel.Services
 {
     public class HomeChefService
     {

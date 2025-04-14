@@ -29,7 +29,7 @@ namespace Models.HomeChef
 
             builder.HasOne(Hchef => Hchef.HomeChef)
                 .WithMany(review => review.ReviewHomeChefOrders)
-                .HasForeignKey(chef => chef.HomeChefOrderId);
+                .HasForeignKey(chef => chef.HomeChefId);
         }
     }
 

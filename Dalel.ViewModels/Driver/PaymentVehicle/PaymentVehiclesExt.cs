@@ -5,6 +5,19 @@ namespace Dalel.ViewModels
 {
     public static class PaymentVehicleExtensions
     {
+
+        public static PaymentVehicle ToModel(this AddPaymentVehicle vm)
+        {
+            return new PaymentVehicle
+            {
+                Amount = vm.Amount,
+                PaymentMethod = vm.PaymentMethod,
+                PaymentStatus = vm.PaymentStatus,
+                TransactionDateTime = DateTime.Now,
+                BookingVehicleId = vm.BookingVehicleId
+            };
+        }
+
         public static PaymentVehicleDetailsViewModel ToDetailsViewModel(this PaymentVehicle payment)
         {
             return new PaymentVehicleDetailsViewModel

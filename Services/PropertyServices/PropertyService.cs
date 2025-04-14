@@ -99,7 +99,7 @@ namespace Dalel.Services
                 if (booking == null)
                     return ServiceResult.FailureResult("Booking not found.");
 
-                booking.Status = Models.Enums.BookingStatus.Cancel;
+                booking.Status = BookingStatus.Cancel;
                 _bookingRepo.Update(booking);
                 return ServiceResult.SuccessResult("Booking canceled.");
             }

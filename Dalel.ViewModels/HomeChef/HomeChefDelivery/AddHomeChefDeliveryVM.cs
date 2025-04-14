@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Models.Enums;
 
-namespace Dalel.ViewModels.HomeChef.HomeChefDelivery
+namespace Dalel.ViewModels
 {
     public class AddHomeChefDeliveryVM
     {

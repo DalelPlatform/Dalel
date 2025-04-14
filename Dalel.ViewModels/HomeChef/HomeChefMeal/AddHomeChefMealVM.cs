@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Models.Enums;
 
-namespace Dalel.ViewModels.HomeChef.HomeChefMeal
+namespace Dalel.ViewModels
 {
     public class AddHomeChefMealVM
     {

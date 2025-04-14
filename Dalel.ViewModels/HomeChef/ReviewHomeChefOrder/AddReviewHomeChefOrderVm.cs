@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Dalel.ViewModels.HomeChef.ReviewHomeChefOrder
+namespace Dalel.ViewModels
 {
     public class AddReviewHomeChefOrderVM
     {
