@@ -57,11 +57,9 @@ namespace Dalel.ViewModels
         [StringLength(15, MinimumLength = 7, ErrorMessage = "Phone number must be between 7 and 15 digits.")]
         public string PhoneNumber { get; set; }
 
-
-
-
-        public List<string> Paths { get; set; } = new List<string>();
-        public IFormFileCollection RestaurantImage { get; set; }
+        public string? OwnerId { get; set; }
+        public List<string>? Paths { get; set; } = new List<string>();
+        public IFormFileCollection? RestaurantImage { get; set; }
     }
 }
 

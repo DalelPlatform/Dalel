@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Models.HomeService;
-using Dalel.Services.ServiceProvicerService;
+using Dalel.Services;
 
 [ApiController]
 [Route("api/[controller]")]

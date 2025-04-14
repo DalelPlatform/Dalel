@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Dalel.Services;
 using Dalel.ViewModels.HomeServices.CategoryServices;
-using Dalel.Services.HotelService;
-using Dalel.Services.ServiceProvicerService;
+using Dalel.Services.HomeService;
 
 namespace Controllers
 {
@@ -22,6 +21,7 @@ namespace Controllers
             var categories = _service.GetCategories();
             return View(categories.Data);
         }
+
 
         public IActionResult Details(int id)
         {

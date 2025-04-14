@@ -7,6 +7,7 @@ using Dalel.Repository.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
+using Dalel.ViewModels.Agency.Packagebooking;
 using Dalel.ViewModels.Agency.TravelAgencies;
 using Models.Agency;
 using Models.Restaurant;
@@ -31,18 +32,18 @@ namespace Dalel.Services.Agency
             PackagebookingRepo = _PackagebookingRepo;
             TravelAgenciesRepo = _TravelAgenciesRepo;
         }
-        public ServiceResult CreateAgencyPackage(AgencyPackage agency  )
+        public ServiceResult CreateAgencyPackage(AddAgencyPackageVM agency  )
         {
-            AgencyPackageRepo.Add(agency);
+            AgencyPackageRepo.Add(agency.ToModel());
             return new ServiceResult
             {
                 Success = true,
                 Message = "added successfully."
             };
         }
-        public ServiceResult UpdateAgencyPackage(AgencyPackage agency)
+        public ServiceResult UpdateAgencyPackage(AddAgencyPackageVM agency)
         {
-            AgencyPackageRepo.Update(agency);
+            AgencyPackageRepo.Update(agency.ToModel());
             return new ServiceResult
             {
                 Success = true,
@@ -75,9 +76,9 @@ namespace Dalel.Services.Agency
             Message = "deleted successfully."
         };
         }
-        public ServiceResult UpdateDocument(AgencyVerificationDocument doc)
+        public ServiceResult UpdateDocument(addAgencyVerificationDocumentVM doc)
         {
-            AgencyVerificationDocumentRepo.Update(doc);
+            AgencyVerificationDocumentRepo.Update(doc.ToModel());
             return new ServiceResult
             {
                 Success = true,
@@ -100,14 +101,15 @@ namespace Dalel.Services.Agency
             };
         }
 
-        public List<AgencyVerificationDocumentDetails> GetAllVerificationDocument(int id)
+        public List<AgencyVerificationDocumentDetails> 
+            GetAllVerificationDocument(int id)
         {
             return AgencyVerificationDocumentRepo.GetApprovedDocuments(id).ToList();
         }
 
-        public ServiceResult updataBooking(PackageBooking book)
+        public ServiceResult updataBooking(AddPackagebookingVM book)
         {
-            PackagebookingRepo.Update(book);
+            PackagebookingRepo.Update(book.ToModel());
             return new ServiceResult
             {
                 Success = true,
@@ -128,7 +130,7 @@ namespace Dalel.Services.Agency
             };
         }
 
-        public ServiceResult<List<TravelAgenciesDetails>> GetAllTravelAgency(int id)
+        public ServiceResult<List<TravelAgenciesDetails>> GetAllTravelAgency()
         {            try
             {
                 var list = TravelAgenciesRepo.GetList().
@@ -144,18 +146,18 @@ namespace Dalel.Services.Agency
         }
 
 
-        public ServiceResult CreateTravelAgencies(TravelAgencies agency)
+        public ServiceResult CreateTravelAgencies(addTravelAgenciesVM agency)
         {
-            TravelAgenciesRepo.Add(agency);
+            TravelAgenciesRepo.Add(agency.ToModel());
             return new ServiceResult
             {
                 Success = true,
                 Message = "added successfully."
             };
         }
-        public ServiceResult UpdateTravelAgencies(TravelAgencies agency)
+        public ServiceResult UpdateTravelAgencies(addTravelAgenciesVM agency)
         {
-            TravelAgenciesRepo.Update(agency);
+            TravelAgenciesRepo.Update(agency.ToModel());
             return new ServiceResult
             {
                 Success = true,

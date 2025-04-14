@@ -46,12 +46,12 @@ namespace Dalel.Services
             this.clientRepository = clientRepository;
             this.driverRepository = driverRepository;
             this.serviceProviderRepository = serviceProviderRepository;
-            this.HomeChefReopsitory = chefRepository;
-            this.HotelOwnerReopsitory = hotelOwnerReopsitory;
+            HomeChefReopsitory = chefRepository;
+            HotelOwnerReopsitory = hotelOwnerReopsitory;
             this.propertiesRepository = propertiesRepository;
-            this.RestaurantOwnerReopsitory = restaurantOwnerReopsitory;
-            this.TravelAgencyOwnerReopsitory = travelAgencyOwnerReopsitory;
-            this.appSettingConfiguration = configuration;
+            RestaurantOwnerReopsitory = restaurantOwnerReopsitory;
+            TravelAgencyOwnerReopsitory = travelAgencyOwnerReopsitory;
+            appSettingConfiguration = configuration;
         }
 
         public async Task<IdentityResult> CreateAccount(UserRegisterVM user)

@@ -7,7 +7,7 @@ using Models.Enums;
 using Models.Property;
 using Utilities;
 
-namespace Dalel.API.Areas.Property.Controllers
+namespace Dalel.API.Areas
 {
     [Route("api/[controller]")]
     [ApiController]

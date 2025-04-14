@@ -10,6 +10,22 @@ namespace Dalel.ViewModels
 {
     public  static class VehicleExt
     {
+
+          public static Vehicle ToModel(this AddVehicle vm)
+        {
+            return new Vehicle
+            {
+                Type = vm.Type,
+                Model = vm.Model,
+                Color = vm.Color,
+                ModelYear = vm.ModelYear,
+                Seats = vm.Seats,
+                LicenseNumber = vm.LicenseNumber,
+                PlateNumber = vm.PlateNumber,
+                DriverId = vm.DriverId,
+                VehicleImages = vm.ImagePaths?.Select(path => new VehicleImage { Image = path }).ToList()
+            };
+        }
         public static VehicleDetailsViewModel ToDetailsViewModel(this Vehicle vehicle)
         {
             return new VehicleDetailsViewModel
