@@ -84,13 +84,13 @@ builder.Services.AddScoped<RestaurantOrderRepository>();
 #endregion
 
 #region HomeChef
-
-//builder.Services.AddScoped<HomeChefDeliveryRepository>();
-//builder.Services.AddScoped<HomeChefMealRepository>();
-//builder.Services.AddScoped<HomeChefOrderMealRepository>();
-//builder.Services.AddScoped<HomeChefOrderRepository>();
-//builder.Services.AddScoped<PaymentHomeChefOrderRepasitory>();
-//builder.Services.AddScoped<ReviewHomeChefOrderRepository>();
+builder.Services.AddScoped<HomeChefDeliveryRepository>();
+builder.Services.AddScoped<HomeChefMealRepository>();
+builder.Services.AddScoped<HomeChefOrderMealRepository>();
+builder.Services.AddScoped<HomeChefOrderRepository>();
+builder.Services.AddScoped<PaymentHomeChefOrderRepasitory>();
+builder.Services.AddScoped<ReviewHomeChefOrderRepository>();
+builder.Services.AddScoped<HomeChefService>();
 
 #endregion
 
@@ -142,6 +142,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();

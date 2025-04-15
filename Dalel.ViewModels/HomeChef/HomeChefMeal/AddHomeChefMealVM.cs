@@ -41,7 +41,7 @@ namespace Dalel.ViewModels
         public double? Duration { get; set; }
 
         public List<string> Paths { get; set; } = new List<string>();
-        public IFormFileCollection RestaurantMenuItemImages { get; set; }
+        public IFormFileCollection HomeChefMealImages { get; set; }
 
     }
 }
