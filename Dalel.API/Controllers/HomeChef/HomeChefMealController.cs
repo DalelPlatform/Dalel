@@ -168,18 +168,7 @@ namespace Dalel.API.Controllers.HomeChef
         }
 
 
-        [HttpGet("GetAvailableMeals")]
-        public IActionResult SearchMeals(string keyword)
-        {
-            var result = _homeChefService.SearchMeals(keyword);
-
-            if (result[0].Success)
-            {
-                return new JsonResult(result);
-            }
-            return new JsonResult(result);
-            
-        }
+       
 
     }
 }

@@ -5,7 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Models.HomeChef;
 
 namespace Dalel.API.Controllers.HomeChef
+
 {
+
+    [ApiController]
+    [Route("api/[controller]")]
     public class PaymentHomeChefOrderController : Controller
     {
 
@@ -21,7 +25,7 @@ namespace Dalel.API.Controllers.HomeChef
         [Authorize(Roles = "Client,Admin,HomeChef")]
 
 
-        [HttpPost("AddOrder")]
+        [HttpPost("AddPayment")]
         public IActionResult Addpayment(AddPaymentHomeChefOrderVM PayVm)
         {
             if (!ModelState.IsValid)
@@ -43,7 +47,7 @@ namespace Dalel.API.Controllers.HomeChef
 
 
         [Authorize(Roles = "Client,Admin,HomeChef")]
-        [HttpPost("UpdateOrder")]
+        [HttpPost("UpdatePayment")]
 
         public IActionResult UpdatePayment(AddPaymentHomeChefOrderVM PayVm)
         {
@@ -65,7 +69,7 @@ namespace Dalel.API.Controllers.HomeChef
 
 
         [Authorize(Roles = "Admin,HomeChef")]
-        [HttpPost("DeleteMealById")]
+        [HttpPost("DeletePaymentById")]
 
         public IActionResult DeletePayment(int id)
         {
