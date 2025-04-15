@@ -6,14 +6,14 @@ using Dalel.ViewModels.Agency.AgencyVerificationDocument;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dalel.API.Controllers.Agency
+namespace Dalel.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AgencyPackageController : ControllerBase
     {
         private readonly AgencyPakageService _pakageService;
-        AgencyPackageController(AgencyPakageService _service)
+       public AgencyPackageController(AgencyPakageService _service)
         {
             _pakageService = _service;
         }
@@ -25,6 +25,7 @@ namespace Dalel.API.Controllers.Agency
             return new JsonResult(res);
         }
         [HttpPost]
+
         public IActionResult AddDocAddDocument(int agencyId, string documentType,
             string documentFile)
         {

@@ -8,6 +8,8 @@ namespace Models.User
     public class AppUser : IdentityUser
     {
 
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
         public string? NationalId { get; set; }
 
         public string? Location { get; set; }

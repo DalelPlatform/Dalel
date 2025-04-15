@@ -12,7 +12,7 @@ namespace Dalel.API.Controllers.Agency
     public class AgencyVerificationDocumentController : ControllerBase
     {
         private readonly AgencyPakageService _pakageService;
-        AgencyVerificationDocumentController(AgencyPakageService _service)
+       public AgencyVerificationDocumentController(AgencyPakageService _service)
         {
             _pakageService = _service;
         }

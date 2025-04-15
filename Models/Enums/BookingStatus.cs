@@ -5,6 +5,7 @@
         Panding,
         Confirmed,
         Rejected,
-        Cancel ////recend added
+        Cancel ,////recend added
+        All
     }
 }

@@ -14,6 +14,9 @@ using Dalel.Repository.Hotel.Non_GenericRepository;
 using Dalel.Services.HotelService;
 using Models.Hotel;
 using Dalel.Services;
+using Dalel.Services.Agency;
+using Models.Agency;
+using Dalel.Repository.Agency;
 using Serilog;
 
 
@@ -108,6 +111,19 @@ builder.Services.AddScoped<IHotelService, Dalel.Services.HotelService.HotelServi
 builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
 builder.Services.AddScoped<IPaymentHotelRoomService, PaymentHotelRoomService>();
 #endregion
+//agency
+builder.Services.AddScoped<AgencyPakageService>();
+builder.Services.AddScoped<AgencyCustomerInquiry>();
+builder.Services.AddScoped<AgencyPackageRepo>();
+builder.Services.AddScoped<AgencyPaymentRepo>();
+builder.Services.AddScoped<AgencyPromotionRepo>();
+builder.Services.AddScoped<AgencyVerificationDocumentRepo>();
+builder.Services.AddScoped<PackagebookingRepo>();
+builder.Services.AddScoped<PackageBookingReviewRepo>();
+
+builder.Services.AddScoped<PackageSchaduleRepo>();
+builder.Services.AddScoped<PackageStepRepo>();
+builder.Services.AddScoped<TravelAgenciesRepo>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

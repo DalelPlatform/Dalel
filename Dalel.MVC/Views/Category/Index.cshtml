@@ -1,8 +1,9 @@
-﻿@{
+﻿@using Dalel.ViewModels.HomeServices.CategoryServices
+@{
     Layout = "Dashboard";
 }
 
-@model List<Dalel.ViewModels.HomeServices.CategoryServices.CategoryServicesDetailsVM>
+@model IQueryable<CategoryServicesDetailsVM>
 <h2>Categories</h2>
 
 @if (TempData["Success"] != null)

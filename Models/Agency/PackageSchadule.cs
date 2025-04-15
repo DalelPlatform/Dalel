@@ -9,7 +9,7 @@ namespace Models.Agency
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public int SlotsAvailable { get; set; }
+        public int SlotsAvailable { get; set; } //عدد الأماكن المتوفرة
         public int PackageId { get; set; }
         public virtual AgencyPackage AgencyPackage { get; set; }
 
