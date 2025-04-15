@@ -15,6 +15,9 @@ namespace Models.Hotel
         public int NumberOfBeds { get; set; }
         public float Price { get; set; }
         public int HotelId { get; set; }
+        public string AccessibilityFeatures { get; set; }
+
+        
 
         // Navigation properties
         public virtual Hotel Hotel { get; set; }
