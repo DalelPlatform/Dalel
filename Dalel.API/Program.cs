@@ -11,15 +11,15 @@ using Models.User;
 using System.Text;
 using System.Text.Json.Serialization;
 using Dalel.Repository.Hotel.Non_GenericRepository;
-using Dalel.Services.HomeService;
-using FluentValidation.AspNetCore;
-using FluentValidation;
+using Dalel.Services.HotelService;
 using Models.Hotel;
-using Dalel.Mappings;
 using Dalel.Services;
 using Dalel.Services.Agency;
 using Models.Agency;
 using Dalel.Repository.Agency;
+using Serilog;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +28,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DelelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
 // Register AutoMapper
-builder.Services.AddAutoMapper(typeof(HotelMappingProfile));
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DelelContext>
@@ -40,6 +39,15 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//Add srilog logging
+Log.Logger = new LoggerConfiguration()  
+                .ReadFrom.Configuration(builder.Configuration) 
+                .WriteTo.Console()                             
+                .CreateLogger();                              
+                                                     
+builder.Host.UseSerilog(); 
+
 
 #region Account
 builder.Services.AddScoped<AccountService>();
@@ -79,14 +87,29 @@ builder.Services.AddScoped<RestaurantOrderRepository>();
 #endregion
 
 #region HomeChef
+builder.Services.AddScoped<HomeChefDeliveryRepository>();
+builder.Services.AddScoped<HomeChefMealRepository>();
+builder.Services.AddScoped<HomeChefOrderMealRepository>();
+builder.Services.AddScoped<HomeChefOrderRepository>();
+builder.Services.AddScoped<PaymentHomeChefOrderRepasitory>();
+builder.Services.AddScoped<ReviewHomeChefOrderRepository>();
+builder.Services.AddScoped<HomeChefService>();
 
-//builder.Services.AddScoped<HomeChefDeliveryRepository>();
-//builder.Services.AddScoped<HomeChefMealRepository>();
-//builder.Services.AddScoped<HomeChefOrderMealRepository>();
-//builder.Services.AddScoped<HomeChefOrderRepository>();
-//builder.Services.AddScoped<PaymentHomeChefOrderRepasitory>();
-//builder.Services.AddScoped<ReviewHomeChefOrderRepository>();
+#endregion
 
+#region HotelServicess
+// Register repository classes (Scoped lifetime is recommended)
+builder.Services.AddScoped<BookingHotelRoomRepository>();
+builder.Services.AddScoped<HotelRepository>();
+builder.Services.AddScoped<RoomTypeRepository>();
+builder.Services.AddScoped<PaymentHotelRoomRepository>();
+builder.Services.AddScoped<BookingGuestInRoomRepository>(); // if you use it in services
+
+// Register service classes using interfaces
+builder.Services.AddScoped<IBookingHotelRoomService, BookingHotelRoomService>();
+builder.Services.AddScoped<IHotelService, Dalel.Services.HotelService.HotelService>();
+builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
+builder.Services.AddScoped<IPaymentHotelRoomService, PaymentHotelRoomService>();
 #endregion
 //agency
 builder.Services.AddScoped<AgencyPakageService>();
@@ -101,7 +124,6 @@ builder.Services.AddScoped<PackageBookingReviewRepo>();
 builder.Services.AddScoped<PackageSchaduleRepo>();
 builder.Services.AddScoped<PackageStepRepo>();
 builder.Services.AddScoped<TravelAgenciesRepo>();
-
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -136,6 +158,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();

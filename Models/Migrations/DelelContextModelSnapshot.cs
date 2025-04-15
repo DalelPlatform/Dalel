@@ -753,6 +753,9 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("DeliveryStatus")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -973,6 +976,10 @@ namespace Models.Migrations
                         .IsRequired()
                         .HasColumnType("NVARCHAR(max)");
 
+                    b.Property<string>("HomeChefId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("HomeChefOrderId")
                         .HasColumnType("int");
 
@@ -983,6 +990,8 @@ namespace Models.Migrations
                         .HasColumnType("real");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HomeChefId");
 
                     b.HasIndex("HomeChefOrderId")
                         .IsUnique();
@@ -2880,11 +2889,19 @@ namespace Models.Migrations
 
             modelBuilder.Entity("Models.HomeChef.ReviewHomeChefOrder", b =>
                 {
+                    b.HasOne("Models.User.HomeChef", "HomeChef")
+                        .WithMany("ReviewHomeChefOrders")
+                        .HasForeignKey("HomeChefId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Models.HomeChef.HomeChefOrder", "HomeChefOrder")
                         .WithOne("ReviewHomeChefOrder")
                         .HasForeignKey("Models.HomeChef.ReviewHomeChefOrder", "HomeChefOrderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("HomeChef");
 
                     b.Navigation("HomeChefOrder");
                 });
@@ -3662,6 +3679,8 @@ namespace Models.Migrations
                     b.Navigation("HomeChefMeal");
 
                     b.Navigation("HomeChefOrder");
+
+                    b.Navigation("ReviewHomeChefOrders");
                 });
 
             modelBuilder.Entity("Models.User.HotelOwners", b =>

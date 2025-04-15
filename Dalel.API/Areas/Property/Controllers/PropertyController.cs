@@ -1,10 +1,12 @@
 ﻿using Dalel.Services;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.PackageBookingPayment;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 using Models.Property;
+using System.Security.Claims;
 using Utilities;
 
 namespace Dalel.API.Areas
@@ -20,45 +22,52 @@ namespace Dalel.API.Areas
         }
 
         [HttpPost("Property")]
-        public async Task<IActionResult> AddProperty([FromBody] AddPropertiesVM property)
+        [Authorize(Roles = "PropertyOwner")]
+        public  IActionResult AddProperty([FromBody] AddPropertiesVM property)
         {
-            var result = await propertyService.AddProperty(property.ToModel());
+            property.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result =  propertyService.AddProperty(property.ToModel());
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
+
         [HttpPut("Property")]
         public async Task<IActionResult> EditProperty([FromBody] AddPropertiesVM property)
         {
             var result = await propertyService.EditProperty(property.ToModel());
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProperty(int id)
         {
             var result = await propertyService.DeleteProperty(id);
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
 
         [HttpPost("Booking")]
-        public async Task<IActionResult> BookProperty(AddBookingPropertiesVM booking)
+        [Authorize(Roles = "Client")]
+        public  IActionResult BookProperty([FromBody]AddBookingPropertiesVM booking)
         {
-            var result = await propertyService.BookProperty(booking.ToModel());
+            booking.ClientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result =  propertyService.BookProperty(booking.ToModel(), booking.ClientId);
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
+
         [HttpDelete("{bookingId}")]
+        [Authorize("Client")]
         public async Task<IActionResult> CancelBooking(int bookingId)
         {
             var result = await propertyService.CancelBooking(bookingId);
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
 
         [HttpPost("Payment")]
@@ -66,16 +75,16 @@ namespace Dalel.API.Areas
         {
             var result = await propertyService.AddPayment(payment);
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
         [HttpPut("Payment")]
         public async Task<IActionResult> UpdatePaymentStatus(int paymentId, PaymentStatus newStatus)
         {
             var result = await propertyService.UpdatePaymentStatus(paymentId, newStatus);
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
 
         // complete the view model
@@ -93,16 +102,16 @@ namespace Dalel.API.Areas
         {
             var result = await propertyService.EditReview(review);
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
         [HttpDelete("{reviewId}")]
         public async Task<IActionResult> DeleteReview(int reviewId)
         {
             var result = await propertyService.DeleteReview(reviewId);
             if (!result.Success)
-                return BadRequest(result.Message);
-            return Ok(result);
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
 
     }

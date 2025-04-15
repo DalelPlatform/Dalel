@@ -31,7 +31,7 @@ namespace Dalel.Services
 
         #region Properties
 
-        public async Task<ServiceResult> AddProperty(Properties property)
+        public ServiceResult AddProperty(Properties property)
         {
             try
             {
@@ -78,10 +78,17 @@ namespace Dalel.Services
 
         #region Booking
 
-        public async Task<ServiceResult> BookProperty(BookingProperties booking)
+        public  ServiceResult BookProperty(BookingProperties booking,string userId)
         {
             try
             {
+                var property = _propertiesRepo.GetPropertyById(booking.PropertyId);
+                if (property == null) // (property == null || property.IsDeleted)
+                    return ServiceResult.FailureResult("Property not found.");
+
+                if (booking.CheckIn >= booking.CheckOut)
+                    return ServiceResult.FailureResult("Invalid dates.");
+
                 _bookingRepo.Add(booking);
                 return ServiceResult.SuccessResult("Booking created.");
             }

@@ -1,11 +1,9 @@
-﻿@{
+﻿@using Dalel.ViewModels.HomeServices.CategoryServices
+@{
     Layout = "Dashboard";
 }
 
-
-
-
-@model IQueryable<Dalel.ViewModels.HomeServices.CategoryServices.CategoryServicesDetailsVM>
+@model IQueryable<CategoryServicesDetailsVM>
 <h2>Categories</h2>
 
 @if (TempData["Success"] != null)
@@ -20,6 +18,8 @@
 <a asp-controller="Category" asp-action="Create">Create New</a>
 <table>
     <tr><th>Name</th><th>Description</th><th>Service Providers</th><th>Actions</th></tr>
+    if(Model != null)
+    {
     @foreach (var item in Model)
     {
         <tr>
@@ -32,6 +32,12 @@
                 <a asp-controller="Category"  asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
+    }
+    }
+    else
+    {
+    <p>No categories available.</p>
+
     }
 </table>
 

@@ -6,6 +6,7 @@ using Models.Enums;
 using Models.Restaurant;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace Dalel.Repository
@@ -86,6 +87,12 @@ namespace Dalel.Repository
             var restaurant = base.GetList(r => r.VerificationStatus == verificationStatus && !r.IsDeleted)
                 .Select(r => r.ToDetailsViewModel());
             return restaurant.AsQueryable();
+        }
+        public RestaurantDetailsVM GetRestaurantByOwnerId(string ownerId)
+        {
+            return base.GetList()
+        .FirstOrDefault(r => r.OwnerId == ownerId && !r.IsDeleted)
+        ?.ToDetailsViewModel();
         }
     }
 }
