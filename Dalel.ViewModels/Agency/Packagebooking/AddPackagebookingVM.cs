@@ -18,5 +18,6 @@ namespace Dalel.ViewModels.Agency.Packagebooking
         public int ReservedPeople { get; set; }
         [Required(ErrorMessage = "Please Provide valid TotalPrice")]
         public float TotalPrice { get; set; }
+        public string ClientId { get; set; }
     }
 }

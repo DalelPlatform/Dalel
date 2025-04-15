@@ -25,6 +25,7 @@ namespace Dalel.API.Controllers
             return new JsonResult(res);
         }
         [HttpPost]
+
         public IActionResult AddDocAddDocument(int agencyId, string documentType,
             string documentFile)
         {

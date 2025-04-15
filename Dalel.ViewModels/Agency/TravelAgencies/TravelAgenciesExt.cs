@@ -27,7 +27,7 @@ namespace Dalel.ViewModels
                 Address = book.Address,
                 BusinessCategory = book.BusinessCategory,
                 ContactInfo = book.ContactInfo,
-                
+                OwnerId = book.ownerId,
 
 
 
