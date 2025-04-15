@@ -13,8 +13,10 @@ using System.Text.Json.Serialization;
 using Dalel.Repository.Hotel.Non_GenericRepository;
 using Dalel.Services.HotelService;
 using Models.Hotel;
-using Dalel.Mappings;
 using Dalel.Services;
+using Serilog;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,15 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//Add srilog logging
+Log.Logger = new LoggerConfiguration()  
+                .ReadFrom.Configuration(builder.Configuration) 
+                .WriteTo.Console()                             
+                .CreateLogger();                              
+                                                     
+builder.Host.UseSerilog(); 
+
 
 #region Account
 builder.Services.AddScoped<AccountService>();
@@ -83,6 +94,7 @@ builder.Services.AddScoped<RestaurantOrderRepository>();
 
 #endregion
 
+#region HotelServicess
 // Register repository classes (Scoped lifetime is recommended)
 builder.Services.AddScoped<BookingHotelRoomRepository>();
 builder.Services.AddScoped<HotelRepository>();
@@ -95,6 +107,8 @@ builder.Services.AddScoped<IBookingHotelRoomService, BookingHotelRoomService>();
 builder.Services.AddScoped<IHotelService, Dalel.Services.HotelService.HotelService>();
 builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
 builder.Services.AddScoped<IPaymentHotelRoomService, PaymentHotelRoomService>();
+#endregion
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
