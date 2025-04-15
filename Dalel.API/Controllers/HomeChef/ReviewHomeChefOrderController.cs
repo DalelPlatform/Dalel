@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dalel.API.Controllers.HomeChef
 {
+
+    [ApiController]
+    [Route("api/[controller]")]
     public class ReviewHomeChefOrderController : Controller
     {
         private readonly HomeChefService _homeChefService;
@@ -19,7 +22,7 @@ namespace Dalel.API.Controllers.HomeChef
         [Authorize(Roles = "Client,Admin,HomeChef")]
 
 
-        [HttpPost("AddOrder")]
+        [HttpPost("AddReview")]
         public IActionResult AddReview(AddReviewHomeChefOrderVM Review)
         {
             if (!ModelState.IsValid)
@@ -41,7 +44,7 @@ namespace Dalel.API.Controllers.HomeChef
        
 
         [Authorize(Roles = "Client,Admin,HomeChef")]
-        [HttpPost("UpdateOrder")]
+        [HttpPost("UpdateReview")]
 
         public IActionResult UpdateReview(AddReviewHomeChefOrderVM Review)
         {
@@ -63,7 +66,7 @@ namespace Dalel.API.Controllers.HomeChef
 
 
         [Authorize(Roles = "Admin,HomeChef")]
-        [HttpPost("DeleteMealById")]
+        [HttpPost("DeleteReviewById")]
 
         public IActionResult DeleteReview(int id)
         {

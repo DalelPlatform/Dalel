@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Dalel.Services;
 using Dalel.ViewModels.HomeServices.CategoryServices;
-using Dalel.Services.HomeService;
 
 namespace Controllers
 {

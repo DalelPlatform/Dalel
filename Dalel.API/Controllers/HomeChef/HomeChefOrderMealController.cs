@@ -25,7 +25,7 @@ namespace Dalel.API.Controllers.HomeChef
         //[Authorize(Roles = "Client,Admin,HomeChef")]
 
 
-        [HttpPost("AddOrder")]
+        [HttpPost("AddOrderMeal")]
         public IActionResult AddOrderMeal(AddHomeChefOrderMealVM orderMealVm)
         {
             if (!ModelState.IsValid)
@@ -47,7 +47,7 @@ namespace Dalel.API.Controllers.HomeChef
 
 
         [Authorize(Roles = "Client,Admin,HomeChef")]
-        [HttpPost("UpdateOrder")]
+        [HttpPost("UpdateOrderMeal")]
 
         public IActionResult UpdateOrderMeal(AddHomeChefOrderMealVM orderMealVm)
         {
@@ -68,7 +68,7 @@ namespace Dalel.API.Controllers.HomeChef
 
 
         [Authorize(Roles = "Client,Admin,HomeChef")]
-        [HttpPost("DeleteMealById")]
+        [HttpPost("DeleteOrderMealById")]
 
         public IActionResult DeleteOrderMeal(int id)
         {

@@ -63,7 +63,7 @@ namespace Dalel.API.Controllers.HomeChef
         }
 
         [Authorize(Roles = "Client,Admin,HomeChef")]
-        [HttpPost("DeleteMealById")]
+        [HttpPost("DeleteOrderById")]
 
         public IActionResult DeleteOrder(int id)
         {

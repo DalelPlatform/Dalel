@@ -13,7 +13,6 @@ using System.Text.Json.Serialization;
 using Dalel.Repository.Hotel.Non_GenericRepository;
 using Dalel.Services.HotelService;
 using Models.Hotel;
-using Dalel.Mappings;
 using Dalel.Services;
 
 var builder = WebApplication.CreateBuilder(args);
