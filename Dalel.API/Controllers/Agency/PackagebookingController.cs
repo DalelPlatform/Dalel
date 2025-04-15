@@ -1,4 +1,5 @@
 ﻿using Dalel.Services;
+using Dalel.Services.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
 using Dalel.ViewModels.Agency.Packagebooking;
@@ -19,7 +20,7 @@ namespace Dalel.API.Controllers.Agency
         [HttpPut]
         public IActionResult UpdateBooking(AddPackagebookingVM book)
         {
-            var res = _pakageService.updataBooking(book.ToModel());
+            var res = _pakageService.updataBooking(book);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]

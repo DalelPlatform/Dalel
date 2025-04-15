@@ -8,6 +8,8 @@ using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
 using Dalel.ViewModels.Agency.Packagebooking;
+using Dalel.ViewModels.Agency.PackageSchadule;
+using Dalel.ViewModels.Agency.PackageStep;
 using Dalel.ViewModels.Agency.TravelAgencies;
 using Models.Agency;
 using Models.Restaurant;
@@ -21,16 +23,23 @@ namespace Dalel.Services.Agency
         AgencyVerificationDocumentRepo AgencyVerificationDocumentRepo { get; set; }
         PackagebookingRepo PackagebookingRepo { get; set; }
         TravelAgenciesRepo TravelAgenciesRepo { get; set; }
+        PackageStepRepo PackageStepRepo { get; set; }
+        PackageSchaduleRepo PackageSchaduleRepo { get; set; }
         public AgencyPakageService(AgencyPackageRepo _AgencyPackageRepo,
             AgencyVerificationDocumentRepo _AgencyVerificationDocumentRepo,
              PackagebookingRepo _PackagebookingRepo,
-                  TravelAgenciesRepo _TravelAgenciesRepo
+                  TravelAgenciesRepo _TravelAgenciesRepo,
+                    PackageStepRepo _PackageStepRepo ,
+                      PackageSchaduleRepo _PackageSchaduleRepo
             )
         {
             AgencyPackageRepo = _AgencyPackageRepo;
             AgencyVerificationDocumentRepo = _AgencyVerificationDocumentRepo;
             PackagebookingRepo = _PackagebookingRepo;
             TravelAgenciesRepo = _TravelAgenciesRepo;
+            PackageStepRepo = _PackageStepRepo;
+            PackageSchaduleRepo = _PackageSchaduleRepo;
+
         }
         public ServiceResult CreateAgencyPackage(AddAgencyPackageVM agency  )
         {
@@ -179,6 +188,113 @@ namespace Dalel.Services.Agency
                 Message = "deleted successfully."
             };
         }
+
+        //PackageStep 
+
+        public ServiceResult  <List<PackageStepDetails>> GetAllPackageStep()
+        {
+            try
+            {
+                var list = PackageStepRepo.GetList().
+                    Select(t => t.ToDetailsModels()).ToList();
+                return ServiceResult<List<PackageStepDetails>>.
+                    SuccessResult(list, "steps fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<PackageStepDetails>>.FailureResult("Error: " + ex.Message);
+            }
+        }
+
+
+        public ServiceResult CreatePackageStep(addPackageStepVM step)
+        {
+            PackageStepRepo.Add(step.ToModel());
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "added successfully."
+            };
+        }
+        public ServiceResult UpdatePackageStep(addPackageStepVM step)
+        {
+            PackageStepRepo.Update(step.ToModel());
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "update successfully."
+            };
+        }
+
+        public ServiceResult deletePackageStep(int stepId)
+        {
+            var _PackageStep = PackageStepRepo.
+                GetList(i => i.Id == stepId).FirstOrDefault();
+            if (_PackageStep != null)
+            {
+                PackageStepRepo.Delete(_PackageStep);
+            }
+
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "deleted successfully."
+            };
+        }
+
+        //PackageSchadule
+
+        public ServiceResult<List<PackageSchaduleDetails>> GetAllPackageSchadule()
+        {
+            try
+            {
+                var list = PackageSchaduleRepo.GetList().
+                    Select(t => t.ToDetailsModels()).ToList();
+                return ServiceResult<List<PackageSchaduleDetails>>.
+                    SuccessResult(list, "steps fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<PackageSchaduleDetails>>.FailureResult("Error: " + ex.Message);
+            }
+        }
+
+
+        public ServiceResult CreatePackageSchadule(addPackageSchaduleVM Schadule)
+        {
+            PackageSchaduleRepo.Add(Schadule.ToModel());
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "added successfully."
+            };
+        }
+        public ServiceResult UpdatePackageSchadule(addPackageSchaduleVM Schadule)
+        {
+            PackageSchaduleRepo.Update(Schadule.ToModel());
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "update successfully."
+            };
+        }
+
+        public ServiceResult deleteSchadule(int stepId)
+        {
+            var _PackageSchadule = PackageSchaduleRepo.
+                GetList(i => i.Id == stepId).FirstOrDefault();
+            if (_PackageSchadule != null)
+            {
+                PackageSchaduleRepo.Delete(_PackageSchadule);
+            }
+
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "deleted successfully."
+            };
+        }
+
 
 
 

@@ -17,6 +17,9 @@ using FluentValidation;
 using Models.Hotel;
 using Dalel.Mappings;
 using Dalel.Services;
+using Dalel.Services.Agency;
+using Models.Agency;
+using Dalel.Repository.Agency;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,6 +88,19 @@ builder.Services.AddScoped<RestaurantOrderRepository>();
 //builder.Services.AddScoped<ReviewHomeChefOrderRepository>();
 
 #endregion
+//agency
+builder.Services.AddScoped<AgencyPakageService>();
+builder.Services.AddScoped<AgencyCustomerInquiry>();
+builder.Services.AddScoped<AgencyPackageRepo>();
+builder.Services.AddScoped<AgencyPaymentRepo>();
+builder.Services.AddScoped<AgencyPromotionRepo>();
+builder.Services.AddScoped<AgencyVerificationDocumentRepo>();
+builder.Services.AddScoped<PackagebookingRepo>();
+builder.Services.AddScoped<PackageBookingReviewRepo>();
+
+builder.Services.AddScoped<PackageSchaduleRepo>();
+builder.Services.AddScoped<PackageStepRepo>();
+builder.Services.AddScoped<TravelAgenciesRepo>();
 
 
 builder.Services.AddControllers()

@@ -1,4 +1,5 @@
 ﻿using Dalel.Services;
+using Dalel.Services.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,7 @@ namespace Dalel.API.Controllers.Agency
     public class AgencyVerificationDocumentController : ControllerBase
     {
         private readonly AgencyPakageService _pakageService;
-        AgencyVerificationDocumentController(AgencyPakageService _service)
+       public AgencyVerificationDocumentController(AgencyPakageService _service)
         {
             _pakageService = _service;
         }
@@ -26,13 +27,13 @@ namespace Dalel.API.Controllers.Agency
         public IActionResult createAgencyPackage(AddAgencyPackageVM packageAgency)
         {
 
-            var res = _pakageService.CreateAgencyPackage(packageAgency.ToModel());
+            var res = _pakageService.CreateAgencyPackage(packageAgency);
             return new JsonResult(res);
         }
         [HttpPut]
         public IActionResult UpdateAgecyPackage(AddAgencyPackageVM packageAgency)
         {
-            var res = _pakageService.UpdateAgencyPackage(packageAgency.ToModel());
+            var res = _pakageService.UpdateAgencyPackage(packageAgency);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]
