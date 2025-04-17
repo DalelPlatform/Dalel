@@ -16,12 +16,12 @@ namespace Dalel.Services.HotelService
             _hotelRepo = hotelRepo;
         }
 
-        public ServiceResult AddHotel(Hotel hotel)
+        public async Task<ServiceResult> AddHotelAsync(Hotel hotel)
         {
             try
             {
-                _hotelRepo.InsertAsync(hotel).GetAwaiter().GetResult();
-                _hotelRepo.SaveAsync().GetAwaiter().GetResult();
+                await _hotelRepo.InsertAsync(hotel);
+                await _hotelRepo.SaveAsync();
                 return ServiceResult.SuccessResult("Hotel added successfully.");
             }
             catch (Exception ex)
@@ -30,12 +30,12 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult UpdateHotel(Hotel hotel)
+        public async Task<ServiceResult> UpdateHotelAsync(Hotel hotel)
         {
             try
             {
-                _hotelRepo.UpdateAsync(hotel).GetAwaiter().GetResult();
-                _hotelRepo.SaveAsync().GetAwaiter().GetResult();
+                await _hotelRepo.UpdateAsync(hotel);
+                await _hotelRepo.SaveAsync();
                 return ServiceResult.SuccessResult("Hotel updated successfully.");
             }
             catch (Exception ex)
@@ -44,12 +44,12 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult DeleteHotel(int id)
+        public async Task<ServiceResult> DeleteHotelAsync(int id)
         {
             try
             {
-                _hotelRepo.DeleteAsync(id).GetAwaiter().GetResult();
-                _hotelRepo.SaveAsync().GetAwaiter().GetResult();
+                await _hotelRepo.DeleteAsync(id);
+                await _hotelRepo.SaveAsync();
                 return ServiceResult.SuccessResult("Hotel deleted successfully.");
             }
             catch (Exception ex)
@@ -58,11 +58,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<Hotel> GetHotelById(int id)
+        public async Task<ServiceResult<Hotel>> GetHotelByIdAsync(int id)
         {
             try
             {
-                var hotel = _hotelRepo.GetByIdAsync(id).GetAwaiter().GetResult();
+                var hotel = await _hotelRepo.GetByIdAsync(id);
                 if (hotel == null)
                     return ServiceResult<Hotel>.FailureResult("Hotel not found.");
                 return ServiceResult<Hotel>.SuccessResult(hotel, "Hotel retrieved successfully.");
@@ -73,11 +73,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<IEnumerable<Hotel>> GetAllHotels()
+        public async Task<ServiceResult<IEnumerable<Hotel>>> GetAllHotelsAsync()
         {
             try
             {
-                var hotels = _hotelRepo.GetAllAsync().GetAwaiter().GetResult();
+                var hotels = await _hotelRepo.GetAllAsync();
                 return ServiceResult<IEnumerable<Hotel>>.SuccessResult(hotels, "Hotels retrieved successfully.");
             }
             catch (Exception ex)
@@ -86,11 +86,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<IEnumerable<Hotel>> GetHotelsByCity(string city)
+        public async Task<ServiceResult<IEnumerable<Hotel>>> GetHotelsByCityAsync(string city)
         {
             try
             {
-                var hotels = _hotelRepo.GetByConditionAsync(h => h.City == city && !h.IsDeleted).GetAwaiter().GetResult();
+                var hotels = await _hotelRepo.GetByConditionAsync(h => h.City == city && !h.IsDeleted);
                 return ServiceResult<IEnumerable<Hotel>>.SuccessResult(hotels, "Hotels by city retrieved successfully.");
             }
             catch (Exception ex)
@@ -99,11 +99,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<Hotel> GetHotelByOwnerId(string ownerId)
+        public async Task<ServiceResult<Hotel>> GetHotelByOwnerIdAsync(string ownerId)
         {
             try
             {
-                var hotel = _hotelRepo.GetHotelByOwnerIdAsync(ownerId).GetAwaiter().GetResult();
+                var hotel = await _hotelRepo.GetHotelByOwnerIdAsync(ownerId);
                 if (hotel == null)
                     return ServiceResult<Hotel>.FailureResult("Hotel for the owner not found.");
                 return ServiceResult<Hotel>.SuccessResult(hotel, "Hotel by owner retrieved successfully.");
@@ -113,5 +113,7 @@ namespace Dalel.Services.HotelService
                 return ServiceResult<Hotel>.FailureResult("Error retrieving hotel by owner: " + ex.Message);
             }
         }
+
+      
     }
 }

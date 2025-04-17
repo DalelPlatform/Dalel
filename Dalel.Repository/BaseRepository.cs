@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace Dalel.Repository
@@ -68,13 +70,19 @@ namespace Dalel.Repository
         public IQueryable<T> Get(
             Expression<Func<T, bool>> filter = null,
             int pageSize = 4,
-            int pageNumber = 1)
+            int pageNumber = 1,
+            string? orderBy="Id",
+            bool isAscebding = false)
         {
             IQueryable<T> query = Table.AsQueryable();
 
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+            if (!string.IsNullOrEmpty(orderBy))
+            {
+                query.Sort(orderBy, isAscebding);
             }
 
             if (pageSize < 0) pageSize = 4;
@@ -95,6 +103,9 @@ namespace Dalel.Repository
         {
             return filter != null ? Table.Where(filter) : Table;
         }
+
+
+
 
         public void Add(T newRow)
         {
@@ -119,7 +130,7 @@ namespace Dalel.Repository
             Context.SaveChanges();
         }
 
-
+        
 
         #endregion
 
@@ -131,5 +142,5 @@ namespace Dalel.Repository
 
 
 
-    }
+       }
 }

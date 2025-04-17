@@ -25,9 +25,6 @@ namespace Dalel.ViewModels.Agency.AgencyPackage
      
         public string Price { get; set; }
 
-        public Models.Agency.AgencyPackage ToModel()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

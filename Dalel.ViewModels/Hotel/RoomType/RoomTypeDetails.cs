@@ -12,5 +12,6 @@
         public float Price { get; set; }
         public int HotelId { get; set; }
         public List<string> RoomTypeImages { get; set; }
+        public string AccessibilityFeatures { get; set; }
     }
 }

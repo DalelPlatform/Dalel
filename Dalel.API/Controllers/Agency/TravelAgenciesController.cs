@@ -1,4 +1,5 @@
-﻿using Dalel.Services.Agency;
+﻿using System.Security.Claims;
+using Dalel.Services.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
 using Dalel.ViewModels.Agency.TravelAgencies;
@@ -24,9 +25,11 @@ namespace Dalel.API.Controllers.Agency
             return new JsonResult(res);
         }
         [HttpPost]
+
         public IActionResult AddTravelAgency(addTravelAgenciesVM trvelAgency)
         {
 
+            trvelAgency.ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var res = _pakageService.CreateTravelAgencies(trvelAgency);
             return new JsonResult(res);
         }

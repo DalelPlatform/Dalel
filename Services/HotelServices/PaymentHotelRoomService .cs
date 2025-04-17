@@ -1,5 +1,8 @@
 ﻿using Dalel.Repository.Hotel.Non_GenericRepository;
 using Models.Hotel;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Utilities;
 
 namespace Dalel.Services.HotelService
@@ -13,12 +16,12 @@ namespace Dalel.Services.HotelService
             _paymentRepo = paymentRepo;
         }
 
-        public ServiceResult AddPayment(PaymentHotelRoom payment)
+        public async Task<ServiceResult> AddPaymentAsync(PaymentHotelRoom payment)
         {
             try
             {
-                _paymentRepo.InsertAsync(payment).GetAwaiter().GetResult();
-                _paymentRepo.SaveAsync().GetAwaiter().GetResult();
+                await _paymentRepo.InsertAsync(payment);
+                await _paymentRepo.SaveAsync();
                 return ServiceResult.SuccessResult("Payment added successfully.");
             }
             catch (Exception ex)
@@ -27,12 +30,12 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult UpdatePayment(PaymentHotelRoom payment)
+        public async Task<ServiceResult> UpdatePaymentAsync(PaymentHotelRoom payment)
         {
             try
             {
-                _paymentRepo.UpdateAsync(payment).GetAwaiter().GetResult();
-                _paymentRepo.SaveAsync().GetAwaiter().GetResult();
+                await _paymentRepo.UpdateAsync(payment);
+                await _paymentRepo.SaveAsync();
                 return ServiceResult.SuccessResult("Payment updated successfully.");
             }
             catch (Exception ex)
@@ -41,12 +44,12 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult DeletePayment(int id)
+        public async Task<ServiceResult> DeletePaymentAsync(int id)
         {
             try
             {
-                _paymentRepo.DeleteAsync(id).GetAwaiter().GetResult();
-                _paymentRepo.SaveAsync().GetAwaiter().GetResult();
+                await _paymentRepo.DeleteAsync(id);
+                await _paymentRepo.SaveAsync();
                 return ServiceResult.SuccessResult("Payment deleted successfully.");
             }
             catch (Exception ex)
@@ -55,11 +58,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<PaymentHotelRoom> GetPaymentById(int id)
+        public async Task<ServiceResult<PaymentHotelRoom>> GetPaymentByIdAsync(int id)
         {
             try
             {
-                var payment = _paymentRepo.GetByIdAsync(id).GetAwaiter().GetResult();
+                var payment = await _paymentRepo.GetByIdAsync(id);
                 if (payment == null)
                     return ServiceResult<PaymentHotelRoom>.FailureResult("Payment not found.");
 
@@ -71,11 +74,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<IEnumerable<PaymentHotelRoom>> GetPaymentsByStatus(string status)
+        public async Task<ServiceResult<IEnumerable<PaymentHotelRoom>>> GetPaymentsByStatusAsync(string status)
         {
             try
             {
-                var payments = _paymentRepo.GetPaymentsByStatusAsync(status).GetAwaiter().GetResult();
+                var payments = await _paymentRepo.GetPaymentsByStatusAsync(status);
                 return ServiceResult<IEnumerable<PaymentHotelRoom>>.SuccessResult(payments, "Payments retrieved successfully by status.");
             }
             catch (Exception ex)
@@ -84,11 +87,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<IEnumerable<PaymentHotelRoom>> GetPaymentsForHotel(int hotelId)
+        public async Task<ServiceResult<IEnumerable<PaymentHotelRoom>>> GetPaymentsForHotelAsync(int hotelId)
         {
             try
             {
-                var payments = _paymentRepo.GetPaymentsForHotelAsync(hotelId).GetAwaiter().GetResult();
+                var payments = await _paymentRepo.GetPaymentsForHotelAsync(hotelId);
                 return ServiceResult<IEnumerable<PaymentHotelRoom>>.SuccessResult(payments, "Payments retrieved successfully for hotel.");
             }
             catch (Exception ex)
@@ -97,11 +100,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<IEnumerable<PaymentHotelRoom>> GetPaymentsForClient(int clientId)
+        public async Task<ServiceResult<IEnumerable<PaymentHotelRoom>>> GetPaymentsForClientAsync(int clientId)
         {
             try
             {
-                var payments = _paymentRepo.GetPaymentsForClientAsync(clientId).GetAwaiter().GetResult();
+                var payments = await _paymentRepo.GetPaymentsForClientAsync(clientId);
                 return ServiceResult<IEnumerable<PaymentHotelRoom>>.SuccessResult(payments, "Payments retrieved successfully for client.");
             }
             catch (Exception ex)

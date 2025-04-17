@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Models.Hotel;
+﻿using Models.Hotel;
 
 namespace Dalel.ViewModels
 {
@@ -8,13 +6,18 @@ namespace Dalel.ViewModels
     {
         public static RoomDetails ToDetailsViewModel(this Room room)
         {
+            if (room == null) return null;
+
             return new RoomDetails
             {
-                Id = room.Id,
-                Availability = room.Availability.ToString(),
-                RoomTypeId = room.RoomTypeId,
-                RoomTypeName = room.RoomType?.Type.ToString(),
-                RoomTypePrice = room.RoomType?.Price ?? 0
+                RoomID = room.Id,
+                RoomNumber = room.RoomNumber,
+                RoomTypeID = room.RoomTypeId,
+                Price = room.Price,
+                BedType = room.BedType,
+                ViewType = room.ViewType,
+                Status = room.Status,
+                IsActive = room.IsActive
             };
         }
     }
