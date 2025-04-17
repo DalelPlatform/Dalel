@@ -1,10 +1,8 @@
-﻿using Dalel.Repository.Hotel.Non_GenericRepository;
-using Models.Hotel;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Dalel.Repository.Hotel.Non_GenericRepository;
+using Models.Hotel;
 using Utilities;
 
 namespace Dalel.Services.HotelService
@@ -18,12 +16,12 @@ namespace Dalel.Services.HotelService
             _bookingRepo = bookingRepo;
         }
 
-        public ServiceResult AddBooking(BookingHotelRoom booking)
+        public async Task<ServiceResult> AddBookingAsync(BookingHotelRoom booking)
         {
             try
             {
-                _bookingRepo.InsertAsync(booking).GetAwaiter().GetResult();
-                _bookingRepo.SaveAsync().GetAwaiter().GetResult();
+                await _bookingRepo.InsertAsync(booking);
+                await _bookingRepo.SaveAsync();
                 return ServiceResult.SuccessResult("Booking added successfully.");
             }
             catch (Exception ex)
@@ -32,12 +30,12 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult UpdateBooking(BookingHotelRoom booking)
+        public async Task<ServiceResult> UpdateBookingAsync(BookingHotelRoom booking)
         {
             try
             {
-                _bookingRepo.UpdateAsync(booking).GetAwaiter().GetResult();
-                _bookingRepo.SaveAsync().GetAwaiter().GetResult();
+                await _bookingRepo.UpdateAsync(booking);
+                await _bookingRepo.SaveAsync();
                 return ServiceResult.SuccessResult("Booking updated successfully.");
             }
             catch (Exception ex)
@@ -46,12 +44,12 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult DeleteBooking(int id)
+        public async Task<ServiceResult> DeleteBookingAsync(int id)
         {
             try
             {
-                _bookingRepo.DeleteAsync(id).GetAwaiter().GetResult();
-                _bookingRepo.SaveAsync().GetAwaiter().GetResult();
+                await _bookingRepo.DeleteAsync(id);
+                await _bookingRepo.SaveAsync();
                 return ServiceResult.SuccessResult("Booking deleted successfully.");
             }
             catch (Exception ex)
@@ -60,11 +58,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<BookingHotelRoom> GetBookingById(int id)
+        public async Task<ServiceResult<BookingHotelRoom>> GetBookingByIdAsync(int id)
         {
             try
             {
-                var booking = _bookingRepo.GetByIdAsync(id).GetAwaiter().GetResult();
+                var booking = await _bookingRepo.GetByIdAsync(id);
                 if (booking == null)
                     return ServiceResult<BookingHotelRoom>.FailureResult("Booking not found.");
 
@@ -76,11 +74,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<IEnumerable<BookingHotelRoom>> GetAllBookings()
+        public async Task<ServiceResult<IEnumerable<BookingHotelRoom>>> GetAllBookingsAsync()
         {
             try
             {
-                var bookings = _bookingRepo.GetAllAsync().GetAwaiter().GetResult();
+                var bookings = await _bookingRepo.GetAllAsync();
                 return ServiceResult<IEnumerable<BookingHotelRoom>>.SuccessResult(bookings, "Bookings retrieved successfully.");
             }
             catch (Exception ex)
@@ -89,11 +87,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<IEnumerable<BookingHotelRoom>> GetBookingsByClientId(string clientId)
+        public async Task<ServiceResult<IEnumerable<BookingHotelRoom>>> GetBookingsByClientIdAsync(string clientId)
         {
             try
             {
-                var bookings = _bookingRepo.GetByConditionAsync(b => b.ClientId == clientId).GetAwaiter().GetResult();
+                var bookings = await _bookingRepo.GetByConditionAsync(b => b.ClientId == clientId);
                 return ServiceResult<IEnumerable<BookingHotelRoom>>.SuccessResult(bookings, "Bookings for client retrieved successfully.");
             }
             catch (Exception ex)
@@ -102,11 +100,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<IEnumerable<BookingHotelRoom>> GetAvailableBookings()
+        public async Task<ServiceResult<IEnumerable<BookingHotelRoom>>> GetAvailableBookingsAsync()
         {
             try
             {
-                var bookings = _bookingRepo.GetByConditionAsync(b => b.IsAvailable).GetAwaiter().GetResult();
+                var bookings = await _bookingRepo.GetByConditionAsync(b => b.IsAvailable);
                 return ServiceResult<IEnumerable<BookingHotelRoom>>.SuccessResult(bookings, "Available bookings retrieved successfully.");
             }
             catch (Exception ex)

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Dalel.Repository.Hotel.Non_GenericRepository;
+﻿using Dalel.Repository.Hotel.Non_GenericRepository;
 using Models.Hotel;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Utilities;
 
 namespace Dalel.Services.HotelService
@@ -16,12 +16,12 @@ namespace Dalel.Services.HotelService
             _roomTypeRepo = roomTypeRepo;
         }
 
-        public ServiceResult AddRoomType(RoomType roomType)
+        public async Task<ServiceResult> AddRoomTypeAsync(RoomType roomType)
         {
             try
             {
-                _roomTypeRepo.InsertAsync(roomType).GetAwaiter().GetResult();
-                _roomTypeRepo.SaveAsync().GetAwaiter().GetResult();
+                await _roomTypeRepo.InsertAsync(roomType);
+                await _roomTypeRepo.SaveAsync();
                 return ServiceResult.SuccessResult("Room type added successfully.");
             }
             catch (Exception ex)
@@ -30,12 +30,12 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult UpdateRoomType(RoomType roomType)
+        public async Task<ServiceResult> UpdateRoomTypeAsync(RoomType roomType)
         {
             try
             {
-                _roomTypeRepo.UpdateAsync(roomType).GetAwaiter().GetResult();
-                _roomTypeRepo.SaveAsync().GetAwaiter().GetResult();
+                await _roomTypeRepo.UpdateAsync(roomType);
+                await _roomTypeRepo.SaveAsync();
                 return ServiceResult.SuccessResult("Room type updated successfully.");
             }
             catch (Exception ex)
@@ -44,12 +44,12 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult DeleteRoomType(int id)
+        public async Task<ServiceResult> DeleteRoomTypeAsync(int id)
         {
             try
             {
-                _roomTypeRepo.DeleteAsync(id).GetAwaiter().GetResult();
-                _roomTypeRepo.SaveAsync().GetAwaiter().GetResult();
+                await _roomTypeRepo.DeleteAsync(id);
+                await _roomTypeRepo.SaveAsync();
                 return ServiceResult.SuccessResult("Room type deleted successfully.");
             }
             catch (Exception ex)
@@ -58,11 +58,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<RoomType> GetRoomTypeById(int id)
+        public async Task<ServiceResult<RoomType>> GetRoomTypeByIdAsync(int id)
         {
             try
             {
-                var roomType = _roomTypeRepo.GetByIdAsync(id).GetAwaiter().GetResult();
+                var roomType = await _roomTypeRepo.GetByIdAsync(id);
                 if (roomType == null)
                     return ServiceResult<RoomType>.FailureResult("Room type not found.");
                 return ServiceResult<RoomType>.SuccessResult(roomType, "Room type retrieved successfully.");
@@ -73,11 +73,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<IEnumerable<RoomType>> GetAllRoomTypes()
+        public async Task<ServiceResult<IEnumerable<RoomType>>> GetAllRoomTypesAsync()
         {
             try
             {
-                var roomTypes = _roomTypeRepo.GetAllAsync().GetAwaiter().GetResult();
+                var roomTypes = await _roomTypeRepo.GetAllAsync();
                 return ServiceResult<IEnumerable<RoomType>>.SuccessResult(roomTypes, "Room types retrieved successfully.");
             }
             catch (Exception ex)
@@ -86,11 +86,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<IEnumerable<RoomType>> GetRoomTypesByHotelId(int hotelId)
+        public async Task<ServiceResult<IEnumerable<RoomType>>> GetRoomTypesByHotelIdAsync(int hotelId)
         {
             try
             {
-                var roomTypes = _roomTypeRepo.GetByConditionAsync(rt => rt.HotelId == hotelId).GetAwaiter().GetResult();
+                var roomTypes = await _roomTypeRepo.GetByConditionAsync(rt => rt.HotelId == hotelId);
                 return ServiceResult<IEnumerable<RoomType>>.SuccessResult(roomTypes, "Room types by hotel retrieved successfully.");
             }
             catch (Exception ex)
@@ -99,11 +99,11 @@ namespace Dalel.Services.HotelService
             }
         }
 
-        public ServiceResult<IEnumerable<RoomType>> GetExpensiveRoomTypes(float priceThreshold)
+        public async Task<ServiceResult<IEnumerable<RoomType>>> GetExpensiveRoomTypesAsync(float priceThreshold)
         {
             try
             {
-                var roomTypes = _roomTypeRepo.GetByConditionAsync(rt => rt.Price > priceThreshold).GetAwaiter().GetResult();
+                var roomTypes = await _roomTypeRepo.GetByConditionAsync(rt => rt.Price > priceThreshold);
                 return ServiceResult<IEnumerable<RoomType>>.SuccessResult(roomTypes, "Expensive room types retrieved successfully.");
             }
             catch (Exception ex)

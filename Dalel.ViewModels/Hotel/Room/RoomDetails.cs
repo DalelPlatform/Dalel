@@ -8,13 +8,14 @@ namespace Dalel.ViewModels
 {
     public class RoomDetails
     {
-        public int Id { get; set; }
-        public string Availability { get; set; }
-        public int RoomTypeId { get; set; }
-
-        // Optional details from RoomType
-        public string RoomTypeName { get; set; }
-        public float RoomTypePrice { get; set; }
+        public int RoomID { get; set; }
+        public string RoomNumber { get; set; }
+        public int RoomTypeID { get; set; }
+        public decimal Price { get; set; }
+        public string BedType { get; set; }
+        public string ViewType { get; set; }
+        public string Status { get; set; }
+        public bool IsActive { get; set; }
     }
 }
 

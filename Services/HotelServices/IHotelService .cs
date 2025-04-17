@@ -6,12 +6,14 @@ namespace Dalel.Services.HotelService
 {
     public interface IHotelService
     {
-        ServiceResult AddHotel(Hotel hotel);
-        ServiceResult UpdateHotel(Hotel hotel);
-        ServiceResult DeleteHotel(int id);
-        ServiceResult<Hotel> GetHotelById(int id);
-        ServiceResult<IEnumerable<Hotel>> GetAllHotels();
-        ServiceResult<IEnumerable<Hotel>> GetHotelsByCity(string city);
-        ServiceResult<Hotel> GetHotelByOwnerId(string ownerId);
+        Task<ServiceResult> AddHotelAsync(Hotel hotel);
+        Task<ServiceResult> UpdateHotelAsync(Hotel hotel);
+        Task<ServiceResult> DeleteHotelAsync(int id);
+        Task<ServiceResult<Hotel>> GetHotelByIdAsync(int id);
+        Task<ServiceResult<IEnumerable<Hotel>>> GetAllHotelsAsync();
+        Task<ServiceResult<IEnumerable<Hotel>>> GetHotelsByCityAsync(string city);
+        Task<ServiceResult<Hotel>> GetHotelByOwnerIdAsync(string ownerId);
+  
     }
+
 }

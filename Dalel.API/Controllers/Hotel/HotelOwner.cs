@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Dalel.Services.HotelService;
-using Dalel.ViewModels;           
+using Dalel.ViewModels;
 using Microsoft.Extensions.Logging;
 using Models.Hotel;
 using Utilities;
@@ -13,41 +14,37 @@ namespace Dalel.Controllers
     [Authorize(Roles = "HotelOwner")]
     [ApiController]
     [Route("api/[controller]")]
-    public class OwnerController : ControllerBase
+    public class HotelOwnerController : ControllerBase
     {
         private readonly IHotelService _hotelService;
-        private readonly ILogger<OwnerController> _logger;
+        private readonly ILogger<HotelOwnerController> _logger;
 
-        public OwnerController(IHotelService hotelService, ILogger<OwnerController> logger)
+        public HotelOwnerController(IHotelService hotelService, ILogger<HotelOwnerController> logger)
         {
             _hotelService = hotelService;
             _logger = logger;
         }
 
-        
-        // Retrieves the hotel for the current owner.
-     
         [HttpGet("hotel")]
-        public IActionResult GetOwnerHotel()
+        public async Task<IActionResult> GetOwnerHotel()
         {
             try
             {
-                string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (string.IsNullOrEmpty(ownerId))
                 {
                     _logger.LogWarning("GetOwnerHotel: Owner ID not found in token.");
                     return Unauthorized("Owner ID not found in token.");
                 }
 
-                var result = _hotelService.GetHotelByOwnerId(ownerId);
-                if (!result.Success)
+                var result = await _hotelService.GetHotelByOwnerIdAsync(ownerId);
+                if (!result.Success || result.Data == null)
                 {
                     _logger.LogWarning("GetOwnerHotel: {Message}", result.Message);
                     return NotFound(result.Message);
                 }
 
                 var hotelDetails = result.Data.ToDetailsViewModel();
-                _logger.LogInformation("GetOwnerHotel: Successfully retrieved hotel for owner {OwnerId}", ownerId);
                 return Ok(hotelDetails);
             }
             catch (Exception ex)
@@ -57,15 +54,17 @@ namespace Dalel.Controllers
             }
         }
 
-  
-        // Creates a new hotel for the owner.
-   
         [HttpPost("hotel")]
-        public IActionResult CreateHotel([FromForm] HotelCreation hotelCreation)
+        public async Task<IActionResult> CreateHotel([FromForm] HotelCreation hotelCreation)
         {
             try
             {
-                string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (string.IsNullOrEmpty(ownerId))
                 {
                     _logger.LogWarning("CreateHotel: Owner ID not found in token.");
@@ -73,17 +72,16 @@ namespace Dalel.Controllers
                 }
 
                 hotelCreation.OwnerId = ownerId;
-
                 var hotelModel = hotelCreation.ToModel();
-                var result = _hotelService.AddHotel(hotelModel);
+
+                var result = await _hotelService.AddHotelAsync(hotelModel);
                 if (!result.Success)
                 {
                     _logger.LogWarning("CreateHotel: {Message}", result.Message);
                     return BadRequest(result.Message);
                 }
 
-                _logger.LogInformation("CreateHotel: Hotel created successfully for owner {OwnerId}", ownerId);
-                return Ok(result.Message);
+                return CreatedAtAction(nameof(GetOwnerHotel), new { id = hotelModel.Id }, result.Message);
             }
             catch (Exception ex)
             {
@@ -92,23 +90,25 @@ namespace Dalel.Controllers
             }
         }
 
-     
-        // Updates the hotel specified by id.
-  
         [HttpPut("hotel/{id}")]
-        public IActionResult UpdateHotel(int id, [FromForm] HotelCreation hotelUpdate)
+        public async Task<IActionResult> UpdateHotel(int id, [FromForm] HotelCreation hotelUpdate)
         {
             try
             {
-                string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (string.IsNullOrEmpty(ownerId))
                 {
                     _logger.LogWarning("UpdateHotel: Owner ID not found in token.");
                     return Unauthorized("Owner ID not found in token.");
                 }
 
-                var getResult = _hotelService.GetHotelById(id);
-                if (!getResult.Success)
+                var getResult = await _hotelService.GetHotelByIdAsync(id);
+                if (!getResult.Success || getResult.Data == null)
                 {
                     _logger.LogWarning("UpdateHotel: {Message}", getResult.Message);
                     return NotFound(getResult.Message);
@@ -117,125 +117,108 @@ namespace Dalel.Controllers
                 var existingHotel = getResult.Data;
                 if (!string.Equals(existingHotel.OwnerId, ownerId, StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogWarning("UpdateHotel: Owner {OwnerId} does not own hotel with ID {Id}", ownerId, id);
-                    return Forbid("You are not authorized to update this hotel.");
+                    _logger.LogWarning("UpdateHotel: Authorization failed for owner {OwnerId}", ownerId);
+                    return Forbid();
                 }
 
                 var updatedHotel = hotelUpdate.ToModel();
                 updatedHotel.Id = id;
+                updatedHotel.VerificationStatus = existingHotel.VerificationStatus; // Preserve status
 
-                var updateResult = _hotelService.UpdateHotel(updatedHotel);
+                var updateResult = await _hotelService.UpdateHotelAsync(updatedHotel);
                 if (!updateResult.Success)
                 {
-                    _logger.LogWarning("UpdateHotel: {Message}", updateResult.Message);
                     return BadRequest(updateResult.Message);
                 }
 
-                _logger.LogInformation("UpdateHotel: Hotel with ID {Id} updated successfully for owner {OwnerId}", id, ownerId);
                 return Ok(updateResult.Message);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "UpdateHotel: Error updating hotel with ID {Id}", id);
+                _logger.LogError(ex, "UpdateHotel: Error updating hotel {Id}", id);
                 return StatusCode(500, "An error occurred while updating the hotel.");
             }
         }
 
-     
-        // Deletes the hotel specified by id.
-
         [HttpDelete("hotel/{id}")]
-        public IActionResult DeleteHotel(int id)
+        public async Task<IActionResult> DeleteHotel(int id)
         {
             try
             {
-                string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (string.IsNullOrEmpty(ownerId))
                 {
                     _logger.LogWarning("DeleteHotel: Owner ID not found in token.");
                     return Unauthorized("Owner ID not found in token.");
                 }
 
-                // Ensure the hotel belongs to the current owner.
-                var getResult = _hotelService.GetHotelById(id);
-                if (!getResult.Success)
+                var getResult = await _hotelService.GetHotelByIdAsync(id);
+                if (!getResult.Success || getResult.Data == null)
                 {
-                    _logger.LogWarning("DeleteHotel: {Message}", getResult.Message);
                     return NotFound(getResult.Message);
                 }
 
                 if (!string.Equals(getResult.Data.OwnerId, ownerId, StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogWarning("DeleteHotel: Owner {OwnerId} does not own hotel with ID {Id}", ownerId, id);
-                    return Forbid("You are not authorized to delete this hotel.");
+                    _logger.LogWarning("DeleteHotel: Authorization failed for owner {OwnerId}", ownerId);
+                    return Forbid();
                 }
 
-                var deleteResult = _hotelService.DeleteHotel(id);
+                var deleteResult = await _hotelService.DeleteHotelAsync(id);
                 if (!deleteResult.Success)
                 {
-                    _logger.LogWarning("DeleteHotel: {Message}", deleteResult.Message);
                     return BadRequest(deleteResult.Message);
                 }
 
-                _logger.LogInformation("DeleteHotel: Hotel with ID {Id} deleted successfully for owner {OwnerId}", id, ownerId);
                 return Ok(deleteResult.Message);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "DeleteHotel: Error deleting hotel with ID {Id}", id);
+                _logger.LogError(ex, "DeleteHotel: Error deleting hotel {Id}", id);
                 return StatusCode(500, "An error occurred while deleting the hotel.");
             }
         }
 
-        // Retrieves all hotels (for demonstration; typically, an owner would have one hotel).
-      
         [HttpGet("hotels")]
-        public IActionResult GetAllHotels()
+        public async Task<IActionResult> GetAllHotels()
         {
             try
             {
-                var result = _hotelService.GetAllHotels();
+                var result = await _hotelService.GetAllHotelsAsync();
                 if (!result.Success)
                 {
-                    _logger.LogWarning("GetAllHotels: {Message}", result.Message);
                     return NotFound(result.Message);
                 }
-                _logger.LogInformation("GetAllHotels: Retrieved {Count} hotels.", result.Data?.Count() ?? 0);
                 return Ok(result.Data);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetAllHotels: Error retrieving hotels.");
+                _logger.LogError(ex, "GetAllHotels: Error retrieving hotels");
                 return StatusCode(500, "An error occurred while retrieving hotels.");
             }
         }
 
-        
-        // Retrieves hotels by city.
-       
         [HttpGet("hotels/city")]
-        public IActionResult GetHotelsByCity([FromQuery] string city)
+        public async Task<IActionResult> GetHotelsByCity([FromQuery] string city)
         {
             try
             {
-                if (string.IsNullOrEmpty(city))
+                if (string.IsNullOrWhiteSpace(city))
                 {
-                    _logger.LogWarning("GetHotelsByCity: City parameter is missing.");
                     return BadRequest("City parameter is required.");
                 }
-                var result = _hotelService.GetHotelsByCity(city);
+
+                var result = await _hotelService.GetHotelsByCityAsync(city);
                 if (!result.Success)
                 {
-                    _logger.LogWarning("GetHotelsByCity: {Message}", result.Message);
                     return NotFound(result.Message);
                 }
-                _logger.LogInformation("GetHotelsByCity: Retrieved {Count} hotels in city {City}.", result.Data?.Count() ?? 0, city);
                 return Ok(result.Data);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetHotelsByCity: Error retrieving hotels by city.");
-                return StatusCode(500, "An error occurred while retrieving hotels by city.");
+                _logger.LogError(ex, "GetHotelsByCity: Error retrieving hotels in {City}", city);
+                return StatusCode(500, "An error occurred while retrieving hotels.");
             }
         }
     }
