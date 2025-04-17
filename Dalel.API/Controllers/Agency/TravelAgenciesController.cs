@@ -1,10 +1,13 @@
 ﻿using System.Security.Claims;
+using Dalel.Services;
 using Dalel.Services.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
 using Dalel.ViewModels.Agency.TravelAgencies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models.Enums;
 
 namespace Dalel.API.Controllers.Agency
 {
@@ -17,8 +20,38 @@ namespace Dalel.API.Controllers.Agency
         {
             _pakageService = _service;
         }
+
+        [HttpGet("search")]
+        public IActionResult SearchTravelAgencies(
+              [FromQuery] string searchText = "",
+              [FromQuery] string BusinessCategory = "",
+              [FromQuery] string Address = "",
+              [FromQuery] string? owner = "",
+              [FromQuery] List<string>? Category = null,
+              [FromQuery] int pageSize = 10,
+              [FromQuery] int pageIndex = 1,
+              [FromQuery] string OrderBy = "Id",
+              [FromQuery] bool IsAscending = false)
+        {
+            var result = _pakageService.SearchTravelAgencies(
+                searchText,
+                BusinessCategory,
+                Address,
+                owner,
+                Category,
+                pageSize,
+                pageIndex,
+                OrderBy,
+                IsAscending
+            );
+
+            if (!result.Success)
+                return new JsonResult(result);
+
+            return new JsonResult(result);
+        }
         [HttpGet]
-        public IActionResult GetAllTravels(int id)
+        public IActionResult GetAllTravels()
         {
 
             var res = _pakageService.GetAllTravelAgency();
@@ -26,6 +59,7 @@ namespace Dalel.API.Controllers.Agency
         }
         [HttpPost]
 
+        [Authorize(Roles = "TravelAgencyOwner")]
         public IActionResult AddTravelAgency(addTravelAgenciesVM trvelAgency)
         {
 
@@ -33,10 +67,10 @@ namespace Dalel.API.Controllers.Agency
             var res = _pakageService.CreateTravelAgencies(trvelAgency);
             return new JsonResult(res);
         }
-        [HttpPut]
-        public IActionResult UpdateTravelAgency(addTravelAgenciesVM trvelAgency)
+        [HttpPut("{Id}")]
+        public IActionResult UpdateTravelAgency(addTravelAgenciesVM trvelAgency,int Id)
         {
-            var res = _pakageService.UpdateTravelAgencies(trvelAgency);
+            var res = _pakageService.UpdateTravelAgencies(Id,trvelAgency);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]

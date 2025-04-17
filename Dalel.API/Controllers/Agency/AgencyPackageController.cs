@@ -27,9 +27,9 @@ namespace Dalel.API.Controllers
             return new JsonResult(res);
         }
         [HttpPost]
-        public IActionResult createAgencyPackage(AddAgencyPackageVM packageAgency)
+        public IActionResult createAgencyPackage([FromForm] AddAgencyPackageVM packageAgency)
         {
-
+            //user claim    
             var res = _pakageService.CreateAgencyPackage(packageAgency);
             return new JsonResult(res);
         }

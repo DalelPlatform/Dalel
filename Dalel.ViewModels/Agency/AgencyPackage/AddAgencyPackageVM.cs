@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dalel.ViewModels.Agency.PackageStep;
+using Dalel.ViewModels.Agency.PackageSchadule;
 
 namespace Dalel.ViewModels.Agency.AgencyPackage
 {
@@ -18,13 +20,20 @@ namespace Dalel.ViewModels.Agency.AgencyPackage
       
         public string Description { get; set; }
 
-
-
-
         [Required(ErrorMessage = "Please Provide valid Agency Price Start from 5")]
-     
         public string Price { get; set; }
 
-       
+        public float? Duration { get; set; }
+        public string TermsPolicies { get; set; }
+
+        public int AgencyId { get; set; }
+
+
+        public List<addPackageStepVM> Steps { get; set; }
+        public List<addPackageSchaduleVM> Schadules { get; set; }
+
+
     }
+
+
 }

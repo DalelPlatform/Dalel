@@ -53,7 +53,7 @@ namespace Dalel.Repository.Agency
             }
             if (!string.IsNullOrWhiteSpace(BusinessCategory))
             {
-                predicate = predicate.Or(b =>
+                predicate = predicate.And(b =>
                 b.BusinessCategory.ToLower().Contains(BusinessCategory.ToLower()) 
                );
             }

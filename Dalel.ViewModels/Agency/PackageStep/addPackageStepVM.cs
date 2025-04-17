@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,5 +19,7 @@ namespace Dalel.ViewModels.Agency.PackageStep
         public float? Duration { get; set; }
 
         public string? Image { get; set; }
+        public IFormFile? ImageFile { get; set; }
+
     }
 }

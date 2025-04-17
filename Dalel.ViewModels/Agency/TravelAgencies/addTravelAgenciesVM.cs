@@ -45,6 +45,6 @@ namespace Dalel.ViewModels.Agency.TravelAgencies
         public VerificationStatus VerificationStatus { get; set; }
 
 
-        public string ownerId { get; set; }
+        public string ownerId { get; set; } = "";
 }
 }

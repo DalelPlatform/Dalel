@@ -57,6 +57,24 @@ namespace Dalel.ViewModels
 
             };
         }
+        public static TravelAgencies ToEditModel(this addTravelAgenciesVM book, TravelAgencies old)
+        {
+
+            old.BusinessName = string.IsNullOrEmpty(book.BusinessName)?old.BusinessName: book.BusinessName;
+            old.VerificationStatus = book.VerificationStatus == old.VerificationStatus ? old.VerificationStatus:book.VerificationStatus;
+            old.Description = book.Description;
+            old.Latitude = book.Latitude;
+            old.Longitude = book.Longitude;
+            old.Street = book.Street;
+            old.BuildingNo = book.BuildingNo;
+            old.City = book.City;
+            old.Address = book.Address;
+            old.BusinessCategory = book.BusinessCategory;
+            old.ContactInfo = book.ContactInfo;
+
+
+            return old;
+        }
     }
 
 }
