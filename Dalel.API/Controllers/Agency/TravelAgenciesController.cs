@@ -12,7 +12,7 @@ namespace Dalel.API.Controllers.Agency
     public class TravelAgenciesController : ControllerBase
     {
         private readonly AgencyPakageService _pakageService;
-        TravelAgenciesController(AgencyPakageService _service)
+        public TravelAgenciesController(AgencyPakageService _service)
         {
             _pakageService = _service;
         }

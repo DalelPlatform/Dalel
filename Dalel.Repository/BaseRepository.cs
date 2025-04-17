@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dalel.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,49 @@ namespace Dalel.Repository
         }
 
         #region Existing Methods (Maintained for backward compatibility)
+
+        public PaginationViewModel<TViewModel> Search<TViewModel, TKey>(
+             Expression<Func<T, bool>> filterPredicate,
+             Expression<Func<T, TKey>> orderBy,
+             Func<T, TViewModel> selector,
+             bool descending = false,
+             int pageSize = 5,
+             int pageIndex = 1)
+        {
+            var query = GetSortedFilter(orderBy, filterPredicate, !descending);
+            var totalCount = query.Count();
+
+            var data = query
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .Select(selector)
+                .ToList();
+
+            return new PaginationViewModel<TViewModel>
+            {
+                Data = data,
+                TotalCount = totalCount,
+                PageNumber = pageIndex,
+                PageSize = pageSize
+            };
+        }
+        protected  IQueryable<T> GetSortedFilter<TKey>(
+         Expression<Func<T, TKey>> orderBy,
+         Expression<Func<T, bool>> filter,
+         bool ascending = true)
+        {
+            var query = Table.AsQueryable();
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            if (orderBy != null)
+                query = ascending ? query.OrderBy(orderBy) : query.OrderByDescending(orderBy);
+
+            return query;
+        }
+
+
         public IQueryable<T> Get(
             Expression<Func<T, bool>> filter = null,
             int pageSize = 4,
@@ -75,7 +119,7 @@ namespace Dalel.Repository
             Context.SaveChanges();
         }
 
-       
+
 
         #endregion
 

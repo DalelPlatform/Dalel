@@ -6,6 +6,7 @@ using Models.Restaurant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +18,35 @@ namespace Dalel.Repository
         {
 
         }
+        public  PaginationViewModel<RestaurantMenuItemDetailsVM> SearchMeals(
+                string search = "",
+                float? minPrice = null,
+                float? maxPrice = null,
+                string sortBy = "Name",
+                bool descending = false,
+                int pageSize = 5,
+                int pageIndex = 1)
+        {
+            var predicate = PredicateBuilder.New<RestaurantMenuItem>(true);
 
+            if (!string.IsNullOrWhiteSpace(search))
+                predicate = predicate.And(m => m.Name.Contains(search));
+
+            if (minPrice.HasValue)
+                predicate = predicate.And(m => m.Price >= minPrice.Value);
+
+            if (maxPrice.HasValue)
+                predicate = predicate.And(m => m.Price <= maxPrice.Value);
+
+            Expression<Func<RestaurantMenuItem, object>> orderBy = sortBy.ToLower() switch
+            {
+                "price" => m => m.Price,
+              //  "created" => m => m.cre,
+                _ => m => m.Name
+            };
+
+            return  Search(predicate, orderBy, m => m.ToDetailsViewModel(), descending, pageSize, pageIndex);
+        }
         public PaginationViewModel<RestaurantMenuItemDetailsVM> SearchMenuItem(
            string searchText = "",
            FoodCategory? category = null,
