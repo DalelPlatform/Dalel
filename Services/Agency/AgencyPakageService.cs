@@ -139,6 +139,7 @@ namespace Dalel.Services.Agency
             };
         }
 
+        
         public ServiceResult<List<TravelAgenciesDetails>> GetAllTravelAgency()
         {            try
             {

@@ -2,6 +2,7 @@
 using Dalel.Services.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
+using Dalel.ViewModels.Agency.AgencyVerificationDocument;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,32 +17,38 @@ namespace Dalel.API.Controllers.Agency
         {
             _pakageService = _service;
         }
+
+
+
         [HttpGet]
-        public IActionResult GetAllAgencyPackage(int id)
+        public IActionResult GetAlldoc(int id)
         {
 
-            var res = _pakageService.GetAllAgencyPackage(id);
+            var res = _pakageService.GetAllVerificationDocument(id);
             return new JsonResult(res);
         }
         [HttpPost]
-        public IActionResult createAgencyPackage(AddAgencyPackageVM packageAgency)
+
+        public IActionResult AddDocAddDocument(int agencyId, string documentType,
+            string documentFile)
         {
 
-            var res = _pakageService.CreateAgencyPackage(packageAgency);
+            var res = _pakageService.AddDocument(agencyId, documentType, documentFile);
             return new JsonResult(res);
         }
         [HttpPut]
-        public IActionResult UpdateAgecyPackage(AddAgencyPackageVM packageAgency)
+        public IActionResult UpdateDoc(addAgencyVerificationDocumentVM doc)
         {
-            var res = _pakageService.UpdateAgencyPackage(packageAgency);
+            var res = _pakageService.UpdateDocument(doc);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]
-        public IActionResult DeleteAgecyPackage(int id)
+        public IActionResult DeleteDoc(int id)
         {
-            var res = _pakageService.deleteAgencyPackage(id);
+            var res = _pakageService.delecteDocument(id);
             return new JsonResult(res);
 
         }
+
     }
 }

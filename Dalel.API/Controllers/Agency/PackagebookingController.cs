@@ -13,7 +13,7 @@ namespace Dalel.API.Controllers.Agency
     public class PackagebookingController : ControllerBase
     {
         private readonly AgencyPakageService _pakageService;
-        PackagebookingController(AgencyPakageService _service)
+       public PackagebookingController(AgencyPakageService _service)
         {
             _pakageService = _service;
         }
@@ -24,7 +24,7 @@ namespace Dalel.API.Controllers.Agency
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]
-        public IActionResult UpdateBooking(int id)
+        public IActionResult delecteBooking(int id)
         {
             var res = _pakageService.delecteBooking(id);
             return new JsonResult(res);
