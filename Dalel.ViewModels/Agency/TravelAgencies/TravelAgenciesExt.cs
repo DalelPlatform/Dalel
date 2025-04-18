@@ -28,6 +28,7 @@ namespace Dalel.ViewModels
                 BusinessCategory = book.BusinessCategory,
                 ContactInfo = book.ContactInfo,
                 OwnerId = book.ownerId,
+
             };
 
 
@@ -53,7 +54,7 @@ namespace Dalel.ViewModels
 
             };
         }
-        public static TravelAgencies ToEditModel(this addTravelAgenciesVM book, TravelAgencies old)
+        public static TravelAgencies ToEditModel(this addTravelAgenciesVM book, TravelAgencies old )
         {
 
             old.BusinessName = string.IsNullOrEmpty(book.BusinessName)?old.BusinessName: book.BusinessName;

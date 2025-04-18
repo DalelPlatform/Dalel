@@ -110,7 +110,7 @@ namespace Dalel.Services
 
         }
 
-        
+
 
         ///////////////////////////Method 1 /////////////////////////
 
@@ -210,7 +210,37 @@ namespace Dalel.Services
 
         #region Meal
 
-
+        public ServiceResult<PaginationViewModel<HomeChefMealDetailsVM>> Search(
+       string searchText = "",
+       bool? AvailabilityStatus = true, // default = true
+       string? owner = "",
+       FoodCategory? foodCategory = null, // now filtering by enum
+       decimal? Price = null,
+       int pageSize = 10,
+       int pageIndex = 1,
+       string OrderBy = "Id",
+       bool IsAscending = false)
+        {
+            try
+            {
+                var result = _HomeChefMealRepository.Search(
+                searchText,
+                AvailabilityStatus,
+                owner,
+                foodCategory,
+                Price,
+                pageSize,
+                pageIndex,
+                OrderBy,
+                IsAscending
+            );
+                return ServiceResult<PaginationViewModel<HomeChefMealDetailsVM>>.SuccessResult(result);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<HomeChefMealDetailsVM>>.FailureResult($"Error: {ex.Message}");
+            }
+        }
         public ServiceResult AddMeal(AddHomeChefMealVM vm)
         {
             try
@@ -228,12 +258,13 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdateMeal (AddHomeChefMealVM vm)
+        public ServiceResult UpdateMeal(int id , AddHomeChefMealVM vm)
         {
             try
             {
-                var meal = vm.ToModel();
-                _HomeChefMealRepository.Update(meal);
+                var oldMeal = _HomeChefMealRepository.GetList(m => m.Id == id).FirstOrDefault();
+                
+                _HomeChefMealRepository.Update(vm.ToEditModel(oldMeal));
 
                 return ServiceResult.SuccessResult("Meal Updated successfully.");
             }
@@ -247,7 +278,7 @@ namespace Dalel.Services
 
         //Delete meal by id or by Dishname 
 
-        public ServiceResult DeleteMeal (int id) // Delete meal by id
+        public ServiceResult DeleteMeal(int id) // Delete meal by id
         {
             try
             {
@@ -361,10 +392,10 @@ namespace Dalel.Services
 
         ///////////////////////Method 3////////////////////////
 
-        
 
 
-        public List<ServiceResult<HomeChefMealDetailsVM>> GetMealsByChefId (string chefId)
+
+        public List<ServiceResult<HomeChefMealDetailsVM>> GetMealsByChefId(string chefId)
         {
             try
             {
@@ -400,7 +431,7 @@ namespace Dalel.Services
         ///////////////////////Method 4////////////////////////
 
 
-        public List<ServiceResult<HomeChefMealDetailsVM>> GetMealsByCategory(FoodCategory category , int pageNumber = 1, int pageSize = 4)
+        public List<ServiceResult<HomeChefMealDetailsVM>> GetMealsByCategory(FoodCategory category, int pageNumber = 1, int pageSize = 4)
         {
             try
             {
@@ -626,7 +657,7 @@ namespace Dalel.Services
                   ServiceResult<HomeChefOrderDetailsVM>.FailureResult($"Error : {ex.Message}")
               };
             }
-            
+
 
         }
 
@@ -960,24 +991,24 @@ namespace Dalel.Services
 
 
 
-     //   public IActionResult SearchRestaurants(
-     //[FromQuery] string searchText = "",
-     //[FromQuery] string city = null,
-     //[FromQuery] string region = null,
-     //[FromQuery] VerificationStatus? verificationStatus = null,
-     //[FromQuery] string sortBy = "Name",
-     //[FromQuery] bool descending = false,
-     //[FromQuery] int pageSize = 5,
-     //[FromQuery] int pageIndex = 1)
-     //   {
-     //       var result = restaurantService.Search(
-     //           searchText, city, region, verificationStatus,
-     //           sortBy, descending, pageSize, pageIndex
-     //       );
-     //       if (!result.Success)
-     //           return new JsonResult(result);
-     //       return new JsonResult(result);
-     //   }
+        //   public IActionResult SearchRestaurants(
+        //[FromQuery] string searchText = "",
+        //[FromQuery] string city = null,
+        //[FromQuery] string region = null,
+        //[FromQuery] VerificationStatus? verificationStatus = null,
+        //[FromQuery] string sortBy = "Name",
+        //[FromQuery] bool descending = false,
+        //[FromQuery] int pageSize = 5,
+        //[FromQuery] int pageIndex = 1)
+        //   {
+        //       var result = restaurantService.Search(
+        //           searchText, city, region, verificationStatus,
+        //           sortBy, descending, pageSize, pageIndex
+        //       );
+        //       if (!result.Success)
+        //           return new JsonResult(result);
+        //       return new JsonResult(result);
+        //   }
 
     }
 

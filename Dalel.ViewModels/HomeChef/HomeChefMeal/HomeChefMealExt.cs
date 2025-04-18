@@ -46,5 +46,19 @@ namespace Dalel.ViewModels
 
             };
         }
+
+
+        public static HomeChefMeal ToEditModel(this  AddHomeChefMealVM addVM , HomeChefMeal old)
+        {
+            old.DishName = string.IsNullOrEmpty(addVM.DishName)? old.DishName : addVM.DishName ;
+            old.Description = addVM.Description;
+            old.Price = addVM.Price;
+            old.AvailabilityStatus = addVM.AvailabilityStatus;
+            old.DietaryTags = addVM.DietaryTags;
+            old.FoodCategory = addVM.FoodCategory;
+            old.PieceSize = addVM.PieceSize;
+            old.Duration = addVM.Duration;
+            return old;
+        }
     }
 }
