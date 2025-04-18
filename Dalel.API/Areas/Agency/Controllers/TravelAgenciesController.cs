@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 
-namespace Dalel.API.Controllers.Agency
+namespace Dalel.API.Areas.Agency.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

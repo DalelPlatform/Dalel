@@ -23,6 +23,9 @@ namespace Dalel.API.Areas
            [FromQuery] string searchText = "",
            [FromQuery] string city = null,
            [FromQuery] string region = null,
+           [FromQuery] string street = null,
+           [FromQuery] string address = null,
+           [FromQuery] int NumberOfRooms = 0,
            [FromQuery] VerificationStatus? verificationStatus = null,
            [FromQuery] string sortBy = "Name",
            [FromQuery] bool descending = false,
@@ -30,15 +33,14 @@ namespace Dalel.API.Areas
            [FromQuery] int pageIndex = 1)
         {
             var result = restaurantService.Search(
-                searchText, city, region, verificationStatus,
-                sortBy, descending, pageSize, pageIndex
-            );
+                    searchText, city, region, street, address, NumberOfRooms, verificationStatus,
+                    sortBy, descending, pageSize, pageIndex);
             if (!result.Success)
                 return new JsonResult(result);
             return new JsonResult(result);
         }
         [HttpPost]
-        [Authorize(Roles ="RestaurantOwner")]
+        [Authorize(Roles = "RestaurantOwner")]
         public async Task<IActionResult> AddRestaurant([FromBody] AddRestaurantVM model)
         {
             model.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -46,16 +48,16 @@ namespace Dalel.API.Areas
             if (ModelState.IsValid)
             {
                 if (!result.Success)
-                    return new JsonResult(result);           
+                    return new JsonResult(result);
             }
             return new JsonResult(result);
         }
 
-        [HttpPut]
-        [Authorize(Roles = "RestaurantOwner")]
-        public async Task<IActionResult> EditRestaurant([FromBody] AddRestaurantVM model)
+        [HttpPut("{id}")]
+       [Authorize(Roles = "RestaurantOwner")]
+        public async Task<IActionResult> EditRestaurant([FromBody] AddRestaurantVM model,int id)
         {
-            var result = await restaurantService.EditRestaurant(model);
+            var result = await restaurantService.EditRestaurant(model, id);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);

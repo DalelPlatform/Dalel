@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Models.Hotel;
 using Utilities;
 
-namespace Dalel.Controllers
+namespace Dalel.API.Areas.Hotel.Controllers
 {
     [Authorize(Roles = "HotelOwner")]
     [ApiController]

@@ -20,6 +20,29 @@ namespace Dalel.API.Areas
         {
             this.propertyService = propertyService;
         }
+        [HttpGet("search")]
+        public IActionResult SearchProperties(
+            [FromQuery] string searchText = "",
+            [FromQuery] string city = null,
+            [FromQuery] string region = null,
+            [FromQuery] string street = null,
+            [FromQuery] string address = null,
+            [FromQuery] int NumberOfRooms = 0,
+            [FromQuery] int BuildingNo = 0,
+            [FromQuery] int FloorNo = 0,
+            [FromQuery] VerificationStatus? verificationStatus = null,
+            [FromQuery] string sortBy = "id",
+            [FromQuery] bool descending = false,
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageIndex = 1)
+        {
+            var result = propertyService.SearchProperties(
+                    searchText, city, region, street, address, NumberOfRooms, BuildingNo, FloorNo, verificationStatus,
+                    sortBy, descending, pageSize, pageIndex);
+            if (!result.Success)
+                return new JsonResult(result);
+            return new JsonResult(result);
+        }
 
         [HttpPost("Property")]
         [Authorize(Roles = "PropertyOwner")]
@@ -32,10 +55,10 @@ namespace Dalel.API.Areas
             return new JsonResult(result);
         }
 
-        [HttpPut("Property")]
-        public async Task<IActionResult> EditProperty([FromBody] AddPropertiesVM property)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditProperty([FromBody] AddPropertiesVM property, int id)
         {
-            var result = await propertyService.EditProperty(property.ToModel());
+            var result = await propertyService.EditProperty(property,id);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);

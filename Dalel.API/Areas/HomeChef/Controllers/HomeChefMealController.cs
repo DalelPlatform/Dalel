@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 using Utilities;
 
-namespace Dalel.API.Controllers.HomeChef
+namespace Dalel.API.Areas.HomeChef.Controllers
 {
 
     [ApiController]

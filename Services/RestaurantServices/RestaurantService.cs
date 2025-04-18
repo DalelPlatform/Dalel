@@ -33,11 +33,12 @@ namespace Dalel.Services
             }
         }
 
-        public async Task<ServiceResult> EditRestaurant(AddRestaurantVM model)
+        public async Task<ServiceResult> EditRestaurant(AddRestaurantVM model,int id)
         {
             try
             {
-                _restaurantRepo.Update(model.ToModel());
+                var oldrestaurant = _restaurantRepo.GetById(id);
+                _restaurantRepo.Update(model.ToEditModel(oldrestaurant));
                 return ServiceResult.SuccessResult("Restaurant updated successfully.");
             }
             catch (Exception ex)
@@ -83,6 +84,9 @@ namespace Dalel.Services
             string searchText = "",
             string city = null,
             string region = null,
+            string street = null,
+            string address = null,
+            int NumberOfRooms = 0,
             VerificationStatus? verificationStatus = null,
             string sortBy = "Name",
             bool descending = false,
@@ -92,7 +96,7 @@ namespace Dalel.Services
             try
             {
                 var result = _restaurantRepo.SearchRestaurants(
-                    searchText, city, region, verificationStatus,
+                    searchText, city, region,street,address,NumberOfRooms, verificationStatus,
                     sortBy, descending, pageSize, pageIndex);
 
                 return ServiceResult<PaginationViewModel<RestaurantDetailsVM>>.SuccessResult(result, "Search completed.");

@@ -28,10 +28,6 @@ namespace Dalel.ViewModels
                 BusinessCategory = book.BusinessCategory,
                 ContactInfo = book.ContactInfo,
                 OwnerId = book.ownerId,
-
-
-
-
             };
 
 
