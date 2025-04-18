@@ -45,7 +45,7 @@ namespace Dalel.API.Areas.HomeChef.Controllers
         }
 
 
-        [HttpPost("{id}")]
+        [HttpPost("UpdateMeal/{id}")]
 
         public IActionResult UpdateMeal (int id ,AddHomeChefMealVM mealVM)
         {
