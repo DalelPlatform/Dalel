@@ -136,7 +136,7 @@ namespace Dalel.Services
 
                 JwtSecurityToken securityToken = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(30),
+                    expires: DateTime.Now.AddMinutes(60), // expiration time
                     signingCredentials: new SigningCredentials(
                         algorithm: SecurityAlgorithms.HmacSha256,
                         key: new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettingConfiguration["JWT:PrivateKey"]))

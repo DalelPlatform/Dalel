@@ -1,36 +1,39 @@
 ﻿using Dalel.Services;
 using Dalel.ViewModels;
+using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Models.Enums;
+using Utilities;
 
-namespace Dalel.API.Controllers.HomeChef
+namespace Dalel.API.Areas.HomeChef.Controllers
 {
 
     [ApiController]
     [Route("api/[controller]")]
-    public class ReviewHomeChefOrderController : Controller
+    public class HomeChefOrderMealController : ControllerBase
     {
         private readonly HomeChefService _homeChefService;
 
-        public ReviewHomeChefOrderController(HomeChefService homeChefService)
+        public HomeChefOrderMealController(HomeChefService homeChefService)
         {
             _homeChefService = homeChefService;
         }
 
 
 
-        [Authorize(Roles = "Client,Admin,HomeChef")]
+        //[Authorize(Roles = "Client,Admin,HomeChef")]
 
 
-        [HttpPost("AddReview")]
-        public IActionResult AddReview(AddReviewHomeChefOrderVM Review)
+        [HttpPost("AddOrderMeal")]
+        public IActionResult AddOrderMeal(AddHomeChefOrderMealVM orderMealVm)
         {
             if (!ModelState.IsValid)
             {
                 return new JsonResult("Invalid data provided");
             }
 
-            var result = _homeChefService.AddReview(Review);
+            var result = _homeChefService.AddOrderMeal(orderMealVm);
 
             if (result.Success)
             {
@@ -41,19 +44,19 @@ namespace Dalel.API.Controllers.HomeChef
         }
 
 
-       
+
 
         [Authorize(Roles = "Client,Admin,HomeChef")]
-        [HttpPost("UpdateReview")]
+        [HttpPost("UpdateOrderMeal")]
 
-        public IActionResult UpdateReview(AddReviewHomeChefOrderVM Review)
+        public IActionResult UpdateOrderMeal(AddHomeChefOrderMealVM orderMealVm)
         {
             if (!ModelState.IsValid)
             {
                 return new JsonResult("Invalid data provided");
             }
 
-            var result = _homeChefService.UpdateReview(Review);
+            var result = _homeChefService.UpdateOrderMeal(orderMealVm);
             if (result.Success)
             {
                 return new JsonResult(result);
@@ -64,13 +67,12 @@ namespace Dalel.API.Controllers.HomeChef
 
 
 
+        [Authorize(Roles = "Client,Admin,HomeChef")]
+        [HttpPost("DeleteOrderMealById")]
 
-        [Authorize(Roles = "Admin,HomeChef")]
-        [HttpPost("DeleteReviewById")]
-
-        public IActionResult DeleteReview(int id)
+        public IActionResult DeleteOrderMeal(int id)
         {
-            var result = _homeChefService.DeleteReview(id);
+            var result = _homeChefService.DeleteOrderMeal(id);
             if (result.Success)
             {
                 return new JsonResult(result);
@@ -78,5 +80,8 @@ namespace Dalel.API.Controllers.HomeChef
 
             return new JsonResult(result);
         }
+
     }
+
 }
+

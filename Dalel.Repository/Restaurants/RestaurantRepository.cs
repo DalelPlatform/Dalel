@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Dalel.Repository
 {
@@ -21,6 +22,9 @@ namespace Dalel.Repository
             string searchText = "",
             string city = null,
             string region = null,
+            string street = null,
+            string address = null,
+            int NumberOfRooms = 0,
             VerificationStatus? verificationStatus = null,
             string sortBy = "Name",
             bool descending = false,
@@ -44,38 +48,35 @@ namespace Dalel.Repository
             {
                 predicate = predicate.And(r => r.Region.Contains(region));
             }
+            if (!string.IsNullOrWhiteSpace(street))
+            {
+                predicate = predicate.And(r => r.Street.Contains(street));
+            }
+            if (!string.IsNullOrWhiteSpace(address))
+            {
+                predicate = predicate.And(r => r.Address.Contains(address));
+            }
 
             if (verificationStatus.HasValue)
             {
                 predicate = predicate.And(r => r.VerificationStatus == verificationStatus.Value);
             }
+            if (NumberOfRooms > 0)
+            {
+                predicate = predicate.And(r => r.NumberOfRooms == NumberOfRooms);
+            }
 
             predicate = predicate.And(r => !r.IsDeleted);
 
-            var totalCount = base.GetList(predicate).Count();
-            var query = base.GetList(predicate);
-
-            query = sortBy.ToLower() switch
+            Expression<Func<Restaurant, object>> orderBy = sortBy.ToLower() switch
             {
-                "city" => descending ? query.OrderByDescending(r => r.City) : query.OrderBy(r => r.City),
-                "region" => descending ? query.OrderByDescending(r => r.Region) : query.OrderBy(r => r.Region),
-                "modificationdate" => descending ? query.OrderByDescending(r => r.ModificationDate) : query.OrderBy(r => r.ModificationDate),
-                _ => descending ? query.OrderByDescending(r => r.Name) : query.OrderBy(r => r.Name)
+                "id" => m => m.Id,
+                "NumberOfRooms" => m => m.NumberOfRooms,
+                "Region" => m => m.Region,
+                _ => m => m.Name
             };
 
-            var items = query
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .Select(r => r.ToDetailsViewModel())
-                .ToList();
-
-            return new PaginationViewModel<RestaurantDetailsVM>
-            {
-                Data = items,
-                PageNumber = pageIndex,
-                PageSize = pageSize,
-                TotalCount = totalCount
-            };
+            return  Search(predicate, orderBy, m => m.ToDetailsViewModel(), descending, pageSize, pageIndex);
         }
 
         public Restaurant GetById(int id)
