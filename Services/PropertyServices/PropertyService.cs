@@ -7,6 +7,7 @@ using Models.Property;
 using Utilities;
 using Dalel.Repository;
 using Models.Enums;
+using Dalel.ViewModels;
 
 namespace Dalel.Services
 {
@@ -30,6 +31,34 @@ namespace Dalel.Services
         }
 
         #region Properties
+        public ServiceResult<PaginationViewModel<PropertiesDetailsVM>> SearchProperties(
+             string searchText = "",
+             string city = null,
+             string region = null,
+             string street = null,
+             string address = null,
+             int NumberOfRooms = 0,
+             int BuildingNo = 0,
+             int FloorNo = 0,
+             VerificationStatus? verificationStatus = null,
+             string sortBy = "id",
+             bool descending = false,
+             int pageSize = 5,
+             int pageIndex = 1)
+        {
+            try
+            {
+                var result = _propertiesRepo.SearchProperties(
+                    searchText, city, region, street, address, NumberOfRooms, BuildingNo, FloorNo, verificationStatus,
+                    sortBy, descending, pageSize, pageIndex);
+
+                return ServiceResult<PaginationViewModel<PropertiesDetailsVM>>.SuccessResult(result, "Search completed.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<PropertiesDetailsVM>>.FailureResult("Error: " + ex.Message);
+            }
+        }
 
         public ServiceResult AddProperty(Properties property)
         {
@@ -44,11 +73,12 @@ namespace Dalel.Services
             }
         }
 
-        public async Task<ServiceResult> EditProperty(Properties property)
+        public async Task<ServiceResult> EditProperty(AddPropertiesVM property,int id)
         {
             try
             {
-                _propertiesRepo.Update(property);
+                var existingProperty = _propertiesRepo.GetList(i => i.Id == id).FirstOrDefault();
+                _propertiesRepo.Update(property.ToEditModel(existingProperty));
                 return ServiceResult.SuccessResult("Property updated successfully.");
             }
             catch (Exception ex)

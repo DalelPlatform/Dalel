@@ -53,5 +53,26 @@ namespace Dalel.ViewModels
                 : new List<string>()
             };
         }
+        public static Models.Restaurant.Restaurant ToEditModel(this AddRestaurantVM edit, Models.Restaurant.Restaurant old)
+        {
+            old.Name = string.IsNullOrEmpty(edit.Name) ? old.Name : edit.Name;
+            old.Description = string.IsNullOrEmpty(edit.Description) ? old.Description : edit.Description;
+            old.NumberOfRooms = edit.NumberOfRooms == 0 ? old.NumberOfRooms : edit.NumberOfRooms;
+            old.BuildingNo = edit.BuildingNo == 0 ? old.BuildingNo : edit.BuildingNo;
+            old.Address = string.IsNullOrEmpty(edit.Address) ? old.Address : edit.Address;
+            old.City = string.IsNullOrEmpty(edit.City) ? old.City : edit.City;
+            old.Region = string.IsNullOrEmpty(edit.Region) ? old.Region : edit.Region;
+            old.Street = string.IsNullOrEmpty(edit.Street) ? old.Street : edit.Street;
+            old.Latitude = edit.Latitude == 0 ? old.Latitude : edit.Latitude;
+            old.Longitude = edit.Longitude == 0 ? old.Longitude : edit.Longitude;
+            old.PhoneNumber = string.IsNullOrEmpty(edit.PhoneNumber) ? old.PhoneNumber : edit.PhoneNumber;
+            old.RestaurantImages = edit.Paths != null
+                ? edit.Paths.Select(i => new RestaurantImage { Image = i }).ToList()
+                : old.RestaurantImages;
+            old.ModificationDate = DateTime.Now;
+
+            return old;
+        }
+
     }
 }

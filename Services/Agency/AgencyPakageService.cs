@@ -215,6 +215,8 @@ namespace Dalel.Services.Agency
                 Message = "added successfully."
             };
         }
+
+
         public ServiceResult UpdateTravelAgencies(int id,addTravelAgenciesVM agency)
         {
             var travelAgencies = TravelAgenciesRepo.GetList(p => p.Id == id).FirstOrDefault();

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Dalel.Controllers
+namespace Dalel.API.Areas.Hotel.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

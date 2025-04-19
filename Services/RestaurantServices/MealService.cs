@@ -22,29 +22,32 @@ namespace Dalel.Services
         }
 
         public ServiceResult<PaginationViewModel<RestaurantMenuItemDetailsVM>> SearchMeals(
-            string searchText = "",
-            FoodCategory? category = null,
-            AvaliabilityStatus status = AvaliabilityStatus.Available,
+            string search = "",
             float? minPrice = null,
             float? maxPrice = null,
-            int pageSize = 4,
-            int pageIndex = 1,
+            AvaliabilityStatus? avaliabilityStatus = null,
+            FoodCategory? foodCategory = null,
+            SizeOfPiece? sizeOfPiece = null,
+            double? duration = null,
             string sortBy = "Name",
-            bool descending = false)
+            bool descending = false,
+            int pageSize = 5,
+            int pageIndex = 1)
         {
             try
             {
-                var data = menuItemRepository.SearchMenuItem(
-                    searchText,
-                    category,
-                    status,
+                var data = menuItemRepository.SearchMeals(
+                    search,
                     minPrice,
                     maxPrice,
-                    pageSize,
-                    pageIndex,
+                    avaliabilityStatus,
+                    foodCategory,
+                    sizeOfPiece,
+                    duration,
                     sortBy,
-                    descending
-                );
+                    descending,
+                    pageSize,
+                    pageIndex);
 
                 return ServiceResult<PaginationViewModel<RestaurantMenuItemDetailsVM>>.SuccessResult(
                     data,
@@ -76,11 +79,12 @@ namespace Dalel.Services
 
             }
         }
-        public async Task<ServiceResult> EditMeal(RestaurantMenuItem meal)
+        public async Task<ServiceResult> EditMeal(AddRestaurantMenuItemVM meal, int id)
         {
             try
             {
-                menuItemRepository.Update(meal);
+                var oldMeal = menuItemRepository.GetList(m => m.Id == id).FirstOrDefault();
+                menuItemRepository.Update(meal.ToEditModel(oldMeal));
 
                 return ServiceResult.SuccessResult("Meal Updated successfully.");
             }

@@ -2,17 +2,20 @@
 using Dalel.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Models.HomeChef;
 
-namespace Dalel.API.Controllers.HomeChef
+namespace Dalel.API.Areas.HomeChef.Controllers
+
 {
 
     [ApiController]
     [Route("api/[controller]")]
-    public class ReviewHomeChefOrderController : Controller
+    public class PaymentHomeChefOrderController : Controller
     {
+
         private readonly HomeChefService _homeChefService;
 
-        public ReviewHomeChefOrderController(HomeChefService homeChefService)
+        public PaymentHomeChefOrderController(HomeChefService homeChefService)
         {
             _homeChefService = homeChefService;
         }
@@ -22,15 +25,15 @@ namespace Dalel.API.Controllers.HomeChef
         [Authorize(Roles = "Client,Admin,HomeChef")]
 
 
-        [HttpPost("AddReview")]
-        public IActionResult AddReview(AddReviewHomeChefOrderVM Review)
+        [HttpPost("AddPayment")]
+        public IActionResult Addpayment(AddPaymentHomeChefOrderVM PayVm)
         {
             if (!ModelState.IsValid)
             {
                 return new JsonResult("Invalid data provided");
             }
 
-            var result = _homeChefService.AddReview(Review);
+            var result = _homeChefService.AddPayment(PayVm);
 
             if (result.Success)
             {
@@ -41,19 +44,19 @@ namespace Dalel.API.Controllers.HomeChef
         }
 
 
-       
+
 
         [Authorize(Roles = "Client,Admin,HomeChef")]
-        [HttpPost("UpdateReview")]
+        [HttpPost("UpdatePayment/{id}")]
 
-        public IActionResult UpdateReview(AddReviewHomeChefOrderVM Review)
+        public IActionResult UpdatePayment(int id ,AddPaymentHomeChefOrderVM PayVm)
         {
             if (!ModelState.IsValid)
             {
                 return new JsonResult("Invalid data provided");
             }
 
-            var result = _homeChefService.UpdateReview(Review);
+            var result = _homeChefService.UpdatePayment(id,PayVm);
             if (result.Success)
             {
                 return new JsonResult(result);
@@ -66,11 +69,11 @@ namespace Dalel.API.Controllers.HomeChef
 
 
         [Authorize(Roles = "Admin,HomeChef")]
-        [HttpPost("DeleteReviewById")]
+        [HttpPost("DeletePaymentById")]
 
-        public IActionResult DeleteReview(int id)
+        public IActionResult DeletePayment(int id)
         {
-            var result = _homeChefService.DeleteReview(id);
+            var result = _homeChefService.DeletePayment(id);
             if (result.Success)
             {
                 return new JsonResult(result);

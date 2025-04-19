@@ -25,5 +25,28 @@ namespace Dalel.ViewModels
                 ModificationDateTime = reviewHomeChefOrder.ModificationDateTime
             };
         }
+
+
+        public static ReviewHomeChefOrder ToEditModel(this AddReviewHomeChefOrderVM addVM, ReviewHomeChefOrder old)
+        {
+            old.Comments = !string.IsNullOrWhiteSpace(addVM.Comments)
+                ? addVM.Comments
+                : old.Comments;
+
+            old.Rating = addVM.Rating > 0
+                ? addVM.Rating
+                : old.Rating;
+
+            old.ModificationDateTime = addVM.ModificationDateTime != default(DateTime)
+                ? addVM.ModificationDateTime
+                : DateTime.Now;
+
+            old.HomeChefOrderId = addVM.HomeChefOrderId.HasValue && addVM.HomeChefOrderId > 0
+                ? addVM.HomeChefOrderId.Value
+                : old.HomeChefOrderId;
+
+            return old;
+        }
+
     }
 }

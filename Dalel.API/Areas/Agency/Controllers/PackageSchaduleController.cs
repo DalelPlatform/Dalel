@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models.Agency;
 using Utilities;
 
-namespace Dalel.API.Controllers.Agency
+namespace Dalel.API.Areas.Agency.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -66,12 +66,16 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdateDeliveryOrder(AddHomeChefDeliveryVM vm)
+        public ServiceResult UpdateDeliveryOrder(int id ,AddHomeChefDeliveryVM vm)
         {
             try
             {
-                var delivery = vm.ToModel();
-                _HomeChefDeliveryRepository.Update(delivery);
+                var oldDelivery = _HomeChefDeliveryRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if(oldDelivery == null)
+                {
+                    return ServiceResult.FailureResult("Delivery not found.");
+                }
+                _HomeChefDeliveryRepository.Update(vm.ToEditModel(oldDelivery));
 
                 return ServiceResult.SuccessResult("Delivery Updated successfully.");
             }
@@ -110,7 +114,7 @@ namespace Dalel.Services
 
         }
 
-        
+
 
         ///////////////////////////Method 1 /////////////////////////
 
@@ -210,7 +214,37 @@ namespace Dalel.Services
 
         #region Meal
 
-
+        public ServiceResult<PaginationViewModel<HomeChefMealDetailsVM>> Search(
+       string searchText = "",
+       bool? AvailabilityStatus = true, // default = true
+       string? owner = "",
+       FoodCategory? foodCategory = null, // now filtering by enum
+       decimal? Price = null,
+       int pageSize = 10,
+       int pageIndex = 1,
+       string OrderBy = "Id",
+       bool IsAscending = false)
+        {
+            try
+            {
+                var result = _HomeChefMealRepository.Search(
+                searchText,
+                AvailabilityStatus,
+                owner,
+                foodCategory,
+                Price,
+                pageSize,
+                pageIndex,
+                OrderBy,
+                IsAscending
+            );
+                return ServiceResult<PaginationViewModel<HomeChefMealDetailsVM>>.SuccessResult(result);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<HomeChefMealDetailsVM>>.FailureResult($"Error: {ex.Message}");
+            }
+        }
         public ServiceResult AddMeal(AddHomeChefMealVM vm)
         {
             try
@@ -228,12 +262,18 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdateMeal (AddHomeChefMealVM vm)
+        public ServiceResult UpdateMeal(int id , AddHomeChefMealVM vm)
         {
             try
             {
-                var meal = vm.ToModel();
-                _HomeChefMealRepository.Update(meal);
+                var oldMeal = _HomeChefMealRepository.GetList(m => m.Id == id).FirstOrDefault();
+                
+                if (oldMeal == null)
+                {
+                    return ServiceResult.FailureResult("Order not found.");
+                }
+                _HomeChefMealRepository.Update(vm.ToEditModel(oldMeal));
+
 
                 return ServiceResult.SuccessResult("Meal Updated successfully.");
             }
@@ -247,7 +287,7 @@ namespace Dalel.Services
 
         //Delete meal by id or by Dishname 
 
-        public ServiceResult DeleteMeal (int id) // Delete meal by id
+        public ServiceResult DeleteMeal(int id) // Delete meal by id
         {
             try
             {
@@ -361,10 +401,10 @@ namespace Dalel.Services
 
         ///////////////////////Method 3////////////////////////
 
-        
 
 
-        public List<ServiceResult<HomeChefMealDetailsVM>> GetMealsByChefId (string chefId)
+
+        public List<ServiceResult<HomeChefMealDetailsVM>> GetMealsByChefId(string chefId)
         {
             try
             {
@@ -400,7 +440,7 @@ namespace Dalel.Services
         ///////////////////////Method 4////////////////////////
 
 
-        public List<ServiceResult<HomeChefMealDetailsVM>> GetMealsByCategory(FoodCategory category , int pageNumber = 1, int pageSize = 4)
+        public List<ServiceResult<HomeChefMealDetailsVM>> GetMealsByCategory(FoodCategory category, int pageNumber = 1, int pageSize = 4)
         {
             try
             {
@@ -529,21 +569,27 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdateOrder(AddHomeChefOrderVM vm)
+        public ServiceResult UpdateOrder(int id, AddHomeChefOrderVM vm)
         {
             try
             {
-                var order = vm.ToModel();
-                _HomeChefOrderRepository.Update(order);
+                var oldOrder = _HomeChefOrderRepository.GetList(m => m.Id == id).FirstOrDefault();
 
-                return ServiceResult.SuccessResult("Order Updated successfully.");
+                if (oldOrder == null)
+                {
+                    return ServiceResult.FailureResult("Order not found.");
+                }
+
+                _HomeChefOrderRepository.Update(vm.ToEditModel(oldOrder));
+
+                return ServiceResult.SuccessResult("Order updated successfully.");
             }
             catch (Exception ex)
             {
-
                 return ServiceResult.FailureResult($"Error: {ex.Message}");
             }
         }
+
 
 
 
@@ -626,7 +672,7 @@ namespace Dalel.Services
                   ServiceResult<HomeChefOrderDetailsVM>.FailureResult($"Error : {ex.Message}")
               };
             }
-            
+
 
         }
 
@@ -783,12 +829,16 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdateOrderMeal(AddHomeChefOrderMealVM vm)
+        public ServiceResult UpdateOrderMeal(int id ,AddHomeChefOrderMealVM vm)
         {
             try
             {
-                var orderMeal = vm.ToModel();
-                _HomeChefOrderMealRepository.Update(orderMeal);
+                var oldOrderMeal = _HomeChefOrderMealRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if(oldOrderMeal == null)
+                {
+                    return ServiceResult.FailureResult("OrderMeal not found.");
+                }
+                _HomeChefOrderMealRepository.Update(vm.ToEditModel(oldOrderMeal));
 
                 return ServiceResult.SuccessResult("OrderMeal Updated successfully.");
             }
@@ -847,12 +897,16 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdatePayment(AddPaymentHomeChefOrderVM vm)
+        public ServiceResult UpdatePayment(int id ,AddPaymentHomeChefOrderVM vm)
         {
             try
             {
-                var payment = vm.ToModel();
-                _PaymentHomeChefOrderRepasitory.Update(payment);
+                var oldPayment = _PaymentHomeChefOrderRepasitory.GetList(m => m.Id == id).FirstOrDefault();
+                if (oldPayment == null)
+                {
+                    return ServiceResult.FailureResult("Payment not found.");
+                }
+                _PaymentHomeChefOrderRepasitory.Update(vm.ToEditModel(oldPayment));
 
                 return ServiceResult.SuccessResult("Payment Updated successfully.");
             }
@@ -913,12 +967,16 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdateReview(AddReviewHomeChefOrderVM vm)
+        public ServiceResult UpdateReview(int id ,AddReviewHomeChefOrderVM vm)
         {
             try
             {
-                var review = vm.ToModel();
-                _ReviewHomeChefOrderRepository.Update(review);
+                var oldReview = _ReviewHomeChefOrderRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if (oldReview == null)
+                {
+                    return ServiceResult.FailureResult("Review not found.");
+                }
+                _ReviewHomeChefOrderRepository.Update(vm.ToEditModel(oldReview));
 
                 return ServiceResult.SuccessResult("Review Updated successfully.");
             }
@@ -960,24 +1018,24 @@ namespace Dalel.Services
 
 
 
-     //   public IActionResult SearchRestaurants(
-     //[FromQuery] string searchText = "",
-     //[FromQuery] string city = null,
-     //[FromQuery] string region = null,
-     //[FromQuery] VerificationStatus? verificationStatus = null,
-     //[FromQuery] string sortBy = "Name",
-     //[FromQuery] bool descending = false,
-     //[FromQuery] int pageSize = 5,
-     //[FromQuery] int pageIndex = 1)
-     //   {
-     //       var result = restaurantService.Search(
-     //           searchText, city, region, verificationStatus,
-     //           sortBy, descending, pageSize, pageIndex
-     //       );
-     //       if (!result.Success)
-     //           return new JsonResult(result);
-     //       return new JsonResult(result);
-     //   }
+        //   public IActionResult SearchRestaurants(
+        //[FromQuery] string searchText = "",
+        //[FromQuery] string city = null,
+        //[FromQuery] string region = null,
+        //[FromQuery] VerificationStatus? verificationStatus = null,
+        //[FromQuery] string sortBy = "Name",
+        //[FromQuery] bool descending = false,
+        //[FromQuery] int pageSize = 5,
+        //[FromQuery] int pageIndex = 1)
+        //   {
+        //       var result = restaurantService.Search(
+        //           searchText, city, region, verificationStatus,
+        //           sortBy, descending, pageSize, pageIndex
+        //       );
+        //       if (!result.Success)
+        //           return new JsonResult(result);
+        //       return new JsonResult(result);
+        //   }
 
     }
 

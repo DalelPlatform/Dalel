@@ -33,5 +33,39 @@ namespace Dalel.ViewModels
                 TransactionDateTime = paymentHomeChefOrder.TransactionDateTime
             };
         }
+
+
+
+        public static PaymentHomeChefOrder ToEditModel(this AddPaymentHomeChefOrderVM addVM, PaymentHomeChefOrder old)
+        {
+            old.Amount = addVM.Amount > 0
+                ? addVM.Amount
+                : old.Amount;
+
+            old.AmountPaid = addVM.AmountPaid > 0
+                ? addVM.AmountPaid
+                : old.AmountPaid;
+
+            old.CommissionDeducted = addVM.CommissionDeducted; // bool, no validation
+
+            old.CodeApplied = !string.IsNullOrWhiteSpace(addVM.CodeApplied)
+                ? addVM.CodeApplied
+                : old.CodeApplied;
+
+            old.PaymentMethod = addVM.PaymentMethod; // enum, no validation
+
+            old.PaymentStatus = addVM.PaymentStatus; // enum, no validation
+
+            old.TransactionDateTime = addVM.TransactionDateTime != default(DateTime)
+                ? addVM.TransactionDateTime
+                : old.TransactionDateTime;
+
+            old.HomeChefOrderId = addVM.HomeChefOrderId > 0
+                ? addVM.HomeChefOrderId
+                : old.HomeChefOrderId;
+
+            return old;
+        }
+
     }
 }

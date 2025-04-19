@@ -7,6 +7,7 @@ using Models.Restaurant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,12 +20,20 @@ namespace Dalel.Repository
 
         }
 
-        public PaginationViewModel<PropertiesDetailsVM> SearchProperties( 
-          string city = null,
-          string address = null,
-          string searchText = "",
-          int pageSize = 4,
-           int pageIndex = 1)
+        public PaginationViewModel<PropertiesDetailsVM> SearchProperties(
+             string searchText = "",
+             string city = null,
+             string region = null,
+             string street = null,
+             string address = null,
+             int NumberOfRooms = 0,
+             int BuildingNo = 0,
+             int FloorNo = 0,
+             VerificationStatus? verificationStatus = null,
+             string sortBy = "id",
+             bool descending = false,
+             int pageSize = 5,
+             int pageIndex = 1)
         {
 
             var builder = PredicateBuilder.New<Properties>();
@@ -40,24 +49,37 @@ namespace Dalel.Repository
             if (!string.IsNullOrEmpty(searchText))
                 builder = builder.And(r => r.Description.Contains(searchText));
 
+            if (!string.IsNullOrEmpty(region))
+                builder = builder.And(r => r.Region.Contains(region));
+
+            if (!string.IsNullOrEmpty(street))
+                builder = builder.And(r => r.Street.Contains(street));
+
+            if (NumberOfRooms > 0)
+                builder = builder.And(r => r.NumberOfRooms == NumberOfRooms);
+
+            if (BuildingNo > 0)
+                builder = builder.And(r => r.BuildingNo == BuildingNo);
+
+            if (FloorNo > 0)
+                builder = builder.And(r => r.FloorNo == FloorNo);
+
+            if (verificationStatus.HasValue)
+                builder = builder.And(r => r.VerificationStatus == verificationStatus.Value);
+
             builder = builder.And(r => r.IsDeleted == false);
 
-            var count = base.GetList(builder).Count();
 
-            var query = base.GetList(builder);
-             
-              var resultAfterPagination = base.Get(
-                  filter: builder,
-                  pageSize: pageSize,
-                  pageNumber: pageIndex).Select(p => p.ToDetailsViewModel()).ToList();
+            Expression<Func<Properties, object>> orderBy = sortBy.ToLower() switch
+            {
+                "NumberOfRooms" => m => m.NumberOfRooms,
+                "Region" => m => m.Region,
+                "Street" => m => m.Street,
+                "Address" => m => m.Address,
+                _ => m => m.Id
+            };
 
-            return new PaginationViewModel<PropertiesDetailsVM>
-              {
-                  Data = resultAfterPagination,
-                  PageNumber = pageIndex,
-                  PageSize = pageSize,
-                  TotalCount = count
-              }; 
+            return Search(builder, orderBy, m => m.ToDetailsViewModel(), descending, pageSize, pageIndex);
         }
         public PropertiesDetailsVM GetPropertyById(int propertyId)
         {

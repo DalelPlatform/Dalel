@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Hotel;
 
-namespace Dalel.API.Controllers
+namespace Dalel.API.Areas.Agency.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
