@@ -12,7 +12,7 @@ namespace Dalel.ViewModels
         public int Id { get; set; }
         public DateTime CheckIn { get; set; }
         public DateTime CheckOut { get; set; }
-        public float Price { get; set; }
+        public float PricePerNight { get; set; }
         public string PropertyName { get; set; }
         public string ClientName { get; set; }
     }
