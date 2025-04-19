@@ -66,12 +66,16 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdateDeliveryOrder(AddHomeChefDeliveryVM vm)
+        public ServiceResult UpdateDeliveryOrder(int id ,AddHomeChefDeliveryVM vm)
         {
             try
             {
-                var delivery = vm.ToModel();
-                _HomeChefDeliveryRepository.Update(delivery);
+                var oldDelivery = _HomeChefDeliveryRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if(oldDelivery == null)
+                {
+                    return ServiceResult.FailureResult("Delivery not found.");
+                }
+                _HomeChefDeliveryRepository.Update(vm.ToEditModel(oldDelivery));
 
                 return ServiceResult.SuccessResult("Delivery Updated successfully.");
             }
@@ -264,7 +268,12 @@ namespace Dalel.Services
             {
                 var oldMeal = _HomeChefMealRepository.GetList(m => m.Id == id).FirstOrDefault();
                 
+                if (oldMeal == null)
+                {
+                    return ServiceResult.FailureResult("Order not found.");
+                }
                 _HomeChefMealRepository.Update(vm.ToEditModel(oldMeal));
+
 
                 return ServiceResult.SuccessResult("Meal Updated successfully.");
             }
@@ -560,21 +569,27 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdateOrder(AddHomeChefOrderVM vm)
+        public ServiceResult UpdateOrder(int id, AddHomeChefOrderVM vm)
         {
             try
             {
-                var order = vm.ToModel();
-                _HomeChefOrderRepository.Update(order);
+                var oldOrder = _HomeChefOrderRepository.GetList(m => m.Id == id).FirstOrDefault();
 
-                return ServiceResult.SuccessResult("Order Updated successfully.");
+                if (oldOrder == null)
+                {
+                    return ServiceResult.FailureResult("Order not found.");
+                }
+
+                _HomeChefOrderRepository.Update(vm.ToEditModel(oldOrder));
+
+                return ServiceResult.SuccessResult("Order updated successfully.");
             }
             catch (Exception ex)
             {
-
                 return ServiceResult.FailureResult($"Error: {ex.Message}");
             }
         }
+
 
 
 
@@ -814,12 +829,16 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdateOrderMeal(AddHomeChefOrderMealVM vm)
+        public ServiceResult UpdateOrderMeal(int id ,AddHomeChefOrderMealVM vm)
         {
             try
             {
-                var orderMeal = vm.ToModel();
-                _HomeChefOrderMealRepository.Update(orderMeal);
+                var oldOrderMeal = _HomeChefOrderMealRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if(oldOrderMeal == null)
+                {
+                    return ServiceResult.FailureResult("OrderMeal not found.");
+                }
+                _HomeChefOrderMealRepository.Update(vm.ToEditModel(oldOrderMeal));
 
                 return ServiceResult.SuccessResult("OrderMeal Updated successfully.");
             }
@@ -878,12 +897,16 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdatePayment(AddPaymentHomeChefOrderVM vm)
+        public ServiceResult UpdatePayment(int id ,AddPaymentHomeChefOrderVM vm)
         {
             try
             {
-                var payment = vm.ToModel();
-                _PaymentHomeChefOrderRepasitory.Update(payment);
+                var oldPayment = _PaymentHomeChefOrderRepasitory.GetList(m => m.Id == id).FirstOrDefault();
+                if (oldPayment == null)
+                {
+                    return ServiceResult.FailureResult("Payment not found.");
+                }
+                _PaymentHomeChefOrderRepasitory.Update(vm.ToEditModel(oldPayment));
 
                 return ServiceResult.SuccessResult("Payment Updated successfully.");
             }
@@ -944,12 +967,16 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdateReview(AddReviewHomeChefOrderVM vm)
+        public ServiceResult UpdateReview(int id ,AddReviewHomeChefOrderVM vm)
         {
             try
             {
-                var review = vm.ToModel();
-                _ReviewHomeChefOrderRepository.Update(review);
+                var oldReview = _ReviewHomeChefOrderRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if (oldReview == null)
+                {
+                    return ServiceResult.FailureResult("Review not found.");
+                }
+                _ReviewHomeChefOrderRepository.Update(vm.ToEditModel(oldReview));
 
                 return ServiceResult.SuccessResult("Review Updated successfully.");
             }

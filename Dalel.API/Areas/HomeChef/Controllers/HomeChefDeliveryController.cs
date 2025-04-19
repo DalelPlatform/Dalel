@@ -44,16 +44,16 @@ namespace Dalel.API.Areas.HomeChef.Controllers
         }
 
         [Authorize(Roles = "Client,Admin,HomeChef")]
-        [HttpPost("UpdateOrder")]
+        [HttpPost("UpdateOrder/{id}")]
 
-        public IActionResult UpdateDeliveryOrder(AddHomeChefDeliveryVM deliveryVm)
+        public IActionResult UpdateDeliveryOrder(int id ,AddHomeChefDeliveryVM deliveryVm)
         {
             if (!ModelState.IsValid)
             {
                 return new JsonResult("Invalid data provided");
             }
 
-            var result = _homeChefService.UpdateDeliveryOrder(deliveryVm);
+            var result = _homeChefService.UpdateDeliveryOrder(id ,deliveryVm);
             if (result.Success)
             {
                 return new JsonResult(result);

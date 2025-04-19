@@ -30,6 +30,18 @@ namespace Dalel.ViewModels
                 DeliveryStatus = homeChefDelivery.DeliveryStatus
             };
         }
+
+
+        public static HomeChefDelivery ToEditModel(this AddHomeChefDeliveryVM addVM, HomeChefDelivery old)
+        {
+            old.PlatformLogistics = string.IsNullOrWhiteSpace(addVM.PlatformLogistics) ? old.PlatformLogistics : addVM.PlatformLogistics;
+            old.SelfDelivery = addVM.SelfDelivery; // bool — always valid
+            old.DeliveryStatus = addVM.DeliveryStatus; // assuming it's an enum or valid int/bool
+            old.HomeChefOrderId = addVM.HomeChefOrderId > 0 ? addVM.HomeChefOrderId : old.HomeChefOrderId;
+
+            return old;
+        }
+
     }
 }
 
