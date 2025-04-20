@@ -4,21 +4,24 @@ using Models;
 using Models.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Models;
-using Models.User;
 using System.Text;
 using System.Text.Json.Serialization;
 using Dalel.Repository.Hotel.Non_GenericRepository;
 using Dalel.Services.HotelService;
-using Models.Hotel;
 using Dalel.Services;
 using Dalel.Services.Agency;
 using Models.Agency;
 using Dalel.Repository.Agency;
 using Serilog;
 using Microsoft.OpenApi.Models;
+using Models.HomeService;
+using Utilities;
+using Models.Restaurant;
+using Models.HomeChef;
+using Models.Property;
+using Models.Hotel;
+using Models.Driver;
 
 
 
@@ -84,7 +87,6 @@ Log.Logger = new LoggerConfiguration()
                                                      
 builder.Host.UseSerilog(); 
 
-
 #region Account
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<AppUserRepository>();
@@ -148,7 +150,8 @@ builder.Services.AddScoped<IHotelService, Dalel.Services.HotelService.HotelServi
 builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
 builder.Services.AddScoped<IPaymentHotelRoomService, PaymentHotelRoomService>();
 #endregion
-//agency
+
+#region Agency
 builder.Services.AddScoped<AgencyPakageService>();
 builder.Services.AddScoped<AgencyCustomerInquiry>();
 builder.Services.AddScoped<AgencyPackageRepo>();
@@ -157,10 +160,24 @@ builder.Services.AddScoped<AgencyPromotionRepo>();
 builder.Services.AddScoped<AgencyVerificationDocumentRepo>();
 builder.Services.AddScoped<PackagebookingRepo>();
 builder.Services.AddScoped<PackageBookingReviewRepo>();
-
 builder.Services.AddScoped<PackageSchaduleRepo>();
 builder.Services.AddScoped<PackageStepRepo>();
 builder.Services.AddScoped<TravelAgenciesRepo>();
+#endregion
+
+#region Payment
+
+builder.Services.AddScoped<StripeService>();
+builder.Services.AddScoped<PayPalService>();
+builder.Services.AddScoped<IPaymentProcessor<PaymentRestaurantOrder>, RestaurantPaymentProcess>();
+builder.Services.AddScoped<IPaymentProcessor<PaymentHotelRoom>, HotelPaymentProcess>();
+builder.Services.AddScoped<IPaymentProcessor<PaymentProperties>, PropertyPaymentProcess>();
+builder.Services.AddScoped<IPaymentProcessor<PaymentHomeChefOrder>, HomeChefPaymentProcess>();
+builder.Services.AddScoped<IPaymentProcessor<PackageBookingPayment>, AgencyPaymentProcess>();
+builder.Services.AddScoped<IPaymentProcessor<ServiceProviderPayment>, ServiceProviderPaymentProcess>();
+builder.Services.AddScoped<IPaymentProcessor<PaymentVehicle>, DriverPaymentProcess>();
+
+#endregion
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

@@ -9,16 +9,18 @@ namespace Dalel.ViewModels
 {
     public static class AgencyPaymentExt
     {
-        public static Models.Agency.PackageBookingPayment
-            ToModel(this AddAgencyPaymentVM packageVM)
+        public static PackageBookingPayment ToModel(this AddAgencyPaymentVM packageVM)
         {
             return new PackageBookingPayment
             {
-            
                 Amount = packageVM.Amount,
                 AmountPaid = packageVM.AmountPaid,
                 CommissionDeducted = packageVM.CommissionDeducted,
                 CodeApplied = packageVM.CodeApplied,
+                PaymentMethod = packageVM.PaymentMethod,
+                PaymentStatus = packageVM.PaymentStatus,
+                Date = packageVM.Date,
+                BookingId = packageVM.BookingId,
             };
 
 
