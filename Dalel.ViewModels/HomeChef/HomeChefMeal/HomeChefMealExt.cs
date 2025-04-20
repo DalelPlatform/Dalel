@@ -46,5 +46,27 @@ namespace Dalel.ViewModels
 
             };
         }
+
+
+        public static HomeChefMeal ToEditModel(this AddHomeChefMealVM addVM, HomeChefMeal old)
+        {
+            old.DishName = string.IsNullOrWhiteSpace(addVM.DishName) ? old.DishName : addVM.DishName;
+            old.Description = string.IsNullOrWhiteSpace(addVM.Description) ? old.Description : addVM.Description;
+            old.Price = addVM.Price > 0 ? addVM.Price : old.Price;
+
+            // No validation needed for bool
+            old.AvailabilityStatus = addVM.AvailabilityStatus;
+            old.DietaryTags = string.IsNullOrWhiteSpace(addVM.DietaryTags) ? old.DietaryTags : addVM.DietaryTags;
+
+            // Enum validation (avoid assigning default value 0 if it's invalid)
+            old.FoodCategory = addVM.FoodCategory != default ? addVM.FoodCategory : old.FoodCategory;
+            old.PieceSize = addVM.PieceSize != default ? addVM.PieceSize : old.PieceSize;
+
+            old.Duration = addVM.Duration > 0 ? addVM.Duration : old.Duration;
+
+            return old;
+        }
+
+
     }
 }

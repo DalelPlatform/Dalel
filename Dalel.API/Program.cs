@@ -18,6 +18,7 @@ using Dalel.Services.Agency;
 using Models.Agency;
 using Dalel.Repository.Agency;
 using Serilog;
+using Microsoft.OpenApi.Models;
 
 
 
@@ -29,7 +30,42 @@ builder.Services.AddDbContext<DelelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
 // Register AutoMapper
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles; //Preserve or ignoreCycle
+    options.JsonSerializerOptions.PropertyNamingPolicy = null; // Keep property names as they are
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull; // Ignore null values
+});
+
+builder.Services.AddEndpointsApiExplorer();
+//To Enable Swagger to test authentication token >>(Bearer space token)
+builder.Services.AddSwaggerGen(c => {
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "JWTToken_Auth_API",
+        Version = "v1"
+    });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
+                    Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 builder.Services.AddDbContext<DelelContext>
     (i => i.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
 builder.Services.AddIdentity<AppUser, IdentityRole>()

@@ -1,11 +1,12 @@
-﻿using Dalel.Services;
+﻿using System.Security.Claims;
+using Dalel.Services;
 using Dalel.ViewModels;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 using Utilities;
 
-namespace Dalel.API.Controllers.HomeChef
+namespace Dalel.API.Areas.HomeChef.Controllers
 {
 
     [ApiController]
@@ -26,6 +27,8 @@ namespace Dalel.API.Controllers.HomeChef
         [HttpPost("AddMeal")]
         public IActionResult AddMeal(AddHomeChefMealVM mealVm)
         {
+
+            mealVm.HomeChefId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!ModelState.IsValid)
             {
                 return new JsonResult("Invalid data provided");
@@ -42,21 +45,19 @@ namespace Dalel.API.Controllers.HomeChef
         }
 
 
-        [HttpPost("UpdateMeal")]
+        [HttpPost("UpdateMeal/{id}")]
 
-        public IActionResult UpdateMeal (AddHomeChefMealVM mealVM)
+        public IActionResult UpdateMeal (int id ,AddHomeChefMealVM mealVM)
         {
             if (!ModelState.IsValid)
             {
                 return new JsonResult("Invalid data provided");
             }
-
-            var result = _homeChefService.UpdateMeal(mealVM);
+            var result = _homeChefService.UpdateMeal(id,mealVM);
             if (result.Success)
             {
                 return new JsonResult(result);
             }
-
             return new JsonResult(result);
         }
 

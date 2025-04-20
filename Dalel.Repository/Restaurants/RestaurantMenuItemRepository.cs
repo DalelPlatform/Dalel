@@ -6,6 +6,7 @@ using Models.Restaurant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +18,58 @@ namespace Dalel.Repository
         {
 
         }
+        public  PaginationViewModel<RestaurantMenuItemDetailsVM> SearchMeals(
+                string search = "",
+                float? minPrice = null,
+                float? maxPrice = null,
+                AvaliabilityStatus? avaliabilityStatus = null,
+                FoodCategory? foodCategory = null,
+                SizeOfPiece? sizeOfPiece = null,
+                double? duration = null,
+                string sortBy = "Name",
+                bool descending = false,
+                int pageSize = 5,
+                int pageIndex = 1)
+        {
+            var predicate = PredicateBuilder.New<RestaurantMenuItem>(true);
 
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                predicate = predicate.And(m => m.Name.Contains(search));
+                predicate = predicate.And(m => m.Description.Contains(search));
+            }
+
+            if (minPrice.HasValue)
+                predicate = predicate.And(m => m.Price >= minPrice.Value);
+
+            if (maxPrice.HasValue)
+                predicate = predicate.And(m => m.Price <= maxPrice.Value);
+            if (avaliabilityStatus.HasValue)
+            {
+                predicate = predicate.And(m => m.AvailabilityStatus == avaliabilityStatus.Value);
+            }
+            if (foodCategory.HasValue)
+            {
+                predicate = predicate.And(m => m.FoodCategory == foodCategory.Value);
+            }
+            if (sizeOfPiece.HasValue)
+            {
+                predicate = predicate.And(m => m.PieceSize == sizeOfPiece.Value);
+            }
+
+            Expression<Func<RestaurantMenuItem, object>> orderBy = sortBy.ToLower() switch
+            {
+                "price" => m => m.Price,
+                "FoodCategory" => m => m.FoodCategory,
+                "AvailabilityStatus" => m => m.AvailabilityStatus,
+                "SizeOfPiece" => m => m.PieceSize,
+                "Duration" => m => m.Duration,
+                "Id" => m => m.Id,
+                _ => m => m.Name
+            };
+
+            return  Search(predicate, orderBy, m => m.ToDetailsViewModel(), descending, pageSize, pageIndex);
+        }
         public PaginationViewModel<RestaurantMenuItemDetailsVM> SearchMenuItem(
            string searchText = "",
            FoodCategory? category = null,

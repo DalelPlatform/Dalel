@@ -15,9 +15,13 @@ namespace Dalel.ViewModels
             {
                 Name = packageVM.Name,
                 Price = packageVM.Price,
-                Description = packageVM.Description
-
-
+                Description = packageVM.Description,
+                Duration =packageVM.Duration,
+                TermsPolicies = packageVM.TermsPolicies,
+                AgencyId = packageVM.AgencyId,
+                VerificationStatus = Models.Enums.VerificationStatus.Pending,
+                PackageSteps = packageVM.Steps.Select(i=>i.ToModel()).ToList(), 
+                PackageSchadules = packageVM.Schadules.Select(i=>i.ToModel()).ToList(),
             };
 
 

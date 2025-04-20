@@ -12,6 +12,7 @@ using Dalel.ViewModels.Agency.PackageSchadule;
 using Dalel.ViewModels.Agency.PackageStep;
 using Dalel.ViewModels.Agency.TravelAgencies;
 using Models.Agency;
+using Models.Enums;
 using Models.Restaurant;
 using Utilities;
 
@@ -41,6 +42,8 @@ namespace Dalel.Services.Agency
             PackageSchaduleRepo = _PackageSchaduleRepo;
 
         }
+
+        #region AgencyPackage
         public ServiceResult CreateAgencyPackage(AddAgencyPackageVM agency  )
         {
             AgencyPackageRepo.Add(agency.ToModel());
@@ -72,11 +75,16 @@ namespace Dalel.Services.Agency
                 Message = "deleted successfully."
             };
         }
+
         public List<AgencyPackageDetails> GetAllAgencyPackage(int id)
         {
             return AgencyPackageRepo.GetAgencyPackage(id).ToList();
         }
-       public ServiceResult AddDocument(int agencyId, string documentType, string documentFile)
+
+#endregion
+
+        #region AgencyVerificationDocument
+        public ServiceResult AddDocument(int agencyId, string documentType, string documentFile)
         {
             AgencyVerificationDocumentRepo.AddVerificationDocument(agencyId, documentType, documentFile);
         return new ServiceResult
@@ -115,7 +123,9 @@ namespace Dalel.Services.Agency
         {
             return AgencyVerificationDocumentRepo.GetApprovedDocuments(id).ToList();
         }
+#endregion
 
+        #region AgencyBooking
         public ServiceResult updataBooking(AddPackagebookingVM book)
         {
             PackagebookingRepo.Update(book.ToModel());
@@ -138,7 +148,48 @@ namespace Dalel.Services.Agency
                 Message = "deleted successfully."
             };
         }
+        #endregion
 
+
+        #region TravelAgencies
+
+        public ServiceResult<PaginationViewModel<TravelAgenciesDetails>> SearchTravelAgencies(
+            string searchText = "",
+            string BusinessCategory = "",
+            string Address = "",
+            string? owner = "",
+            List<string>? Category = null,
+            int pageSize = 10,
+            int pageIndex = 1,
+            string OrderBy = "Id",
+            bool IsAscending = false)
+        {
+            try
+            {
+                var data = TravelAgenciesRepo.Search(
+                    searchText,
+                    BusinessCategory,
+                    Address,
+                    owner,
+                    Category,
+                    pageSize,
+                    pageIndex,
+                    OrderBy,
+                    IsAscending
+                );
+
+                return ServiceResult<PaginationViewModel<TravelAgenciesDetails>>.SuccessResult(
+                    data,
+                    "TravelAgencies retrieved successfully"
+                );
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<TravelAgenciesDetails>>.FailureResult(
+                    $"Error occurred while retrieving TravelAgencies: {ex.Message}"
+                );
+            }
+        }
         public ServiceResult<List<TravelAgenciesDetails>> GetAllTravelAgency()
         {            try
             {
@@ -164,9 +215,12 @@ namespace Dalel.Services.Agency
                 Message = "added successfully."
             };
         }
-        public ServiceResult UpdateTravelAgencies(addTravelAgenciesVM agency)
+
+
+        public ServiceResult UpdateTravelAgencies(int id,addTravelAgenciesVM agency)
         {
-            TravelAgenciesRepo.Update(agency.ToModel());
+            var travelAgencies = TravelAgenciesRepo.GetList(p => p.Id == id).FirstOrDefault();
+            TravelAgenciesRepo.Update(agency.ToEditModel(travelAgencies));
             return new ServiceResult
             {
                 Success = true,
@@ -189,8 +243,9 @@ namespace Dalel.Services.Agency
             };
         }
 
-        //PackageStep 
+        #endregion
 
+        #region PackageStep
         public ServiceResult  <List<PackageStepDetails>> GetAllPackageStep()
         {
             try
@@ -241,9 +296,9 @@ namespace Dalel.Services.Agency
                 Message = "deleted successfully."
             };
         }
+        #endregion
 
-        //PackageSchadule
-
+        #region PackageSchadule
         public ServiceResult<List<PackageSchaduleDetails>> GetAllPackageSchadule()
         {
             try
@@ -295,7 +350,7 @@ namespace Dalel.Services.Agency
             };
         }
 
-
+#endregion
 
 
 

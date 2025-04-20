@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace Dalel.Repository.Agency
 
         }
         //Get All Bookings for a Client
-
+        
         public IQueryable<PackageBooking> GetBookingsByClient(string clientId)
         {
             return GetList(booking => booking.ClientId == clientId)
@@ -58,15 +59,17 @@ namespace Dalel.Repository.Agency
 
         public PaginationViewModel<PackagebookingDetails> SearchMenuItem(
         string searchText = "",
-        BookingStatus Status = BookingStatus.Confirmed,//add all enum
+        BookingStatus? Status= null,//add all enum
         DateTime? date = null,
         int pageSize = 10,
         int pageIndex = 1,
-        string sortBy = "Date",
-        bool descending = false)
+        //string sortBy = "Date",
+        string OrderBy = "Id",
+        bool IsAscending = false
+       )
         {
             var predicate = PredicateBuilder.New<PackageBooking>(true);
-
+            var oldFilter = predicate;
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 predicate = predicate.And(b =>
@@ -75,7 +78,7 @@ namespace Dalel.Repository.Agency
 
             }
 
-            if (Status != BookingStatus.All) // Assuming you have an "All" in enum
+            if (Status != null) // Assuming you have an "All" in enum
             {
                 predicate = predicate.And(b => b.BookingStatus == Status);
             }
@@ -91,22 +94,29 @@ namespace Dalel.Repository.Agency
 
             var totalCount = query.Count();
 
-            query = sortBy.ToLower() switch
+            //query = sortBy.ToLower() switch
+            //{
+            //    "date" => descending ? query.OrderByDescending(b => b.Date) : query.OrderBy(b => b.Date),
+            //    "status" => descending ? query.OrderByDescending(b => b.BookingStatus) : query.OrderBy(b => b.BookingStatus),
+            //    _ => descending ? query.OrderByDescending(b => b.Id) : query.OrderBy(b => b.Id)
+            //};
+
+            //var items = query
+            //    .Skip((pageIndex - 1) * pageSize)
+            //    .Take(pageSize)
+            //    .Select(b => b.ToDetailsModels()).ToList();
+            //    ;
+            var result = Get(filter: predicate,
+                orderBy: OrderBy, 
+                isAscebding: IsAscending,
+                pageSize: pageSize,pageNumber: pageIndex);
+            if (oldFilter == predicate)
             {
-                "date" => descending ? query.OrderByDescending(b => b.Date) : query.OrderBy(b => b.Date),
-                "status" => descending ? query.OrderByDescending(b => b.BookingStatus) : query.OrderBy(b => b.BookingStatus),
-                _ => descending ? query.OrderByDescending(b => b.Id) : query.OrderBy(b => b.Id)
-            };
-
-            var items = query
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .Select(b => b.ToDetailsModels()).ToList();
-                ;
-
+                predicate = null;
+            }
             return new PaginationViewModel<PackagebookingDetails>
             {
-                Data = items,
+                Data = result.Select(b => b.ToDetailsModels()).ToList(),
                 PageNumber = pageIndex,
                 PageSize = pageSize,
                 TotalCount = totalCount
@@ -116,7 +126,7 @@ namespace Dalel.Repository.Agency
 
         }
 
-
+     
 
 
     }
