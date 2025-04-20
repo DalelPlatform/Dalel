@@ -17,10 +17,10 @@ namespace Dalel.API.Areas.Agency.Controllers
         {
             _pakageService = _service;
         }
-        [HttpPut]
-        public IActionResult UpdateBooking(AddPackagebookingVM book)
+        [HttpPut("{Id}")]
+        public IActionResult UpdateBooking(int Id,AddPackagebookingVM book)
         {
-            var res = _pakageService.updataBooking(book);
+            var res = _pakageService.updataBooking(Id,book);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]

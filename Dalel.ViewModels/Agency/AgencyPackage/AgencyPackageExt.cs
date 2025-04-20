@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dalel.ViewModels.Agency.AgencyPackage;
+using Dalel.ViewModels.Agency.Packagebooking;
 using Models.Agency;
+using Models.Enums;
 namespace Dalel.ViewModels
 {
     public static class AgencyPackageExt
@@ -36,6 +38,18 @@ namespace Dalel.ViewModels
                 VerificationStatus= package.VerificationStatus ///???
 
             };
+        }
+        public static AgencyPackage ToEditModel(this AddAgencyPackageVM packageVM,
+        AgencyPackage old)
+        {
+
+            old.Name = packageVM.Name;
+            old.Price = packageVM.Price;
+            old.Description = packageVM.Description;
+            old.Duration = packageVM.Duration;
+            old.TermsPolicies = packageVM.TermsPolicies;
+            old.VerificationStatus = Models.Enums.VerificationStatus.Pending;
+            return old;
         }
     }
     

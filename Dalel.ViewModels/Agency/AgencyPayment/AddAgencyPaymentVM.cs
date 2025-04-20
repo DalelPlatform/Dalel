@@ -22,6 +22,9 @@ namespace Dalel.ViewModels.Agency.PackageBookingPayment
         public string? CodeApplied { get; set; }
         [Required(ErrorMessage = "Please Provide Date")]
         public DateTime Date { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
+        public int BookingId { get; set; }
 
     }
 }
