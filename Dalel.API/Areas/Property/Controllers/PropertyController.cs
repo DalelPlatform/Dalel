@@ -77,7 +77,7 @@ namespace Dalel.API.Areas
         public  IActionResult BookProperty([FromBody]AddBookingPropertiesVM booking)
         {
             booking.ClientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result =  propertyService.BookProperty(booking.ToModel(), booking.ClientId);
+            var result =  propertyService.BookProperty(booking);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);

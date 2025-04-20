@@ -8,12 +8,19 @@ namespace Dalel.ViewModels
 {
     public static class ServiceProviderPaymentExt
     {
-        public static Models.HomeService.ServiceProviderPayment ToModel(this ServiceProviderDetailsVM vm)
+        public static Models.HomeService.ServiceProviderPayment ToModel(this AddServiceProviderPayment vm)
         {
             return new Models.HomeService.ServiceProviderPayment
             {
-                PaymentMethod = Enum.Parse<PaymentMethod>(vm.PaymentMethod),
-                PaymentStatus = Enum.Parse<PaymentStatus>(vm.PaymentStatus),
+                Amount = vm.Amount,
+                AmountPaid = vm.AmountPaid,
+                CommissionDeducted = vm.CommissionDeducted,
+                CodeApplied = vm.CodeApplied,
+                TransactionDateTime = DateTime.Now,
+                PaymentMethod = vm.PaymentMethod,
+                PaymentStatus = vm.PaymentStatus,
+                RequestId = vm.RequestId
+
             };
         }
 
