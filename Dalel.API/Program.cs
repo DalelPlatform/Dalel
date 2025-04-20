@@ -116,7 +116,7 @@ builder.Services.AddScoped<ReviewPropertiesRepository>();
 
 #region Restaurant
 builder.Services.AddScoped<RestaurantService>();
-builder.Services.AddScoped<MealService>();
+
 builder.Services.AddScoped<RestaurantRepository>();
 builder.Services.AddScoped<RestaurantMenuItemRepository>();
 builder.Services.AddScoped<RestaurantOrderRepository>();
