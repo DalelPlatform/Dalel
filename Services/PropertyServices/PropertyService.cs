@@ -108,7 +108,7 @@ namespace Dalel.Services
 
         #region Booking
 
-        public  ServiceResult BookProperty(BookingProperties booking,string userId)
+        public  ServiceResult BookProperty(AddBookingPropertiesVM booking)
         {
             try
             {
@@ -116,10 +116,14 @@ namespace Dalel.Services
                 if (property == null) // (property == null || property.IsDeleted)
                     return ServiceResult.FailureResult("Property not found.");
 
-                if (booking.CheckIn >= booking.CheckOut)
-                    return ServiceResult.FailureResult("Invalid dates.");
+                var numberOfNights = (booking.CheckOut - booking.CheckIn).Days;
+                if (numberOfNights <= 0)
+                    return ServiceResult.FailureResult("Invalid check-in/check-out dates.");
 
-                _bookingRepo.Add(booking);
+                float totalPrice = property.PricePerNight * numberOfNights;
+
+                booking.Status = BookingStatus.Panding;
+                _bookingRepo.Add(booking.ToModel(totalPrice));
                 return ServiceResult.SuccessResult("Booking created.");
             }
             catch (Exception ex)
