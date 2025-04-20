@@ -23,7 +23,7 @@ namespace Dalel.Services
         DriverRepository driverRepository;
         HomeChefReopsitory HomeChefReopsitory;
         HotelOwnerReopsitory HotelOwnerReopsitory;
-        PropertiesRepository propertiesRepository;
+        PropertyOwnerReopsitory propertownerRepository;
         RestaurantOwnerReopsitory RestaurantOwnerReopsitory;
         ServiceProviderRepository serviceProviderRepository;
         TravelAgencyOwnerReopsitory TravelAgencyOwnerReopsitory;
@@ -35,7 +35,7 @@ namespace Dalel.Services
             DriverRepository driverRepository,
             HomeChefReopsitory chefRepository,
             HotelOwnerReopsitory hotelOwnerReopsitory,
-            PropertiesRepository propertiesRepository,
+            PropertyOwnerReopsitory propertownerRepository,
             RestaurantOwnerReopsitory restaurantOwnerReopsitory,
             ServiceProviderRepository serviceProviderRepository,
             TravelAgencyOwnerReopsitory travelAgencyOwnerReopsitory,
@@ -48,7 +48,7 @@ namespace Dalel.Services
             this.serviceProviderRepository = serviceProviderRepository;
             HomeChefReopsitory = chefRepository;
             HotelOwnerReopsitory = hotelOwnerReopsitory;
-            this.propertiesRepository = propertiesRepository;
+            this.propertownerRepository = propertownerRepository;
             RestaurantOwnerReopsitory = restaurantOwnerReopsitory;
             TravelAgencyOwnerReopsitory = travelAgencyOwnerReopsitory;
             appSettingConfiguration = configuration;
@@ -83,6 +83,12 @@ namespace Dalel.Services
                 {
                     //Add Record In HotelOwner table
                     HotelOwnerReopsitory.Add(new HotelOwners() { UserId = currentUser.Id });
+                    return IdentityResult.Success;
+                }
+                else if (user.Role == "PropertyOwner")
+                {
+                    //Add Record In PropertyOwner table
+                    propertownerRepository.Add(new PropertyOwner() { UserId = currentUser.Id });
                     return IdentityResult.Success;
                 }
                 else if (user.Role == "RestaurantOwner")
