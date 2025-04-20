@@ -17,5 +17,6 @@ namespace Dalel.ViewModels.Agency.AgencyVerificationDocument
 
         [Required(ErrorMessage = "Please Select stutus")]
         public virtual VerificationStatus status { get; set; }
+        public int AgencyId { get; set; }
     }
 }

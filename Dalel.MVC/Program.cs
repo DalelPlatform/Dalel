@@ -2,9 +2,11 @@ using Dalel.Repository;
 using Dalel.Repository.Agency;
 using Dalel.Repository.HomeServices;
 using Dalel.Services;
+using Dalel.Services.Agency;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Models.Agency;
 using Models.User;
 using NuGet.Protocol.Core.Types;
 
@@ -25,10 +27,18 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped(typeof(RoleRepository));
 
 //Agency Repos
-builder.Services.AddScoped(typeof(PackagebookingRepo));
-builder.Services.AddScoped(typeof(AgencyPackageRepo));
-builder.Services.AddScoped(typeof(AgencyPaymentRepo));
-builder.Services.AddScoped(typeof(AgencyPromotionRepo));
+builder.Services.AddScoped<AgencyPakageService>();
+builder.Services.AddScoped<AgencyCustomerInquiry>();
+builder.Services.AddScoped<AgencyPackageRepo>();
+builder.Services.AddScoped<AgencyPaymentRepo>();
+builder.Services.AddScoped<AgencyPromotionRepo>();
+builder.Services.AddScoped<AgencyVerificationDocumentRepo>();
+builder.Services.AddScoped<PackagebookingRepo>();
+builder.Services.AddScoped<PackageBookingReviewRepo>();
+
+builder.Services.AddScoped<PackageSchaduleRepo>();
+builder.Services.AddScoped<PackageStepRepo>();
+builder.Services.AddScoped<TravelAgenciesRepo>();
 
 //Restaurant Repos
 builder.Services.AddScoped(typeof(RestaurantRepository));
@@ -49,6 +59,11 @@ builder.Services.AddScoped(typeof(ReviewPropertiesRepository));
 //HomeServices
 builder.Services.AddScoped<HomeServiceRepository>();
 builder.Services.AddScoped<Services>();
+
+builder.Services.AddScoped(typeof(BaseRepository<>));
+builder.Services.AddScoped<PendingRequestService>();
+
+
 
 var app = builder.Build();
 

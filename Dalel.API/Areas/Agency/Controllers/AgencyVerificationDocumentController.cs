@@ -36,10 +36,10 @@ namespace Dalel.API.Areas.Agency.Controllers
             var res = _pakageService.AddDocument(agencyId, documentType, documentFile);
             return new JsonResult(res);
         }
-        [HttpPut]
-        public IActionResult UpdateDoc(addAgencyVerificationDocumentVM doc)
+        [HttpPut("{Id}")]
+        public IActionResult UpdateDoc(int Id,addAgencyVerificationDocumentVM doc)
         {
-            var res = _pakageService.UpdateDocument(doc);
+            var res = _pakageService.UpdateDocument(Id,doc);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]
