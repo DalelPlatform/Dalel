@@ -89,6 +89,7 @@ builder.Host.UseSerilog();
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<AppUserRepository>();
 builder.Services.AddScoped<ClientRepository>();
+builder.Services.AddScoped<PropertyOwnerReopsitory>();
 builder.Services.AddScoped<DriverRepository>();
 builder.Services.AddScoped<HomeChefReopsitory>();
 builder.Services.AddScoped<HotelOwnerReopsitory>();
