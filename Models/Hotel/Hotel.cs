@@ -28,6 +28,8 @@ namespace Models.Hotel
         public virtual ICollection<HotelService> HotelServices { get; set; }
         public virtual ICollection<HotelImage> HotelImages { get; set; }
         public virtual ICollection<RoomType> RoomTypes { get; set; }
+
+        public virtual ICollection<Room> Rooms { get; set; }
     }
 
 

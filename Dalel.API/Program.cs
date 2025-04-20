@@ -103,13 +103,15 @@ builder.Services.AddScoped<BookingHotelRoomRepository>();
 builder.Services.AddScoped<HotelRepository>();
 builder.Services.AddScoped<RoomTypeRepository>();
 builder.Services.AddScoped<PaymentHotelRoomRepository>();
-builder.Services.AddScoped<BookingGuestInRoomRepository>(); // if you use it in services
+builder.Services.AddScoped<BookingGuestInRoomRepository>();
+builder.Services.AddScoped<ServiceRepository>();
 
 // Register service classes using interfaces
 builder.Services.AddScoped<IBookingHotelRoomService, BookingHotelRoomService>();
 builder.Services.AddScoped<IHotelService, Dalel.Services.HotelService.HotelService>();
 builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
 builder.Services.AddScoped<IPaymentHotelRoomService, PaymentHotelRoomService>();
+builder.Services.AddScoped<AmenitiesService>();
 #endregion
 //agency
 builder.Services.AddScoped<AgencyPakageService>();

@@ -1,12 +1,35 @@
-﻿using Models.Hotel;
+﻿using Dalel.ViewModels;
+using Models.Hotel;
+using System;
 
-namespace Dalel.ViewModels
+namespace Dalel.ViewModels.Extensions
 {
     public static class RoomEx
     {
-        public static RoomDetails ToDetailsViewModel(this Room room)
+        // Maps from RoomCreation ViewModel to Room Model
+        public static Room ToModel(this RoomCreation model)
         {
-            if (room == null) return null;
+            if (model == null)
+                return null;
+
+            return new Room
+            {
+                RoomNumber = model.RoomNumber,
+                RoomTypeId = model.RoomTypeID,
+                Price = model.Price,
+                BedType = model.BedType,
+                ViewType = model.ViewType,
+                Status = model.Status,
+                IsActive = model.IsActive,
+                Availability = Models.Enums.AvaliabilityStatus.Available // You can customize this logic as needed
+            };
+        }
+
+        // Maps from Room model to RoomDetails ViewModel
+        public static RoomDetails ToDetails(this Room room)
+        {
+            if (room == null)
+                return null;
 
             return new RoomDetails
             {
@@ -20,5 +43,7 @@ namespace Dalel.ViewModels
                 IsActive = room.IsActive
             };
         }
+
+    
     }
 }

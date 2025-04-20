@@ -19,6 +19,7 @@ namespace Models.Hotel
         [Required]
         public int RoomTypeId { get; set; }
 
+        public string HotelId { get; set; }
         [Required]
         [Range(typeof(decimal), "0.01", "999999.99", ErrorMessage = "Price must be between 0.01 and 999999.99.")]
         public decimal Price { get; set; }
@@ -43,6 +44,8 @@ namespace Models.Hotel
 
         // Navigation property: each room belongs to one RoomType.
         public virtual RoomType RoomType { get; set; }
+
+        public virtual Hotel Hotel { get; set; }
 
         // Navigation property: a room can have multiple bookings.
         public virtual ICollection<BookingHotelRoom> BookingHotelRooms { get; set; }
