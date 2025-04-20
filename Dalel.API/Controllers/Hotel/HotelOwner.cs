@@ -34,23 +34,23 @@ namespace Dalel.Controllers
                 if (string.IsNullOrEmpty(ownerId))
                 {
                     _logger.LogWarning("GetOwnerHotel: Owner ID not found in token.");
-                    return Unauthorized("Owner ID not found in token.");
+                    return new JsonResult("Owner ID not found in token.");
                 }
 
                 var result = await _hotelService.GetHotelByOwnerIdAsync(ownerId);
                 if (!result.Success || result.Data == null)
                 {
                     _logger.LogWarning("GetOwnerHotel: {Message}", result.Message);
-                    return NotFound(result.Message);
+                    return new JsonResult(result.Message);
                 }
 
                 var hotelDetails = result.Data.ToDetailsViewModel();
-                return Ok(hotelDetails);
+                return new JsonResult(hotelDetails);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetOwnerHotel: Error retrieving hotel for owner.");
-                return StatusCode(500, "An error occurred while retrieving the hotel.");
+                return new JsonResult(500, "An error occurred while retrieving the hotel.");
             }
         }
 
@@ -61,14 +61,14 @@ namespace Dalel.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return new JsonResult(ModelState);
                 }
 
                 var ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (string.IsNullOrEmpty(ownerId))
                 {
                     _logger.LogWarning("CreateHotel: Owner ID not found in token.");
-                    return Unauthorized("Owner ID not found in token.");
+                    return new JsonResult("Owner ID not found in token.");
                 }
 
                 hotelCreation.OwnerId = ownerId;
@@ -78,7 +78,7 @@ namespace Dalel.Controllers
                 if (!result.Success)
                 {
                     _logger.LogWarning("CreateHotel: {Message}", result.Message);
-                    return BadRequest(result.Message);
+                    return new JsonResult(result.Message);
                 }
 
                 return CreatedAtAction(nameof(GetOwnerHotel), new { id = hotelModel.Id }, result.Message);
@@ -86,7 +86,7 @@ namespace Dalel.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "CreateHotel: Error creating hotel for owner.");
-                return StatusCode(500, "An error occurred while creating the hotel.");
+                return new JsonResult(500, "An error occurred while creating the hotel.");
             }
         }
 
@@ -97,21 +97,21 @@ namespace Dalel.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return new JsonResult(ModelState);
                 }
 
                 var ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (string.IsNullOrEmpty(ownerId))
                 {
                     _logger.LogWarning("UpdateHotel: Owner ID not found in token.");
-                    return Unauthorized("Owner ID not found in token.");
+                    return new JsonResult("Owner ID not found in token.");
                 }
 
                 var getResult = await _hotelService.GetHotelByIdAsync(id);
                 if (!getResult.Success || getResult.Data == null)
                 {
                     _logger.LogWarning("UpdateHotel: {Message}", getResult.Message);
-                    return NotFound(getResult.Message);
+                    return new JsonResult(getResult.Message);
                 }
 
                 var existingHotel = getResult.Data;
@@ -128,15 +128,15 @@ namespace Dalel.Controllers
                 var updateResult = await _hotelService.UpdateHotelAsync(updatedHotel);
                 if (!updateResult.Success)
                 {
-                    return BadRequest(updateResult.Message);
+                    return new JsonResult(updateResult.Message);
                 }
 
-                return Ok(updateResult.Message);
+                return new JsonResult(updateResult.Message);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "UpdateHotel: Error updating hotel {Id}", id);
-                return StatusCode(500, "An error occurred while updating the hotel.");
+                return new JsonResult(500, "An error occurred while updating the hotel.");
             }
         }
 
@@ -149,13 +149,13 @@ namespace Dalel.Controllers
                 if (string.IsNullOrEmpty(ownerId))
                 {
                     _logger.LogWarning("DeleteHotel: Owner ID not found in token.");
-                    return Unauthorized("Owner ID not found in token.");
+                    return new JsonResult("Owner ID not found in token.");
                 }
 
                 var getResult = await _hotelService.GetHotelByIdAsync(id);
                 if (!getResult.Success || getResult.Data == null)
                 {
-                    return NotFound(getResult.Message);
+                    return new JsonResult(getResult.Message);
                 }
 
                 if (!string.Equals(getResult.Data.OwnerId, ownerId, StringComparison.OrdinalIgnoreCase))
@@ -167,15 +167,15 @@ namespace Dalel.Controllers
                 var deleteResult = await _hotelService.DeleteHotelAsync(id);
                 if (!deleteResult.Success)
                 {
-                    return BadRequest(deleteResult.Message);
+                    return new JsonResult(deleteResult.Message);
                 }
 
-                return Ok(deleteResult.Message);
+                return new JsonResult(deleteResult.Message);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "DeleteHotel: Error deleting hotel {Id}", id);
-                return StatusCode(500, "An error occurred while deleting the hotel.");
+                return new JsonResult(500, "An error occurred while deleting the hotel.");
             }
         }
 
@@ -187,14 +187,14 @@ namespace Dalel.Controllers
                 var result = await _hotelService.GetAllHotelsAsync();
                 if (!result.Success)
                 {
-                    return NotFound(result.Message);
+                    return new JsonResult(result.Message);
                 }
-                return Ok(result.Data);
+                return new JsonResult(result.Data);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetAllHotels: Error retrieving hotels");
-                return StatusCode(500, "An error occurred while retrieving hotels.");
+                return new JsonResult(500, "An error occurred while retrieving hotels.");
             }
         }
 
@@ -205,20 +205,20 @@ namespace Dalel.Controllers
             {
                 if (string.IsNullOrWhiteSpace(city))
                 {
-                    return BadRequest("City parameter is required.");
+                    return new JsonResult("City parameter is required.");
                 }
 
                 var result = await _hotelService.GetHotelsByCityAsync(city);
                 if (!result.Success)
                 {
-                    return NotFound(result.Message);
+                    return new JsonResult(result.Message);
                 }
-                return Ok(result.Data);
+                return new JsonResult(result.Data);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetHotelsByCity: Error retrieving hotels in {City}", city);
-                return StatusCode(500, "An error occurred while retrieving hotels.");
+                return new JsonResult(500, "An error occurred while retrieving hotels.");
             }
         }
     }
