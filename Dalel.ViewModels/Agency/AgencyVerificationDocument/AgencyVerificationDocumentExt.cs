@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Dalel.ViewModels.Agency.AgencyPackage;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
-using Dalel.ViewModels.Agency.Packagebooking;
 using Models.Agency;
 
 namespace Dalel.ViewModels
@@ -20,7 +18,7 @@ namespace Dalel.ViewModels
                DocumentFile=Document.DocumentFile,
                DocumentType=Document.DocumentType,
                status = Document.status,
-               AgencyId=Document.AgencyId,
+
 
             };
 
@@ -37,15 +35,6 @@ namespace Dalel.ViewModels
                 status = doc.status
 
             };
-        }
-        public static AgencyVerificationDocument ToEditModel(this addAgencyVerificationDocumentVM doc,
-        AgencyVerificationDocument old)
-        {
-
-            old.DocumentType = doc.DocumentType;
-            old.DocumentFile = doc.DocumentFile;
-            old.status = doc.status;
-            return old;
         }
     }
 }

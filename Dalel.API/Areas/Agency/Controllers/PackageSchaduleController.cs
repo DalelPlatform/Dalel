@@ -40,10 +40,10 @@ namespace Dalel.API.Areas.Agency.Controllers
 
         }
 
-        [HttpPut("{Id}")]
-        public IActionResult Update(int Id,[FromBody] addPackageSchaduleVM schadule)
+        [HttpPut("{id}")]
+        public IActionResult Update([FromBody] addPackageSchaduleVM schadule)
         {
-            var result = _pakageService.UpdatePackageSchadule(Id,schadule);
+            var result = _pakageService.UpdatePackageSchadule(schadule);
             return new JsonResult(result);
         }
         [HttpDelete("{id}")]

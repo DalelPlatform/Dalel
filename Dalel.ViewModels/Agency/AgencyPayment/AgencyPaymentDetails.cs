@@ -17,6 +17,5 @@ namespace Dalel.ViewModels.Agency.PackageBookingPayment
         public PaymentMethod PaymentMethod { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
         public DateTime Date { get; set; }
-        public int BookingId { get; set; }
     }
 }

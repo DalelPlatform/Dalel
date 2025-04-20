@@ -39,10 +39,10 @@ namespace Dalel.API.Areas.Agency.Controllers
 
 
         }
-        [HttpPut("{Id}")]
-        public IActionResult Update(int Id,[FromBody] addPackageStepVM step)
+        [HttpPut("{id}")]
+        public IActionResult Update([FromBody] addPackageStepVM step)
         {
-            var result = _pakageService.UpdatePackageStep(Id,step);
+            var result = _pakageService.UpdatePackageStep(step);
             return new JsonResult(result);
         }
         [HttpDelete("{id}")]

@@ -53,10 +53,9 @@ namespace Dalel.Services.Agency
                 Message = "added successfully."
             };
         }
-        public ServiceResult UpdateAgencyPackage(int id,AddAgencyPackageVM agency)
+        public ServiceResult UpdateAgencyPackage(AddAgencyPackageVM agency)
         {
-            var package = AgencyPackageRepo.GetList(p => p.Id == id).FirstOrDefault();
-            AgencyPackageRepo.Update(agency.ToEditModel(package));
+            AgencyPackageRepo.Update(agency.ToModel());
             return new ServiceResult
             {
                 Success = true,
@@ -77,45 +76,6 @@ namespace Dalel.Services.Agency
             };
         }
 
-
-        public ServiceResult<PaginationViewModel<AgencyPackageDetails>> SearchAgencyPackage(
-            string searchText = "",
-      string Name = "",
-      string Price = "",
-
-      int pageSize = 10,
-      int pageIndex = 1,
-      string OrderBy = "Id",
-      bool IsAscending = false)
-        {
-            try
-            {
-                var data = AgencyPackageRepo.Search(
-                       searchText,
-                       Name,
-                       Price ,
-
-                       pageSize,
-                       pageIndex,
-                       OrderBy ,
-                      IsAscending 
-                );
-
-                return ServiceResult<PaginationViewModel<AgencyPackageDetails>>.
-                    SuccessResult(
-                    data,
-                    "TravelAgencies retrieved successfully"
-                );
-            }
-            catch (Exception ex)
-            {
-                return ServiceResult<PaginationViewModel<AgencyPackageDetails>>.
-                    FailureResult(
-                    $"Error occurred while retrieving TravelAgencies: {ex.Message}"
-                );
-            }
-        }
-
         public List<AgencyPackageDetails> GetAllAgencyPackage(int id)
         {
             return AgencyPackageRepo.GetAgencyPackage(id).ToList();
@@ -133,11 +93,9 @@ namespace Dalel.Services.Agency
             Message = "deleted successfully."
         };
         }
-        public ServiceResult UpdateDocument(int id,addAgencyVerificationDocumentVM doc)
+        public ServiceResult UpdateDocument(addAgencyVerificationDocumentVM doc)
         {
-            var VerificationDocument = AgencyVerificationDocumentRepo.GetList(p => p.Id == id).FirstOrDefault();
-
-            AgencyVerificationDocumentRepo.Update(doc.ToEditModel(VerificationDocument));
+            AgencyVerificationDocumentRepo.Update(doc.ToModel());
             return new ServiceResult
             {
                 Success = true,
@@ -168,11 +126,9 @@ namespace Dalel.Services.Agency
 #endregion
 
         #region AgencyBooking
-        public ServiceResult updataBooking(int id, AddPackagebookingVM book)
+        public ServiceResult updataBooking(AddPackagebookingVM book)
         {
-            var AgencyBooking = PackagebookingRepo.GetList(p => p.Id == id).FirstOrDefault();
-
-            PackagebookingRepo.Update(book.ToEditModel(AgencyBooking));
+            PackagebookingRepo.Update(book.ToModel());
             return new ServiceResult
             {
                 Success = true,
@@ -315,11 +271,9 @@ namespace Dalel.Services.Agency
                 Message = "added successfully."
             };
         }
-        public ServiceResult UpdatePackageStep(int id,addPackageStepVM step)
+        public ServiceResult UpdatePackageStep(addPackageStepVM step)
         {
-            var PackageStep = PackageStepRepo.GetList(p => p.Id == id).FirstOrDefault();
-
-            PackageStepRepo.Update(step.ToEditModel(PackageStep));
+            PackageStepRepo.Update(step.ToModel());
             return new ServiceResult
             {
                 Success = true,
@@ -370,11 +324,9 @@ namespace Dalel.Services.Agency
                 Message = "added successfully."
             };
         }
-        public ServiceResult UpdatePackageSchadule(int id ,addPackageSchaduleVM Schadule)
+        public ServiceResult UpdatePackageSchadule(addPackageSchaduleVM Schadule)
         {
-            var PackageSchadule = PackageSchaduleRepo.GetList(p => p.Id == id).FirstOrDefault();
-
-            PackageSchaduleRepo.Update(Schadule.ToEditModel(PackageSchadule));
+            PackageSchaduleRepo.Update(Schadule.ToModel());
             return new ServiceResult
             {
                 Success = true,
