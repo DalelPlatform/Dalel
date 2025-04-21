@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Agency\NewFolder\**" />
     <Compile Remove="Property\PaymentProperties\**" />
-    <EmbeddedResource Remove="Agency\NewFolder\**" />
     <EmbeddedResource Remove="Property\PaymentProperties\**" />
-    <None Remove="Agency\NewFolder\**" />
     <None Remove="Property\PaymentProperties\**" />
   </ItemGroup>
 
