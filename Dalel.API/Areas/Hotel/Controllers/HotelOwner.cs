@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Dalel.Services;
 using Dalel.ViewModels;
-using Dalel.ViewModels.Hotel;
 using Models.Enums;
 using Serilog;
 
@@ -15,10 +14,10 @@ namespace Dalel.Api.Controllers
 
     public class HotelOwnerController : ControllerBase
     {
-        private readonly HotelService _hotelService;
+        private readonly HotelServices _hotelService;
         private readonly ILogger<HotelOwnerController> _logger;
 
-        public HotelOwnerController(HotelService hotelService, ILogger<HotelOwnerController> logger)
+        public HotelOwnerController(HotelServices hotelService, ILogger<HotelOwnerController> logger)
         {
             _hotelService = hotelService;
             _logger = logger;

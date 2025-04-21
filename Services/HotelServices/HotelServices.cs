@@ -5,7 +5,7 @@ using Utilities;
 
 namespace Dalel.Services
 {
-    public class HotelService
+    public class HotelServices
     {
         private readonly HotelRepository _hotelRepo;
         private readonly RoomTypeRepository _roomTypeRepo;
@@ -15,7 +15,7 @@ namespace Dalel.Services
         private readonly PaymentHotelRoomRepository _paymentRepo;
         private readonly ReviewHotelRoomRepository _reviewRepo;
 
-        public HotelService(
+        public HotelServices(
             HotelRepository hotelRepo,
             RoomTypeRepository roomTypeRepo,
             RoomRepository roomRepo,

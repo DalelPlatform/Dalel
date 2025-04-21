@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
-using Dalel.Repository.Hotel.Non_GenericRepository;
-using Dalel.Services.HotelService;
 using Dalel.Services;
 using Dalel.Services.Agency;
 using Models.Agency;
@@ -136,21 +134,17 @@ builder.Services.AddScoped<HomeChefService>();
 
 #endregion
 
-#region HotelServicess
+#region Hotel
 // Register repository classes (Scoped lifetime is recommended)
 builder.Services.AddScoped<BookingHotelRoomRepository>();
 builder.Services.AddScoped<HotelRepository>();
 builder.Services.AddScoped<RoomTypeRepository>();
 builder.Services.AddScoped<PaymentHotelRoomRepository>();
-builder.Services.AddScoped<BookingGuestInRoomRepository>();
+builder.Services.AddScoped<ReviewHotelRoomRepository>();
+builder.Services.AddScoped<RoomRepository>();
 builder.Services.AddScoped<ServiceRepository>();
+builder.Services.AddScoped<HotelServices>();
 
-// Register service classes using interfaces
-builder.Services.AddScoped<IBookingHotelRoomService, BookingHotelRoomService>();
-builder.Services.AddScoped<IHotelService, Dalel.Services.HotelService.HotelService>();
-builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
-builder.Services.AddScoped<IPaymentHotelRoomService, PaymentHotelRoomService>();
-builder.Services.AddScoped<AmenitiesService>();
 #endregion
 
 #region Agency

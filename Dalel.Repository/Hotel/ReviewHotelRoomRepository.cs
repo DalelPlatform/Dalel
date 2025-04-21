@@ -43,11 +43,9 @@ namespace Dalel.Repository
             );
         }
 
-        // Single
         public ReviewDetails GetDetailsById(int id)
             => base.GetList(r => r.Id == id).FirstOrDefault().ToDetailsViewModel();
 
-        // List as IQueryable
         public IQueryable<ReviewDetails> GetAllDetails()
             => base.GetList().Select(r => r.ToDetailsViewModel());
 
