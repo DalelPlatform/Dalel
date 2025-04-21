@@ -9,6 +9,8 @@ namespace Models.Driver
     {
         public int Id { get; set; }
         public decimal Amount { get; set; }
+        public decimal AmountPaid { get; set; }
+        public decimal? CommissionDeducted { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
         public DateTime TransactionDateTime { get; set; }
@@ -31,6 +33,12 @@ namespace Models.Driver
                    .WithOne(bv => bv.Payment) // BookingVehicle لديه فقط Payment واحد
                    .HasForeignKey<PaymentVehicle>(pv => pv.BookingVehicleId)
                    .OnDelete(DeleteBehavior.NoAction);
+            // ضبط القيم الافتراضية
+            builder.Property(pv => pv.PaymentMethod).HasDefaultValue(PaymentMethod.Cash);
+            builder.Property(pv => pv.PaymentStatus).HasDefaultValue(PaymentStatus.Pending);
+            builder.Property(pv => pv.CommissionDeducted).IsRequired(false);
+            builder.Property(pv => pv.AmountPaid).IsRequired();
+            builder.Property(pv => pv.Amount).IsRequired();
         }
     }
 }

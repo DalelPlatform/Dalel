@@ -13,12 +13,12 @@ namespace Dalel.API.Areas
     [ApiController]
     public class MealController : ControllerBase
     {
-        private MealService mealService;
+        
         private RestaurantService restaurantService;
 
-        public MealController(MealService mealService, RestaurantService restaurantService)
+        public MealController( RestaurantService restaurantService)
         {
-            this.mealService = mealService;
+            
             this.restaurantService = restaurantService;
         }
 
@@ -36,7 +36,7 @@ namespace Dalel.API.Areas
            [FromQuery] int pageSize = 5,
            [FromQuery] int pageIndex = 1)
         {
-            var result = mealService.SearchMeals(
+            var result = restaurantService.SearchMeals(
                     search,
                     minPrice,
                     maxPrice,
@@ -63,7 +63,7 @@ namespace Dalel.API.Areas
             var Restaurant = restaurantService.GetRestaurantByOwnerId(meal.RestaurantOwnerId);
             meal.RestaurantId = Restaurant.Data.Id;
 
-            var result = mealService.CreateMeal(meal);
+            var result = restaurantService.CreateMeal(meal);
             if (!result.Success)
                 return new JsonResult(result.Message);
 
@@ -72,9 +72,10 @@ namespace Dalel.API.Areas
 
         [HttpPut("{id}")]
         [Authorize(Roles = "RestaurantOwner")]
-        public async Task<IActionResult> UpdateMeal([FromBody] AddRestaurantMenuItemVM meal, int id)
+        public IActionResult UpdateMeal([FromBody] AddRestaurantMenuItemVM meal, int id)
         {
-            var result = await mealService.EditMeal(meal,id);
+            var result = restaurantService.EditMeal(meal,id);
+
             if (!result.Success)
                 return new JsonResult(result.Message);
 
@@ -83,18 +84,19 @@ namespace Dalel.API.Areas
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "RestaurantOwner")]
-        public async Task<IActionResult> DeleteMeal(int id)
+        public IActionResult DeleteMeal(int id)
         {
-            var result = await mealService.DeleteMeal(id);
+            var result =  restaurantService.DeleteMeal(id);
+
             if (!result.Success)
                 return new JsonResult(result.Message);
 
             return new JsonResult(result);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetMealByID(int id)
+        public IActionResult GetMealByID(int id)
         {
-            var result = await mealService.GetMealById(id);
+            var result =  restaurantService.GetMealById(id);
             if (!result.Success)
                 return new JsonResult(result.Message);
 

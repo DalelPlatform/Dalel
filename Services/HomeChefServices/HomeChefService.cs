@@ -215,15 +215,15 @@ namespace Dalel.Services
         #region Meal
 
         public ServiceResult<PaginationViewModel<HomeChefMealDetailsVM>> Search(
-       string searchText = "",
-       bool? AvailabilityStatus = true, // default = true
-       string? owner = "",
-       FoodCategory? foodCategory = null, // now filtering by enum
-       decimal? Price = null,
-       int pageSize = 10,
-       int pageIndex = 1,
-       string OrderBy = "Id",
-       bool IsAscending = false)
+           string searchText = "",
+           bool? AvailabilityStatus = true, // default = true
+           string? owner = "",
+           FoodCategory? foodCategory = null, // now filtering by enum
+           decimal? Price = null,
+           int pageSize = 10,
+           int pageIndex = 1,
+           string OrderBy = "Id",
+           bool IsAscending = false)
         {
             try
             {
@@ -550,7 +550,37 @@ namespace Dalel.Services
 
 
         #region Order
-
+        public ServiceResult<PaginationViewModel<HomeChefOrderDetailsVM>> Search(
+        string searchText = "",
+        string? customerId = "",
+        OrderStatus? status = null,
+        DateTime? fromDate = null,
+        DateTime? toDate = null,
+        int pageSize = 10,
+        int pageIndex = 1,
+        string orderBy = "Id",
+        bool IsAscending = false)
+        {
+            try
+            {
+                var result = _HomeChefOrderRepository.Search(
+                searchText,
+                customerId,
+                status,
+                fromDate,
+                toDate,
+                pageSize,
+                pageIndex,
+                orderBy,
+                IsAscending
+            );
+                return ServiceResult<PaginationViewModel<HomeChefOrderDetailsVM>>.SuccessResult(result);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<HomeChefOrderDetailsVM>>.FailureResult($"Error: {ex.Message}");
+            }
+        }
 
         public ServiceResult AddOrder(AddHomeChefOrderVM vm)
         {
@@ -812,6 +842,32 @@ namespace Dalel.Services
 
 
         #region HomeChefOrderMeal
+
+        public ServiceResult<PaginationViewModel<HomeChefOrderMealDetailsVM>> Search(
+        string searchText = "",
+        string? customerId = "",
+        int pageSize = 10,
+        int pageIndex = 1,
+        string orderBy = "Id",
+        bool IsAscending = false)
+        {
+            try
+            {
+                var result = _HomeChefOrderMealRepository.Search(
+                searchText,
+                customerId,
+                pageSize,
+                pageIndex,
+                orderBy,
+                IsAscending
+            );
+                return ServiceResult<PaginationViewModel<HomeChefOrderMealDetailsVM>>.SuccessResult(result);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<HomeChefOrderMealDetailsVM>>.FailureResult($"Error: {ex.Message}");
+            }
+        }
         public ServiceResult AddOrderMeal(AddHomeChefOrderMealVM vm)
         {
             try
@@ -879,22 +935,8 @@ namespace Dalel.Services
 
 
 
-        #region PaymentHomeChefOrder 
-        public ServiceResult AddPayment(AddPaymentHomeChefOrderVM vm)
-        {
-            try
-            {
-                var payment = vm.ToModel();
-                _PaymentHomeChefOrderRepasitory.Add(payment);
-
-                return ServiceResult.SuccessResult("Payment added successfully.");
-            }
-            catch (Exception ex)
-            {
-
-                return ServiceResult.FailureResult($"Error: {ex.Message}");
-            }
-        }
+        #region PaymentHomeChefOrder
+      
 
 
         public ServiceResult UpdatePayment(int id ,AddPaymentHomeChefOrderVM vm)
@@ -949,7 +991,54 @@ namespace Dalel.Services
 
         #region ReviewHomeChefOrder
 
+        public ServiceResult<PaginationViewModel<ReviewHomeChefOrderDetailsVM>> Search(
+      string searchText = "",
+      float? rating = null,
+      DateTime? fromDate = null,
+      DateTime? toDate = null,
+      string? homeChefId = null,
+      int? orderId = null,
+      int pageSize = 10,
+      int pageIndex = 1,
+      string orderBy = "Id",
+      bool isAscending = false)
+        {
+            try
+            {
+                var result = _ReviewHomeChefOrderRepository.Search(
+                searchText,
+                rating,
+                fromDate,
+                toDate,
+                homeChefId,
+                orderId,
+                pageSize,
+                pageIndex,
+                orderBy,
+                isAscending
+            );
+                return ServiceResult<PaginationViewModel<ReviewHomeChefOrderDetailsVM>>.SuccessResult(result);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<ReviewHomeChefOrderDetailsVM>>.FailureResult($"Error: {ex.Message}");
+            }
+        }
+        public ServiceResult AddPayment(AddPaymentHomeChefOrderVM vm)
+        {
+            try
+            {
+                var payment = vm.ToModel();
+                _PaymentHomeChefOrderRepasitory.Add(payment);
 
+                return ServiceResult.SuccessResult("Payment added successfully.");
+            }
+            catch (Exception ex)
+            {
+
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
         public ServiceResult AddReview(AddReviewHomeChefOrderVM vm)
         {
             try
@@ -1018,24 +1107,7 @@ namespace Dalel.Services
 
 
 
-        //   public IActionResult SearchRestaurants(
-        //[FromQuery] string searchText = "",
-        //[FromQuery] string city = null,
-        //[FromQuery] string region = null,
-        //[FromQuery] VerificationStatus? verificationStatus = null,
-        //[FromQuery] string sortBy = "Name",
-        //[FromQuery] bool descending = false,
-        //[FromQuery] int pageSize = 5,
-        //[FromQuery] int pageIndex = 1)
-        //   {
-        //       var result = restaurantService.Search(
-        //           searchText, city, region, verificationStatus,
-        //           sortBy, descending, pageSize, pageIndex
-        //       );
-        //       if (!result.Success)
-        //           return new JsonResult(result);
-        //       return new JsonResult(result);
-        //   }
+
 
     }
 

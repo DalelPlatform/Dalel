@@ -20,7 +20,35 @@ namespace Dalel.API.Areas.HomeChef.Controllers
             _homeChefService = homeChefService;
         }
 
+        [HttpGet("search")]
+        public IActionResult Search(
+            string searchText = "",
+            string? customerId = "",
+            OrderStatus? status = null,
+            DateTime? fromDate = null,
+            DateTime? toDate = null,
+            int pageSize = 10,
+            int pageIndex = 1,
+            string orderBy = "Id",
+            bool IsAscending = false)
+        {
+            var result = _homeChefService.Search(
+                searchText,
+                customerId,
+                status,
+                fromDate,
+                toDate,
+                pageSize,
+                pageIndex,
+                orderBy,
+                IsAscending
+            );
 
+            if (!result.Success)
+                return new JsonResult(result);
+
+            return new JsonResult(result);
+        }
 
         [Authorize(Roles = "Client,Admin,HomeChef")]
 

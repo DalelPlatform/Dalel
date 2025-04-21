@@ -12,14 +12,17 @@ namespace Dalel.ViewModels.Agency.PackageBookingPayment
     public class AddAgencyPaymentVM
     {
         [Required(ErrorMessage = "Please Provide Amount")]
-
         public decimal Amount { get; set; }
         [Required(ErrorMessage = "Please Provide AmountPaid")]
         public decimal AmountPaid { get; set; }
         [Required(ErrorMessage = "Please Provide CommissionDeducted")]
         public decimal? CommissionDeducted { get; set; }
-        [Required(ErrorMessage = "Please Provide CodeApplied")]
         public string? CodeApplied { get; set; }
+
+        [Required(ErrorMessage = "Payment method is required.")]
+        public PaymentMethod PaymentMethod { get; set; } // e.g. cash, PayPal, Stripe
+        [Required(ErrorMessage = "Payment status is required.")]
+        public PaymentStatus PaymentStatus { get; set; } // e.g. pending, completed
         [Required(ErrorMessage = "Please Provide Date")]
         public DateTime Date { get; set; }
 
