@@ -1,0 +1,5 @@
+﻿
+1. update in reservation staus .(RestaurantReservationRepository)
+2. what is the different between search and Get for ex. GetAllReservation()
+
+

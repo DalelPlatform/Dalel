@@ -11,12 +11,12 @@ namespace Dalel.API.Areas
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MealController : ControllerBase
+    public class RestaurantMealController : ControllerBase
     {
         
         private RestaurantService restaurantService;
 
-        public MealController( RestaurantService restaurantService)
+        public RestaurantMealController( RestaurantService restaurantService)
         {
             
             this.restaurantService = restaurantService;

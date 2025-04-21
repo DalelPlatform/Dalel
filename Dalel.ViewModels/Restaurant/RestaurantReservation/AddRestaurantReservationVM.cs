@@ -24,7 +24,7 @@ namespace Dalel.ViewModels.Restaurant
         [Required(ErrorMessage = "Restaurant Id is required.")]
         public int RestaurantId { get; set; }
 
-        [Required(ErrorMessage = "Client Id is required.")]
+        
         public string ClientId { get; set; }
     }
 }

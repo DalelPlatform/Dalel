@@ -20,15 +20,17 @@ namespace Dalel.Services
         private readonly RestaurantOrderRepository _restaurantOrderRepository;
         private readonly ReviewRestaurantOrderRepository _reviewRestaurantOrderRepository;
         private readonly PaymentRestaurantOrderReopsitory _paymentRestaurantOrderReopsitory;
+        private readonly ClientRepository _clientRepository;
 
         public RestaurantService(
-            RestaurantRepository restaurantRepo ,
+            RestaurantRepository restaurantRepo,
             RestaurantMenuItemRepository menuItemRepository,
             RestaurantReservationRepository restaurantReservationRepository,
             RestaurantOrderItemRepository restaurantOrderItemRepository,
             RestaurantOrderRepository restaurantOrderRepository,
             ReviewRestaurantOrderRepository reviewRestaurantOrderRepository,
-            PaymentRestaurantOrderReopsitory paymentRestaurantOrderReopsitory
+            PaymentRestaurantOrderReopsitory paymentRestaurantOrderReopsitory,
+            ClientRepository clientRepository
             )
         {
             _restaurantRepo = restaurantRepo;
@@ -38,12 +40,12 @@ namespace Dalel.Services
             _restaurantOrderRepository = restaurantOrderRepository;
             _reviewRestaurantOrderRepository = reviewRestaurantOrderRepository;
             _paymentRestaurantOrderReopsitory = paymentRestaurantOrderReopsitory;
+            _clientRepository = clientRepository;
 
         }
 
         #region Restaurant
-        [Authorize(Roles = "RestaurantOwner")]
-        public async Task<ServiceResult> CreateRestaurant([FromForm] AddRestaurantVM vm)
+        public ServiceResult CreateRestaurant([FromForm] AddRestaurantVM vm)
         {
             try
             {
@@ -57,7 +59,7 @@ namespace Dalel.Services
             }
         }
 
-        public async Task<ServiceResult> EditRestaurant(AddRestaurantVM model, int id)
+        public ServiceResult EditRestaurant(AddRestaurantVM model, int id)
         {
             try
             {
@@ -71,7 +73,7 @@ namespace Dalel.Services
             }
         }
 
-        public async Task<ServiceResult> DeleteRestaurant(int id)
+        public ServiceResult DeleteRestaurant(int id)
         {
             try
             {
@@ -88,7 +90,7 @@ namespace Dalel.Services
             }
         }
 
-        public async Task<ServiceResult<List<RestaurantDetailsVM>>> GetAll()
+        public ServiceResult<List<RestaurantDetailsVM>> GetAll()
         {
             try
             {
@@ -130,7 +132,7 @@ namespace Dalel.Services
                 return ServiceResult<PaginationViewModel<RestaurantDetailsVM>>.FailureResult("Error: " + ex.Message);
             }
         }
-        public async Task<ServiceResult<RestaurantDetailsVM>> GetRestaurantById(int id)
+        public ServiceResult<RestaurantDetailsVM> GetRestaurantById(int id)
         {
             try
             {
@@ -158,7 +160,7 @@ namespace Dalel.Services
                 return ServiceResult<RestaurantDetailsVM>.FailureResult("Error: " + ex.Message);
             }
         }
-        public async Task<ServiceResult<List<RestaurantDetailsVM>>> GetRestaurantsByVerificationStatus(VerificationStatus verificationStatus)
+        public ServiceResult<List<RestaurantDetailsVM>> GetRestaurantsByVerificationStatus(VerificationStatus verificationStatus)
         {
             try
             {
@@ -243,6 +245,10 @@ namespace Dalel.Services
             try
             {
                 var oldMeal = _menuItemRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if (oldMeal == null)
+                {
+                    return ServiceResult.FailureResult("Meal not found.");
+                }
                 _menuItemRepository.Update(meal.ToEditModel(oldMeal));
 
                 return ServiceResult.SuccessResult("Meal Updated successfully.");
@@ -288,7 +294,7 @@ namespace Dalel.Services
             }
         }
 
-        public  ServiceResult<RestaurantMenuItemDetailsVM> GetMealById(int mealId)
+        public ServiceResult<RestaurantMenuItemDetailsVM> GetMealById(int mealId)
         {
             try
             {
@@ -325,7 +331,7 @@ namespace Dalel.Services
         }
 
 
-        public ServiceResult UpdateOrderItem(int id ,AddRestaurantOrderItemVM orderVM)
+        public ServiceResult UpdateOrderItem(int id, AddRestaurantOrderItemVM orderVM)
         {
             try
             {
@@ -375,8 +381,6 @@ namespace Dalel.Services
 
         #endregion
 
-
-
         #region RestaurantOrder
 
         public ServiceResult CreateOrder(AddRestaurantOrderItemVM order)
@@ -422,9 +426,89 @@ namespace Dalel.Services
 
         #endregion
 
+        #region RestaurantReservation
+
+        public ServiceResult<RestaurantReservationDetailsVM> CreateRestaurantReservation([FromForm] AddRestaurantReservationVM vm)
+        {
+            try
+            {
+                var reservation = vm.ToModel();
+                _restaurantReservationRepository.Add(reservation);
+                var restaurant = _restaurantRepo.GetById(reservation.RestaurantId);
+                if (restaurant == null)
+                    return ServiceResult<RestaurantReservationDetailsVM>.FailureResult("Restaurant not found.");
+                var clientId = vm.ClientId;
+                var client = _clientRepository.GetList(r => r.UserId == clientId).FirstOrDefault();
+
+
+                if (client == null)
+                    return ServiceResult<RestaurantReservationDetailsVM>.FailureResult("Client not found.");
+                var details = reservation.ToDetailsViewModel();
+                details.RestaurantName = restaurant.Name;
+                details.ClientName = client.User.UserName ?? "Not Provided";
+                details.ReervationStatus = "pending";
 
 
 
+                return ServiceResult<RestaurantReservationDetailsVM>.SuccessResult(details, "Restaurant Reservation sended.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<RestaurantReservationDetailsVM>.FailureResult("Error: " + ex.Message);
+            }
+        }
 
+        public ServiceResult EditRestaurantReservation(AddRestaurantReservationVM reserve, int id)
+        {
+            try
+            {
+                var oldReservation = _restaurantReservationRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if (oldReservation == null)
+                {
+                    return ServiceResult.FailureResult("Reservation not found.");
+                }
+                _restaurantReservationRepository.Update(reserve.ToEditModel(oldReservation));
+
+                return ServiceResult.SuccessResult("Reserve Updated successfully , please wait for Response ...");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult(ex.Message);
+            }
+        }
+
+
+
+        public ServiceResult DeleteReserve(int reserveId)
+        {
+            try
+            {
+                var reserve = _menuItemRepository.GetList(m => m.Id == reserveId).FirstOrDefault();
+                if (reserve != null)
+                {
+                    _menuItemRepository.Delete(reserve);
+                    return ServiceResult.SuccessResult("reserve Deleted successfully.");
+
+                }
+                else
+                {
+                    return ServiceResult.FailureResult("reserve Not Found");
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult(ex.Message);
+
+            }
+        }
+
+  
+
+            #endregion
+
+
+
+        
     }
 }

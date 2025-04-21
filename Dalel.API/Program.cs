@@ -117,10 +117,13 @@ builder.Services.AddScoped<ReviewPropertiesRepository>();
 
 #region Restaurant
 builder.Services.AddScoped<RestaurantService>();
-
 builder.Services.AddScoped<RestaurantRepository>();
 builder.Services.AddScoped<RestaurantMenuItemRepository>();
 builder.Services.AddScoped<RestaurantOrderRepository>();
+builder.Services.AddScoped<RestaurantReservationRepository>();
+builder.Services.AddScoped<RestaurantOrderItemRepository>();
+builder.Services.AddScoped<PaymentRestaurantOrderReopsitory>();
+builder.Services.AddScoped<ReviewRestaurantOrderRepository>();
 #endregion
 
 #region HomeChef

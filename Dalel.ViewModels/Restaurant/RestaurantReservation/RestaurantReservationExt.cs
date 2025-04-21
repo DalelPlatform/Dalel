@@ -1,5 +1,6 @@
 ﻿using Dalel.ViewModels.Restaurant;
 using Models.Restaurant;
+using Models.Restaurant.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,8 @@ namespace Dalel.ViewModels
                 Rating = reservation.Rating,
                 TableNumber = reservation.TableNumber,
                 RestaurantName = reservation.Restaurant.RestaurantOwner.AppUser.UserName ?? "Not Provided",
-                ClientName = reservation.Client.User.UserName
+                ClientName = reservation.Client.User.UserName ?? "Not Provided",
+                ReervationStatus = reservation.ReervationStatus != null ? reservation.ReervationStatus.ToString() : StatusOfReservations.Panding.ToString()
             };
         }
 
@@ -33,8 +35,8 @@ namespace Dalel.ViewModels
                 ModificationDateTime = DateTime.Now,
                 TableNumber = reservation.TableNumber,
                 ReervationStatus = reservation.ReervationStatus,
-                RestaurantId = reservation.RestaurantId ,
-                ClientId = reservation.ClientId 
+                RestaurantId = reservation.RestaurantId, 
+                ClientId = reservation.ClientId
             };
         }
 

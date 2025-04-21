@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Restaurant.Enums;
 
 namespace Dalel.ViewModels
 {
@@ -14,6 +15,10 @@ namespace Dalel.ViewModels
         public string RestaurantName{ get; set; }
         public string? TableNumber { get; set; }
         public string ClientName { get; set; }
+
+        public string ReervationStatus { get; set; }
+
+
 
     }
 }

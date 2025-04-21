@@ -75,7 +75,7 @@ namespace Dalel.Api.Controllers
         #endregion
 
         #region Room Types Management
-        [HttpPost("room-types")]
+        
         [Authorize(Roles = "HotelOwner")]
         [HttpPost("room-types")]
         public IActionResult CreateRoomType([FromBody] RoomTypeCreation model)
@@ -198,7 +198,7 @@ namespace Dalel.Api.Controllers
             var result = _hotelService.SearchRooms(roomTypeId, viewType, availability, false, pageSize, pageIndex);
             return new JsonResult(result);
         }
-
+        [HttpGet("rooms/availability")]
         public IActionResult CheckRoomAvailability(DateTime startDate, DateTime endDate, int roomTypeId)
         {
             _logger.LogInformation("Checking room availability for RoomTypeId {RoomTypeId}", roomTypeId);

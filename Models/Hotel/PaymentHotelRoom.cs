@@ -22,7 +22,7 @@ namespace Models.Hotel
         public virtual BookingHotelRoom BookingHotelRoom { get; set; }
         public virtual Client Client { get; set; }
 
-        public Hotel Hotel { get; set; }
+        public virtual Hotel Hotel { get; set; }
 
 
 
