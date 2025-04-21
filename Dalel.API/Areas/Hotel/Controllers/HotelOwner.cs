@@ -218,7 +218,7 @@ namespace Dalel.Api.Controllers
 
         [Authorize(Roles = "HotelOwner")]
         [HttpPut("bookings/{id}/status")]
-        public IActionResult UpdateBookingStatus(int id, [FromBody] BookingStatusUpdate model)
+        public IActionResult UpdateBookingStatus(int id, [FromBody] BookingHotelRoomCreation model)
         {
             _logger.LogInformation("Updating booking status for {BookingId}", id);
             return new JsonResult(new { success = true, message = "Booking status update placeholder." });
@@ -252,7 +252,7 @@ namespace Dalel.Api.Controllers
 
         [Authorize(Roles = "HotelOwner")]
         [HttpPost("reviews/{id}/response")]
-        public IActionResult AddReviewResponse(int id, [FromBody] ReviewResponse model)
+        public IActionResult AddReviewResponse(int id, [FromBody] ReviewDetails model)
         {
             _logger.LogInformation("Adding review response for {ReviewId}", id);
             return new JsonResult(new { success = true, message = "Review response placeholder." });
