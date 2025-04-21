@@ -11,7 +11,7 @@ namespace Dalel.ViewModels
         public int Id { get; set; }
         public string Comments { get; set; }
         public float Rating { get; set; }
-        public string RestaurantName { get; set; }
+        public string RestaurantName{ get; set; }
         public string? TableNumber { get; set; }
         public string ClientName { get; set; }
 

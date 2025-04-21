@@ -62,8 +62,7 @@ namespace Dalel.Repository.Agency
         }
 
         //Get Approved Documents for an Agency
-        public IQueryable<AgencyVerificationDocumentDetails>
-            GetApprovedDocuments(int agencyId)
+        public IQueryable<AgencyVerificationDocumentDetails> GetApprovedDocuments(int agencyId)
         {
             return GetList(approve =>approve.AgencyId == agencyId && approve.status == 
             VerificationStatus.Confirmed

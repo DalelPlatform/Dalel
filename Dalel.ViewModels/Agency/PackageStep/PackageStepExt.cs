@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Dalel.ViewModels.Agency.Packagebooking;
 using Dalel.ViewModels.Agency.PackageStep;
-using Dalel.ViewModels.Agency.TravelAgencies;
 using Models.Agency;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Dalel.ViewModels
 {
@@ -21,7 +19,6 @@ namespace Dalel.ViewModels
                 Image = step.Image,
                 Description = step.Description,
                 Duration = step.Duration,
-                PackageId = step.PackageId,
    
              };
 
@@ -39,20 +36,6 @@ namespace Dalel.ViewModels
 
 
             };
-        }
-
-        public static PackageStep ToEditModel(this addPackageStepVM step,
-          PackageStep old)
-        {
-
-            old.Name = step.Name;
-            old.Image = step.Image;
-            old.Description = step.Description;
-            old.Duration = step.Duration;
-            old.PackageId = step.PackageId;
-
-
-            return old;
         }
     }
 }

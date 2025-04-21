@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
-using Dalel.ViewModels.Agency.TravelAgencies;
-using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Agency;
@@ -31,63 +29,14 @@ namespace Dalel.Repository.Agency
 
         }
         //Search Packages by Name
-        public PaginationViewModel<AgencyPackageDetails> Search(
-      string searchText = "",
-      string Name = "",
-      string Price = "",
-
-      int pageSize = 10,
-      int pageIndex = 1,
-      string OrderBy = "Id",
-      bool IsAscending = false
-     )
+        public  IQueryable<AgencyPackageDetails> searchAgencyPackage(string pckg_name)
         {
-            var predicate = PredicateBuilder.New<AgencyPackage>(true);
-            var oldFilter = predicate;
-            if (!string.IsNullOrWhiteSpace(searchText))
-            {
-                predicate = predicate.And(b =>
-                b.Name.ToLower().Contains(searchText.ToLower())||
-                 b.Description.ToLower().Contains(searchText.ToLower())
-                );
-            }
-            if (!string.IsNullOrWhiteSpace(Price))
-            {
-                predicate = predicate.And(b =>
-                b.Price == Price
-
-                );
-            }
-
-
-            if (oldFilter == predicate)
-            {
-                predicate = null;
-            }
-
-            var query = base.GetList(predicate);
-
-            var totalCount = query.Count();
-
-            var result = Get(filter: predicate,
-                orderBy: OrderBy,
-                isAscebding: IsAscending,
-                pageSize: pageSize, pageNumber: pageIndex);
-
-            return new PaginationViewModel<AgencyPackageDetails>
-            {
-                Data = result.Select(b => b.ToDetailsModels()).ToList(),
-                PageNumber = pageIndex,
-                PageSize = pageSize,
-                TotalCount = totalCount
-            };
-
+            return base.GetList(agenc => agenc.Name.Contains(pckg_name)).Select(i=>i.ToDetailsModels());
+                
 
         }
-
-
         //Get Verified Packages
-        public IQueryable<AgencyPackageDetails> GetVerifiedStatusPackages(VerificationStatus status)
+        public  IQueryable<AgencyPackageDetails> GetVerifiedStatusPackages(VerificationStatus status)
         {
             return base.GetList(agenc => agenc.VerificationStatus ==
                 status).Select(i => i.ToDetailsModels());

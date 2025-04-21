@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Dalel.ViewModels.Agency.PackageSchadule;
 using Dalel.ViewModels.Agency.PackageStep;
-using Dalel.ViewModels.Agency.TravelAgencies;
 using Models.Agency;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Dalel.ViewModels
 {
@@ -19,7 +17,6 @@ namespace Dalel.ViewModels
             {
                Date = schadule.Date,
                SlotsAvailable = schadule.SlotsAvailable,
-               PabckageBookings = schadule.PackageBookings.Select(i => i.ToModel()).ToList(),
 
             };
 
@@ -38,17 +35,5 @@ namespace Dalel.ViewModels
             };
         }
 
-
-        public static PackageSchadule ToEditModel(this addPackageSchaduleVM schadule,
-    PackageSchadule old)
-        {
-
-            old.Date = schadule.Date;
-            old.SlotsAvailable = schadule.SlotsAvailable;
-
-
-
-            return old;
-        }
     }
 }

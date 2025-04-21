@@ -27,10 +27,6 @@ namespace Dalel.ViewModels
                 Address = book.Address,
                 BusinessCategory = book.BusinessCategory,
                 ContactInfo = book.ContactInfo,
-
-                AgencyPackages = book.AgencyPackage.Select(i => i.ToModel()).ToList(),
-                agencyPromotions = book.AgencyPromotion.Select(i => i.ToModel()).ToList(),
-                AgencyVerificationDocuments = book.VerificationDocument.Select(i => i.ToModel()).ToList(),
                 OwnerId = book.ownerId,
 
             };
@@ -58,8 +54,7 @@ namespace Dalel.ViewModels
 
             };
         }
-        public static TravelAgencies ToEditModel(this addTravelAgenciesVM book,
-            TravelAgencies old )
+        public static TravelAgencies ToEditModel(this addTravelAgenciesVM book, TravelAgencies old )
         {
 
             old.BusinessName = string.IsNullOrEmpty(book.BusinessName)?old.BusinessName: book.BusinessName;
@@ -77,7 +72,6 @@ namespace Dalel.ViewModels
 
             return old;
         }
-  
     }
 
 }

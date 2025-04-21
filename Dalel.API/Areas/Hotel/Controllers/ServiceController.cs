@@ -1,5 +1,6 @@
 ﻿using Dalel.Services.HotelService;
 using Dalel.ViewModels.Hotel.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Models.Hotel;
@@ -35,16 +36,16 @@ namespace Dalel.API.Areas.Hotel.Controllers
                 if (!result.Success)
                 {
                     _logger.LogWarning("GetAll failed: {Message}", result.Message);
-                    return BadRequest(result.Message);
+                    return new JsonResult(result.Message);
                 }
 
                 var viewModel = result.Data.Select(s => s.ToServiceDetailsViewModel());
-                return Ok(viewModel);
+                return new JsonResult(viewModel);
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Error occurred in GetAll");
-                return StatusCode(500, "An error occurred while fetching data.");
+                return new JsonResult(500, "An error occurred while fetching data.");
             }
         }
 
@@ -58,24 +59,25 @@ namespace Dalel.API.Areas.Hotel.Controllers
                 if (!result.Success)
                 {
                     _logger.LogWarning("GetById failed for Id={Id}: {Message}", id, result.Message);
-                    return NotFound(result.Message);
+                    return new JsonResult(result.Message);
                 }
 
-                return Ok(result.Data.ToServiceDetailsViewModel());
+                return new JsonResult(result.Data.ToServiceDetailsViewModel());
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Error occurred in GetById");
-                return StatusCode(500, "An error occurred while fetching the service.");
+                return new JsonResult(500, "An error occurred while fetching the service.");
             }
         }
 
         // Bulk insert new services
         [HttpPost("bulk-insert")]
+        [Authorize(Roles = "HotelOwner")]
         public async Task<IActionResult> BulkInsert([FromBody] List<ServiceCreation> models)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return new JsonResult(ModelState);
 
             try
             {
@@ -85,24 +87,25 @@ namespace Dalel.API.Areas.Hotel.Controllers
                 if (!result.Success)
                 {
                     _logger.LogError("BulkInsert failed: {Message}", result.Message);
-                    return BadRequest(result.Message);
+                    return new JsonResult(result.Message);
                 }
 
-                return Ok(result.Message);
+                return new JsonResult(result.Message);
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Error occurred in BulkInsert");
-                return StatusCode(500, "An error occurred while inserting services.");
+                return new JsonResult(500, "An error occurred while inserting services.");
             }
         }
 
         // Bulk update existing services
         [HttpPut("bulk-update")]
+        [Authorize(Roles = "HotelOwner")]
         public async Task<IActionResult> BulkUpdate([FromBody] List<ServiceDetails> models)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return new JsonResult(ModelState);
 
             try
             {
@@ -121,24 +124,25 @@ namespace Dalel.API.Areas.Hotel.Controllers
                 if (!result.Success)
                 {
                     _logger.LogError("BulkUpdate failed: {Message}", result.Message);
-                    return BadRequest(result.Message);
+                    return new JsonResult(result.Message);
                 }
 
-                return Ok(result.Message);
+                return new JsonResult(result.Message);
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Error occurred in BulkUpdate");
-                return StatusCode(500, "An error occurred while updating services.");
+                return new JsonResult(500, "An error occurred while updating services.");
             }
         }
 
         // Bulk update IsActive status
         [HttpPut("bulk-update-status")]
+        [Authorize(Roles = "HotelOwner")]
         public async Task<IActionResult> BulkUpdateStatus([FromBody] List<ServiceDetails> models)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return new JsonResult(ModelState);
 
             try
             {
@@ -155,15 +159,15 @@ namespace Dalel.API.Areas.Hotel.Controllers
                 if (!result.Success)
                 {
                     _logger.LogError("BulkUpdateStatus failed: {Message}", result.Message);
-                    return BadRequest(result.Message);
+                    return new JsonResult(result.Message);
                 }
 
-                return Ok(result.Message);
+                return new JsonResult(result.Message);
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Error occurred in BulkUpdateStatus");
-                return StatusCode(500, "An error occurred while updating statuses.");
+                return new JsonResult(500, "An error occurred while updating statuses.");
             }
         }
     }

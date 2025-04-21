@@ -11,9 +11,11 @@ namespace Dalel.ViewModels
             return new PaymentVehicle
             {
                 Amount = vm.Amount,
+                AmountPaid = vm.AmountPaid,
+                CommissionDeducted = vm.CommissionDeducted,
+                TransactionDateTime = DateTime.Now,
                 PaymentMethod = vm.PaymentMethod,
                 PaymentStatus = vm.PaymentStatus,
-                TransactionDateTime = DateTime.Now,
                 BookingVehicleId = vm.BookingVehicleId
             };
         }

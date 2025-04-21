@@ -33,10 +33,10 @@ namespace Dalel.API.Areas.Agency.Controllers
             var res = _pakageService.CreateAgencyPackage(packageAgency);
             return new JsonResult(res);
         }
-        [HttpPut("{Id}")]
-        public IActionResult UpdateAgecyPackage(AddAgencyPackageVM packageAgency,int Id)
+        [HttpPut]
+        public IActionResult UpdateAgecyPackage(AddAgencyPackageVM packageAgency)
         {
-            var res = _pakageService.UpdateAgencyPackage(Id,packageAgency);
+            var res = _pakageService.UpdateAgencyPackage(packageAgency);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]
@@ -47,34 +47,7 @@ namespace Dalel.API.Areas.Agency.Controllers
 
         }
 
-        [HttpGet("search")]
-        public IActionResult SearchAgencyPackage(
-               [FromQuery] string searchText = "",
-              [FromQuery] string Name = "",
-               [FromQuery] string Price = "",
-
-               [FromQuery] int pageSize = 10,
-              [FromQuery] int pageIndex = 1,
-               [FromQuery] string OrderBy = "Id",
-               [FromQuery] bool IsAscending = false
-           )
-        {
-            var result = _pakageService.SearchAgencyPackage(
-                 searchText,
-                       Name,
-                       Price,
-
-                       pageSize,
-                       pageIndex,
-                       OrderBy,
-                      IsAscending
-            );
-
-            if (!result.Success)
-                return new JsonResult(result);
-
-            return new JsonResult(result);
-        }
+       
 
 
     }

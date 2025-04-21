@@ -623,14 +623,24 @@ namespace Models.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("AmountPaid")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("BookingVehicleId")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("CommissionDeducted")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("PaymentStatus")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<DateTime>("TransactionDateTime")
                         .ValueGeneratedOnAdd()
@@ -1038,14 +1048,33 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<float>("Amount")
+                        .HasColumnType("real");
+
+                    b.Property<decimal>("AmountPaid")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CodeApplied")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("CommissionDeducted")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("PaymentStatus")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("TransactionDateTime")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

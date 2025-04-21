@@ -9,10 +9,6 @@ namespace Models.Hotel
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTime? ModifiedDate { get; set; }
         public virtual ICollection<HotelService> HotelServices { get; set; }
     }
 
@@ -38,22 +34,6 @@ namespace Models.Hotel
 
             builder.Property(a => a.IsActive)
                 .HasDefaultValue(true);
-
-            builder.Property(a => a.CreatedBy)
-                .HasColumnType("NVARCHAR")
-                .HasMaxLength(100);
-
-            builder.Property(a => a.CreatedDate)
-                .HasDefaultValueSql("GETDATE()");
-
-            builder.Property(a => a.ModifiedBy)
-                .HasColumnType("NVARCHAR")
-                .HasMaxLength(100);
-
-            // ModifiedDate is nullable, so no specific configuration needed beyond the type mapping
-            builder.Property(a => a.ModifiedDate)
-                .HasColumnType("DATETIME")
-                .IsRequired(false);
         }
     }
 }

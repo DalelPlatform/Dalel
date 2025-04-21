@@ -15,12 +15,15 @@ namespace Models.Hotel
         public BookingStatus BookingStatus { get; set; }
         public string ClientId { get; set; }
         public int RoomId { get; set; }
+
+
+
+        //Navigation Properities
         public virtual Client Client { get; set; }
         public virtual Room Room { get; set; }
         public virtual ICollection<BookingGuestInRoom> BookingGuestsInRooms { get; set; }
         public virtual PaymentHotelRoom PaymentHotelRoom { get; set; }
         public virtual ReviewHotelRoom ReviewHotelRoom { get; set; }
-        public bool IsAvailable { get; set; }
     }
 
     public class BookingHotelRoomConfiguration : IEntityTypeConfiguration<BookingHotelRoom>
