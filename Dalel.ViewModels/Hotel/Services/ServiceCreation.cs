@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Dalel.ViewModels.Hotel.Services
+namespace Dalel.ViewModels
 {
     public class ServiceCreation
     {
-        
-        public int Id { get; set; }
-        [Required(ErrorMessage = "Name is required")]
-        [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
+        [Required(ErrorMessage = "Service name is required.")]
+        [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters.")]
         public string Name { get; set; }
 
-        [StringLength(255, ErrorMessage = "Description cannot exceed 255 characters")]
+        [Required(ErrorMessage = "Description is required.")]
+        [StringLength(255, ErrorMessage = "Description cannot exceed 255 characters.")]
         public string Description { get; set; }
 
-        public bool IsActive { get; set; } = true; // Default value
+        public bool IsActive { get; set; } = true; // Default to true
     }
 }

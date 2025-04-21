@@ -2,48 +2,42 @@
 using Models.Hotel;
 using System;
 
-namespace Dalel.ViewModels.Extensions
+namespace Dalel.ViewModels
 {
+
+
     public static class RoomEx
     {
-        // Maps from RoomCreation ViewModel to Room Model
-        public static Room ToModel(this RoomCreation model)
+        // Create a new Room entity from the VM
+        public static Room ToModel(this RoomCreation vm)
         {
-            if (model == null)
-                return null;
-
             return new Room
             {
-                RoomNumber = model.RoomNumber,
-                RoomTypeId = model.RoomTypeID,
-                Price = model.Price,
-                BedType = model.BedType,
-                ViewType = model.ViewType,
-                Status = model.Status,
-                IsActive = model.IsActive,
-                Availability = Models.Enums.AvaliabilityStatus.Available // You can customize this logic as needed
+                RoomTypeId = vm.RoomTypeId,
+                ViewType = vm.ViewType,
+                Availability = vm.Availability
             };
         }
 
-        // Maps from Room model to RoomDetails ViewModel
-        public static RoomDetails ToDetails(this Room room)
+        // Update an existing Room entity from the VM
+        public static void UpdateModel(this Room model, RoomCreation vm)
         {
-            if (room == null)
-                return null;
+            model.RoomTypeId = vm.RoomTypeId;
+            model.ViewType = vm.ViewType;
+            model.Availability = vm.Availability;
+        }
 
+        // Project a Room entity into the details VM
+        public static RoomDetails ToDetailsViewModel(this Room model)
+        {
             return new RoomDetails
             {
-                RoomID = room.Id,
-                RoomNumber = room.RoomNumber,
-                RoomTypeID = room.RoomTypeId,
-                Price = room.Price,
-                BedType = room.BedType,
-                ViewType = room.ViewType,
-                Status = room.Status,
-                IsActive = room.IsActive
+                Id = model.Id,
+                RoomTypeId = model.RoomTypeId,
+                ViewType = model.ViewType,
+                Availability = model.Availability.ToString(),
             };
         }
-
-    
     }
+
 }

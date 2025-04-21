@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Models.Hotel;
-using Models.Enums; // Ensure this namespace contains your VerificationStatus enum
+using Models.Enums;
 
 namespace Dalel.ViewModels
 {
@@ -22,8 +22,7 @@ namespace Dalel.ViewModels
                 CancelationCharges = hotelVM.CancelationCharges,
                 OwnerId = hotelVM.OwnerId,
                 IsDeleted = false,
-                VerificationStatus = VerificationStatus.Pending, // Assumes a default pending status
-                // Map images from provided paths
+                VerificationStatus = VerificationStatus.Pending,
                 HotelImages = hotelVM.Paths.Select(p => new HotelImage { Image = p }).ToList()
             };
         }
@@ -49,6 +48,25 @@ namespace Dalel.ViewModels
                     ? hotel.HotelImages.Select(i => i.Image).ToList()
                     : new System.Collections.Generic.List<string>()
             };
+        }
+
+ 
+        public static void UpdateModel(this Models.Hotel.Hotel hotel, HotelCreation hotelVM)
+        {
+            hotel.Name = hotelVM.Name;
+            hotel.Description = hotelVM.Description;
+            hotel.City = hotelVM.City;
+            hotel.Street = hotelVM.Street;
+            hotel.Address = hotelVM.Address;
+            hotel.Latitude = hotelVM.Latitude;
+            hotel.Longitude = hotelVM.Longitude;
+            hotel.PhoneNumber = hotelVM.PhoneNumber;
+            hotel.CancelationOptions = hotelVM.CancelationOptions;
+            hotel.CancelationCharges = hotelVM.CancelationCharges;
+            hotel.OwnerId = hotelVM.OwnerId;
+
+            // Optional: clear and replace images
+            hotel.HotelImages = hotelVM.Paths.Select(p => new HotelImage { Image = p }).ToList();
         }
     }
 }

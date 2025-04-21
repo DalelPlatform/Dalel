@@ -16,13 +16,6 @@ namespace Models.Hotel
 
         public string ViewType { get; set; }
 
-       
-        public string Status { get; set; }
-
-       
-        public bool IsActive { get; set; }
-
-      
         public AvaliabilityStatus Availability { get; set; }
 
         // Navigation property: each room belongs to one RoomType.
@@ -59,14 +52,7 @@ namespace Models.Hotel
                    .IsRequired()
                    .HasMaxLength(50);
 
-            // Status: required, max length 50.
-            builder.Property(r => r.Status)
-                   .IsRequired()
-                   .HasMaxLength(50);
-
-            // IsActive: required.
-            builder.Property(r => r.IsActive)
-                   .IsRequired();
+       
 
             // Availability: required; convert the enum to its string representation.
             builder.Property(r => r.Availability)

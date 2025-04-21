@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Models.User;
 
 namespace Models.Hotel
 {
@@ -11,7 +12,11 @@ namespace Models.Hotel
         public DateTime ReviewDate { get; set; }
         public int BookingHotelRoomId { get; set; }
 
+        public int ClientId { get; set; }
+
         public virtual BookingHotelRoom BookingHotelRoom { get; set; }
+
+        public virtual Client Client { get; set; }
     }
 
     public class ReviewHotelRoomConfiguration : IEntityTypeConfiguration<ReviewHotelRoom>
