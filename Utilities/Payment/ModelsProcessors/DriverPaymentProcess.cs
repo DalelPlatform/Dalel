@@ -1,4 +1,5 @@
-﻿using Models.Driver;
+﻿using Dalel.Reopsitory;
+using Models.Driver;
 using Models.Enums;
 using Models.HomeService;
 using System;
@@ -13,11 +14,14 @@ namespace Utilities
     {
         private readonly StripeService _stripeService;
         private readonly PayPalService _payPalService;
+        private readonly PaymentVehicleRepository _paymentVehicleRepository;
 
-        public DriverPaymentProcess(StripeService stripeService, PayPalService payPalService)
+        public DriverPaymentProcess(StripeService stripeService, PayPalService payPalService,
+            PaymentVehicleRepository paymentVehicleRepository)
         {
             _stripeService = stripeService;
             _payPalService = payPalService;
+            _paymentVehicleRepository = paymentVehicleRepository;
         }
 
         public ServiceResult ProcessPayment(PaymentVehicle payment)
@@ -46,6 +50,8 @@ namespace Utilities
 
                 payment.TransactionDateTime = DateTime.Now;
                 payment.PaymentStatus = PaymentStatus.Completed;
+
+                _paymentVehicleRepository.Add(payment);
 
                 return ServiceResult.SuccessResult("Vehicle Booking payment completed.");
             }

@@ -1,4 +1,5 @@
-﻿using Models.Agency;
+﻿using Dalel.Repository.Agency;
+using Models.Agency;
 using Models.Enums;
 using Models.Restaurant;
 using System;
@@ -13,11 +14,14 @@ namespace Utilities
     {
         private readonly StripeService _stripeService;
         private readonly PayPalService _payPalService;
+        private readonly AgencyPaymentRepo _paymentPackageBookingRepository;
 
-        public AgencyPaymentProcess(StripeService stripeService, PayPalService payPalService)
+        public AgencyPaymentProcess(StripeService stripeService, PayPalService payPalService,
+            AgencyPaymentRepo agencyPaymentRepo)
         {
             _stripeService = stripeService;
             _payPalService = payPalService;
+            _paymentPackageBookingRepository = agencyPaymentRepo;
         }
 
         public ServiceResult ProcessPayment(PackageBookingPayment payment)
@@ -46,6 +50,8 @@ namespace Utilities
 
                 payment.Date = DateTime.Now;
                 payment.PaymentStatus = PaymentStatus.Completed;
+
+                _paymentPackageBookingRepository.Add(payment);
 
                 return ServiceResult.SuccessResult("Package Booking payment completed.");
             }

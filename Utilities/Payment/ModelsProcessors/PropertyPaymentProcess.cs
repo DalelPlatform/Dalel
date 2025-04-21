@@ -1,4 +1,5 @@
-﻿using Models.Enums;
+﻿using Dalel.Repository;
+using Models.Enums;
 using Models.Property;
 using Models.Restaurant;
 using System;
@@ -13,11 +14,14 @@ namespace Utilities
     {
         private readonly StripeService _stripeService;
         private readonly PayPalService _payPalService;
+        private readonly PaymentPropertiesRepository _paymentPropertiesRepository;
 
-        public PropertyPaymentProcess(StripeService stripeService, PayPalService payPalService)
+        public PropertyPaymentProcess(StripeService stripeService, PayPalService payPalService,
+            PaymentPropertiesRepository paymentPropertiesRepository)
         {
             _stripeService = stripeService;
             _payPalService = payPalService;
+            _paymentPropertiesRepository = paymentPropertiesRepository;
         }
 
         public ServiceResult ProcessPayment(PaymentProperties payment)
@@ -46,6 +50,8 @@ namespace Utilities
 
                 payment.TransactionDateTime = DateTime.Now;
                 payment.PaymentStatus = PaymentStatus.Completed;
+
+                _paymentPropertiesRepository.Add(payment);
 
                 return ServiceResult.SuccessResult("Property Booking payment completed.");
             }

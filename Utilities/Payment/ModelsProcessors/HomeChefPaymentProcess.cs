@@ -1,4 +1,5 @@
-﻿using Models.Enums;
+﻿using Dalel.Repository;
+using Models.Enums;
 using Models.HomeChef;
 using Models.Restaurant;
 using System;
@@ -13,11 +14,14 @@ namespace Utilities
     {
         private readonly StripeService _stripeService;
         private readonly PayPalService _payPalService;
+        private readonly PaymentHomeChefOrderRepasitory _paymentHomeChefOrderRepository;
 
-        public HomeChefPaymentProcess(StripeService stripeService, PayPalService payPalService)
+        public HomeChefPaymentProcess(StripeService stripeService, PayPalService payPalService,
+            PaymentHomeChefOrderRepasitory paymentHomeChefOrderRepasitory)
         {
             _stripeService = stripeService;
             _payPalService = payPalService;
+            _paymentHomeChefOrderRepository = paymentHomeChefOrderRepasitory;
         }
 
         public ServiceResult ProcessPayment(PaymentHomeChefOrder payment)
@@ -46,6 +50,8 @@ namespace Utilities
 
                 payment.TransactionDateTime = DateTime.Now;
                 payment.PaymentStatus = PaymentStatus.Completed;
+
+                _paymentHomeChefOrderRepository.Add(payment);
 
                 return ServiceResult.SuccessResult("HomeChef Order payment completed.");
             }
