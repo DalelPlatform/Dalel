@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dalel.ViewModels.Hotel.HotelPayment
+namespace Dalel.ViewModels
 {
     public class PaymentHotelRoomCreation
     {

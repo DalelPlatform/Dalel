@@ -1,7 +1,7 @@
 ﻿// File: Dalel.ViewModels.Hotel/ReviewDetails.cs
 using System;
 
-namespace Dalel.ViewModels.Hotel
+namespace Dalel.ViewModels
 {
     public class ReviewDetails
     {

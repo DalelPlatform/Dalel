@@ -1,5 +1,4 @@
-﻿using Dalel.ViewModels.Hotel.HotelPayment;
-using Models.Hotel;
+﻿using Models.Hotel;
 
 namespace Dalel.ViewModels
 {

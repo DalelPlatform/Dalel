@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Dalel.ViewModels.Hotel
+namespace Dalel.ViewModels
 {
     public class ReviewCreation
     {

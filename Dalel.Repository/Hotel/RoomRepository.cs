@@ -2,12 +2,10 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Dalel.ViewModels.Hotel;
 using Models.Enums;
 using Models.Hotel;
 using Models;
 using Dalel.ViewModels;
-using Dalel.ViewModels.Extensions;
 
 namespace Dalel.Repository
 {

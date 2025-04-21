@@ -1,9 +1,5 @@
 ﻿// File: Dalel.Repository/ReviewHotelRoomRepository.cs
-using System;
-using System.Linq;
 using System.Linq.Expressions;
-using Dalel.ViewModels.Hotel;
-using Models.Enums;
 using Models.Hotel;
 using Models;
 using Dalel.ViewModels;
@@ -13,10 +9,6 @@ namespace Dalel.Repository
     public class ReviewHotelRoomRepository : BaseRepository<ReviewHotelRoom>
     {
         public ReviewHotelRoomRepository(DelelContext context) : base(context) { }
-
-        /// <summary>
-        /// Paged search by comments, rating range, date range, client, or booking.
-        /// </summary>
         public PaginationViewModel<ReviewDetails> Search(
             string comments = null,
             float? minRating = null,
@@ -53,22 +45,17 @@ namespace Dalel.Repository
 
         // Single
         public ReviewDetails GetDetailsById(int id)
-            => Table.Find(id)?.ToDetailsViewModel();
+            => base.GetList(r => r.Id == id).FirstOrDefault().ToDetailsViewModel();
 
         // List as IQueryable
         public IQueryable<ReviewDetails> GetAllDetails()
-            => Table.Select(r => r.ToDetailsViewModel());
+            => base.GetList().Select(r => r.ToDetailsViewModel());
 
         public IQueryable<ReviewDetails> GetByClient(int clientId)
-            => Table
-               .Where(r => r.ClientId == clientId)
-               .Select(r => r.ToDetailsViewModel());
+            => base.GetList(r => r.ClientId == clientId).Select(r => r.ToDetailsViewModel());
 
         public IQueryable<ReviewDetails> GetByBooking(int bookingId)
-            => Table
-               .Where(r => r.BookingHotelRoomId == bookingId)
-               .Select(r => r.ToDetailsViewModel());
-
-
+            => base.GetList(r => r.BookingHotelRoomId == bookingId)
+            .Select(r => r.ToDetailsViewModel());
     }
 }

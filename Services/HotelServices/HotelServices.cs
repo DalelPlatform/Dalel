@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Dalel.Repository;
+﻿using Dalel.Repository;
 using Dalel.ViewModels;
-using Dalel.ViewModels.Hotel;
-using Dalel.ViewModels.Hotel.HotelPayment;
 using Models.Enums;
 using Utilities;
-using Models.Hotel;
 
 namespace Dalel.Services
 {
