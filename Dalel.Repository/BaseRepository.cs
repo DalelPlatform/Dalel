@@ -1,14 +1,8 @@
 ﻿using Dalel.ViewModels;
-using Microsoft.EntityFrameworkCore;
 using Models;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
 using System.Data.Entity;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
+
 
 namespace Dalel.Repository
 {
@@ -65,7 +59,6 @@ namespace Dalel.Repository
 
             return query;
         }
-
 
         public IQueryable<T> Get(
             Expression<Func<T, bool>> filter = null,
