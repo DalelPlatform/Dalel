@@ -20,6 +20,7 @@ using Models.HomeChef;
 using Models.Property;
 using Models.Hotel;
 using Models.Driver;
+using Dalel.Reopsitory;
 
 
 
@@ -96,6 +97,16 @@ builder.Services.AddScoped<HotelOwnerReopsitory>();
 builder.Services.AddScoped<RestaurantOwnerReopsitory>();
 builder.Services.AddScoped<ServiceProviderRepository>();
 builder.Services.AddScoped<TravelAgencyOwnerReopsitory>();
+#endregion
+
+#region Driver
+builder.Services.AddScoped<VehicleService>();
+builder.Services.AddScoped<CarProposalRepository>();
+builder.Services.AddScoped<DriverRepository>();
+builder.Services.AddScoped<BookingVehicleRepository>();
+builder.Services.AddScoped<PaymentVehicleRepository>();
+builder.Services.AddScoped<ReviewVehicleRepository>();
+builder.Services.AddScoped<VehicleRepository>();
 #endregion
 
 #region Serviceprovider

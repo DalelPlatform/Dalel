@@ -17,6 +17,7 @@ namespace Dalel.Services
         private readonly PaymentPropertiesRepository _paymentRepo;
         private readonly PropertiesRepository _propertiesRepo;
         private readonly ReviewPropertiesRepository _reviewRepo;
+        private readonly IPaymentProcessor<PaymentProperties> paymentProcessor;
 
         public PropertyService(
             BookingPropertiesRepository bookingRepo,
@@ -158,8 +159,8 @@ namespace Dalel.Services
         {
             try
             {
-                _paymentRepo.Add(payment);
-                return ServiceResult.SuccessResult("Payment recorded.");
+                var result = paymentProcessor.ProcessPayment(payment);
+                return result;
             }
             catch (Exception ex)
             {
