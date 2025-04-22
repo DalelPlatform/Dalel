@@ -13,14 +13,14 @@ namespace Dalel.API.Areas.Agency.Controllers
     public class PackagebookingController : ControllerBase
     {
         private readonly AgencyPakageService _pakageService;
-       public PackagebookingController(AgencyPakageService _service)
+        public PackagebookingController(AgencyPakageService _service)
         {
             _pakageService = _service;
         }
-        [HttpPut]
-        public IActionResult UpdateBooking(AddPackagebookingVM book)
+        [HttpPut("{Id}")]
+        public IActionResult UpdateBooking(int Id, AddPackagebookingVM book)
         {
-            var res = _pakageService.updataBooking(book);
+            var res = _pakageService.updataBooking(Id, book);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]

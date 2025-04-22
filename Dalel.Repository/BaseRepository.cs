@@ -105,7 +105,10 @@ namespace Dalel.Repository
         }
 
 
-
+        public T GetById(int id)
+        {
+            return Table.Find(id);
+        }
 
         public void Add(T newRow)
         {
@@ -125,22 +128,27 @@ namespace Dalel.Repository
             Context.SaveChanges();
         }
 
+
+        //pending 
+        public IQueryable<T> GetPendingRequests(Expression<Func<T, bool>> filter)
+        {
+            return GetList(filter);
+        }
         public void Save()
         {
             Context.SaveChanges();
         }
 
-        
+
 
         #endregion
 
 
 
+        
 
 
 
 
-
-
-       }
+    }
 }
