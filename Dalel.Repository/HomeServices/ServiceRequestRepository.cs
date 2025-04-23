@@ -18,36 +18,31 @@ namespace Dalel.Repository
         {
         }
 
-        public async Task<ServiceRequest> GetRequestWithDetailsAsync(int requestId)
+        public ServiceRequest GetRequestWithDetails(int requestId)
         {
-            return await _context.ServiceRequests
-                .Include(r => r.Client)
-                .Include(r => r.Propsals)
-                .Include(r => r.Payment)
-                .Include(r => r.Review)
-                .FirstOrDefaultAsync(r => r.Id == requestId);
+            return _context.ServiceRequests.FirstOrDefault(r => r.Id == requestId);
         }
 
-        public async Task<IQueryable<ServiceRequest>> GetRequestsByClientAsync(string clientId)
+        public IQueryable<ServiceRequest> GetRequestsByClient(string clientId)
         {
-            return (IQueryable<ServiceRequest>)await base.GetList(r=>r.ClientId == clientId)
+            return (IQueryable<ServiceRequest>)base.GetList(r=>r.ClientId == clientId)
                 .OrderByDescending(r => r.Date)
                 .ToListAsync();
      
         }
 
-        public async Task<IQueryable<ServiceRequest>> GetRequestsByStatusAsync(RequestStatus status)
+        public IQueryable<ServiceRequest> GetRequestsByStatus(RequestStatus status)
         {
-            return (IQueryable<ServiceRequest>)await base.GetList(r => r.Status == status)
+            return (IQueryable<ServiceRequest>)base.GetList(r => r.Status == status)
                 .OrderByDescending(r => r.Date)
                 .ToListAsync();
       
         }
 
-        public async Task<bool> RequestExistsAsync(int requestId)
+        public bool RequestExists(int requestId)
         {
-            return await base.GetList(r => r.Id == requestId)
-                .AnyAsync();
+            return base.GetList(r => r.Id == requestId)
+                .Any();
         }
 
         //public async Task<PagedResult<ServiceRequest>> FilterRequestsAsync(

@@ -17,28 +17,46 @@ namespace Dalel.Repository
 
         }
 
-        public async Task<IQueryable<ServiceProviderProject>> GetProjectsByProviderAsync(string providerId)
+        public IQueryable<ServiceProviderProject> GetProjects(string serviceProviderId)
         {
-            return base.GetList(p => p.ServiceProviderId == providerId).OrderByDescending(p => p.Id);
+            return base.GetList(p => p.ServiceProviderId == serviceProviderId).OrderByDescending(p => p.Id);
         }
 
-        public async Task AddProjectAsync(ServiceProviderProject project, string imagePath = null)
+        public void AddProject(ServiceProviderProject project, string imagePath = null)
         {
             if (!string.IsNullOrEmpty(imagePath))
             {
                 project.ProjectImages = imagePath;
             }
             base.Add(project);
+            base.Save();
 
         }
 
-        public async Task UpdateProjectImageAsync(int projectId, string newImagePath)
+        public void UpdateProject(ServiceProviderProject project)
         {
-            var project = await _context.ServiceProviderProjects.FindAsync(projectId);
+            base.Update(project);
+            base.Save();
+        }
+
+        public void UpdateProjectImage(int projectId, string newImagePath)
+        {
+            var project = base.Get(p => p.Id == projectId).FirstOrDefault();
             if (project != null)
             {
                 project.ProjectImages = newImagePath;
-                await _context.SaveChangesAsync();
+                base.Update(project);
+                base.Save();
+            }
+        }
+
+        public void DeleteProject(int projectId)
+        {
+            var project = base.Get(p => p.Id == projectId).FirstOrDefault();
+            if (project != null)
+            {
+                base.Delete(project);
+                base.Save();
             }
         }
 

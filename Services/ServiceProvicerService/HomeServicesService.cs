@@ -18,7 +18,7 @@ namespace Dalel.Services
 
         public async Task<IQueryable<ServiceProviderProject>> GetProjectsByProviderAsync(string providerId)
         {
-            return (IQueryable<ServiceProviderProject>)await _repository.GetProjectsByProviderAsync(providerId);
+            return (IQueryable<ServiceProviderProject>)await _repository.GetProjectsByProvider(providerId);
         }
 
         public IQueryable<ServiceProviderProject> GetProjects(int pageSize, int pageNumber)

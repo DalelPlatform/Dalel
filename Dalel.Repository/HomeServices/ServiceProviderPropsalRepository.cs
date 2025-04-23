@@ -19,37 +19,38 @@ namespace Dalel.Repository
         {
         }
 
-        public async Task<IQueryable<ServiceProviderPropsal>> GetProposalsByRequestAsync(int requestId)
+        public IQueryable<ServiceProviderPropsal> GetProposalsByRequest(int requestId)
         {
             return base.GetList(p => p.ServiceRequestId == requestId).OrderByDescending(p => p.Id);
         }
 
-        public async Task<IQueryable<ServiceProviderPropsal>> GetProposalsByProviderAsync(string providerId)
+        public IQueryable<ServiceProviderPropsal> GetProposalsByProvider(string providerId)
         {
             return base.GetList(p => p.ServiceProviderId == providerId).OrderByDescending(p => p.Id);
         }
 
-        public async Task<ServiceProviderPropsal> GetProposalWithDetailsAsync(int proposalId)
+        public ServiceProviderPropsal GetProposalWithDetails(int proposalId)
         {
             return base.Get(p => p.Id == proposalId).FirstOrDefault();
         }
 
-        public async Task<bool> HasProviderProposedAsync(int requestId, string providerId)
+        public bool HasProviderProposed(int requestId, string providerId)
         {
             return base.Get(p => p.ServiceRequestId == requestId && p.ServiceProviderId == providerId).Any();
         }
 
-        public async Task AcceptProposalAsync(int proposalId)
+        public void AcceptProposal(int proposalId)
         {
-            var proposal = await base.Get(p => p.Id == proposalId).FirstOrDefaultAsync();
+            var proposal = base.Get(p => p.Id == proposalId).FirstOrDefault();
             if (proposal != null)
             {
                 proposal.Status = ProposalStatus.Accepted;
-                var request = await _context.ServiceRequests.FindAsync(proposal.ServiceRequestId);
+                var request = _context.ServiceRequests.Find(proposal.ServiceRequestId);
                 if (request != null)
                 {
                     request.Status = RequestStatus.Pending;
                 }
+                base.Save();
             }
         }
 
@@ -59,7 +60,15 @@ namespace Dalel.Repository
             if (proposal != null)
             {
                 proposal.Status = ProposalStatus.Rejected;
+                base.Save();
             }
+        }
+
+        public void AddProposal(ServiceProviderPropsal proposal)
+        {
+            base.Add(proposal);
+            base.Save();
+
         }
 
         //public async Task<PagedResult<ServiceProviderPropsal>> FilterProposalsAsync(

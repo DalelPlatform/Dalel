@@ -58,7 +58,7 @@ namespace Dalel.Repository
         }
 
         // Get paginated service providers for a category
-        public IEnumerable<ServiceProvider> GetPaginatedServiceProviders(
+        public IQueryable<ServiceProvider> GetPaginatedServiceProviders(
             int categoryId,
             int pageSize = 10,
             int pageNumber = 1)
@@ -77,7 +77,7 @@ namespace Dalel.Repository
             }
 
             int skip = (pageNumber - 1) * pageSize;
-            return providers.OrderBy(p => p.AppUser.UserName)
+            return (IQueryable<ServiceProvider>)providers.OrderBy(p => p.AppUser.UserName)
                            .Skip(skip)
                            .Take(pageSize)
                            .ToList();
@@ -127,6 +127,7 @@ namespace Dalel.Repository
             };
 
             base.Add(category);
+            base.Save();
             return true;
         }
 
@@ -138,6 +139,7 @@ namespace Dalel.Repository
 
             category.Image = newImagePath;
             base.Update(category);
+            base.Save();
             return true;
         }
 
@@ -149,6 +151,7 @@ namespace Dalel.Repository
                   .Take(count)
                   .ToList();
         }
+
         public class RepositoryException : Exception
         {
             public RepositoryException(string message, Exception innerException)
@@ -156,6 +159,7 @@ namespace Dalel.Repository
             {
             }
         }
+
 
         #region Mahmoud&Osama
         //public async Task<CategoryServices> GetCategoryWithServiceProvidersAsync(int categoryId)
