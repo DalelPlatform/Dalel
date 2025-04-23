@@ -11,10 +11,9 @@ namespace Models.Hotel
         public string NationalId { get; set; }
         public string NationalIDImage { get; set; }
 
-        // Navigation property
         public int BookingHotelRoomId { get; set; }
+        // Navigation property
         public virtual BookingHotelRoom BookingHotelRoom { get; set; }
-        public int BookingId { get; set; }
     }
 
     public class BookingGuestInRoomConfiguration : IEntityTypeConfiguration<BookingGuestInRoom>

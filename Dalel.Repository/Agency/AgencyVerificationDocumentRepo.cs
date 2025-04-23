@@ -11,7 +11,7 @@ using Dalel.ViewModels;
 
 namespace Dalel.Repository.Agency
 {
-    public class AgencyVerificationDocumentRepo:
+    public class AgencyVerificationDocumentRepo :
     BaseRepository<AgencyVerificationDocument>
     {
         //Get Packages by Agency ID
@@ -22,17 +22,17 @@ namespace Dalel.Repository.Agency
 
         }
         //Get Verification Documents
-        public IQueryable<AgencyVerificationDocumentDetails> 
+        public IQueryable<AgencyVerificationDocumentDetails>
             GetVerificationDocuments(int agencyId)
         {
             return base.GetList(doc => doc.AgencyId == agencyId)
-                .Select(doc=>doc.ToDetailsModels())
+                .Select(doc => doc.ToDetailsModels())
                 ;
         }
         //documents awaiting approval
         public IQueryable<AgencyVerificationDocumentDetails> GetPendingDocuments()
         {
-            return GetList(p=>p.status == VerificationStatus.Pending)
+            return GetList(p => p.status == VerificationStatus.Pending)
                 .Select(doc => doc.ToDetailsModels());
 
         }
@@ -62,9 +62,10 @@ namespace Dalel.Repository.Agency
         }
 
         //Get Approved Documents for an Agency
-        public IQueryable<AgencyVerificationDocumentDetails> GetApprovedDocuments(int agencyId)
+        public IQueryable<AgencyVerificationDocumentDetails>
+            GetApprovedDocuments(int agencyId)
         {
-            return GetList(approve =>approve.AgencyId == agencyId && approve.status == 
+            return GetList(approve => approve.AgencyId == agencyId && approve.status ==
             VerificationStatus.Confirmed
             ).Select(doc => doc.ToDetailsModels());
         }

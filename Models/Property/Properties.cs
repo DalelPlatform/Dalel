@@ -11,6 +11,7 @@ namespace Models.Property
         public string Description { get; set; }
         public string Amenities { get; set; } 
         public int NumberOfRooms { get; set; }
+        public float PricePerNight { get; set; }
         public int BuildingNo { get; set; }
         public int FloorNo { get; set; }
         public string Address { get; set; }

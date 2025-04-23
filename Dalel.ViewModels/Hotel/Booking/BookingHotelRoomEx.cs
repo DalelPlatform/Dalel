@@ -6,6 +6,7 @@ namespace Dalel.ViewModels
 {
     public static class BookingHotelRoomEx
     {
+        //Creation
         public static BookingHotelRoom ToModel(this BookingHotelRoomCreation bookingVM)
         {
             return new BookingHotelRoom
@@ -15,9 +16,8 @@ namespace Dalel.ViewModels
                 Checkin = bookingVM.Checkin,
                 Checkout = bookingVM.Checkout,
                 NumberOfGuests = bookingVM.NumberOfGuests,
-                Price = 0, // Price will be calculated or set via business logic.
-                BookingStatus = BookingStatus.Panding, // Assuming a default pending status.
-                IsAvailable = true,
+                Price = 0, 
+                BookingStatus = BookingStatus.Panding, 
                 BookingGuestsInRooms = bookingVM.Guests?
                     .Select(g => new BookingGuestInRoom
                     {
@@ -33,23 +33,38 @@ namespace Dalel.ViewModels
             return new BookingHotelRoomDetails
             {
                 Id = booking.Id,
+                RoomId = booking.RoomId,
+                ClientId = booking.ClientId,
                 Checkin = booking.Checkin,
                 Checkout = booking.Checkout,
-                Price = booking.Price,
                 NumberOfGuests = booking.NumberOfGuests,
+                Price = booking.Price,
                 BookingStatus = booking.BookingStatus.ToString(),
-                RoomId = booking.RoomId,
-                HotelId = booking.Id,
-                ClientId = booking.ClientId,
-                Guests = booking.BookingGuestsInRooms?
-                    .Select(g => new BookingGuestInRoomDetails
+
+            };
+        }
+
+        public static BookingHotelRoom UpdateModel(this BookingHotelRoom existingBooking, BookingHotelRoomCreation bookingVM )
+        {
+            existingBooking.RoomId = bookingVM.RoomId != 0 ? bookingVM.RoomId : existingBooking.RoomId;
+            existingBooking.ClientId = bookingVM.ClientId != null ? bookingVM.ClientId : existingBooking.ClientId;
+            existingBooking.Checkin = bookingVM.Checkin != default ? bookingVM.Checkin : existingBooking.Checkin;
+            existingBooking.Checkout = bookingVM.Checkout != default ? bookingVM.Checkout : existingBooking.Checkout;
+            existingBooking.NumberOfGuests = bookingVM.NumberOfGuests != 0 ? bookingVM.NumberOfGuests : existingBooking.NumberOfGuests;
+
+            if (bookingVM.Guests != null && bookingVM.Guests.Any())
+            {
+                existingBooking.BookingGuestsInRooms = bookingVM.Guests
+                    .Select(g => new BookingGuestInRoom
                     {
-                        Id = g.Id,
                         FullName = g.FullName,
                         NationalId = g.NationalId,
                         NationalIDImage = g.NationalIDImage
-                    }).ToList() ?? new System.Collections.Generic.List<BookingGuestInRoomDetails>()
-            };
+                    }).ToList();
+            }
+
+            return existingBooking;
         }
     }
 }
+

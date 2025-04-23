@@ -17,6 +17,8 @@ namespace Models.Restaurant
 
         public StatusOfReservations ReervationStatus { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+
         public int RestaurantId { get; set; } //fk
 
         public string ClientId { get; set; }//fk

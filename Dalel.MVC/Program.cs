@@ -29,7 +29,7 @@ builder.Services.AddScoped(typeof(PackagebookingRepo));
 builder.Services.AddScoped(typeof(AgencyPackageRepo));
 builder.Services.AddScoped(typeof(AgencyPaymentRepo));
 builder.Services.AddScoped(typeof(AgencyPromotionRepo));
-
+builder.Services.AddScoped<AgencyVerificationDocumentRepo>();
 //Restaurant Repos
 builder.Services.AddScoped(typeof(RestaurantRepository));
 builder.Services.AddScoped(typeof(PaymentRestaurantOrderReopsitory));

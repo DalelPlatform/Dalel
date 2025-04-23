@@ -31,6 +31,7 @@ namespace Dalel.Repository
         
         public RestaurantReservationDetailsVM GetReservationDetails(int reservationId)
         {
+
             return GetList(reservation => reservation.Id == reservationId).Select(reservation => reservation.ToDetailsViewModel())
                 .FirstOrDefault();
         }

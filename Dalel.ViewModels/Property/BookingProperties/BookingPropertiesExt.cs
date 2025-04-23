@@ -9,13 +9,13 @@ namespace Dalel.ViewModels
 {
     public static class BookingPropertiesExt
     {
-        public static BookingProperties ToModel(this AddBookingPropertiesVM viewModel)
+        public static BookingProperties ToModel(this AddBookingPropertiesVM viewModel,float TotalPrice)
         {
             return new BookingProperties
             {
-                CheckIn = DateTime.Now, //viewModel.CheckIn,
-                CheckOut = DateTime.Now,   //viewModel.CheckOut,
-                Price = viewModel.Price,
+                CheckIn = viewModel.CheckIn,
+                CheckOut = viewModel.CheckOut,
+                Price = TotalPrice,
                 Status = viewModel.Status,
                 PropertyId = viewModel.PropertyId,
                 ClientId = viewModel.ClientId

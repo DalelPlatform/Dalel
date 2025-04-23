@@ -1,0 +1,16 @@
+﻿@model List<Dalel.ViewModels.Agency.AgencyVerificationDocument.AgencyVerificationDocumentDetails>
+<h2>Agency Pending Documents</h2>
+@foreach (var doc in Model){
+    <div>
+        <p><strong>Type:</strong> @doc.DocumentType</p>
+        <p><strong>File:</strong> @doc.DocumentFile</p>
+
+        <form method="post" asp-action="Accept" asp-controller="AgencyVerification" asp-route-id="@doc.Id">
+            <button type="submit">✅ Accept</button>
+        </form>
+
+        <form method="post" asp-action="Reject" asp-controller="AgencyVerification" asp-route-id="@doc.Id">
+            <button type="submit">❌ Reject</button>
+        </form>
+    </div>
+}

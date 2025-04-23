@@ -30,7 +30,7 @@ namespace Dalel.Services.Agency
             AgencyVerificationDocumentRepo _AgencyVerificationDocumentRepo,
              PackagebookingRepo _PackagebookingRepo,
                   TravelAgenciesRepo _TravelAgenciesRepo,
-                    PackageStepRepo _PackageStepRepo ,
+                    PackageStepRepo _PackageStepRepo,
                       PackageSchaduleRepo _PackageSchaduleRepo
             )
         {
@@ -44,7 +44,7 @@ namespace Dalel.Services.Agency
         }
 
         #region AgencyPackage
-        public ServiceResult CreateAgencyPackage(AddAgencyPackageVM agency  )
+        public ServiceResult CreateAgencyPackage(AddAgencyPackageVM agency)
         {
             AgencyPackageRepo.Add(agency.ToModel());
             return new ServiceResult
@@ -53,9 +53,10 @@ namespace Dalel.Services.Agency
                 Message = "added successfully."
             };
         }
-        public ServiceResult UpdateAgencyPackage(AddAgencyPackageVM agency)
+        public ServiceResult UpdateAgencyPackage(int id, AddAgencyPackageVM agency)
         {
-            AgencyPackageRepo.Update(agency.ToModel());
+            var package = AgencyPackageRepo.GetList(p => p.Id == id).FirstOrDefault();
+            AgencyPackageRepo.Update(agency.ToEditModel(package));
             return new ServiceResult
             {
                 Success = true,
@@ -65,10 +66,11 @@ namespace Dalel.Services.Agency
         public ServiceResult deleteAgencyPackage(int agencyId)
         {
             var _agencyPackage = AgencyPackageRepo.GetList(i => i.Id == agencyId).FirstOrDefault();
-            if (_agencyPackage != null) {
+            if (_agencyPackage != null)
+            {
                 AgencyPackageRepo.Delete(_agencyPackage);
             }
-            
+
             return new ServiceResult
             {
                 Success = true,
@@ -76,26 +78,67 @@ namespace Dalel.Services.Agency
             };
         }
 
+
+        public ServiceResult<PaginationViewModel<AgencyPackageDetails>> SearchAgencyPackage(
+            string searchText = "",
+      string Name = "",
+      string Price = "",
+
+      int pageSize = 10,
+      int pageIndex = 1,
+      string OrderBy = "Id",
+      bool IsAscending = false)
+        {
+            try
+            {
+                var data = AgencyPackageRepo.Search(
+                       searchText,
+                       Name,
+                       Price,
+
+                       pageSize,
+                       pageIndex,
+                       OrderBy,
+                      IsAscending
+                );
+
+                return ServiceResult<PaginationViewModel<AgencyPackageDetails>>.
+                    SuccessResult(
+                    data,
+                    "TravelAgencies retrieved successfully"
+                );
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<AgencyPackageDetails>>.
+                    FailureResult(
+                    $"Error occurred while retrieving TravelAgencies: {ex.Message}"
+                );
+            }
+        }
+
         public List<AgencyPackageDetails> GetAllAgencyPackage(int id)
         {
             return AgencyPackageRepo.GetAgencyPackage(id).ToList();
         }
 
-#endregion
+        #endregion
 
         #region AgencyVerificationDocument
         public ServiceResult AddDocument(int agencyId, string documentType, string documentFile)
         {
             AgencyVerificationDocumentRepo.AddVerificationDocument(agencyId, documentType, documentFile);
-        return new ServiceResult
-        {
-            Success = true,
-            Message = "deleted successfully."
-        };
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "deleted successfully."
+            };
         }
-        public ServiceResult UpdateDocument(addAgencyVerificationDocumentVM doc)
+        public ServiceResult UpdateDocument(int id, addAgencyVerificationDocumentVM doc)
         {
-            AgencyVerificationDocumentRepo.Update(doc.ToModel());
+            var VerificationDocument = AgencyVerificationDocumentRepo.GetList(p => p.Id == id).FirstOrDefault();
+
+            AgencyVerificationDocumentRepo.Update(doc.ToEditModel(VerificationDocument));
             return new ServiceResult
             {
                 Success = true,
@@ -118,17 +161,19 @@ namespace Dalel.Services.Agency
             };
         }
 
-        public List<AgencyVerificationDocumentDetails> 
+        public List<AgencyVerificationDocumentDetails>
             GetAllVerificationDocument(int id)
         {
             return AgencyVerificationDocumentRepo.GetApprovedDocuments(id).ToList();
         }
-#endregion
+        #endregion
 
         #region AgencyBooking
-        public ServiceResult updataBooking(AddPackagebookingVM book)
+        public ServiceResult updataBooking(int id, AddPackagebookingVM book)
         {
-            PackagebookingRepo.Update(book.ToModel());
+            var AgencyBooking = PackagebookingRepo.GetList(p => p.Id == id).FirstOrDefault();
+
+            PackagebookingRepo.Update(book.ToEditModel(AgencyBooking));
             return new ServiceResult
             {
                 Success = true,
@@ -140,7 +185,7 @@ namespace Dalel.Services.Agency
         public ServiceResult delecteBooking(int id)
         {
             var booking = PackagebookingRepo.CancelBooking(id);
-                
+
 
             return new ServiceResult
             {
@@ -191,7 +236,8 @@ namespace Dalel.Services.Agency
             }
         }
         public ServiceResult<List<TravelAgenciesDetails>> GetAllTravelAgency()
-        {            try
+        {
+            try
             {
                 var list = TravelAgenciesRepo.GetList().
                     Select(t => t.ToDetailsModels()).ToList();
@@ -217,7 +263,7 @@ namespace Dalel.Services.Agency
         }
 
 
-        public ServiceResult UpdateTravelAgencies(int id,addTravelAgenciesVM agency)
+        public ServiceResult UpdateTravelAgencies(int id, addTravelAgenciesVM agency)
         {
             var travelAgencies = TravelAgenciesRepo.GetList(p => p.Id == id).FirstOrDefault();
             TravelAgenciesRepo.Update(agency.ToEditModel(travelAgencies));
@@ -246,7 +292,7 @@ namespace Dalel.Services.Agency
         #endregion
 
         #region PackageStep
-        public ServiceResult  <List<PackageStepDetails>> GetAllPackageStep()
+        public ServiceResult<List<PackageStepDetails>> GetAllPackageStep()
         {
             try
             {
@@ -271,9 +317,11 @@ namespace Dalel.Services.Agency
                 Message = "added successfully."
             };
         }
-        public ServiceResult UpdatePackageStep(addPackageStepVM step)
+        public ServiceResult UpdatePackageStep(int id, addPackageStepVM step)
         {
-            PackageStepRepo.Update(step.ToModel());
+            var PackageStep = PackageStepRepo.GetList(p => p.Id == id).FirstOrDefault();
+
+            PackageStepRepo.Update(step.ToEditModel(PackageStep));
             return new ServiceResult
             {
                 Success = true,
@@ -324,9 +372,11 @@ namespace Dalel.Services.Agency
                 Message = "added successfully."
             };
         }
-        public ServiceResult UpdatePackageSchadule(addPackageSchaduleVM Schadule)
+        public ServiceResult UpdatePackageSchadule(int id, addPackageSchaduleVM Schadule)
         {
-            PackageSchaduleRepo.Update(Schadule.ToModel());
+            var PackageSchadule = PackageSchaduleRepo.GetList(p => p.Id == id).FirstOrDefault();
+
+            PackageSchaduleRepo.Update(Schadule.ToEditModel(PackageSchadule));
             return new ServiceResult
             {
                 Success = true,
@@ -350,7 +400,7 @@ namespace Dalel.Services.Agency
             };
         }
 
-#endregion
+        #endregion
 
 
 

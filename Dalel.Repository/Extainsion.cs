@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Dalel.Repository
 {
     public static class Extainsion
@@ -22,7 +21,7 @@ namespace Dalel.Repository
             string methodName = isAscending ? "OrderBy" : "OrderByDescending";
             Expression methodCallExpression = Expression.Call(
                   typeof(Queryable),
-                  methodName,
+                  methodName, 
                   new Type[] { source.ElementType, property.Type },
                   source.Expression,
                   Expression.Quote(lambda));

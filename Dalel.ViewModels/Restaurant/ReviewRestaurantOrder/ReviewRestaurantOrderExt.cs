@@ -18,5 +18,28 @@ namespace Dalel.ViewModels
                 RestaurantOrderId = review.RestaurantOrderId
             };
         }
+
+
+        public static ReviewRestaurantOrder ToModel(this ReviewRestaurantOrderDetailsVM review)
+        {
+            return new ReviewRestaurantOrder
+            {
+                Comments = review.Comments,
+                Rating = review.Rating,
+                RestaurantOrderId = review.RestaurantOrderId
+            };
+        }
+
+
+        public static ReviewRestaurantOrder ToEditModel(this ReviewRestaurantOrderDetailsVM EditModel, ReviewRestaurantOrder oldModel)
+        {
+            oldModel.Comments = EditModel.Comments != null
+                ? EditModel.Comments
+                : oldModel.Comments;
+            oldModel.Rating = EditModel.Rating > 0
+                ? EditModel.Rating
+                : oldModel.Rating;
+            return oldModel;
+        }
     }
 }

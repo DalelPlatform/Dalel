@@ -1,51 +1,38 @@
 ﻿using Models.Hotel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Dalel.ViewModels.Hotel.Services
+namespace Dalel.ViewModels
 {
-    public static class ServiceViewModelExtensions
+    public static class ServiceEx
     {
-        public static ServiceDetails ToServiceDetailsViewModel(this Service service)
+        // ViewModel → Model (Create)
+        public static Service ToModel(this ServiceCreation vm)
         {
-            if (service == null)
+            return new Service
             {
-                return null;
-            }
-
-            return new ServiceDetails
-            {
-                Id = service.Id,
-                Name = service.Name,
-                Description = service.Description,
-                IsActive = service.IsActive,
-                CreatedBy = service.CreatedBy,
-                CreatedDate = service.CreatedDate,
-                ModifiedBy = service.ModifiedBy,
-                ModifiedDate = service.ModifiedDate
+                Name = vm.Name,
+                Description = vm.Description,
+                IsActive = vm.IsActive
             };
         }
 
-        public static Service ToService(this ServiceCreation model)
+        // ViewModel → Update existing Model
+        public static void UpdateModel(this Service model, ServiceCreation vm)
         {
-            if (model == null)
+            model.Name = vm.Name;
+            model.Description = vm.Description;
+            model.IsActive = vm.IsActive;
+        }
+
+        // Model → ViewModel
+        public static ServiceDetails ToDetailsViewModel(this Service model)
+        {
+            return new ServiceDetails
             {
-                return null;
-            }
-            return new Service
-            {
+                Id = model.Id,
                 Name = model.Name,
                 Description = model.Description,
-                IsActive = model.IsActive,
-
-
-                CreatedBy = "CurrentUser",
-                CreatedDate = DateTime.Now,
+                IsActive = model.IsActive
             };
         }
     }
-
 }

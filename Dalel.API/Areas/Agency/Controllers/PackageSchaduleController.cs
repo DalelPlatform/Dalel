@@ -13,7 +13,7 @@ namespace Dalel.API.Areas.Agency.Controllers
     public class PackageSchaduleController : ControllerBase
     {
         private readonly AgencyPakageService _pakageService;
-        public PackageSchaduleController (AgencyPakageService service)
+        public PackageSchaduleController(AgencyPakageService service)
         {
             _pakageService = service;
         }
@@ -40,10 +40,10 @@ namespace Dalel.API.Areas.Agency.Controllers
 
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update([FromBody] addPackageSchaduleVM schadule)
+        [HttpPut("{Id}")]
+        public IActionResult Update(int Id, [FromBody] addPackageSchaduleVM schadule)
         {
-            var result = _pakageService.UpdatePackageSchadule(schadule);
+            var result = _pakageService.UpdatePackageSchadule(Id, schadule);
             return new JsonResult(result);
         }
         [HttpDelete("{id}")]

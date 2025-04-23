@@ -2,6 +2,7 @@
 using Dalel.Services;
 using Dalel.ViewModels;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 using Utilities;
@@ -21,9 +22,37 @@ namespace Dalel.API.Areas.HomeChef.Controllers
         }
 
 
+        [HttpGet("search")]
+        public IActionResult Search(
+            string searchText = "",
+            bool? AvailabilityStatus = true, // default = true
+            string? owner = "",
+            FoodCategory? foodCategory = null, // now filtering by enum
+            decimal? Price = null,
+            int pageSize = 10,
+            int pageIndex = 1,
+            string OrderBy = "Id",
+            bool IsAscending = false)
+        {
+            var result = _homeChefService.Search(
+                searchText,
+                AvailabilityStatus,
+                owner,
+                foodCategory,
+                Price,
+                pageSize,
+                pageIndex,
+                OrderBy,
+                IsAscending
+            );
 
-        
+            if (!result.Success)
+                return new JsonResult(result);
 
+            return new JsonResult(result);
+        }
+
+        [Authorize(Roles ="HomeChef")]
         [HttpPost("AddMeal")]
         public IActionResult AddMeal(AddHomeChefMealVM mealVm)
         {
@@ -44,7 +73,7 @@ namespace Dalel.API.Areas.HomeChef.Controllers
 
         }
 
-
+        [Authorize(Roles = "HomeChef")]
         [HttpPost("UpdateMeal/{id}")]
 
         public IActionResult UpdateMeal (int id ,AddHomeChefMealVM mealVM)
@@ -61,7 +90,7 @@ namespace Dalel.API.Areas.HomeChef.Controllers
             return new JsonResult(result);
         }
 
-
+        [Authorize(Roles = "HomeChef")]
         [HttpPost("DeleteMealById")]
 
         public IActionResult DeleteMeal (int id)

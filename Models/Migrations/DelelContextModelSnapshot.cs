@@ -623,14 +623,24 @@ namespace Models.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("AmountPaid")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("BookingVehicleId")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("CommissionDeducted")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("PaymentStatus")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<DateTime>("TransactionDateTime")
                         .ValueGeneratedOnAdd()
@@ -1038,14 +1048,33 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<float>("Amount")
+                        .HasColumnType("real");
+
+                    b.Property<decimal>("AmountPaid")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CodeApplied")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("CommissionDeducted")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("PaymentStatus")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("TransactionDateTime")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -1306,9 +1335,6 @@ namespace Models.Migrations
                     b.Property<int>("BookingHotelRoomId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
-
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1348,9 +1374,6 @@ namespace Models.Migrations
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
 
                     b.Property<int>("NumberOfGuests")
                         .HasColumnType("int");
@@ -1529,6 +1552,10 @@ namespace Models.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ClientUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("CodeApplied")
                         .HasColumnType("nvarchar(max)");
 
@@ -1555,6 +1582,10 @@ namespace Models.Migrations
 
                     b.HasIndex("BookingHotelRoomId")
                         .IsUnique();
+
+                    b.HasIndex("ClientUserId");
+
+                    b.HasIndex("HotelId");
 
                     b.ToTable("PaymentHotelRooms", (string)null);
                 });
@@ -1590,6 +1621,13 @@ namespace Models.Migrations
                     b.Property<int>("BookingHotelRoomId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClientUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Comments")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1604,6 +1642,8 @@ namespace Models.Migrations
 
                     b.HasIndex("BookingHotelRoomId")
                         .IsUnique();
+
+                    b.HasIndex("ClientUserId");
 
                     b.ToTable("ReviewHotelRooms", (string)null);
                 });
@@ -1621,29 +1661,11 @@ namespace Models.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("BedType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("RoomNumber")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
 
                     b.Property<int>("RoomTypeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ViewType")
                         .IsRequired()
@@ -1651,6 +1673,8 @@ namespace Models.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
 
                     b.HasIndex("RoomTypeId");
 
@@ -1664,10 +1688,6 @@ namespace Models.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AccessibilityFeatures")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1732,16 +1752,6 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("NVARCHAR");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -1751,14 +1761,6 @@ namespace Models.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
-
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("NVARCHAR");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("DATETIME");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1911,6 +1913,9 @@ namespace Models.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<float>("PricePerNight")
+                        .HasColumnType("real");
 
                     b.Property<string>("Region")
                         .IsRequired()
@@ -2299,6 +2304,9 @@ namespace Models.Migrations
                     b.Property<string>("Comments")
                         .IsRequired()
                         .HasColumnType("NVARCHAR(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("ModificationDateTime")
                         .ValueGeneratedOnAdd()
@@ -3181,7 +3189,23 @@ namespace Models.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Models.User.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.Hotel.Hotel", "Hotel")
+                        .WithMany()
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("BookingHotelRoom");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Hotel");
                 });
 
             modelBuilder.Entity("Models.Hotel.ReviewHotelRoom", b =>
@@ -3192,16 +3216,32 @@ namespace Models.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Models.User.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("BookingHotelRoom");
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Models.Hotel.Room", b =>
                 {
+                    b.HasOne("Models.Hotel.Hotel", "Hotel")
+                        .WithMany()
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Models.Hotel.RoomType", "RoomType")
                         .WithMany("Rooms")
                         .HasForeignKey("RoomTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Hotel");
 
                     b.Navigation("RoomType");
                 });

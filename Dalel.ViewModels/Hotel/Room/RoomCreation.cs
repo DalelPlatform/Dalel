@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,25 +11,18 @@ namespace Dalel.ViewModels
     public class RoomCreation
     {
         [Required]
-        [StringLength(10, ErrorMessage = "Room number must be up to 10 characters long.")]
-        public string RoomNumber { get; set; }
+        public int RoomTypeId { get; set; }
+
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Invalid Room Type ID.")]
-        public int RoomTypeID { get; set; }
-        [Required]
-        [Range(typeof(decimal), "0.01", "999999.99", ErrorMessage = "Price must be between 0.01 and 999999.99.")]
-        public decimal Price { get; set; }
-        [Required]
-        [StringLength(50, ErrorMessage = "Bed type must be up to 50 characters long.")]
-        public string BedType { get; set; }
-        [Required]
-        [StringLength(50, ErrorMessage = "View type must be up to 50 characters long.")]
+        [StringLength(50)]
         public string ViewType { get; set; }
+
         [Required]
-        [RegularExpression("(Available|Under Maintenance|Occupied)", ErrorMessage = "Status must be 'Available', 'Under Maintenance', or 'Occupied'.")]
+        [StringLength(50)]
         public string Status { get; set; }
+
         [Required]
-        public bool IsActive { get; set; }
+        public AvaliabilityStatus Availability { get; set; }
     }
 }
 

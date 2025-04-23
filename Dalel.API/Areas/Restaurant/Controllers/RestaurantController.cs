@@ -39,12 +39,12 @@ namespace Dalel.API.Areas
                 return new JsonResult(result);
             return new JsonResult(result);
         }
-        [HttpPost]
+        [HttpPost("AddRestaurant")]
         [Authorize(Roles = "RestaurantOwner")]
-        public async Task<IActionResult> AddRestaurant([FromBody] AddRestaurantVM model)
+        public IActionResult AddRestaurant([FromBody] AddRestaurantVM model)
         {
             model.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = await restaurantService.CreateRestaurant(model);
+            var result = restaurantService.CreateRestaurant(model);
             if (ModelState.IsValid)
             {
                 if (!result.Success)
@@ -55,43 +55,43 @@ namespace Dalel.API.Areas
 
         [HttpPut("{id}")]
        [Authorize(Roles = "RestaurantOwner")]
-        public async Task<IActionResult> EditRestaurant([FromBody] AddRestaurantVM model,int id)
+        public IActionResult EditRestaurant([FromBody] AddRestaurantVM model,int id)
         {
-            var result = await restaurantService.EditRestaurant(model, id);
+            var result = restaurantService.EditRestaurant(model, id);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRestaurant(int id)
+        public  IActionResult DeleteRestaurant(int id)
         {
-            var result = await restaurantService.DeleteRestaurant(id);
+            var result = restaurantService.DeleteRestaurant(id);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllRestaurants()
+        public IActionResult GetAllRestaurants()
         {
-            var result = await restaurantService.GetAll();
+            var result = restaurantService.GetAll();
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetRestaurantById(int id)
+        public IActionResult GetRestaurantById(int id)
         {
-            var result = await restaurantService.GetRestaurantById(id);
+            var result =  restaurantService.GetRestaurantById(id);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
 
         [HttpGet("getByVerificationStatus/{status}")]
-        public async Task<IActionResult> GetRestaurantsByVerificationStatus(VerificationStatus status)
+        public IActionResult GetRestaurantsByVerificationStatus(VerificationStatus status)
         {
-            var result = await restaurantService.GetRestaurantsByVerificationStatus(status);
+            var result =  restaurantService.GetRestaurantsByVerificationStatus(status);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);

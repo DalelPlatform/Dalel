@@ -12,9 +12,7 @@ namespace Dalel.ViewModels
         public int NumberOfGuests { get; set; }
         public string BookingStatus { get; set; }
         public int RoomId { get; set; }
-        public string RoomName { get; set; }
         public int? HotelId { get; set; }
-        public string HotelName { get; set; }
         public string ClientId { get; set; }
 
         // Guest details returned with the booking
