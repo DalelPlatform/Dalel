@@ -9,15 +9,13 @@ namespace Dalel.ViewModels
 {
     public class ServiceRequestDetailsVM
     {
+        public int Id { get; set; }
         public string ClientId { get; set; }
         public string ClientName { get; set; }
-        public string Date { get; set; }
-        public RequestStatus Status { get; set; }
-        public double StartPrice { get; set; }
+        public int CategoryServicesId { get; set; }
+        public string CategoryName { get; set; }
         public string Description { get; set; }
-        public string Address { get; set; }
-        public string? ImageUrl { get; set; }
-        public int ProposalsCount { get; set; }
-        //public PaymentStatus Payment{ get; set; }
+        public DateTime Date { get; set; }
+        public RequestStatus Status { get; set; }
     }
 }

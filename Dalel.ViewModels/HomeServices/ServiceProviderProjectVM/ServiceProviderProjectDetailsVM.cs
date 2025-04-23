@@ -4,10 +4,11 @@ namespace Dalel.ViewModels
 {
     public class ServiceProviderProjectDetailsVM
     {
+        public int Id { get; set; }
+        public string ServiceProviderId { get; set; }
+        public string ServiceProviderName { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<string> Images { get; set; } = new List<string>();
-        public int Id { get; internal set; }
-        public string ProjectImages { get; internal set; }
+        public string ProjectImages { get; set; }
     }
 }

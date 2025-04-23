@@ -21,6 +21,7 @@ using Models.Property;
 using Models.Hotel;
 using Models.Driver;
 using Dalel.Reopsitory;
+using Dalel.Repository.HomeServices;
 
 
 
@@ -113,9 +114,15 @@ builder.Services.AddScoped<VehicleRepository>();
 builder.Services.AddScoped<ServiceProviderProjectRepository>();
 builder.Services.AddScoped<ServiceProviderPropsalRepository>();
 builder.Services.AddScoped<ServiceProviderScheduleRepository>();
-builder.Services.AddScoped<ServiceProviderProjectRepository>();
-builder.Services.AddScoped<ServiceProviderPropsalRepository>();
-builder.Services.AddScoped<ServiceProviderScheduleRepository>();
+builder.Services.AddScoped<ServiceProviderPaymentRepository>();
+//builder.Services.AddScoped<ServiceProviderRepository>();
+builder.Services.AddScoped<CategoryServicesRepository>();
+builder.Services.AddScoped<ServiceProviderReviewRepository>();
+builder.Services.AddScoped<ServiceRequestRepository>();
+builder.Services.AddScoped<ServiceQuariesRepository>();
+builder.Services.AddScoped<HomeServiceService>();
+
+
 #endregion
 
 #region Property
@@ -204,7 +211,6 @@ builder.Services.AddAuthentication(option =>
     option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(option =>
 {
-    //on One Statless Request
     option.SaveToken = true;
     option.TokenValidationParameters = new TokenValidationParameters()
     {

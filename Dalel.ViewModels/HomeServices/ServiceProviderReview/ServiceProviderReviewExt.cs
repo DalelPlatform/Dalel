@@ -12,7 +12,7 @@ namespace Dalel.ViewModels
         {
             return new Models.HomeService.ServiceProviderReview
             {
-                RequestId = vm.Id,
+                RequestId = vm.RequestId,
                 Review = vm.Review,
                 Rating = vm.Rating,
                 ReviewDate = DateTime.UtcNow
@@ -27,7 +27,7 @@ namespace Dalel.ViewModels
                 ClientName = model.ServiceRequest?.Client?.User.UserName ?? string.Empty,
                 Review = model.Review,
                 Rating = model.Rating,
-                ReviewDate = model.ReviewDate.ToString("yyyy-MM-dd")
+                ReviewDate = model.ReviewDate
             };
         }
     }

@@ -23,7 +23,7 @@ namespace Models.User
         public virtual ICollection<ServiceProviderProject> Projects { get; set; }
         public virtual ICollection<ServiceProviderSchedule> Schedules { get; internal set; }
         public virtual ICollection<ServiceProviderPropsal> Propsals { get; set; }
-       
+        public int AverageRating { get; set; }
     }
     public class ServiceProviderConfiguration : IEntityTypeConfiguration<ServiceProvider>
     {

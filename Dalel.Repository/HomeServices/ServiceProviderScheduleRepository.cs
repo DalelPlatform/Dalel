@@ -18,6 +18,19 @@ namespace Dalel.Repository
         {
         }
 
+        public bool DeleteSchedule(string providerId, DateTime date)
+        {
+            var day = (WorKDays)date.DayOfWeek;
+            var schedulesToDelete = base.GetList(s => s.ServiceProviderId == providerId && s.WorKDay == day).ToList();
+
+            if (!schedulesToDelete.Any())
+                return false;
+
+            _context.ServiceProviderSchedules.RemoveRange(schedulesToDelete);
+            _context.SaveChanges();
+            return true;
+        }
+
         public IQueryable<ServiceProviderSchedule> GetSchedulesByProvider(string providerId)
         {
             return (IQueryable<ServiceProviderSchedule>)base.GetList(s=> s.ServiceProviderId == providerId).OrderBy(s => s.WorKDay).ThenBy(s => s.AvailableFrom).ToList();

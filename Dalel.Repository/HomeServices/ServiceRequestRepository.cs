@@ -23,7 +23,7 @@ namespace Dalel.Repository
             return _context.ServiceRequests.FirstOrDefault(r => r.Id == requestId);
         }
 
-        public IQueryable<ServiceRequest> GetRequestsByClient(string clientId)
+        public IQueryable<ServiceRequest> GetRequestsByClient(string clientId, int pageSize)
         {
             return (IQueryable<ServiceRequest>)base.GetList(r=>r.ClientId == clientId)
                 .OrderByDescending(r => r.Date)
@@ -31,7 +31,7 @@ namespace Dalel.Repository
      
         }
 
-        public IQueryable<ServiceRequest> GetRequestsByStatus(RequestStatus status)
+        public IQueryable<ServiceRequest> GetRequestsByStatus(RequestStatus status, int pageSize)
         {
             return (IQueryable<ServiceRequest>)base.GetList(r => r.Status == status)
                 .OrderByDescending(r => r.Date)

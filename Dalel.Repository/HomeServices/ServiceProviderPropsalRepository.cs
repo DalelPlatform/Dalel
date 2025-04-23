@@ -54,9 +54,9 @@ namespace Dalel.Repository
             }
         }
 
-        public async Task RejectProposalAsync(int proposalId)
+        public void RejectProposal(int proposalId)
         {
-            var proposal = await base.Get(p => p.Id == proposalId).FirstOrDefaultAsync();
+            var proposal = base.Get(p => p.Id == proposalId).FirstOrDefault();
             if (proposal != null)
             {
                 proposal.Status = ProposalStatus.Rejected;

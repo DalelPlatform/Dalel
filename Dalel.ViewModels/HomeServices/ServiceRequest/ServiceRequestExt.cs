@@ -1,4 +1,5 @@
 ﻿using Models.Enums;
+using Models.HomeService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,34 +10,39 @@ namespace Dalel.ViewModels
 {
     public static class ServiceRequestExt
     {
-        public static Models.HomeService.ServiceRequest ToModel(this AddServiceRequestVM vm)
+        public static ServiceRequest ToModel(this AddServiceRequestVM vm)
         {
-            return new Models.HomeService.ServiceRequest
+            return new ServiceRequest
             {
                 ClientId = vm.ClientId,
-                Date = DateTime.UtcNow,
-                Status = RequestStatus.Pending,
-                StartPrice = vm.StartPrice,
+                CategoryServicesId = vm.CategoryServicesId,
                 Description = vm.Description,
-                Address = vm.Address,
-                Image = vm.Image,
-                IsDeleted = false
+                Date = vm.Date,
+                Status = vm.Status
             };
         }
 
-        public static ServiceRequestDetailsVM ToDetailsModel(this Models.HomeService.ServiceRequest model)
+        public static ServiceRequest ToEditModel(this AddServiceRequestVM vm, ServiceRequest existing)
+        {
+            existing.ClientId = vm.ClientId;
+            existing.CategoryServicesId = vm.CategoryServicesId;
+            existing.Description = vm.Description;
+            existing.Date = vm.Date;
+            existing.Status = vm.Status;
+            return existing;
+        }
+
+        public static ServiceRequestDetailsVM ToDetailsViewModel(this ServiceRequest model)
         {
             return new ServiceRequestDetailsVM
             {
-                //ClientId = model.Id,
-                ClientName = model.Client?.User.UserName ?? string.Empty,
-                Date = model.Date.ToString("yyyy-MM-dd"),
-                Status = model.Status,
-                StartPrice = model.StartPrice,
+                Id = model.Id,
+                ClientId = model.ClientId,
+                ClientName = model.Client.User.UserName ?? "Not Provided",
+                CategoryServicesId = model.CategoryServicesId,
                 Description = model.Description,
-                Address = model.Address,
-                ImageUrl = model.Image,
-                ProposalsCount = model.Propsals?.Count ?? 0,
+                Date = model.Date,
+                Status = model.Status
             };
         }
     }

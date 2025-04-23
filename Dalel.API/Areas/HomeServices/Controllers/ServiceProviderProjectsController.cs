@@ -1,82 +1,83 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Models.HomeService;
-using Dalel.Services;
+﻿using Dalel.Services;
+using Dalel.ViewModels;
+using Dalel.ViewModels.HomeServices;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
-[ApiController]
-[Route("api/[controller]")]
-public class ServiceProviderProjectsController : ControllerBase
+namespace Dalel.API.Areas
 {
-    private readonly HomeServicesService _service;
-
-    public ServiceProviderProjectsController(HomeServicesService service)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ServiceProviderProjectController : ControllerBase
     {
-        _service = service;
-    }
+        private readonly HomeServiceService _homeServiceService;
 
-    // GET: api/ServiceProviderProjects/provider/{providerId}
-    [HttpGet("provider/{providerId}")]
-    public async Task<ActionResult> GetByProvider(string providerId)
-    {
-        var res = await _service.GetProjectsByProviderAsync(providerId);
-        return new JsonResult(res);
-    }
+        public ServiceProviderProjectController(HomeServiceService homeServiceService)
+        {
+            _homeServiceService = homeServiceService;
+        }
 
-    // GET: api/ServiceProviderProjects
-    [HttpGet]
-    public ActionResult<IQueryable<ServiceProviderProject>> Get(
-        [FromQuery] int pageSize = 4,
-        [FromQuery] int pageNumber = 1)
-    {
-        var projects = _service.GetProjects(pageSize, pageNumber);
-        return Ok(projects);
-    }
+        [HttpPost("create")]
+        [Authorize(Roles = "ServiceProvider")]
+        public IActionResult CreateProject([FromForm] AddServiceProviderProjectVM model)
+        {
+            var result = _homeServiceService.CreateProject(model);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // GET: api/ServiceProviderProjects/{id}
-    [HttpGet("{id}")]
-    public ActionResult<ServiceProviderProject> GetById(int id)
-    {
-        var project = _service.GetProjectById(id);
-        if (project == null) return NotFound();
-        return project;
-    }
+        [HttpGet("provider")]
+        [Authorize(Roles = "ServiceProvider")]
+        public IActionResult GetProjectsByProvider(
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1)
+        {
+            var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = _homeServiceService.GetProjectsByProvider(providerId, pageSize, pageNumber);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // POST: api/ServiceProviderProjects
-    [HttpPost]
-    public IActionResult CreateProject(
-        [FromBody] ServiceProviderProject project,
-        [FromQuery] string imagePath = null)
-    {
-        var createdProject = _service.CreateProject(project, imagePath);
-        return CreatedAtAction(nameof(GetById), new { id = createdProject.Id }, createdProject);
-    }
+        [HttpGet("{id}")]
+        public IActionResult GetProjectById(int id)
+        {
+            var result = _homeServiceService.GetProjectById(id);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // PUT: api/ServiceProviderProjects/{id}/image
-    [HttpPut("{id}/image")]
-    public async Task<IActionResult> UpdateImage(int id, [FromQuery] string newImagePath)
-    {
-        await _service.UpdateProjectImageAsync(id, newImagePath);
-        return NoContent();
-    }
+        [HttpPut("{id}")]
+        [Authorize(Roles = "ServiceProvider")]
+        public IActionResult UpdateProject(int id, [FromForm] AddServiceProviderProjectVM model)
+        {
+            var result = _homeServiceService.UpdateProject(id, model);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // PUT: api/ServiceProviderProjects/{id}
-    [HttpPut("{id}")]
-    public IActionResult Update(int id, ServiceProviderProject project)
-    {
-        if (id != project.Id) return BadRequest();
-        _service.UpdateProject(project);
-        return NoContent();
-    }
+        [HttpPut("image/{id}")]
+        [Authorize(Roles = "ServiceProvider")]
+        public IActionResult UpdateProjectImage(int id, [FromForm] string newImagePath)
+        {
+            var result = _homeServiceService.UpdateProjectImage(id, newImagePath);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // DELETE: api/ServiceProviderProjects/{id}
-    [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
-    {
-        var project = _service.GetProjectById(id);
-        if (project == null) return NotFound();
-
-        _service.DeleteProject(id);
-        return NoContent();
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "ServiceProvider")]
+        public IActionResult DeleteProject(int id)
+        {
+            var result = _homeServiceService.DeleteProject(id);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
     }
 }

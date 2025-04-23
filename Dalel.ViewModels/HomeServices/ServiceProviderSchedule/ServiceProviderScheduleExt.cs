@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Dalel.ViewModels.HomeServices.ServiceProviderSchedule;
+using Models.HomeService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,25 +10,26 @@ namespace Dalel.ViewModels
 {
     public static class ServiceProviderScheduleExt
     {
-        public static Models.HomeService.ServiceProviderSchedule ToModel(this AddServiceProviderScheduleVM vm)
+        public static ServiceProviderSchedule ToModel(this AddServiceProviderScheduleItemVM vm)
         {
-            return new Models.HomeService.ServiceProviderSchedule
+            return new ServiceProviderSchedule
             {
-                WorKDay = vm.WorkDay,
+                WorKDay = vm.WorKDay,
                 AvailableFrom = vm.AvailableFrom,
-                AvailableTo = vm.AvailableTo,
+                AvailableTo = vm.AvailableTo
             };
         }
 
-        public static ServiceProviderScheduleDetailsVM ToDetailsModel(this Models.HomeService.ServiceProviderSchedule model)
+        public static ServiceProviderScheduleDetailsVM ToDetailsViewModel(this ServiceProviderSchedule model)
         {
             return new ServiceProviderScheduleDetailsVM
             {
                 Id = model.Id,
-                Day = model.WorKDay.ToString(),
-                AvailableFrom = model.AvailableFrom.ToString("hh\\:mm"),
-                AvailableTo = model.AvailableTo.ToString("hh\\:mm"),
-                ProviderName = model.ServiceProvider?.AppUser.UserName ?? string.Empty
+                ServiceProviderId = model.ServiceProviderId,
+                ServiceProviderName = model.ServiceProvider?.AppUser?.UserName ?? "Not Provided",
+                WorKDay = model.WorKDay,
+                AvailableFrom = model.AvailableFrom,
+                AvailableTo = model.AvailableTo
             };
         }
     }

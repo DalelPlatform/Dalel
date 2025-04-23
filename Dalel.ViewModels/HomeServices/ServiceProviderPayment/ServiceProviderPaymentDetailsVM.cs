@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 
 namespace Dalel.ViewModels
 {
-    public class ServiceProviderProposalDetailsVM
+    public class ServiceProviderPaymentDetailsVM
     {
         public int Id { get; set; }
+        public int RequestId { get; set; }
         public string ServiceProviderId { get; set; }
         public string ServiceProviderName { get; set; }
-        public int ServiceRequestId { get; set; }
-        public string ServiceRequestDescription { get; set; }
-        public string Description { get; set; }
-        public double SuggestedPrice { get; set; }
-        public ProposalStatus Status { get; set; }
+        public double Amount { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
     }
 }

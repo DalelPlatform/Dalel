@@ -33,7 +33,7 @@ namespace Dalel.Repository
 
         }
 
-        public void UpdateProject(ServiceProviderProject project)
+        public void UpdateProject(ServiceProviderProject project, string imagePath)
         {
             base.Update(project);
             base.Save();
