@@ -1,6 +1,7 @@
 ﻿using Dalel.Services;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.PackageBookingPayment;
+using Dalel.ViewModels.Property.PaymentPropertiesDeails;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -94,9 +95,9 @@ namespace Dalel.API.Areas
         }
 
         [HttpPost("Payment")]
-        public async Task<IActionResult> AddPayment(PaymentProperties payment)
+        public async Task<IActionResult> AddPayment(AddPaymentPropertiesVM payment)
         {
-            var result = await propertyService.AddPayment(payment);
+            var result = await propertyService.AddPayment(payment.ToModel());
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);

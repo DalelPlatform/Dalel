@@ -6,6 +6,7 @@
         Confirmed,
         Rejected,
         Cancel ,////recend added
-        All
+        All,
+        PaymentConfirmed
     }
 }

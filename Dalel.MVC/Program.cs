@@ -47,8 +47,20 @@ builder.Services.AddScoped(typeof(ReviewPropertiesRepository));
 
 
 //HomeServices
-builder.Services.AddScoped<HomeServiceRepository>();
-builder.Services.AddScoped<Services>();
+builder.Services.AddScoped<CategoryServicesRepository>();
+builder.Services.AddScoped<ServiceRequestRepository>();
+builder.Services.AddScoped<ServiceQuariesRepository>();
+builder.Services.AddScoped<ServiceProviderScheduleRepository>();
+builder.Services.AddScoped<ServiceProviderRepository>();
+builder.Services.AddScoped<ServiceProviderPaymentRepository>();
+builder.Services.AddScoped<ServiceProviderProjectRepository>();
+builder.Services.AddScoped<ServiceProviderPropsalRepository>();
+builder.Services.AddScoped<ServiceProviderReviewRepository>();
+builder.Services.AddScoped<HomeServiceService>();
+
+
+builder.Services.AddScoped<ClientRepository>();
+
 
 var app = builder.Build();
 

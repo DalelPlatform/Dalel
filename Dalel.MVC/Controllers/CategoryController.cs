@@ -8,16 +8,16 @@ namespace Controllers
     //[Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
-        private readonly Services _service;
+        private readonly HomeServiceService _service;
 
-        public CategoryController(Services service)
+        public CategoryController(HomeServiceService service)
         {
             _service = service;
         }
         
         public IActionResult Index()
         {
-            var categories = _service.GetCategories();
+            var categories = _service.SearchCategories();
             return View(categories.Data);
         }
 
@@ -45,7 +45,7 @@ namespace Controllers
         {
             if (ModelState.IsValid)
             {
-                _service.AddCategory(vm);
+                _service.CreateCategory(vm);
                 return RedirectToAction("Index");
             }
             return View(vm);
@@ -58,12 +58,12 @@ namespace Controllers
             return View(category.Data);
         }
 
-        [HttpPost]
-        public IActionResult Edit(CategoryServicesDetailsVM vm)
+        [HttpPut("{id}")]
+        public IActionResult Edit(int id,AddCategoryServicesVM vm)
         {
             if (ModelState.IsValid)
             {
-                _service.UpdateCategory(vm);
+                _service.UpdateCategory(id,vm);
                 return RedirectToAction("Index");
             }
             return View(vm);

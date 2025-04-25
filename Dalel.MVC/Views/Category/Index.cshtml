@@ -2,8 +2,8 @@
 @{
     Layout = "Dashboard";
 }
-
-@model IQueryable<CategoryServicesDetailsVM>
+@using Dalel.ViewModels;
+@model PaginationViewModel<CategoryServicesDetailsVM>
 <h2>Categories</h2>
 
 @if (TempData["Success"] != null)
@@ -20,12 +20,12 @@
     <tr><th>Name</th><th>Description</th><th>Service Providers</th><th>Actions</th></tr>
     if(Model != null)
     {
-    @foreach (var item in Model)
+    @foreach (var item in Model.Data)
     {
         <tr>
             <td>@item.Name</td>
             <td>@item.Description</td>
-            <td>@item.ServiceProvidersCount</td>
+            <td>@item.ServiceProviderCount</td>
             <td>
                 <a asp-controller="Category" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-controller="Category"  asp-action="Details" asp-route-id="@item.Id">Details</a> |
