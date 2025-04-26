@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using Microsoft.AspNetCore.Mvc;
+using Dalel.ViewModels;
 
 namespace Dalel.Repository
 {
@@ -17,25 +19,23 @@ namespace Dalel.Repository
         public ServiceRequestRepository(DelelContext context) : base(context)
         {
         }
-
+  
         public ServiceRequest GetRequestWithDetails(int requestId)
         {
-            return _context.ServiceRequests.FirstOrDefault(r => r.Id == requestId);
+            return base.GetById(requestId);
         }
 
         public IQueryable<ServiceRequest> GetRequestsByClient(string clientId, int pageSize)
         {
-            return (IQueryable<ServiceRequest>)base.GetList(r=>r.ClientId == clientId)
-                .OrderByDescending(r => r.Date)
-                .ToListAsync();
+            return base.GetList(r=>r.ClientId == clientId)
+                .OrderByDescending(r => r.Date);
      
         }
 
         public IQueryable<ServiceRequest> GetRequestsByStatus(RequestStatus status, int pageSize)
         {
-            return (IQueryable<ServiceRequest>)base.GetList(r => r.Status == status)
-                .OrderByDescending(r => r.Date)
-                .ToListAsync();
+            return base.GetList(r => r.Status == status)
+                .OrderByDescending(r => r.Date);
       
         }
 

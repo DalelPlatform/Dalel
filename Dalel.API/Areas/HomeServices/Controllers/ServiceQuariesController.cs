@@ -19,7 +19,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPost("create")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult CreateServiceQuery([FromForm] AddServiceQuariesVM model)
         {
             var result = _homeServiceService.CreateServiceQuery(model);
@@ -41,7 +41,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpGet("client")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult GetQueriesByClient(
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1)
@@ -54,7 +54,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpGet("provider")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult GetQueriesByProvider(
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1)
@@ -67,7 +67,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("answer/{id}")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult AnswerQuery(int id, [FromBody] string answer)
         {
             var result = _homeServiceService.AnswerQuery(id, answer);
@@ -86,7 +86,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult UpdateServiceQuery(int id, [FromForm] AddServiceQuariesVM model)
         {
             var result = _homeServiceService.UpdateServiceQuery(id, model);
@@ -96,7 +96,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult DeleteServiceQuery(int id)
         {
             var result = _homeServiceService.DeleteServiceQuery(id);

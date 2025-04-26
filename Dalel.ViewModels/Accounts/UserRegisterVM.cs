@@ -42,5 +42,7 @@ namespace Dalel.ViewModels
 
         [Required(ErrorMessage = "Role is Required")]
         public string Role { get; set; }
+        public int? CategoryServicesId { get; set; }
+
     }
 }

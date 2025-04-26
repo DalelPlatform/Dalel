@@ -19,7 +19,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPost("create")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult CreateProposal([FromForm] AddServiceProviderProposalVM model)
         {
             model.ServiceProviderId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -42,7 +42,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpGet("provider")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult GetProposalsByProvider(
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1)
@@ -64,7 +64,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult UpdateProposal(int id, [FromForm] AddServiceProviderProposalVM model)
         {
             var result = _homeServiceService.UpdateProposal(id, model);
@@ -74,7 +74,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("accept/{id}")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult AcceptProposal(int id)
         {
             var result = _homeServiceService.AcceptProposal(id);
@@ -84,7 +84,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("reject/{id}")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult RejectProposal(int id)
         {
             var result = _homeServiceService.RejectProposal(id);
@@ -94,7 +94,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("cancel/{serviceRequestId}")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult CancelProposals(int serviceRequestId)
         {
             var result = _homeServiceService.CancelProposals(serviceRequestId);
@@ -104,7 +104,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult DeleteProposal(int id)
         {
             var result = _homeServiceService.DeleteProposal(id);

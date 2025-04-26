@@ -19,7 +19,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPost("create")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult CreateCategory([FromForm] AddCategoryServicesVM model)
         {
             var result = _homeServiceService.CreateCategory(model);
@@ -55,7 +55,8 @@ namespace Dalel.API.Areas
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1)
         {
-            var result = _homeServiceService.GetServiceProvidersForCategory(categoryId, pageSize, pageNumber);
+            // Specify the exact method to resolve ambiguity
+            var result = _homeServiceService.GetServiceProvidersForCategory(categoryId: categoryId, pageSize: pageSize, pageNumber: pageNumber);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);
@@ -74,7 +75,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult UpdateCategory(int id, [FromForm] AddCategoryServicesVM model)
         {
             var result = _homeServiceService.UpdateCategory(id, model);
@@ -84,7 +85,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("image/{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult UpdateCategoryImage(int id, [FromForm] string newImagePath)
         {
             var result = _homeServiceService.UpdateCategoryImage(id, newImagePath);
@@ -94,7 +95,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult DeleteCategory(int id)
         {
             var result = _homeServiceService.DeleteCategory(id);

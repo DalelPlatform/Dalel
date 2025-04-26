@@ -40,7 +40,7 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
                 UserName = model.AppUser?.UserName ?? "Not Provided",
                 CategoryServicesId = model.CategoryServicesId,
                 CategoryName = model.CategoryServices?.Name ?? "Not Provided",
-                Address = model.Address,
+                Address = model.Address?? "",
                 City = model.City,
                 AverageRating = avgRating,
                 ProjectCount = model.Projects?.Count ?? 0,

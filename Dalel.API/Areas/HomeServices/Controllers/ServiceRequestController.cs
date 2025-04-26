@@ -24,9 +24,15 @@ namespace Dalel.API.Areas
         public IActionResult CreateServiceRequest([FromForm] AddServiceRequestVM model)
         {
             model.ClientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(model.ClientId))
+                return new JsonResult("User not authenticated") { StatusCode = 401 };
+
             var result = _homeServiceService.CreateServiceRequest(model);
+
             if (!result.Success)
-                return new JsonResult(result.Message);
+                return new JsonResult(result.Message) { StatusCode = 400 };
+
             return new JsonResult(result);
         }
 
@@ -40,7 +46,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpGet("client")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult GetRequestsByClient(
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1)
@@ -53,7 +59,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpGet("status/{status}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult GetRequestsByStatus(
             RequestStatus status,
             [FromQuery] int pageSize = 5,
@@ -66,7 +72,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult UpdateServiceRequest(int id, [FromForm] AddServiceRequestVM model)
         {
             var result = _homeServiceService.UpdateServiceRequest(id, model);
@@ -76,7 +82,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult DeleteServiceRequest(int id)
         {
             var result = _homeServiceService.DeleteServiceRequest(id);

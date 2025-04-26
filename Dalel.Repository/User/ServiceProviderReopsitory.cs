@@ -18,41 +18,25 @@ namespace Dalel.Repository
         // Get provider with details
         public ServiceProvider GetProviderWithDetails(string providerId)
         {
-            return DelelContext.ServiceProviders
-                .Include(p => p.Schedules)
-                .Include(p => p.Projects)
-                .Include(p => p.Propsals)
-                    .ThenInclude(pr => pr.ServiceRequest)
-                .Include(p => p.CategoryServices)
-                .FirstOrDefault(p => p.UserId == providerId);
+            return base.GetList()
+        .Include(p => p.Schedules)
+        .Include(p => p.Projects)
+        .Include(p => p.Propsals)
+            .ThenInclude(pr => pr.ServiceRequest)
+        .Include(p => p.CategoryServices)
+        .FirstOrDefault(p => p.UserId == providerId);
         }
 
         // Get providers by category with pagination
-        public IQueryable<ServiceProvider> GetProvidersByCategory(int categoryId, int pageSize = 10, int pageNumber = 1)
+        public IQueryable<ServiceProvider> GetProvidersByCategory(int categoryId)
         {
-            IQueryable<ServiceProvider> query = GetList()
-                .Where(p => p.CategoryServicesId == categoryId);
-
-            // Apply pagination
-            if (pageSize < 1) pageSize = 10;
-            if (pageNumber < 1) pageNumber = 1;
-
-            int count = query.Count();
-            if (count < pageSize)
-            {
-                pageSize = count;
-                pageNumber = 1;
-            }
-
-            int skip = (pageNumber - 1) * pageSize;
-            return query.Skip(skip)
-                        .Take(pageSize);
+            return base.GetList(p => p.CategoryServicesId == categoryId);
         }
 
         // Get top-rated providers
         public IQueryable<ServiceProvider> GetTopRatedProviders(int count)
         {
-            return (IQueryable<ServiceProvider>)GetList()
+            var query = base.GetList()
                 .Select(p => new
                 {
                     Provider = p,
@@ -62,15 +46,48 @@ namespace Dalel.Repository
                 })
                 .OrderByDescending(x => x.AvgRating)
                 .Take(count)
-                .Select(x => x.Provider)
-                .ToList();
+                .Select(x => x.Provider);
+
+            return query;
         }
 
         // Check if provider exists
         public bool ProviderExists(string providerId)
         {
-            return GetList()
-                .Any(p => p.UserId == providerId);
+            return base.GetList(p => p.UserId == providerId).Any();
         }
+
+        public IQueryable<ServiceProvider> SearchProviders(
+    string searchText = null,
+    int? categoryId = null,
+    string address = null,
+    int? verificationStatus = null,
+    string sortBy = "Name",
+    bool descending = false)
+        {
+            var query = base.GetList();
+
+            if (!string.IsNullOrEmpty(searchText))
+                query = query.Where(p => p.AppUser.UserName.Contains(searchText));
+
+            if (categoryId.HasValue)
+                query = query.Where(p => p.CategoryServicesId == categoryId.Value);
+
+            if (!string.IsNullOrEmpty(address))
+                query = query.Where(p => p.Address.Contains(address));
+
+            if (verificationStatus.HasValue)
+                query = query.Where(p => (int?)p.VerificationStatus == verificationStatus.Value);
+
+            query = sortBy.ToLower() switch
+            {
+                "name" => descending ? query.OrderByDescending(p => p.AppUser.UserName) : query.OrderBy(p => p.AppUser.UserName),
+                "date" => descending ? query.OrderByDescending(p => p.AppUser.ModificationDate) : query.OrderBy(p => p.AppUser.ModificationDate),
+                _ => query.OrderBy(p => p.AppUser.UserName)
+            };
+
+            return query;
+        }
+
     }
 }

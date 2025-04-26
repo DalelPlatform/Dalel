@@ -19,7 +19,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPost("create")]
-        [Authorize(Roles = "Client")]
+       // [Authorize(Roles = "Client")]
         public IActionResult CreatePayment([FromForm] AddServiceProviderPayment model)
         {
             var result = _homeServiceService.CreatePayment(model);
@@ -50,7 +50,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult UpdatePayment(int id, [FromForm] AddServiceProviderPayment model)
         {
             var result = _homeServiceService.UpdatePayment(id, model);
@@ -60,7 +60,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("status/{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult UpdatePaymentStatus(int id, [FromBody] PaymentStatus status)
         {
             var result = _homeServiceService.UpdatePaymentStatus(id, status);
@@ -70,7 +70,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult DeletePayment(int id)
         {
             var result = _homeServiceService.DeletePayment(id);

@@ -19,7 +19,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPost("create")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult CreateProject([FromForm] AddServiceProviderProjectVM model)
         {
             var result = _homeServiceService.CreateProject(model);
@@ -29,7 +29,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpGet("provider")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult GetProjectsByProvider(
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1)
@@ -51,7 +51,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult UpdateProject(int id, [FromForm] AddServiceProviderProjectVM model)
         {
             var result = _homeServiceService.UpdateProject(id, model);
@@ -61,7 +61,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("image/{id}")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult UpdateProjectImage(int id, [FromForm] string newImagePath)
         {
             var result = _homeServiceService.UpdateProjectImage(id, newImagePath);
@@ -71,7 +71,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult DeleteProject(int id)
         {
             var result = _homeServiceService.DeleteProject(id);
