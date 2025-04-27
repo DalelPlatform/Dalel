@@ -1,0 +1,17 @@
+﻿@model List<Dalel.ViewModels.ServiceRequestDetailsVM>
+<h2>ServiceRequest Pending Request</h2>
+@foreach (var req in Model)
+{
+    <div>
+       
+        <form method="post" asp-action="Accept"
+              asp-controller="ServiceRequest" asp-route-id="@req.Id">
+            <button type="submit">✅ Accept</button>
+        </form>
+
+        <form method="post" asp-action="Reject" asp-controller="ServiceRequest"
+              asp-route-id="@req.Id">
+            <button type="submit">❌ Reject</button>
+        </form>
+    </div>
+}

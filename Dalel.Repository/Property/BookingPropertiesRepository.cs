@@ -90,5 +90,12 @@ namespace Dalel.Repository
                 Update(booking);
             }
         }
+        public IQueryable<BookingPropertiesDetailsVM> GetPendingBooking()
+        {
+            return GetList(p => p.Status == BookingStatus.Panding).
+                Select(book => book.ToDetailsViewModel());
+        }
+     
+
     }
 }

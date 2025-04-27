@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using Dalel.ViewModels.Agency.AgencyVerificationDocument;
+using Dalel.ViewModels;
 
 namespace Dalel.Repository
 {
@@ -45,103 +47,119 @@ namespace Dalel.Repository
                 .Any();
         }
 
-        //public async Task<PagedResult<ServiceRequest>> FilterRequestsAsync(
-        //    string clientId = null,
-        //    string providerId = null,
-        //    int? categoryId = null,
-        //    RequestStatus? status = null,
-        //    DateTime? fromDate = null,
-        //    DateTime? toDate = null,
-        //    double? minPrice = null,
-        //    double? maxPrice = null,
-        //    bool? hasProposals = null,
-        //    bool? hasReview = null,
-        //    int pageNumber = 1,
-        //    int pageSize = 10,
-        //    string sortBy = "Date",
-        //    bool ascending = false)
-        //{
-        //    var query = _context.ServiceRequests
-        //        .Include(r => r.Propsals)
-        //        .Include(r => r.Review)
-        //        .AsQueryable();
+        //Requests
+        public IQueryable<ServiceRequestDetailsVM> GetPendingRequests()
+        {
+            return GetList(p => p.Status == RequestStatus.Pending).
+                Select(req => req.ToDetailsViewModel());
+        }
+        public bool UpdaterequestsStatus(int requestsId, RequestStatus newStatus)
+        {
+            var requests = base.GetList(req => req.Id == requestsId).FirstOrDefault();
+            if (requests == null)
+                return false;
 
-        //    if (!string.IsNullOrEmpty(clientId))
-        //    {
-        //        query = query.Where(r => r.ClientId == clientId);
-        //    }
+            requests.Status = newStatus;
+            base.Update(requests);
+            return true;
+        }
+            //public async Task<PagedResult<ServiceRequest>> FilterRequestsAsync(
+            //    string clientId = null,
+            //    string providerId = null,
+            //    int? categoryId = null,
+            //    RequestStatus? status = null,
+            //    DateTime? fromDate = null,
+            //    DateTime? toDate = null,
+            //    double? minPrice = null,
+            //    double? maxPrice = null,
+            //    bool? hasProposals = null,
+            //    bool? hasReview = null,
+            //    int pageNumber = 1,
+            //    int pageSize = 10,
+            //    string sortBy = "Date",
+            //    bool ascending = false)
+            //{
+            //    var query = _context.ServiceRequests
+            //        .Include(r => r.Propsals)
+            //        .Include(r => r.Review)
+            //        .AsQueryable();
 
-        //    if (!string.IsNullOrEmpty(providerId))
-        //    {
-        //        query = query.Where(r => r.Propsals.Any(p => p.ServiceProviderId == providerId));
-        //    }
+            //    if (!string.IsNullOrEmpty(clientId))
+            //    {
+            //        query = query.Where(r => r.ClientId == clientId);
+            //    }
 
-        //    if (categoryId.HasValue)
-        //    {
-        //        query = query.Where(r => r.Propsals.Any(p => p.ServiceProvider.CategoryServicesId == categoryId.Value));
-        //    }
+            //    if (!string.IsNullOrEmpty(providerId))
+            //    {
+            //        query = query.Where(r => r.Propsals.Any(p => p.ServiceProviderId == providerId));
+            //    }
 
-        //    if (status.HasValue)
-        //    {
-        //        query = query.Where(r => r.Status == status.Value);
-        //    }
+            //    if (categoryId.HasValue)
+            //    {
+            //        query = query.Where(r => r.Propsals.Any(p => p.ServiceProvider.CategoryServicesId == categoryId.Value));
+            //    }
 
-        //    if (fromDate.HasValue)
-        //    {
-        //        query = query.Where(r => r.Date >= fromDate.Value);
-        //    }
+            //    if (status.HasValue)
+            //    {
+            //        query = query.Where(r => r.Status == status.Value);
+            //    }
 
-        //    if (toDate.HasValue)
-        //    {
-        //        query = query.Where(r => r.Date <= toDate.Value);
-        //    }
+            //    if (fromDate.HasValue)
+            //    {
+            //        query = query.Where(r => r.Date >= fromDate.Value);
+            //    }
 
-        //    if (minPrice.HasValue)
-        //    {
-        //        query = query.Where(r => r.StartPrice >= minPrice.Value);
-        //    }
+            //    if (toDate.HasValue)
+            //    {
+            //        query = query.Where(r => r.Date <= toDate.Value);
+            //    }
 
-        //    if (maxPrice.HasValue)
-        //    {
-        //        query = query.Where(r => r.StartPrice <= maxPrice.Value);
-        //    }
+            //    if (minPrice.HasValue)
+            //    {
+            //        query = query.Where(r => r.StartPrice >= minPrice.Value);
+            //    }
 
-        //    if (hasProposals.HasValue)
-        //    {
-        //        query = hasProposals.Value
-        //            ? query.Where(r => r.Propsals.Any())
-        //            : query.Where(r => !r.Propsals.Any());
-        //    }
+            //    if (maxPrice.HasValue)
+            //    {
+            //        query = query.Where(r => r.StartPrice <= maxPrice.Value);
+            //    }
 
-        //    if (hasReview.HasValue)
-        //    {
-        //        query = hasReview.Value
-        //            ? query.Where(r => r.Review != null)
-        //            : query.Where(r => r.Review == null);
-        //    }
+            //    if (hasProposals.HasValue)
+            //    {
+            //        query = hasProposals.Value
+            //            ? query.Where(r => r.Propsals.Any())
+            //            : query.Where(r => !r.Propsals.Any());
+            //    }
 
-        //    // Sorting
-        //    query = sortBy switch
-        //    {
-        //        "Date" => ascending ? query.OrderBy(r => r.Date) : query.OrderByDescending(r => r.Date),
-        //        "Price" => ascending ? query.OrderBy(r => r.StartPrice) : query.OrderByDescending(r => r.StartPrice),
-        //        "Status" => ascending ? query.OrderBy(r => r.Status) : query.OrderByDescending(r => r.Status),
-        //        _ => query.OrderByDescending(r => r.Date)
-        //    };
+            //    if (hasReview.HasValue)
+            //    {
+            //        query = hasReview.Value
+            //            ? query.Where(r => r.Review != null)
+            //            : query.Where(r => r.Review == null);
+            //    }
 
-        //    var result = new PagedResult<ServiceRequest>
-        //    {
-        //        PageNumber = pageNumber,
-        //        PageSize = pageSize,
-        //        TotalCount = await query.CountAsync()
-        //    };
+            //    // Sorting
+            //    query = sortBy switch
+            //    {
+            //        "Date" => ascending ? query.OrderBy(r => r.Date) : query.OrderByDescending(r => r.Date),
+            //        "Price" => ascending ? query.OrderBy(r => r.StartPrice) : query.OrderByDescending(r => r.StartPrice),
+            //        "Status" => ascending ? query.OrderBy(r => r.Status) : query.OrderByDescending(r => r.Status),
+            //        _ => query.OrderByDescending(r => r.Date)
+            //    };
 
-        //    result.Items = await query
-        //        .Skip((pageNumber - 1) * pageSize)
-        //        .Take(pageSize)
-        //        .ToListAsync();
+            //    var result = new PagedResult<ServiceRequest>
+            //    {
+            //        PageNumber = pageNumber,
+            //        PageSize = pageSize,
+            //        TotalCount = await query.CountAsync()
+            //    };
 
-        //    return result;
-        //}
-    }
+            //    result.Items = await query
+            //        .Skip((pageNumber - 1) * pageSize)
+            //        .Take(pageSize)
+            //        .ToListAsync();
+
+            //    return result;
+            //}
+        }
 }

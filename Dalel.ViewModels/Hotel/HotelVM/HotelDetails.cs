@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Models.Enums;
 
 namespace Dalel.ViewModels
 {
@@ -17,7 +18,7 @@ namespace Dalel.ViewModels
         public bool CancelationOptions { get; set; }
         public float CancelationCharges { get; set; }
         public string OwnerId { get; set; }
-        public string VerificationStatus { get; set; }
+        public VerificationStatus VerificationStatus { get; set; }
         public List<string> Images { get; set; }
     }
 }
