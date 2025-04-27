@@ -54,8 +54,9 @@ namespace Dalel.Repository
         public IQueryable<ServiceProvider> GetServiceProvidersForCategory(int categoryId)
         {
             var category = GetCategoryById(categoryId);
-            return (IQueryable<ServiceProvider>)(category?.ServiceProviders?.ToList() ?? new List<ServiceProvider>());
+            return category?.ServiceProviders?.AsQueryable() ?? Enumerable.Empty<ServiceProvider>().AsQueryable();
         }
+
 
         // Get paginated service providers for a category
         public IQueryable<ServiceProvider> GetPaginatedServiceProviders(
@@ -63,31 +64,24 @@ namespace Dalel.Repository
             int pageSize = 10,
             int pageNumber = 1)
         {
-            var providers = GetServiceProvidersForCategory(categoryId).AsQueryable();
+            var providers = GetServiceProvidersForCategory(categoryId);
 
             // Apply pagination
             if (pageSize < 1) pageSize = 10;
             if (pageNumber < 1) pageNumber = 1;
 
-            int count = providers.Count();
-            if (count < pageSize)
-            {
-                pageSize = count;
-                pageNumber = 1;
-            }
-
             int skip = (pageNumber - 1) * pageSize;
-            return (IQueryable<ServiceProvider>)providers.OrderBy(p => p.AppUser.UserName)
-                           .Skip(skip)
-                           .Take(pageSize)
-                           .ToList();
+            return providers.OrderBy(p => p.AppUser.UserName)
+                            .Skip(skip)
+                            .Take(pageSize);
         }
 
-        // Get all queries for a specific category
+
+        // Fix for the CS0019 error in the GetQueriesForCategory method
         public IQueryable<ServiceQuaries> GetQueriesForCategory(int categoryId)
         {
             var category = GetCategoryById(categoryId);
-            return (IQueryable<ServiceQuaries>)(category?.Quaries?.ToList() ?? new List<ServiceQuaries>());
+            return category?.Quaries?.AsQueryable() ?? Enumerable.Empty<ServiceQuaries>().AsQueryable();
         }
 
         // Get paginated queries for a category
@@ -146,10 +140,9 @@ namespace Dalel.Repository
         // Get categories with most service providers
         public IQueryable<CategoryServices> GetPopularCategories(int count)
         {
-            return (IQueryable<CategoryServices>)GetList()
+            return base.GetList()
                   .OrderByDescending(c => c.ServiceProviders.Count)
-                  .Take(count)
-                  .ToList();
+                  .Take(count);
         }
 
         public class RepositoryException : Exception

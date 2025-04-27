@@ -19,7 +19,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPost("create")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult CreateReview([FromForm] AddServiceProviderReviewVM model, ServiceProviderReview review)
         {
             var result = _homeServiceService.CreateReview(model, review);
@@ -50,7 +50,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult UpdateReview(int id, [FromForm] AddServiceProviderReviewVM model)
         {
             var result = _homeServiceService.UpdateReview(id, model);
@@ -60,7 +60,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Client")]
+        //[Authorize(Roles = "Client")]
         public IActionResult DeleteReview(int id)
         {
             var result = _homeServiceService.DeleteReview(id);

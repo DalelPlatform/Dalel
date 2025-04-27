@@ -21,13 +21,13 @@ namespace Dalel.API.Areas
         }
 
         [HttpPost("create")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult CreateServiceProvider([FromForm] AddServiceProviderVM model)
         {
             var result = _homeServiceService.CreateServiceProvider(model);
             if (!result.Success)
-                return new JsonResult(result.Message);
-            return new JsonResult(result);
+                return new JsonResult(new { Success = false, Message = result.Message });
+            return new JsonResult(new { Success = true, Message = result.Message, Data = result.Data });
         }
 
         [HttpGet("search")]
@@ -87,7 +87,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "ServiceProvider,Admin")]
+        //[Authorize(Roles = "ServiceProvider,Admin")]
         public IActionResult UpdateServiceProvider(int id, [FromForm] AddServiceProviderVM model, VerificationStatus verificationStatus)
         {
             var result = _homeServiceService.UpdateServiceProvider(id, model, verificationStatus);
@@ -97,7 +97,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult DeleteServiceProvider(int id)
         {
             var result = _homeServiceService.DeleteServiceProvider(id);

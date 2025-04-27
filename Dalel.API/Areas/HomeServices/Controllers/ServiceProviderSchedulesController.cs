@@ -19,7 +19,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpGet("provider")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult GetSchedulesByProvider(
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1)
@@ -45,7 +45,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("update")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult UpdateProviderSchedule([FromForm] AddServiceProviderScheduleVM model)
         {
             var result = _homeServiceService.UpdateProviderSchedule(model);
@@ -55,7 +55,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpDelete("delete")]
-        [Authorize(Roles = "ServiceProvider")]
+        //[Authorize(Roles = "ServiceProvider")]
         public IActionResult DeleteProviderSchedule(
             [FromQuery] string providerId,
             [FromQuery] DateTime date)

@@ -7,6 +7,7 @@ using Dalel.ViewModels.HomeServices.CategoryServices;
 using Dalel.ViewModels.HomeServices.ServiceProvider;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Models;
 using Models.Enums;
 using Models.HomeService;
@@ -53,25 +54,61 @@ namespace Dalel.Services
             _serviceProviderRepository = serviceProviderRepository;
             _clientRepository = clientRepository;
         }
-
-        #region ServiceRequest
-
-        public ServiceResult<ServiceRequestDetailsVM> CreateServiceRequest([FromForm] AddServiceRequestVM vm)
+        #region Service Request
+        public ServiceResult<ServiceRequestDetailsVM> CreateServiceRequest(AddServiceRequestVM vm)
         {
             try
             {
-                var model = vm.ToModel();
-                if (string.IsNullOrEmpty(model.ClientId))
-                    return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Client ID cannot be null or empty.");
+                var entity = vm.ToModel();
 
-                _serviceRequestRepository.Add(model);
-                return ServiceResult<ServiceRequestDetailsVM>.SuccessResult(model.ToDetailsViewModel(), "Service request created successfully.");
+                // Check if the client exists
+                if (!_clientRepository.GetList(c => c.UserId == entity.ClientId).Any())
+                    return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Client not found");
+
+                // Check if the category exists
+                if (!_categoryServicesRepository.GetList(c => c.Id == entity.CategoryServicesId).Any())
+                    return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Category not found");
+
+                _serviceRequestRepository.Add(entity);
+                _serviceRequestRepository.Save(); // Save changes to the database
+
+                return ServiceResult<ServiceRequestDetailsVM>.SuccessResult(
+                    entity.ToDetailsViewModel(),
+                    "Request created successfully");
             }
             catch (Exception ex)
             {
-                return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Error: " + ex.Message);
+                return ServiceResult<ServiceRequestDetailsVM>.FailureResult(
+                    $"Database error: {ex.InnerException?.Message ?? ex.Message}");
             }
         }
+
+        //public ServiceResult<ServiceRequestDetailsVM> CreateServiceRequest([FromForm] AddServiceRequestVM vm)
+        //{
+        //    try
+        //    {
+        //        if (vm == null)
+        //            return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Request data cannot be null");
+        //        if (string.IsNullOrWhiteSpace(vm.ClientId))
+        //            return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Client ID cannot be null or empty");
+        //        if (!Guid.TryParse(vm.ClientId, out _))
+        //            return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Invalid Client ID format");
+        //        if (vm.CategoryServicesId <= 0)
+        //            return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Invalid Category ID");
+
+        //        var model = vm.ToModel();
+        //        _serviceRequestRepository.Add(model);
+        //        _serviceRequestRepository.Save();
+        //        return ServiceResult<ServiceRequestDetailsVM>.SuccessResult(
+        //            model.ToDetailsViewModel(),
+        //            "Service request created successfully");
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        return ServiceResult<ServiceRequestDetailsVM>.FailureResult($"Error creating service request: {ex.Message}");
+        //    }
+        //}
 
         public ServiceResult<ServiceRequestDetailsVM> GetServiceRequestById(int requestId)
         {
@@ -888,6 +925,8 @@ namespace Dalel.Services
             }
         }
 
+
+
         public ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>> GetServiceProvidersForCategory(
             int categoryId, int pageSize = 5, int pageNumber = 1)
         {
@@ -917,18 +956,23 @@ namespace Dalel.Services
         }
 
         public ServiceResult<PaginationViewModel<ServiceQuariesDetailsVM>> GetQueriesForCategory(
-            int categoryId, int pageSize = 5, int pageNumber = 1)
+    int categoryId, int pageSize = 5, int pageNumber = 1)
         {
             try
             {
-                if (categoryId <= 0)
-                    return ServiceResult<PaginationViewModel<ServiceQuariesDetailsVM>>.FailureResult("Category ID must be greater than zero.");
+                if (categoryId <= 0 || pageSize <= 0 || pageNumber <= 0)
+                    return ServiceResult<PaginationViewModel<ServiceQuariesDetailsVM>>.FailureResult("Invalid input parameters.");
 
-                var totalCount = _categoryServicesRepository.GetPaginatedQueries(categoryId).Count();
-                var queries = _categoryServicesRepository.GetPaginatedQueries(categoryId, pageSize, pageNumber);
-                var data = queries.Select(q => q.ToDetailsViewModel()).ToList();
+                var baseQuery = _serviceQuariesRepository.GetQueriesByCategory(categoryId);
+                var totalCount = baseQuery.Count();
 
-                var paginationResult = new PaginationViewModel<ServiceQuariesDetailsVM>
+                var data = baseQuery
+                         .Skip((pageNumber - 1) * pageSize)
+                         .Take(pageSize)
+                         .Select(q => q.ToDetailsViewModel())
+                         .ToList();
+
+                var result = new PaginationViewModel<ServiceQuariesDetailsVM>
                 {
                     Data = data,
                     PageNumber = pageNumber,
@@ -936,11 +980,11 @@ namespace Dalel.Services
                     TotalCount = totalCount
                 };
 
-                return ServiceResult<PaginationViewModel<ServiceQuariesDetailsVM>>.SuccessResult(paginationResult, "Queries retrieved.");
+                return ServiceResult<PaginationViewModel<ServiceQuariesDetailsVM>>.SuccessResult(result);
             }
             catch (Exception ex)
             {
-                return ServiceResult<PaginationViewModel<ServiceQuariesDetailsVM>>.FailureResult("Error: " + ex.Message);
+                return ServiceResult<PaginationViewModel<ServiceQuariesDetailsVM>>.FailureResult(ex.Message);
             }
         }
 
@@ -1011,6 +1055,8 @@ namespace Dalel.Services
             }
         }
 
+
+
         public ServiceResult<PaginationViewModel<CategoryServicesDetailsVM>> GetPopularCategories(int count)
         {
             try
@@ -1018,23 +1064,28 @@ namespace Dalel.Services
                 if (count <= 0)
                     return ServiceResult<PaginationViewModel<CategoryServicesDetailsVM>>.FailureResult("Count must be greater than zero.");
 
-                var categories = _categoryServicesRepository.GetPopularCategories(count);
-                var totalCount = categories.Count();
-                var data = categories.Select(c => c.ToDetailsViewModel()).ToList();
+                var baseQuery = _categoryServicesRepository.GetPopularCategories(count);
+
+                var totalCount = baseQuery.Count();
+
+                var data = baseQuery
+                         .AsQueryable() 
+                         .Select(c => c.ToDetailsViewModel())
+                         .ToList();
 
                 var paginationResult = new PaginationViewModel<CategoryServicesDetailsVM>
                 {
                     Data = data,
                     PageNumber = 1,
-                    PageSize = totalCount,
+                    PageSize = totalCount, 
                     TotalCount = totalCount
                 };
 
-                return ServiceResult<PaginationViewModel<CategoryServicesDetailsVM>>.SuccessResult(paginationResult, "Popular categories retrieved.");
+                return ServiceResult<PaginationViewModel<CategoryServicesDetailsVM>>.SuccessResult(paginationResult, "Popular categories retrieved successfully.");
             }
             catch (Exception ex)
             {
-                return ServiceResult<PaginationViewModel<CategoryServicesDetailsVM>>.FailureResult("Error: " + ex.Message);
+                return ServiceResult<PaginationViewModel<CategoryServicesDetailsVM>>.FailureResult($"Error retrieving categories: {ex.Message}");
             }
         }
 
@@ -1290,19 +1341,28 @@ public ServiceResult DeletePayment(int paymentId)
                     return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Owner ID cannot be null or empty.");
 
                 var provider = vm.ToModel();
+
+
+                if (_categoryServicesRepository.GetById(provider.CategoryServicesId)!= null)
+                    return ServiceResult<ServiceProviderDetailsVM>.FailureResult($"Category with ID {provider.CategoryServicesId} does not exist.");
+
                 _serviceProviderRepository.Add(provider);
+                _serviceProviderRepository.Save();
                 return ServiceResult<ServiceProviderDetailsVM>.SuccessResult(provider.ToDetailsViewModel(), "Service provider created successfully.");
             }
             catch (Exception ex)
             {
-                return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Error: " + ex.Message);
+                var errorMessage = ex.Message;
+                if (ex.InnerException != null)
+                    errorMessage += $"\nInner Exception: {ex.InnerException.Message}";
+                return ServiceResult<ServiceProviderDetailsVM>.FailureResult($"Error: {errorMessage}");
             }
         }
 
         public ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>> SearchServiceProviders(
-           string searchText = "",
+           string? searchText = "",
            int? categoryId = null,
-           string address = null,
+           string? address = null,
            VerificationStatus? verificationStatus = null,
            string sortBy = "Name",
            bool descending = false,
@@ -1362,6 +1422,57 @@ public ServiceResult DeletePayment(int paymentId)
             }
         }
 
+
+        //    public ServiceResult<PaginationViewModel<AddServiceProviderVM>> SearchProviders(
+        //string searchText = null,
+        //int? categoryId = null,
+        //string address = null,
+        //int? verificationStatus = null,
+        //string sortBy = "Name",
+        //bool descending = false,
+        //int pageSize = 5,
+        //int pageNumber = 1)
+        //    {
+        //        try
+        //        {
+        //            if (pageSize <= 0 || pageNumber <= 0)
+        //                return ServiceResult<PaginationViewModel<AddServiceProviderVM>>.FailureResult("Page size and number must be greater than zero");
+
+        //            var baseQuery = _serviceProviderRepository.SearchProviders(
+        //                searchText,
+        //                categoryId,
+        //                address,
+        //                verificationStatus,
+        //                sortBy,
+        //                descending);
+
+        //            var totalCount = baseQuery.Count();
+
+        //            var data = baseQuery
+        //                .Skip((pageNumber - 1) * pageSize)
+        //                .Take(pageSize)
+        //                .AsQueryable()
+        //                .Select(p => p.ToDetailsViewModel())
+        //            .ToList();
+
+        //            var result = new PaginationViewModel<AddServiceProviderVM>
+        //            {
+        //                Data = data,
+        //                PageNumber = pageNumber,
+        //                PageSize = pageSize,
+        //                TotalCount = totalCount
+        //            };
+
+        //            return ServiceResult<PaginationViewModel<AddServiceProviderVM>>.SuccessResult(result);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return ServiceResult<PaginationViewModel<AddServiceProviderVM>>.FailureResult("An error occurred while searching providers");
+        //        }
+        //    }
+
+
+
         public ServiceResult<ServiceProviderDetailsVM> GetServiceProviderById(string providerId)
         {
             try
@@ -1381,21 +1492,55 @@ public ServiceResult DeletePayment(int paymentId)
             }
         }
 
+        //public ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>> GetProvidersByCategory(
+        //    int categoryId, int pageSize = 5, int pageNumber = 1)
+        //{
+        //    try
+        //    {
+        //        if (categoryId <= 0)
+        //            return ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>>.FailureResult("Category ID must be greater than zero.");
+
+        //        var totalCount = _serviceProviderRepository.GetProvidersByCategory(categoryId).Count();
+        //        var providers = _serviceProviderRepository.GetProvidersByCategory(categoryId);
+        //        var data = providers.Select(p => p.ToDetailsViewModel());
+
+        //        var paginationResult = new PaginationViewModel<ServiceProviderDetailsVM>
+        //        {
+        //            Data = data,
+        //            PageNumber = pageNumber,
+        //            PageSize = pageSize,
+        //            TotalCount = totalCount
+        //        };
+
+        //        return ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>>.SuccessResult(paginationResult, "Service providers retrieved.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>>.FailureResult("Error: " + ex.Message);
+        //    }
+        //}
+
+
         public ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>> GetProvidersByCategory(
-            int categoryId, int pageSize = 5, int pageNumber = 1)
+    int categoryId, int pageSize = 5, int pageNumber = 1)
         {
             try
             {
                 if (categoryId <= 0)
                     return ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>>.FailureResult("Category ID must be greater than zero.");
 
-                var totalCount = _serviceProviderRepository.GetProvidersByCategory(categoryId).Count();
-                var providers = _serviceProviderRepository.GetProvidersByCategory(categoryId, pageSize, pageNumber);
-                var data = providers.Select(p => p.ToDetailsViewModel()).ToList();
+                var providers = _serviceProviderRepository.GetProvidersByCategory(categoryId).AsQueryable();
+                var totalCount = providers.Count();
+
+                var paginatedData = providers
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(p => p.ToDetailsViewModel())
+                    .ToList();
 
                 var paginationResult = new PaginationViewModel<ServiceProviderDetailsVM>
                 {
-                    Data = data,
+                    Data = paginatedData,
                     PageNumber = pageNumber,
                     PageSize = pageSize,
                     TotalCount = totalCount
@@ -1405,7 +1550,7 @@ public ServiceResult DeletePayment(int paymentId)
             }
             catch (Exception ex)
             {
-                return ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>>.FailureResult("Error: " + ex.Message);
+                return ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>>.FailureResult($"An error occurred: {ex.Message}");
             }
         }
 

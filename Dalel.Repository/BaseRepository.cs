@@ -106,19 +106,16 @@ namespace Dalel.Repository
         public void Add(T newRow)
         {
             Table.Add(newRow);
-            Context.SaveChanges();
         }
 
         public void Update(T newRow)
         {
             Table.Update(newRow);
-            Context.SaveChanges();
         }
 
         public void Delete(T row)
         {
             Table.Remove(row);
-            Context.SaveChanges();
         }
 
 

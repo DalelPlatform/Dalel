@@ -20,27 +20,23 @@ namespace Dalel.Repository.HomeServices
         public IQueryable<ServiceQuaries> GetQueriesByCategory(int categoryId)
         {
 
-            var queries = base.GetList(q => q.CategoryServicesId == categoryId)
-                          .OrderByDescending(q => q.QuestionDate)
-                          .ToList();
+            return base.GetList(q => q.CategoryServicesId == categoryId)
+                          .OrderByDescending(q => q.QuestionDate);
 
-            return (IQueryable<ServiceQuaries>)queries;
         }
 
         public IQueryable<ServiceQuaries> GetQueriesByClient(string clientId)
         {
-            return (IQueryable<ServiceQuaries>) base.GetList(q => q.ClientId == clientId)
-                          .OrderByDescending(q => q.QuestionDate)
-                          .ToList();
+            return base.GetList(q => q.ClientId == clientId)
+                          .OrderByDescending(q => q.QuestionDate);
 
         }
 
         public IQueryable<ServiceQuaries> GetQueriesByProvider(string providerId)
         {
 
-            return (IQueryable<ServiceQuaries>) base.GetList(q => q.ServiceProviderId == providerId)
-                         .OrderByDescending(q => q.QuestionDate)
-                         .ToList();
+            return base.GetList(q => q.ServiceProviderId == providerId)
+                         .OrderByDescending(q => q.QuestionDate);
         }
 
         public bool AnswerQuery(int queryId, string answer)
