@@ -103,7 +103,22 @@ namespace Dalel.Repository.Agency
             ;
 
         }
+        public IQueryable<AgencyPackageDetails> GetPendingPackage()
+        {
+            return GetList(p => p.VerificationStatus == VerificationStatus.Pending)
+                .Select(doc => doc.ToDetailsModels());
 
+        }
+        public bool UpdatepackageStatus(int packageId, VerificationStatus newStatus)
+        {
+            var package = base.GetList(package => package.Id == packageId).FirstOrDefault();
+            if (package == null)
+                return false;
+
+            package.VerificationStatus = newStatus;
+            base.Update(package);
+            return true;
+        }
 
     }
 }

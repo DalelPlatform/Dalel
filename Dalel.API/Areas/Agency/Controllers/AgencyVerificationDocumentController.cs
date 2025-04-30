@@ -3,6 +3,7 @@ using Dalel.Services.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,7 @@ namespace Dalel.API.Areas.Agency.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult GetAlldoc(int id)
         {
 

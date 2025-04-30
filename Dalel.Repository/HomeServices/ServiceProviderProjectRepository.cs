@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Dalel.ViewModels;
+using Models.Enums;
 
 namespace Dalel.Repository
 {
@@ -60,6 +62,9 @@ namespace Dalel.Repository
             }
         }
 
+
+      
+      
         //public async Task<PagedResult<ServiceProviderProject>> FilterProjectsAsync(
         //    string providerId = null,
         //    int? categoryId = null,

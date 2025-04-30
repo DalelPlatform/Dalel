@@ -1,0 +1,19 @@
+﻿@model List<Dalel.ViewModels.Agency.AgencyPackage.AgencyPackageDetails>
+<h2>Agency Pending AgencyPackage</h2>
+@foreach (var package in Model)
+{
+    <div>
+        <p>@package.Name</p>
+        <p>@package.Price</p>
+
+        <form method="post" asp-action="Accept" asp-controller="AgencyPackage"
+              asp-route-id="@package.Id">
+            <button type="submit">✅ Accept</button>
+        </form>
+
+        <form method="post" asp-action="Reject" asp-controller="AgencyPackage"
+        asp-route-id="@package.Id">
+            <button type="submit">❌ Reject</button>
+        </form>
+    </div>
+}

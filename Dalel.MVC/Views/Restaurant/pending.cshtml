@@ -1,0 +1,21 @@
+﻿@model List<Dalel.ViewModels.RestaurantDetailsVM>
+<h2>Agency Pending Restaurant</h2>
+@foreach (var res in Model)
+{
+    <div>
+        <p>@res.Name</p>
+        <p>@res.NumberOfRooms</p>
+        <p>@res.Address</p>
+        <p>@res.Region</p>
+
+        <form method="post" asp-action="Accept"
+              asp-controller="Restaurant" asp-route-id="@res.Id">
+            <button type="submit">✅ Accept</button>
+        </form>
+
+        <form method="post" asp-action="Reject"
+              asp-controller="Restaurant" asp-route-id="@res.Id">
+            <button type="submit">❌ Reject</button>
+        </form>
+    </div>
+}

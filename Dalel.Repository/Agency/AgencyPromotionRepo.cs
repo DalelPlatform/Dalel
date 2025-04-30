@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dalel.ViewModels;
+using Dalel.ViewModels.Agency;
 using Models;
 using Models.Agency;
+using Models.Enums;
 
 namespace Dalel.Repository.Agency
 {
@@ -20,6 +23,22 @@ namespace Dalel.Repository.Agency
         {
             return GetList(p => p.AgencyId == agencyId &&
             (p.EndDate == null || p.EndDate > DateTime.Now)); //still active or in future 
+        }
+        public IQueryable<AgencyPromotionDetails> GetPendingPromotion()
+        {
+            return GetList(p => p.status == VerificationStatus.Pending)
+                .Select(p => p.ToDetailsModels());
+
+        }
+        public bool UpdatePromotionStatus(int PromotionId, VerificationStatus newStatus)
+        {
+            var Promotion = base.GetList(p => p.Id == PromotionId).FirstOrDefault();
+            if (Promotion == null)
+                return false;
+
+            Promotion.status = newStatus;
+            base.Update(Promotion);
+            return true;
         }
     }
 }

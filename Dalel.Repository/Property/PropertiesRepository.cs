@@ -119,5 +119,13 @@ namespace Dalel.Repository
                 Update(property);
             }
         }
+
+        public IQueryable<PropertiesDetailsVM> GetPendingProperties()
+        {
+            return GetList(p => p.VerificationStatus == VerificationStatus.Pending)
+                .Select(p => p.ToDetailsViewModel());
+
+        }
+      
     }
 }

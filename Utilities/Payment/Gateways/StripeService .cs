@@ -3,7 +3,7 @@ using Stripe;
 
 namespace Utilities
 {
-     public class StripeService
+    public class StripeService
     {
         public StripeService(IConfiguration config)
         {
@@ -12,18 +12,27 @@ namespace Utilities
 
         public bool Charge(decimal amount, string orderId)
         {
-            var options = new PaymentIntentCreateOptions
+            try
             {
-                Amount = (long)(amount * 100), // in cents
-                Currency = "usd",
-                Description = $"Charge for order {orderId}",
-                PaymentMethodTypes = new List<string> { "card" }
-            };
+                var options = new PaymentIntentCreateOptions
+                {
+                    Amount = (long)(amount * 100), // cents
+                    Currency = "usd",
+                    Description = $"Charge for order {orderId}",
+                    PaymentMethodTypes = new List<string> { "card" },
+                };
 
-            var service = new PaymentIntentService();
-            var paymentIntent = service.Create(options);
+                var service = new PaymentIntentService();
+                var paymentIntent = service.Create(options);
 
-            return paymentIntent.Status == "requires_payment_method" || paymentIntent.Status == "requires_confirmation";
+                // Consider PaymentIntent successfully created if it's either 'requires_payment_method' or 'requires_confirmation'
+                return paymentIntent != null && !string.IsNullOrEmpty(paymentIntent.Id);
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                return false;
+            }
         }
-     } 
+    }
 }

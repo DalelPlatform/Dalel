@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Enums;
 
 namespace Dalel.ViewModels
 {
@@ -18,5 +19,6 @@ namespace Dalel.ViewModels
         public int ProjectCount { get; set; }
         public int ScheduleCount { get; set; }
         public int ProposalCount { get; set; }
+        public VerificationStatus VerificationStatus { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using Dalel.Services.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Hotel;
@@ -27,6 +28,7 @@ namespace Dalel.API.Areas.Agency.Controllers
             return new JsonResult(res);
         }
         [HttpPost]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult createAgencyPackage([FromForm] AddAgencyPackageVM packageAgency)
         {
             //user claim    
@@ -34,12 +36,14 @@ namespace Dalel.API.Areas.Agency.Controllers
             return new JsonResult(res);
         }
         [HttpPut("{Id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult UpdateAgecyPackage(AddAgencyPackageVM packageAgency, int Id)
         {
             var res = _pakageService.UpdateAgencyPackage(Id, packageAgency);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult DeleteAgecyPackage(int id)
         {
             var res = _pakageService.deleteAgencyPackage(id);
