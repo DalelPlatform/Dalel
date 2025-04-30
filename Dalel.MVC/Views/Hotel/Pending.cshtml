@@ -1,0 +1,21 @@
+﻿@model List<Dalel.ViewModels.BookingHotelRoomDetails>
+<h2>Agency Pending Documents</h2>
+@foreach (var hotel in Model)
+{
+    <div>
+        <p>@hotel.Price</p>
+        <p>@hotel.NumberOfGuests</p>
+        <p>@hotel.Checkin</p>
+        <p>@hotel.Checkout</p>
+       
+        <form method="post" asp-action="Accept"
+              asp-controller="Hotel" asp-route-id="@hotel.Id">
+            <button type="submit">✅ Accept</button>
+        </form>
+
+        <form method="post" asp-action="Reject"
+              asp-controller="Hotel" asp-route-id="@hotel.Id">
+            <button type="submit">❌ Reject</button>
+        </form>
+    </div>
+}

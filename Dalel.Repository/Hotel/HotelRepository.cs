@@ -41,5 +41,22 @@ namespace Dalel.Repository
 
         public IQueryable<HotelDetails> GetByOwner(string ownerId) =>
             GetList(h => h.OwnerId == ownerId && !h.IsDeleted).Select(h => h.ToDetailsViewModel());
+      
+        public IQueryable<HotelDetails> GetPendingHotel()
+        {
+            return GetList(p => p.VerificationStatus == VerificationStatus.Pending)
+                .Select(h => h.ToDetailsViewModel());
+
+        }
+        public bool UpdateHotelStatus(int HotelId, VerificationStatus newStatus)
+        {
+            var Hotel = base.GetList(h => h.Id == HotelId).FirstOrDefault();
+            if (Hotel == null)
+                return false;
+
+            Hotel.VerificationStatus = newStatus;
+            base.Update(Hotel);
+            return true;
+        }
     }
 }

@@ -43,19 +43,6 @@ namespace Dalel.Reopsitory
                 ).Select(b => b.ToDetailsViewModel());
         }
 
-        public IQueryable<BookingVehicleDetailsViewModel> GetPendingBooking()
-        {
-            return GetList(p => p.BookingStatus == BookingStatus.Panding).
-                Select(book => book.ToDetailsViewModel());
-        }
-        public void UpdateBookingStatus(int Book_Id, BookingStatus newStatus)
-        {
-            var Booking = GetList(res => res.Id == Book_Id).FirstOrDefault();
-            if (Booking != null)
-            {
-                Booking.BookingStatus = newStatus;
-                Update(Booking);
-            }
-        }
+     
     }
 }

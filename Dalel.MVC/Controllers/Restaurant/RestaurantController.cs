@@ -6,31 +6,31 @@ using Models.Restaurant.Enums;
 
 namespace Dalel.MVC.Controllers.RestaurantReservation
 {
-    public class RestaurantReservationController : Controller
+    public class RestaurantController : Controller
     {
-        private RestaurantReservationRepository reserve { get; set; }
-        public RestaurantReservationController(RestaurantReservationRepository _reserve)
+        private RestaurantRepository Restaurant { get; set; }
+        public RestaurantController(RestaurantRepository _Restaurant)
         {
-            reserve = _reserve;
+            Restaurant = _Restaurant;
         }
         public IActionResult Pending()
         {
 
-            var pendingBooking = reserve.GetPendingBooking().ToList();
-            return View(pendingBooking);
+            var pending = Restaurant.GetPendingRestaurant().ToList();
+            return View(pending);
         }
         [HttpPost]
         public IActionResult Accept(int id)
         {
             Console.WriteLine(id);
-            reserve.UpdateReservationStatus(id, StatusOfReservations.Confirmed);
+            Restaurant.UpdateRestaurantStatus(id, VerificationStatus.Confirmed);
             return RedirectToAction("Pending");
         }
         [HttpPost]
         public IActionResult Reject(int id)
         {
             Console.WriteLine("reg", id);
-            reserve.UpdateReservationStatus(id, StatusOfReservations.Rejected);
+            Restaurant.UpdateRestaurantStatus(id, VerificationStatus.Rejected);
             return RedirectToAction("Pending");
         }
     }

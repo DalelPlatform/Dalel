@@ -5,31 +5,31 @@ using Models.Enums;
 
 namespace Dalel.MVC.Controllers.properity
 {
-    public class BookingPropertiesController : Controller
+    public class PropertiesController : Controller
     {
-        private BookingPropertiesRepository BookingProperties { get; set; }
-        public BookingPropertiesController(BookingPropertiesRepository _BookingProperties)
+        private PropertiesRepository Properties { get; set; }
+        public PropertiesController(PropertiesRepository _Properties)
         {
-            BookingProperties = _BookingProperties;
+            Properties = _Properties;
         }
         public IActionResult Pending()
         {
 
-            var pendingbooking = BookingProperties.GetPendingBooking().ToList();
-            return View(pendingbooking);
+            var pending = Properties.GetPendingProperties().ToList();
+            return View(pending);
         }
         [HttpPost]
         public IActionResult Accept(int id)
         {
             Console.WriteLine(id);
-            BookingProperties.UpdateBookingStatus(id, BookingStatus.Confirmed);
+            Properties.UpdateVerificationStatus(id, VerificationStatus.Confirmed);
             return RedirectToAction("Pending");
         }
         [HttpPost]
         public IActionResult Reject(int id)
         {
             Console.WriteLine("reg", id);
-            BookingProperties.UpdateBookingStatus(id, BookingStatus.Rejected);
+            Properties.UpdateVerificationStatus(id, VerificationStatus.Rejected);
             return RedirectToAction("Pending");
         }
     }

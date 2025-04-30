@@ -1,0 +1,20 @@
+﻿@model List<Dalel.ViewModels.Agency.TravelAgencies.TravelAgenciesDetails>
+<h2>Agency Pending TravelAgency</h2>
+@foreach (var Travel in Model)
+{
+    <div>
+        <p>@Travel.BusinessName</p>
+        <p>@Travel.ContactInfo</p>
+        <p>@Travel.BusinessCategory</p>
+        <p>@Travel.BuildingNo</p>
+        <form method="post" asp-action="Accept" asp-controller="TravelAgencies"
+              asp-route-id="@Travel.Id">
+            <button type="submit">✅ Accept</button>
+        </form>
+
+        <form method="post" asp-action="Reject" asp-controller="TravelAgencies"
+              asp-route-id="@Travel.Id">
+            <button type="submit">❌ Reject</button>
+        </form>
+    </div>
+}

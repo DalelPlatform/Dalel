@@ -9,6 +9,7 @@ using Dalel.ViewModels.Agency.TravelAgencies;
 using Dalel.ViewModels.Agency.Packagebooking;
 using Dalel.ViewModels;
 using LinqKit;
+using Models.Enums;
 
 namespace Dalel.Repository.Agency
 {
@@ -86,7 +87,22 @@ namespace Dalel.Repository.Agency
 
 
 
+        public IQueryable<TravelAgenciesDetails> GetPendingTravelAgencies()
+        {
+            return GetList(p => p.VerificationStatus == VerificationStatus.Pending)
+                .Select(doc => doc.ToDetailsModels());
 
+        }
+        public bool UpdateTravelAgenciesStatus(int travelId, VerificationStatus newStatus)
+        {
+            var travel = base.GetList(t => t.Id == travelId).FirstOrDefault();
+            if (travel == null)
+                return false;
+
+            travel.VerificationStatus = newStatus;
+            base.Update(travel);
+            return true;
+        }
     }
     
 }
