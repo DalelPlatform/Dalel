@@ -62,7 +62,7 @@ namespace Dalel.API.Controllers
 
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(UserLoginVM vmodel)
+        public async Task<IActionResult> Login([FromBody]UserLoginVM vmodel)
         {
             if (ModelState.IsValid)
             {

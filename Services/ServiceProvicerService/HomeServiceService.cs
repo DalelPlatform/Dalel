@@ -236,6 +236,7 @@ namespace Dalel.Services
                     return ServiceResult<ServiceQuariesDetailsVM>.FailureResult("Category ID must be greater than zero.");
 
                 _serviceQuariesRepository.Add(query);
+                _serviceQuariesRepository.Save();
                 return ServiceResult<ServiceQuariesDetailsVM>.SuccessResult(query.ToDetailsViewModel(), "Service query created successfully.");
             }
             catch (Exception ex)
