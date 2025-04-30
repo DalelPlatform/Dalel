@@ -105,7 +105,7 @@ namespace Dalel.Repository.Agency
         }
         public IQueryable<AgencyPackageDetails> GetPendingPackage()
         {
-            return GetList(p => p.status == VerificationStatus.Pending)
+            return GetList(p => p.VerificationStatus == VerificationStatus.Pending)
                 .Select(doc => doc.ToDetailsModels());
 
         }
@@ -115,7 +115,7 @@ namespace Dalel.Repository.Agency
             if (package == null)
                 return false;
 
-            package.status = newStatus;
+            package.VerificationStatus = newStatus;
             base.Update(package);
             return true;
         }
