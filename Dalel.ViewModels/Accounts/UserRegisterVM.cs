@@ -38,7 +38,7 @@ namespace Dalel.ViewModels
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Value Must at least 6 letter ")]
         [DataType(DataType.Password)]
         [Display(Name = "Confirm Password")]
-        public string ConfirmPassowrd { get; set; }
+        public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "Role is Required")]
         public string Role { get; set; }
