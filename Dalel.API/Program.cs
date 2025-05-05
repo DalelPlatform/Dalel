@@ -80,6 +80,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 //Add srilog logging
 Log.Logger = new LoggerConfiguration()  
                 .ReadFrom.Configuration(builder.Configuration) 
@@ -221,7 +222,16 @@ builder.Services.AddAuthentication(option =>
     };
 });
 
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAngular", policy => {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+app.UseCors("AllowAngular");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
