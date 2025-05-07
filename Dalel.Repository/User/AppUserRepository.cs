@@ -4,6 +4,7 @@ using Models;
 using Models.User;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,6 +61,11 @@ namespace Dalel.Repository
         public async Task<AppUser> FindByEmail(string email)
         {
             return await userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<AppUser> FindByNationalId(string NationalId)
+        {
+            return await base.GetList(r => r.NationalId == NationalId).FirstOrDefaultAsync();
         }
         public async Task<AppUser> FindById(string NationalId)
         {
