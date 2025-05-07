@@ -8,7 +8,7 @@ using System.Text;
 namespace Dalel.API.Controllers
 {
     [ApiController]
-    [Route("api/{Controller}")]
+    [Route("api/Account")]
     public class AccountController : ControllerBase
     {
         private readonly AccountService accountService;
