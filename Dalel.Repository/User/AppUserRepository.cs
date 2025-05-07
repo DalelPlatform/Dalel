@@ -61,6 +61,10 @@ namespace Dalel.Repository
         {
             return await userManager.FindByEmailAsync(email);
         }
+        public async Task<AppUser> FindById(string NationalId)
+        {
+            return await userManager.FindByIdAsync(NationalId);
+        }
 
         public async Task<IList<string>> GetUserRoles(AppUser user)
         {

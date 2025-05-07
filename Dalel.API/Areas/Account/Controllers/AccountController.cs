@@ -2,6 +2,7 @@
 using Dalel.ViewModels;
 using LinqKit;
 using Microsoft.AspNetCore.Mvc;
+using Models.User;
 using System.Security.Claims;
 using System.Text;
 
@@ -39,7 +40,7 @@ namespace Dalel.API.Controllers
                     res.Errors.ForEach(err => stringBuilder.Append(err.Description));
                     return new JsonResult(new
                     {
-                        Massage = stringBuilder.ToString(),
+                        Massage = "Some Data Are Missing",
                         Status = 400
                     });
                 }
@@ -52,7 +53,6 @@ namespace Dalel.API.Controllers
                     stringBuilder1.Append(err.ErrorMessage);
                 }
             }
-
             return new JsonResult(new
             {
                 Massage = stringBuilder1.ToString(),
@@ -121,6 +121,41 @@ namespace Dalel.API.Controllers
             {
                 Massage = "Sign out Successfully",
                 Status = 200
+            });
+        }
+        //http get check email
+        //http get check national
+        //http get check username
+        [HttpGet("CheckUsername")]
+        public async Task<IActionResult> CheckUsername([FromQuery] string username)
+        {
+            var isTaken = await accountService.IsUserNameTaken(username);
+            return new JsonResult(new
+            {
+                Status = isTaken ? 400 : 200,
+                Message = isTaken ? "Username is already taken" : "Username is available"
+            });
+        }
+
+        [HttpGet("CheckEmail")]
+        public async Task<IActionResult> CheckEmail([FromQuery] string email)
+        {
+            var isTaken = await accountService.IsEmailTaken(email);
+            return new JsonResult(new
+            {
+                Status = isTaken ? 400 : 200,
+                Message = isTaken ? "Email is already taken" : "Email is available"
+            });
+        }
+
+        [HttpGet("CheckNationalId")]
+        public async Task<IActionResult> CheckNationalId([FromQuery] string nationalId)
+        {
+            var isTaken = await accountService.IsNationalIdTaken(nationalId);
+            return new JsonResult(new
+            {
+                Status = isTaken ? 400 : 200,
+                Message = isTaken ? "National ID is already used" : "National ID is available"
             });
         }
 
