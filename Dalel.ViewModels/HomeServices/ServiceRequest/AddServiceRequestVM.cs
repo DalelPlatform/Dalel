@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,25 +10,18 @@ namespace Dalel.ViewModels
 {
     public class AddServiceRequestVM
     {
-        
-        //[Required(ErrorMessage = "Please Provide valid Client Name")]
-        //[StringLength(255)]
-        // public string ClientName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Client ID is required.")]
         public string ClientId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Category ID is required.")]
+        public int CategoryServicesId { get; set; }
 
-        public double StartPrice { get; set; }
-
-        [Required]
-        [StringLength(500)]
+        [Required(ErrorMessage = "Description is required.")]
+        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
         public string Description { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string Address { get; set; }
-
-        public string Image { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
+        public RequestStatus Status { get; set; } = RequestStatus.Pending;
     }
 }
+

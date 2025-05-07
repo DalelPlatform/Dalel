@@ -1,6 +1,7 @@
 ﻿using Dalel.Services.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.PackageStep;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace Dalel.API.Areas.Agency.Controllers
             return new JsonResult(steps);
         }
         [HttpPost]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult Create([FromBody] addPackageStepVM step)
         {
             var result = _pakageService.CreatePackageStep(step);
@@ -39,13 +41,15 @@ namespace Dalel.API.Areas.Agency.Controllers
 
 
         }
-        [HttpPut("{id}")]
-        public IActionResult Update([FromBody] addPackageStepVM step)
+        [HttpPut("{Id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
+        public IActionResult Update(int Id, [FromBody] addPackageStepVM step)
         {
-            var result = _pakageService.UpdatePackageStep(step);
+            var result = _pakageService.UpdatePackageStep(Id, step);
             return new JsonResult(result);
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult Delete(int id)
         {
             _pakageService.deletePackageStep(id);

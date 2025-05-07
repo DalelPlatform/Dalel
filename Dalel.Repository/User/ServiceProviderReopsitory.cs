@@ -2,38 +2,41 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Enums;
 using Models.User;
+using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace Dalel.Repository
 {
     public class ServiceProviderRepository : BaseRepository<ServiceProvider>
     {
-        private readonly DelelContext _context;
-
-        public ServiceProviderRepository(DelelContext context) : base(context)
+        private readonly DelelContext DelelContext;
+        public ServiceProviderRepository(DelelContext delelContext) : base(delelContext)
         {
-            _context = context;
-        }
-        public async Task<ServiceProvider> GetProviderWithDetailsAsync(string providerId)
-        {
-            return await _context.ServiceProviders
-                .Include(p => p.Schedules)
-                .Include(p => p.Projects)
-                .Include(p => p.Propsals)
-                    .ThenInclude(pr => pr.ServiceRequest)
-                .Include(p => p.CategoryServices)
-                .FirstOrDefaultAsync(p => p.UserId == providerId);
+            DelelContext = delelContext;
         }
 
-        public async Task<IEnumerable<ServiceProvider>> GetProvidersByCategoryAsync(int categoryId)
+        // Get provider with details
+        public ServiceProvider GetProviderWithDetails(string providerId)
         {
-            return await base.GetList()
-                .Where(p => p.CategoryServicesId == categoryId)
-                .ToListAsync();
+            return base.GetList()
+        .Include(p => p.Schedules)
+        .Include(p => p.Projects)
+        .Include(p => p.Propsals)
+            .ThenInclude(pr => pr.ServiceRequest)
+        .Include(p => p.CategoryServices)
+        .FirstOrDefault(p => p.UserId == providerId);
         }
 
-        public async Task<IEnumerable<ServiceProvider>> GetTopRatedProvidersAsync(int count)
+        // Get providers by category with pagination
+        public IQueryable<ServiceProvider> GetProvidersByCategory(int categoryId)
         {
-            return await base.GetList()
+            return base.GetList(p => p.CategoryServicesId == categoryId);
+        }
+
+        // Get top-rated providers
+        public IQueryable<ServiceProvider> GetTopRatedProviders(int count)
+        {
+            var query = base.GetList()
                 .Select(p => new
                 {
                     Provider = p,
@@ -43,148 +46,48 @@ namespace Dalel.Repository
                 })
                 .OrderByDescending(x => x.AvgRating)
                 .Take(count)
-                .Select(x => x.Provider)
-                .ToListAsync();
+                .Select(x => x.Provider);
+
+            return query;
         }
 
-        public async Task<bool> ProviderExistsAsync(string providerId)
+        // Check if provider exists
+        public bool ProviderExists(string providerId)
         {
-            return await base.GetList()
-                .AnyAsync(p => p.UserId == providerId);
+            return base.GetList(p => p.UserId == providerId).Any();
         }
 
-        //public async Task<PagedResult<ServiceProvider>> SearchProvidersAsync(
-        //    string searchTerm = null,
-        //    int? categoryId = null,
-        //    double? minRating = null,
-        //    double? maxPrice = null,
-        //    bool? isAvailableNow = null,
-        //    string location = null,
-        //    int pageNumber = 1,
-        //    int pageSize = 10,
-        //    string sortBy = "Rating",
-        //    bool ascending = false)
-        //{
-        //    var query = base.GetList()
-        //        .Include(p => p.Schedules)
-        //        .Include(p => p.Propsals)
-        //            .ThenInclude(pr => pr.ServiceRequest)
-        //                .ThenInclude(sr => sr.Review)
-        //        .AsQueryable();
+        public IQueryable<ServiceProvider> SearchProviders(
+    string searchText = null,
+    int? categoryId = null,
+    string address = null,
+    int? verificationStatus = null,
+    string sortBy = "Name",
+    bool descending = false)
+        {
+            var query = base.GetList();
 
-        //    if (!string.IsNullOrEmpty(searchTerm))
-        //    {
-        //        query = query.Where(p => p.AppUser.UserName.Contains(searchTerm) ||
-        //                              p.AppUser.UserName.Contains(searchTerm) ||
-        //                              p.AppUser.UserName.Contains(searchTerm));
-        //    }
+            if (!string.IsNullOrEmpty(searchText))
+                query = query.Where(p => p.AppUser.UserName.Contains(searchText));
 
-        //    if (categoryId.HasValue)
-        //    {
-        //        query = query.Where(p => p.CategoryServicesId == categoryId.Value);
-        //    }
+            if (categoryId.HasValue)
+                query = query.Where(p => p.CategoryServicesId == categoryId.Value);
 
-        //    if (minRating.HasValue)
-        //    {
-        //        query = query.Where(p => p.Propsals
-        //            .Where(pr => pr.ServiceRequest.Review != null)
-        //            .Average(pr => (double?)pr.ServiceRequest.Review.Rating) >= minRating.Value);
-        //    }
+            if (!string.IsNullOrEmpty(address))
+                query = query.Where(p => p.Address.Contains(address));
 
-        //    if (maxPrice.HasValue)
-        //    {
-        //        query = query.Where(p => p.Propsals
-        //            .Any(pr => pr.SuggestedPrice <= maxPrice.Value));
-        //    }
+            if (verificationStatus.HasValue)
+                query = query.Where(p => (int?)p.VerificationStatus == verificationStatus.Value);
 
-        //    if (isAvailableNow.HasValue && isAvailableNow.Value)
-        //    {
-        //        var now = DateTime.Now;
-        //        var currentDay = now.DayOfWeek;
-        //        var currentTime = TimeOnly.FromDateTime(now);
+            query = sortBy.ToLower() switch
+            {
+                "name" => descending ? query.OrderByDescending(p => p.AppUser.UserName) : query.OrderBy(p => p.AppUser.UserName),
+                "date" => descending ? query.OrderByDescending(p => p.AppUser.ModificationDate) : query.OrderBy(p => p.AppUser.ModificationDate),
+                _ => query.OrderBy(p => p.AppUser.UserName)
+            };
 
-        //        query = query.Where(p => p.Schedules.Any(s =>
-        //            s.WorKDay == (WorKDays)currentDay &&
-        //            s.AvailableFrom <= currentTime &&
-        //            s.AvailableTo >= currentTime));
-        //    }
+            return query;
+        }
 
-        //    if (!string.IsNullOrEmpty(location))
-        //    {
-        //        query = query.Where(p => p.Address.Contains(location));
-        //    }
-
-        //    // Sorting
-        //    query = sortBy switch
-        //    {
-        //        "Rating" => ascending
-        //            ? query.OrderBy(p => p.Propsals
-        //                .Where(pr => pr.ServiceRequest.Review != null)
-        //                .Average(pr => pr.ServiceRequest.Review.Rating))
-        //            : query.OrderByDescending(p => p.Propsals
-        //                .Where(pr => pr.ServiceRequest.Review != null)
-        //                .Average(pr => pr.ServiceRequest.Review.Rating)),
-        //        "Price" => ascending
-        //            ? query.OrderBy(p => p.Propsals.Average(pr => pr.SuggestedPrice))
-        //            : query.OrderByDescending(p => p.Propsals.Average(pr => pr.SuggestedPrice)),
-        //        "Name" => ascending
-        //            ? query.OrderBy(p => p.AppUser.UserName)
-        //            : query.OrderByDescending(p => p.AppUser.UserName),
-        //        _ => query.OrderByDescending(p => p.Propsals
-        //            .Where(pr => pr.ServiceRequest.Review != null)
-        //            .Average(pr => pr.ServiceRequest.Review.Rating))
-        //    };
-
-        //    var result = new PagedResult<ServiceProvider>
-        //    {
-        //        PageNumber = pageNumber,
-        //        PageSize = pageSize,
-        //        TotalCount = await query.CountAsync()
-        //    };
-
-        //    result.Items = await query
-        //        .Skip((pageNumber - 1) * pageSize)
-        //        .Take(pageSize)
-        //        .ToListAsync();
-
-        //    return result;
-        //}
-
-        //public async Task<PagedResult<ServiceProvider>> GetAvailableProvidersAsync(
-        //    DateTime date,
-        //    TimeOnly time,
-        //    int? categoryId = null,
-        //    int pageNumber = 1,
-        //    int pageSize = 10)
-        //{
-        //    var day = (WorKDays)date.DayOfWeek;
-
-        //    var query = base.GetList()
-        //        .Include(p => p.Schedules)
-        //        .Where(p => p.Schedules.Any(s =>
-        //            s.WorKDay == day &&
-        //            s.AvailableFrom <= time &&
-        //            s.AvailableTo >= time))
-        //        .AsQueryable();
-
-        //    if (categoryId.HasValue)
-        //    {
-        //        query = query.Where(p => p.CategoryServicesId == categoryId.Value);
-        //    }
-
-        //    var result = new PagedResult<ServiceProvider>
-        //    {
-        //        PageNumber = pageNumber,
-        //        PageSize = pageSize,
-        //        TotalCount = await query.CountAsync()
-        //    };
-
-        //    result.Items = await query
-        //        .Skip((pageNumber - 1) * pageSize)
-        //        .Take(pageSize)
-        //        .ToListAsync();
-
-        //    return result;
-        //}
     }
 }

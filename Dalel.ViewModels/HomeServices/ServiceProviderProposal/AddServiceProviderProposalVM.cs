@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,15 +10,20 @@ namespace Dalel.ViewModels
 {
     public class AddServiceProviderProposalVM
     {
+        [Required(ErrorMessage = "Service provider ID is required.")]
+        public string ServiceProviderId { get; set; }
 
-        [Required(ErrorMessage = "Please Provide valid Price")]
-        [Range(0, double.MaxValue)]
+        [Required(ErrorMessage = "Service request ID is required.")]
+        public int ServiceRequestId { get; set; }
+
+        [Required(ErrorMessage = "Description is required.")]
+        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
+        public string Description { get; set; }
+
+        [Required(ErrorMessage = "Suggested price is required.")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Suggested price must be greater than zero.")]
         public double SuggestedPrice { get; set; }
 
-        [StringLength(500)]
-        [Required(ErrorMessage = "Please Provide valid Description")]
-        public string Description { get; set; }
-        public int Id { get; set; }
-        public int ServiceRequestId { get; set; }
+        public ProposalStatus Status { get; set; } = ProposalStatus.Pending;
     }
 }

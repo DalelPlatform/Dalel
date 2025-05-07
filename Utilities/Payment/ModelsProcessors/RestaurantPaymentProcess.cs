@@ -1,5 +1,7 @@
-﻿using Models.Enums;
+﻿using Dalel.Repository;
+using Models.Enums;
 using Models.Restaurant;
+using Utilities.Payments.Gateways;
 
 namespace Utilities
 {
@@ -7,11 +9,13 @@ namespace Utilities
     {
         private readonly StripeService _stripeService;
         private readonly PayPalService _payPalService;
+        private readonly PaymentRestaurantOrderReopsitory _paymentRestaurantOrderRepository;
 
-        public RestaurantPaymentProcess(StripeService stripeService, PayPalService payPalService)
+        public RestaurantPaymentProcess(StripeService stripeService, PayPalService payPalService, PaymentRestaurantOrderReopsitory paymentRestaurantOrderRepository)
         {
             _stripeService = stripeService;
             _payPalService = payPalService;
+            _paymentRestaurantOrderRepository = paymentRestaurantOrderRepository;
         }
 
         public ServiceResult ProcessPayment(PaymentRestaurantOrder payment)
@@ -40,6 +44,8 @@ namespace Utilities
 
                 payment.TransactionDateTime = DateTime.Now;
                 payment.PaymentStatus = PaymentStatus.Completed;
+
+                _paymentRestaurantOrderRepository.Add(payment);
 
                 return ServiceResult.SuccessResult("Restaurant Order payment completed.");
             }

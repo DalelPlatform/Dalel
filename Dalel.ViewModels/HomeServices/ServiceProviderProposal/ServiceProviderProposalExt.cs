@@ -14,19 +14,33 @@ namespace Dalel.ViewModels
         {
             return new ServiceProviderPropsal
             {
-                SuggestedPrice = vm.SuggestedPrice,
+                ServiceProviderId = vm.ServiceProviderId,
+                ServiceRequestId = vm.ServiceRequestId,
                 Description = vm.Description,
-                Status = ProposalStatus.Pending
+                SuggestedPrice = vm.SuggestedPrice,
+                Status = vm.Status
             };
         }
-
-        public static ServiceProviderProposalDetailsVM ToDetailsModel(this ServiceProviderPropsal model)
+        public static ServiceProviderPropsal ToEditModel(this AddServiceProviderProposalVM vm, ServiceProviderPropsal existing)
+        {
+            existing.ServiceProviderId = vm.ServiceProviderId;
+            existing.ServiceRequestId = vm.ServiceRequestId;
+            existing.Description = vm.Description;
+            existing.SuggestedPrice = vm.SuggestedPrice;
+            existing.Status = vm.Status;
+            return existing;
+        }
+        public static ServiceProviderProposalDetailsVM ToDetailsViewModel(this ServiceProviderPropsal model)
         {
             return new ServiceProviderProposalDetailsVM
             {
-                ProviderName = model.ServiceProvider?.AppUser.UserName ?? string.Empty,
-                SuggestedPrice = model.SuggestedPrice,
+                Id = model.Id,
+                ServiceProviderId = model.ServiceProviderId,
+                ServiceProviderName = model.ServiceProvider?.AppUser?.UserName ?? "Not Provided",
+                ServiceRequestId = model.ServiceRequestId,
+                ServiceRequestDescription = model.ServiceRequest?.Description ?? "Not Provided",
                 Description = model.Description,
+                SuggestedPrice = model.SuggestedPrice,
                 Status = model.Status
             };
         }

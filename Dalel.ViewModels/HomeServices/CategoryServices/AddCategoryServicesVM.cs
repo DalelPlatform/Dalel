@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,15 +10,15 @@ namespace Dalel.ViewModels.HomeServices.CategoryServices
 {
     public class AddCategoryServicesVM
     {
-        [Required(ErrorMessage = "Please Provide valid Category Name")]
-        [StringLength(100)]
+        [Required(ErrorMessage = "Name is required.")]
+        [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters.")]
         public string Name { get; set; }
 
-        [StringLength(255)]
-        public string Image { get; set; }
-
-        [StringLength(500)]
-        [Required(ErrorMessage = "Please Provide valid Description")]
+        [Required(ErrorMessage = "Description is required.")]
+        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
         public string Description { get; set; }
+
+        public IFormFile ImageFile { get; set; }
+        public string ImagePath { get; set; }
     }
 }

@@ -16,12 +16,11 @@ namespace Models.HomeService
         public string Description { get; set; }
         public string Address { get; set; }
         public string? Image { get; set; }
-
+        public int CategoryServicesId { get; set; } 
         public virtual Client Client { get; set; }
         public virtual ServiceProviderReview Review { get; set; }
         public virtual ServiceProviderPayment Payment { get; set; }
-        public virtual ICollection<ServiceProviderPropsal> Propsals { get; set; } 
-        
+        public virtual ICollection<ServiceProviderPropsal> Propsals { get; set; }
     }
     public class ServiceRequestConfiguration : IEntityTypeConfiguration<ServiceRequest>
     {

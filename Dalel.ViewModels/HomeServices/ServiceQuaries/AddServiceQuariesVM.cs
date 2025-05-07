@@ -9,17 +9,16 @@ namespace Dalel.ViewModels
 {
     public class AddServiceQuariesVM
     {
-        [Required]
-        public string ServiceProviderId { get; set; }
-
-        [Required]
+        [Required(ErrorMessage = "Client ID is required.")]
         public string ClientId { get; set; }
 
-        [Required]
-        [StringLength(1000)]
+        [Required(ErrorMessage = "Category ID is required.")]
+        public int CategoryServicesId { get; set; }
+
+        [Required(ErrorMessage = "Question is required.")]
+        [StringLength(500, ErrorMessage = "Question cannot exceed 500 characters.")]
         public string Question { get; set; }
 
-        [Required]
-        public int CategoryServicesId { get; set; }
+        public string ServiceProviderId { get; set; }
     }
 }

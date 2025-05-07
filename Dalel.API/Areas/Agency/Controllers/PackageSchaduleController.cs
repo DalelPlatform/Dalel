@@ -1,6 +1,7 @@
 ﻿using Dalel.Services.Agency;
 using Dalel.ViewModels.Agency.PackageSchadule;
 using Dalel.ViewModels.Agency.PackageStep;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Agency;
@@ -13,7 +14,7 @@ namespace Dalel.API.Areas.Agency.Controllers
     public class PackageSchaduleController : ControllerBase
     {
         private readonly AgencyPakageService _pakageService;
-        public PackageSchaduleController (AgencyPakageService service)
+        public PackageSchaduleController(AgencyPakageService service)
         {
             _pakageService = service;
         }
@@ -25,6 +26,7 @@ namespace Dalel.API.Areas.Agency.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult Create([FromBody] addPackageSchaduleVM schadule)
         {
             var result = _pakageService.CreatePackageSchadule(schadule);
@@ -40,13 +42,15 @@ namespace Dalel.API.Areas.Agency.Controllers
 
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update([FromBody] addPackageSchaduleVM schadule)
+        [HttpPut("{Id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
+        public IActionResult Update(int Id, [FromBody] addPackageSchaduleVM schadule)
         {
-            var result = _pakageService.UpdatePackageSchadule(schadule);
+            var result = _pakageService.UpdatePackageSchadule(Id, schadule);
             return new JsonResult(result);
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult Delete(int id)
         {
             _pakageService.deleteSchadule(id);

@@ -18,31 +18,51 @@ namespace Dalel.Repository
         {
         }
 
-        public async Task<IQueryable<ServiceProviderSchedule>> GetSchedulesByProviderAsync(string providerId)
-        {
-            return (IQueryable<ServiceProviderSchedule>)await base.GetList(s=> s.ServiceProviderId == providerId).OrderBy(s => s.WorKDay).ThenBy(s => s.AvailableFrom).ToListAsync();
-        }
-
-        public async Task<bool> IsProviderAvailableAsync(string providerId, DateTime date, TimeOnly time)
+        public bool DeleteSchedule(string providerId, DateTime date)
         {
             var day = (WorKDays)date.DayOfWeek;
-            var schedules = await base.GetList(s =>
+            var schedulesToDelete = base.GetList(s => s.ServiceProviderId == providerId && s.WorKDay == day).ToList();
+
+            if (!schedulesToDelete.Any())
+                return false;
+
+            _context.ServiceProviderSchedules.RemoveRange(schedulesToDelete);
+            _context.SaveChanges();
+            return true;
+        }
+
+        public IQueryable<ServiceProviderSchedule> GetSchedulesByProvider(string providerId)
+        {
+            return (IQueryable<ServiceProviderSchedule>)base.GetList(s=> s.ServiceProviderId == providerId).OrderBy(s => s.WorKDay).ThenBy(s => s.AvailableFrom).ToList();
+        }
+
+        public bool IsProviderAvailable(string providerId, DateTime date, TimeOnly time)
+        {
+            var day = (WorKDays)date.DayOfWeek;
+            var schedules = base.GetList(s =>
                 s.ServiceProviderId == providerId &&
                 s.WorKDay == day)
                 .OrderBy(s => s.WorKDay)
                 .ThenBy(s => s.AvailableFrom)
-                .ToListAsync();
+                .ToList();
 
             return schedules.Any(s =>
                 s.AvailableFrom <= time &&
                 s.AvailableTo >= time);
         }
 
-        public async Task UpdateProviderScheduleAsync(string providerId, IQueryable<ServiceProviderSchedule> schedules)
+        public void UpdateProviderSchedule(string providerId, IQueryable<ServiceProviderSchedule> schedules)
         {
             var existingSchedules = base.GetList(s => s.ServiceProviderId == providerId);
-            _context.ServiceProviderSchedules.RemoveRange(existingSchedules);
-            await _context.ServiceProviderSchedules.AddRangeAsync(schedules);
+            foreach (var schedule in existingSchedules)
+            {
+                base.Delete(schedule);
+            }
+            foreach (var schedule in schedules)
+            {
+                base.Add(schedule);
+            }
+            base.Save();
         }
 
         //public async Task<PagedResult<ServiceProviderSchedule>> FilterSchedulesAsync(

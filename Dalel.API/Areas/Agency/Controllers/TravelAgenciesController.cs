@@ -59,7 +59,7 @@ namespace Dalel.API.Areas.Agency.Controllers
         }
         [HttpPost]
 
-        [Authorize(Roles = "TravelAgencyOwner")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult AddTravelAgency(addTravelAgenciesVM trvelAgency)
         {
 
@@ -68,12 +68,14 @@ namespace Dalel.API.Areas.Agency.Controllers
             return new JsonResult(res);
         }
         [HttpPut("{Id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult UpdateTravelAgency(addTravelAgenciesVM trvelAgency,int Id)
         {
             var res = _pakageService.UpdateTravelAgencies(Id,trvelAgency);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult DeleteTravelAgency(int id)
         {
             var res = _pakageService.deleteTravelAgencies(id);

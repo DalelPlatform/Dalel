@@ -43,7 +43,7 @@ namespace Dalel.ViewModels
                 CancelationOptions = hotel.CancelationOptions,
                 CancelationCharges = hotel.CancelationCharges,
                 OwnerId = hotel.OwnerId,
-                VerificationStatus = hotel.VerificationStatus.ToString(),
+                VerificationStatus = hotel.VerificationStatus,
                 Images = hotel.HotelImages != null
                     ? hotel.HotelImages.Select(i => i.Image).ToList()
                     : new System.Collections.Generic.List<string>()

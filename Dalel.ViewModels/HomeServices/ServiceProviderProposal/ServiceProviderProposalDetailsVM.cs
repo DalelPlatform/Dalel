@@ -9,10 +9,13 @@ namespace Dalel.ViewModels
 {
     public class ServiceProviderProposalDetailsVM
     {
-        public string ProviderName { get; set; }
-        public string ProviderImage { get; set; }
-        public double SuggestedPrice { get; set; }
+        public int Id { get; set; }
+        public string ServiceProviderId { get; set; }
+        public string ServiceProviderName { get; set; }
+        public int ServiceRequestId { get; set; }
+        public string ServiceRequestDescription { get; set; }
         public string Description { get; set; }
+        public double SuggestedPrice { get; set; }
         public ProposalStatus Status { get; set; }
     }
 }

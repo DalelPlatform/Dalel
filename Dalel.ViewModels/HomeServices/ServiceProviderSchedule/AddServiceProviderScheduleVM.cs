@@ -1,4 +1,5 @@
-﻿using Models.Enums;
+﻿using Dalel.ViewModels.HomeServices.ServiceProviderSchedule;
+using Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,15 +11,11 @@ namespace Dalel.ViewModels
 {
     public class AddServiceProviderScheduleVM
     {
-        [Required]
-        public WorKDays WorkDay { get; set; }
-
-        [Required]
-        public TimeOnly AvailableFrom { get; set; }
-
-        [Required]
-        public TimeOnly AvailableTo { get; set; }
+        [Required(ErrorMessage = "Service provider ID is required.")]
         public string ServiceProviderId { get; set; }
+
+        [Required(ErrorMessage = "At least one schedule is required.")]
+        public List<AddServiceProviderScheduleItemVM> Schedules { get; set; }
 
     }
 }

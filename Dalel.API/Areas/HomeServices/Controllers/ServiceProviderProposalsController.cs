@@ -1,114 +1,116 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Models.HomeService;
-using Dalel.Repository;
+﻿using Dalel.Services;
+using Dalel.ViewModels;
+using Dalel.ViewModels.HomeServices;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
-[ApiController]
-[Route("api/[controller]")]
-public class ServiceProviderProposalsController : ControllerBase
+namespace Dalel.API.Areas
 {
-    private readonly ServiceProviderProposalService _service;
-
-    public ServiceProviderProposalsController(ServiceProviderProposalService service)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ServiceProviderProposalController : ControllerBase
     {
-        _service = service;
-    }
+        private readonly HomeServiceService _homeServiceService;
 
-    // GET: api/ServiceProviderProposals/request/{requestId}
-    [HttpGet("request/{requestId}")]
-    public async Task<ActionResult<IEnumerable<ServiceProviderPropsal>>> GetByRequest(int requestId)
-    {
-        var proposals = await _service.GetProposalsByRequestAsync(requestId);
-        return Ok(proposals);
-    }
+        public ServiceProviderProposalController(HomeServiceService homeServiceService)
+        {
+            _homeServiceService = homeServiceService;
+        }
 
-    // GET: api/ServiceProviderProposals/provider/{providerId}
-    [HttpGet("provider/{providerId}")]
-    public async Task<ActionResult<IEnumerable<ServiceProviderPropsal>>> GetByProvider(string providerId)
-    {
-        var proposals = await _service.GetProposalsByProviderAsync(providerId);
-        return Ok(proposals);
-    }
+        [HttpPost("create")]
+        //[Authorize(Roles = "ServiceProvider")]
+        public IActionResult CreateProposal([FromForm] AddServiceProviderProposalVM model)
+        {
+            model.ServiceProviderId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = _homeServiceService.CreateProposal(model);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // GET: api/ServiceProviderProposals
-    [HttpGet]
-    public ActionResult<IEnumerable<ServiceProviderPropsal>> Get(
-        [FromQuery] int pageSize = 4,
-        [FromQuery] int pageNumber = 1)
-    {
-        var proposals = _service.GetProposals(pageSize, pageNumber);
-        return Ok(proposals);
-    }
+        [HttpGet("request/{requestId}")]
+        public IActionResult GetProposalsByRequest(
+            int requestId,
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1)
+        {
+            var result = _homeServiceService.GetProposalsByRequest(requestId, pageSize, pageNumber);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // GET: api/ServiceProviderProposals/{id}
-    [HttpGet("{id}")]
-    public ActionResult<ServiceProviderPropsal> GetById(int id)
-    {
-        var proposal = _service.GetProposalById(id);
-        if (proposal == null) return NotFound();
-        return proposal;
-    }
+        [HttpGet("provider")]
+        //[Authorize(Roles = "ServiceProvider")]
+        public IActionResult GetProposalsByProvider(
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1)
+        {
+            var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = _homeServiceService.GetProposalsByProvider(providerId, pageSize, pageNumber);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // GET: api/ServiceProviderProposals/{id}/details
-    [HttpGet("{id}/details")]
-    public async Task<ActionResult<ServiceProviderPropsal>> GetWithDetails(int id)
-    {
-        var proposal = await _service.GetProposalWithDetailsAsync(id);
-        if (proposal == null) return NotFound();
-        return proposal;
-    }
+        [HttpGet("{id}")]
+        public IActionResult GetProposalById(int id)
+        {
+            var result = _homeServiceService.GetProposalById(id);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // POST: api/ServiceProviderProposals/check
-    [HttpPost("check")]
-    public async Task<ActionResult<bool>> HasProviderProposed(
-        [FromQuery] int requestId,
-        [FromQuery] string providerId)
-    {
-        return await _service.HasProviderProposedAsync(requestId, providerId);
-    }
+        [HttpPut("{id}")]
+        //[Authorize(Roles = "ServiceProvider")]
+        public IActionResult UpdateProposal(int id, [FromForm] AddServiceProviderProposalVM model)
+        {
+            var result = _homeServiceService.UpdateProposal(id, model);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // POST: api/ServiceProviderProposals
-    [HttpPost]
-    public IActionResult Create(ServiceProviderPropsal proposal)
-    {
-        var createdProposal = _service.CreateProposal(proposal);
-        return CreatedAtAction(nameof(GetById), new { id = createdProposal.Id }, createdProposal);
-    }
+        [HttpPut("accept/{id}")]
+        //[Authorize(Roles = "Client")]
+        public IActionResult AcceptProposal(int id)
+        {
+            var result = _homeServiceService.AcceptProposal(id);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // PUT: api/ServiceProviderProposals/{id}/accept
-    [HttpPut("{id}/accept")]
-    public async Task<IActionResult> AcceptProposal(int id)
-    {
-        await _service.AcceptProposalAsync(id);
-        return NoContent();
-    }
+        [HttpPut("reject/{id}")]
+        //[Authorize(Roles = "Client")]
+        public IActionResult RejectProposal(int id)
+        {
+            var result = _homeServiceService.RejectProposal(id);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // PUT: api/ServiceProviderProposals/{id}/reject
-    [HttpPut("{id}/reject")]
-    public async Task<IActionResult> RejectProposal(int id)
-    {
-        await _service.RejectProposalAsync(id);
-        return NoContent();
-    }
+        [HttpPut("cancel/{serviceRequestId}")]
+        //[Authorize(Roles = "Client")]
+        public IActionResult CancelProposals(int serviceRequestId)
+        {
+            var result = _homeServiceService.CancelProposals(serviceRequestId);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
-    // PUT: api/ServiceProviderProposals/{id}
-    [HttpPut("{id}")]
-    public IActionResult Update(int id, ServiceProviderPropsal proposal)
-    {
-        if (id != proposal.Id) return BadRequest();
-        _service.UpdateProposal(proposal);
-        return NoContent();
-    }
-
-    // DELETE: api/ServiceProviderProposals/{id}
-    [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
-    {
-        var proposal = _service.GetProposalById(id);
-        if (proposal == null) return NotFound();
-
-        _service.DeleteProposal(id);
-        return NoContent();
+        [HttpDelete("{id}")]
+        //[Authorize(Roles = "ServiceProvider")]
+        public IActionResult DeleteProposal(int id)
+        {
+            var result = _homeServiceService.DeleteProposal(id);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
     }
 }

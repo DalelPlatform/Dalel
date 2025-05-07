@@ -17,17 +17,20 @@ namespace Dalel.Services
         private readonly PaymentPropertiesRepository _paymentRepo;
         private readonly PropertiesRepository _propertiesRepo;
         private readonly ReviewPropertiesRepository _reviewRepo;
+        private readonly IPaymentProcessor<PaymentProperties> paymentProcessor;
 
         public PropertyService(
             BookingPropertiesRepository bookingRepo,
             PaymentPropertiesRepository paymentRepo,
             PropertiesRepository propertiesRepo,
-            ReviewPropertiesRepository reviewRepo)
+            ReviewPropertiesRepository reviewRepo,
+            IPaymentProcessor<PaymentProperties> paymentProcessor)
         {
             _bookingRepo = bookingRepo;
             _paymentRepo = paymentRepo;
             _propertiesRepo = propertiesRepo;
             _reviewRepo = reviewRepo;
+            this.paymentProcessor = paymentProcessor;
         }
 
         #region Properties
@@ -158,8 +161,20 @@ namespace Dalel.Services
         {
             try
             {
-                _paymentRepo.Add(payment);
-                return ServiceResult.SuccessResult("Payment recorded.");
+                var result = paymentProcessor.ProcessPayment(payment);
+                if (!result.Success)
+                    return result;
+
+                // Booking confirmation logic
+                var booking = _bookingRepo.GetBookingById(payment.BookingPropertyId);
+                if (booking == null)
+                    return ServiceResult.FailureResult("Booking not found.");
+
+                booking.Status = BookingStatus.PaymentConfirmed;
+                _bookingRepo.Update(booking);
+
+                return ServiceResult.SuccessResult("Payment done, booking confirmed.");
+
             }
             catch (Exception ex)
             {

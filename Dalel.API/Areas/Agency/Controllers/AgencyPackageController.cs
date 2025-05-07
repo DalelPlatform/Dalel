@@ -3,6 +3,7 @@ using Dalel.Services.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Hotel;
@@ -14,7 +15,7 @@ namespace Dalel.API.Areas.Agency.Controllers
     public class AgencyPackageController : ControllerBase
     {
         private readonly AgencyPakageService _pakageService;
-       public AgencyPackageController(AgencyPakageService _service)
+        public AgencyPackageController(AgencyPakageService _service)
         {
             _pakageService = _service;
         }
@@ -27,19 +28,22 @@ namespace Dalel.API.Areas.Agency.Controllers
             return new JsonResult(res);
         }
         [HttpPost]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult createAgencyPackage([FromForm] AddAgencyPackageVM packageAgency)
         {
             //user claim    
             var res = _pakageService.CreateAgencyPackage(packageAgency);
             return new JsonResult(res);
         }
-        [HttpPut]
-        public IActionResult UpdateAgecyPackage(AddAgencyPackageVM packageAgency)
+        [HttpPut("{Id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
+        public IActionResult UpdateAgecyPackage(AddAgencyPackageVM packageAgency, int Id)
         {
-            var res = _pakageService.UpdateAgencyPackage(packageAgency);
+            var res = _pakageService.UpdateAgencyPackage(Id, packageAgency);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult DeleteAgecyPackage(int id)
         {
             var res = _pakageService.deleteAgencyPackage(id);
@@ -47,7 +51,34 @@ namespace Dalel.API.Areas.Agency.Controllers
 
         }
 
-       
+        [HttpGet("search")]
+        public IActionResult SearchAgencyPackage(
+               [FromQuery] string searchText = "",
+              [FromQuery] string Name = "",
+               [FromQuery] string Price = "",
+
+               [FromQuery] int pageSize = 10,
+              [FromQuery] int pageIndex = 1,
+               [FromQuery] string OrderBy = "Id",
+               [FromQuery] bool IsAscending = false
+           )
+        {
+            var result = _pakageService.SearchAgencyPackage(
+                 searchText,
+                       Name,
+                       Price,
+
+                       pageSize,
+                       pageIndex,
+                       OrderBy,
+                      IsAscending
+            );
+
+            if (!result.Success)
+                return new JsonResult(result);
+
+            return new JsonResult(result);
+        }
 
 
     }

@@ -95,5 +95,21 @@ namespace Dalel.Repository
         .FirstOrDefault(r => r.OwnerId == ownerId && !r.IsDeleted)
         ?.ToDetailsViewModel();
         }
+        public IQueryable<RestaurantDetailsVM> GetPendingRestaurant()
+        {
+            return GetList(r => r.VerificationStatus == VerificationStatus.Pending)
+                .Select(res => res.ToDetailsViewModel());
+
+        }
+        public bool UpdateRestaurantStatus(int RestaurantId, VerificationStatus newStatus)
+        {
+            var Restaurant = base.GetList(r => r.Id == RestaurantId).FirstOrDefault();
+            if (Restaurant == null)
+                return false;
+
+            Restaurant.VerificationStatus = newStatus;
+            base.Update(Restaurant);
+            return true;
+        }
     }
 }

@@ -1,14 +1,8 @@
 ﻿using Dalel.ViewModels;
-using Microsoft.EntityFrameworkCore;
 using Models;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
 using System.Data.Entity;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
+
 
 namespace Dalel.Repository
 {
@@ -66,7 +60,6 @@ namespace Dalel.Repository
             return query;
         }
 
-
         public IQueryable<T> Get(
             Expression<Func<T, bool>> filter = null,
             int pageSize = 4,
@@ -105,42 +98,47 @@ namespace Dalel.Repository
         }
 
 
-
+        public T GetById(int id)
+        {
+            return Table.Find(id);
+        }
 
         public void Add(T newRow)
         {
             Table.Add(newRow);
-            Context.SaveChanges();
         }
 
         public void Update(T newRow)
         {
             Table.Update(newRow);
-            Context.SaveChanges();
         }
 
         public void Delete(T row)
         {
             Table.Remove(row);
-            Context.SaveChanges();
         }
 
+
+        //pending 
+        public IQueryable<T> GetPendingRequests(Expression<Func<T, bool>> filter)
+        {
+            return GetList(filter);
+        }
         public void Save()
         {
             Context.SaveChanges();
         }
 
-        
+
 
         #endregion
 
 
 
+        
 
 
 
 
-
-
-       }
+    }
 }

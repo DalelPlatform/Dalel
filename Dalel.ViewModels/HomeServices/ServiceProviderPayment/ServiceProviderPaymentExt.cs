@@ -1,4 +1,5 @@
 ﻿using Models.Enums;
+using Models.HomeService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,28 +9,35 @@ namespace Dalel.ViewModels
 {
     public static class ServiceProviderPaymentExt
     {
-        public static Models.HomeService.ServiceProviderPayment ToModel(this AddServiceProviderPayment vm)
+        public static ServiceProviderPayment ToModel(this AddServiceProviderPayment vm)
         {
-            return new Models.HomeService.ServiceProviderPayment
+            return new ServiceProviderPayment
             {
-                Amount = vm.Amount,
-                AmountPaid = vm.AmountPaid,
-                CommissionDeducted = vm.CommissionDeducted,
-                CodeApplied = vm.CodeApplied,
-                TransactionDateTime = DateTime.Now,
-                PaymentMethod = vm.PaymentMethod,
-                PaymentStatus = vm.PaymentStatus,
-                RequestId = vm.RequestId
-
+                RequestId = vm.RequestId,
+                Amount = (float)vm.Amount,
+                PaymentStatus = vm.PaymentStatus
             };
         }
 
-        public static ServiceProviderDetailsVM ToDetailsModel(this Models.HomeService.ServiceProviderPayment model)
+        public static ServiceProviderPayment ToEditModel(this AddServiceProviderPayment vm, ServiceProviderPayment existing)
         {
-            return new ServiceProviderDetailsVM
+            existing.RequestId = vm.RequestId;
+            existing.Amount = (float)vm.Amount;
+            existing.PaymentStatus = vm.PaymentStatus;
+            return existing;
+        }
+
+        public static ServiceProviderPaymentDetailsVM ToDetailsViewModel(this ServiceProviderPayment model)
+        {
+            var serviceProviderId = model.ServiceRequest?.Propsals?.FirstOrDefault(p => p.Status == ProposalStatus.Accepted)?.ServiceProviderId;
+            return new ServiceProviderPaymentDetailsVM
             {
-                PaymentMethod = model.PaymentMethod.ToString(),
-                PaymentStatus = model.PaymentStatus.ToString(),
+                Id = model.Id,
+                RequestId = model.RequestId,
+                ServiceProviderId = serviceProviderId,
+                ServiceProviderName = model.ServiceRequest?.Propsals?.FirstOrDefault(p => p.Status == ProposalStatus.Accepted)?.ServiceProvider?.AppUser?.UserName ?? "Not Provided",
+                Amount = model.Amount,
+                PaymentStatus = model.PaymentStatus
             };
         }
     }

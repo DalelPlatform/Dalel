@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Driver;
 using Models.Enums;
+using Models.Restaurant.Enums;
 
 namespace Dalel.Reopsitory
 {
@@ -41,5 +42,7 @@ namespace Dalel.Reopsitory
                     b.Id.ToString().Contains(searchTerm)
                 ).Select(b => b.ToDetailsViewModel());
         }
+
+     
     }
 }

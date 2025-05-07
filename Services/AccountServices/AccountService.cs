@@ -113,6 +113,24 @@ namespace Dalel.Services
             }
             return IdentityResult.Failed();
         }
+        public async Task<bool> IsUserNameTaken(string userName)
+        {
+            var user = await appUserRepository.FindByUserName(userName);
+            return user != null;
+        }
+
+        public async Task<bool> IsEmailTaken(string email)
+        {
+            var user = await appUserRepository.FindByEmail(email);
+            return user != null;
+        }
+
+        public async Task<bool> IsNationalIdTaken(string nationalId)
+        {
+            var user = await appUserRepository.FindByNationalId(nationalId);
+            return user != null;
+        }
+
 
         public async Task<SignInResult> Login(UserLoginVM user)
         {

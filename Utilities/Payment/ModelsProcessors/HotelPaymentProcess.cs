@@ -1,4 +1,5 @@
-﻿using Models.Enums;
+﻿using Dalel.Repository;
+using Models.Enums;
 using Models.Hotel;
 using Models.Restaurant;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities.Payments.Gateways;
 
 namespace Utilities
 {
@@ -13,11 +15,14 @@ namespace Utilities
     {
         private readonly StripeService _stripeService;
         private readonly PayPalService _payPalService;
+        private readonly PaymentHotelRoomRepository _paymentHotelRoomRepository;
 
-        public HotelPaymentProcess(StripeService stripeService, PayPalService payPalService)
+        public HotelPaymentProcess(StripeService stripeService, PayPalService payPalService, 
+            PaymentHotelRoomRepository paymentHotelRoomRepository)
         {
             _stripeService = stripeService;
             _payPalService = payPalService;
+            _paymentHotelRoomRepository = paymentHotelRoomRepository;
         }
 
         public ServiceResult ProcessPayment(PaymentHotelRoom payment)
@@ -46,6 +51,8 @@ namespace Utilities
 
                 payment.TransactionDateTime = DateTime.Now;
                 payment.PaymentStatus = PaymentStatus.Completed;
+
+                _paymentHotelRoomRepository.Add(payment);
 
                 return ServiceResult.SuccessResult("Hotel Room payment completed.");
             }

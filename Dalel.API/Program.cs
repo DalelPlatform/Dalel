@@ -20,6 +20,9 @@ using Models.HomeChef;
 using Models.Property;
 using Models.Hotel;
 using Models.Driver;
+using Dalel.Reopsitory;
+using Dalel.Repository.HomeServices;
+using Utilities.Payments.Gateways;
 
 
 
@@ -77,6 +80,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 //Add srilog logging
 Log.Logger = new LoggerConfiguration()  
                 .ReadFrom.Configuration(builder.Configuration) 
@@ -98,13 +102,29 @@ builder.Services.AddScoped<ServiceProviderRepository>();
 builder.Services.AddScoped<TravelAgencyOwnerReopsitory>();
 #endregion
 
+#region Driver
+builder.Services.AddScoped<VehicleService>();
+builder.Services.AddScoped<CarProposalRepository>();
+builder.Services.AddScoped<DriverRepository>();
+builder.Services.AddScoped<BookingVehicleRepository>();
+builder.Services.AddScoped<PaymentVehicleRepository>();
+builder.Services.AddScoped<ReviewVehicleRepository>();
+builder.Services.AddScoped<VehicleRepository>();
+#endregion
+
 #region Serviceprovider
 builder.Services.AddScoped<ServiceProviderProjectRepository>();
 builder.Services.AddScoped<ServiceProviderPropsalRepository>();
 builder.Services.AddScoped<ServiceProviderScheduleRepository>();
-builder.Services.AddScoped<ServiceProviderProjectRepository>();
-builder.Services.AddScoped<ServiceProviderPropsalRepository>();
-builder.Services.AddScoped<ServiceProviderScheduleRepository>();
+builder.Services.AddScoped<ServiceProviderPaymentRepository>();
+//builder.Services.AddScoped<ServiceProviderRepository>();
+builder.Services.AddScoped<CategoryServicesRepository>();
+builder.Services.AddScoped<ServiceProviderReviewRepository>();
+builder.Services.AddScoped<ServiceRequestRepository>();
+builder.Services.AddScoped<ServiceQuariesRepository>();
+builder.Services.AddScoped<HomeServiceService>();
+
+
 #endregion
 
 #region Property
@@ -193,7 +213,6 @@ builder.Services.AddAuthentication(option =>
     option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(option =>
 {
-    //on One Statless Request
     option.SaveToken = true;
     option.TokenValidationParameters = new TokenValidationParameters()
     {
@@ -203,7 +222,16 @@ builder.Services.AddAuthentication(option =>
     };
 });
 
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAngular", policy => {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+app.UseCors("AllowAngular");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

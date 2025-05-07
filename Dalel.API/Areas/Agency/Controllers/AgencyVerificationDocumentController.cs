@@ -3,6 +3,7 @@ using Dalel.Services.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +14,7 @@ namespace Dalel.API.Areas.Agency.Controllers
     public class AgencyVerificationDocumentController : ControllerBase
     {
         private readonly AgencyPakageService _pakageService;
-       public AgencyVerificationDocumentController(AgencyPakageService _service)
+        public AgencyVerificationDocumentController(AgencyPakageService _service)
         {
             _pakageService = _service;
         }
@@ -21,6 +22,7 @@ namespace Dalel.API.Areas.Agency.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult GetAlldoc(int id)
         {
 
@@ -36,10 +38,10 @@ namespace Dalel.API.Areas.Agency.Controllers
             var res = _pakageService.AddDocument(agencyId, documentType, documentFile);
             return new JsonResult(res);
         }
-        [HttpPut]
-        public IActionResult UpdateDoc(addAgencyVerificationDocumentVM doc)
+        [HttpPut("{Id}")]
+        public IActionResult UpdateDoc(int Id, addAgencyVerificationDocumentVM doc)
         {
-            var res = _pakageService.UpdateDocument(doc);
+            var res = _pakageService.UpdateDocument(Id, doc);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]

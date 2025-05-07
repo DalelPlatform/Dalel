@@ -1,0 +1,20 @@
+﻿@model List<Dalel.ViewModels.Agency.AgencyPromotionDetails>
+<h2>Agency Pending AgencyPromotion</h2>
+@foreach (var Promot in Model)
+{
+    <div>
+        <p>@Promot.DiscountPercentage</p>
+        <p>@Promot.StartDate</p>
+        <p>@Promot.EndDate</p>
+
+        <form method="post" asp-action="Accept" asp-controller="AgencyPromotion"
+              asp-route-id="@Promot.Id">
+            <button type="submit">✅ Accept</button>
+        </form>
+
+        <form method="post" asp-action="Reject" asp-controller="AgencyPromotion"
+              asp-route-id="@Promot.Id">
+            <button type="submit">❌ Reject</button>
+        </form>
+    </div>
+}

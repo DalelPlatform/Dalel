@@ -10,8 +10,9 @@ namespace Dalel.ViewModels.HomeServices.CategoryServices
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string ImageUrl { get; set; }
         public string Description { get; set; }
-        public int ServiceProvidersCount { get; set; }
+        public string Image { get; set; }
+        public int ServiceProviderCount { get; set; }
+        public int QueryCount { get; set; }
     }
 }

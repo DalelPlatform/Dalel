@@ -17,43 +17,50 @@ namespace Dalel.Repository.HomeServices
         {
         }
 
-        public async Task<IQueryable<ServiceQuaries>> GetQueriesByCategoryAsync(int categoryId)
+        public IQueryable<ServiceQuaries> GetQueriesByCategory(int categoryId)
         {
 
-            var queries = await base.GetList(q => q.CategoryServicesId == categoryId)
-                          .OrderByDescending(q => q.QuestionDate)
-                          .ToListAsync();
-
-            return (IQueryable<ServiceQuaries>)queries;
-        }
-
-        public async Task<IQueryable<ServiceQuaries>> GetQueriesByClientAsync(string clientId)
-        {
-            return (IQueryable<ServiceQuaries>)await base.GetList(q => q.ClientId == clientId)
-                          .OrderByDescending(q => q.QuestionDate)
-                          .ToListAsync();
+            return base.GetList(q => q.CategoryServicesId == categoryId)
+                          .OrderByDescending(q => q.QuestionDate);
 
         }
 
-        public async Task<IQueryable<ServiceQuaries>> GetQueriesByProviderAsync(string providerId)
+        public IQueryable<ServiceQuaries> GetQueriesByClient(string clientId)
         {
+            return base.GetList(q => q.ClientId == clientId)
+                          .OrderByDescending(q => q.QuestionDate);
 
-            return (IQueryable<ServiceQuaries>)await _context.ServiceQuaries
-                         .Where(q => q.ServiceProviderId == providerId)
-                         .OrderByDescending(q => q.QuestionDate)
-                         .ToListAsync();
         }
 
-        public async Task<bool> AnswerQueryAsync(int queryId, string answer)
+        public IQueryable<ServiceQuaries> GetQueriesByProvider(string providerId)
         {
-            var query = await base.GetList(q => q.Id == queryId).FirstOrDefaultAsync();
+
+            return base.GetList(q => q.ServiceProviderId == providerId)
+                         .OrderByDescending(q => q.QuestionDate);
+        }
+
+        public bool AnswerQuery(int queryId, string answer)
+        {
+            var query = base.GetList(q => q.Id == queryId).FirstOrDefault(); 
             if (query != null)
             {
                 query.Answer = answer;
                 query.AnswerDate = DateTime.Now;
+                base.Save();
                 return true;
             }
             return false;
+        }
+
+        public ServiceQuaries GetQueryById(int id)
+        {
+            return base.Get(q => q.Id == id).FirstOrDefault();
+        }
+
+        public void UpdateQuery(ServiceQuaries query)
+        {
+            base.Update(query);
+            base.Save();
         }
 
         //public async Task<PagedResult<ServiceQuaries>> FilterQueriesAsync(
