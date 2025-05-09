@@ -14,14 +14,10 @@ namespace Models.Hotel
         public int RoomTypeId { get; set; }
        
 
-        public string ViewType { get; set; }
-
         public AvaliabilityStatus Availability { get; set; }
 
         // Navigation property: each room belongs to one RoomType.
         public virtual RoomType RoomType { get; set; }
-
-        public virtual Hotel Hotel { get; set; }
 
         // Navigation property: a room can have multiple bookings.
         public virtual ICollection<BookingHotelRoom> BookingHotelRooms { get; set; }
@@ -43,14 +39,7 @@ namespace Models.Hotel
             builder.Property(r => r.RoomTypeId)
                    .IsRequired();
 
-           
-
-          
-
-            // ViewType: required, max length 50.
-            builder.Property(r => r.ViewType)
-                   .IsRequired()
-                   .HasMaxLength(50);
+        
 
        
 

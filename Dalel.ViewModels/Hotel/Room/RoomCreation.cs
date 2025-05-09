@@ -14,14 +14,6 @@ namespace Dalel.ViewModels
         public int RoomTypeId { get; set; }
 
         [Required]
-        [StringLength(50)]
-        public string ViewType { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Status { get; set; }
-
-        [Required]
         public AvaliabilityStatus Availability { get; set; }
     }
 }
