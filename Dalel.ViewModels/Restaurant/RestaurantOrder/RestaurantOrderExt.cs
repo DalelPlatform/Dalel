@@ -52,12 +52,21 @@ namespace Dalel.Extensions
         {
             return new RestaurantOrder
             {
-                
+
                 Date = order.Date,
-                TotalPrice = order.TotalPrice,
+                //TotalPrice = order.TotalPrice,
                 OrderStatus = order.OrderStatus,
                 RestaurantId = order.RestaurantId,
-                ClientId = order.ClientId
+                ClientId = order.ClientId,
+                RestaurantOrderItems = order.listItems.Select(item => new RestaurantOrderItem
+                {
+                    SupPrice = item.SupPrice,
+                    Quantity = item.Quantity,
+                    RestaurantMenuItemId = item.RestaurantMenuItemId,
+
+                }).ToList(),
+
+                TotalPrice = order.listItems.Sum(item => item.SupPrice * item.Quantity)
             };
         }
 
@@ -69,9 +78,9 @@ namespace Dalel.Extensions
                     ? order.Date
                     : oldModel.Date;
 
-                oldModel.TotalPrice = order.TotalPrice > 0
-                    ? order.TotalPrice
-                    : oldModel.TotalPrice;
+                //oldModel.TotalPrice = order.TotalPrice > 0
+                //    ? order.TotalPrice
+                //    : oldModel.TotalPrice;
 
                 oldModel.OrderStatus = order.OrderStatus != default
                     ? order.OrderStatus

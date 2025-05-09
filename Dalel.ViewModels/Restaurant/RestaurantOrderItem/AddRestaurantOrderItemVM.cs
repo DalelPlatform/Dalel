@@ -12,11 +12,11 @@ namespace Dalel.ViewModels.Restaurant
         [Range(1, float.MaxValue, ErrorMessage = "Quantity must be at least 1.")]
         public float Quantity { get; set; }
 
-        [Required(ErrorMessage = "Restaurant Order Id is required.")]
-        public int RestaurantOrderId { get; set; }
-
         [Required(ErrorMessage = "Menu Item Id is required.")]
         public int RestaurantMenuItemId { get; set; }
+
+        [Required(ErrorMessage = "Oreder Menu Id is required.")]
+        public int RestaurantOrderId { get; set; }
     }
 }
 

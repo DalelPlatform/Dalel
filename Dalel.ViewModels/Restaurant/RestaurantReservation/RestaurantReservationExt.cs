@@ -29,9 +29,9 @@ namespace Dalel.ViewModels
         {
             return new RestaurantReservation
             {
-                
-                Comments = reservation.Comments,
-                Rating = reservation.Rating,
+
+                Comments = "",
+                Rating = 0,
                 ModificationDateTime = DateTime.Now,
                 TableNumber = reservation.TableNumber,
                 ReervationStatus = reservation.ReervationStatus,
@@ -42,10 +42,7 @@ namespace Dalel.ViewModels
 
         public static RestaurantReservation ToEditModel(this AddRestaurantReservationVM ModelVm , RestaurantReservation oldModel)
         {
-            oldModel.Comments = ModelVm.Comments ?? oldModel.Comments;
-            oldModel.Rating = ModelVm.Rating > 0
-                ? ModelVm.Rating
-                : oldModel.Rating;
+          
             oldModel.TableNumber = ModelVm.TableNumber ?? oldModel.TableNumber;
             oldModel.ReervationStatus = ModelVm.ReervationStatus > 0
                 ? ModelVm.ReervationStatus

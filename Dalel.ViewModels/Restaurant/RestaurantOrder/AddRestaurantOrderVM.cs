@@ -1,16 +1,17 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Dalel.ViewModels.Restaurant;
 using Models.Enums;
 
-namespace Dalel.ViewModels.Restaurant
+namespace Dalel.ViewModels
 {
     public class AddRestaurantOrderVM
     {
         [Required]
         public DateTime Date { get; set; }
 
-        [Range(0.01, double.MaxValue, ErrorMessage = "TotalPrice must be greater than 0.")]
-        public float TotalPrice { get; set; }
+        //[Range(0.01, double.MaxValue, ErrorMessage = "TotalPrice must be greater than 0.")]
+        //public float TotalPrice { get; set; }
 
         [Required]
         public OrderStatus OrderStatus { get; set; }
@@ -20,5 +21,9 @@ namespace Dalel.ViewModels.Restaurant
 
         [Required(ErrorMessage = "ClientId is required.")]
         public string ClientId { get; set; }
+
+       public List<AddRestaurantOrderItemVM> listItems { get; set; } 
     }
+
+   
 }
