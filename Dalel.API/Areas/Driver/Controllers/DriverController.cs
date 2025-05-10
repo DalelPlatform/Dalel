@@ -3,6 +3,7 @@ using Dalel.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Models.Driver;
 using Models.Enums;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Dalel.API.Areas
@@ -18,18 +19,20 @@ namespace Dalel.API.Areas
             _driverService = driverService;
         }
 
-        [HttpPost("Driver")]
+        [HttpPost("AddDriver")]
         public async Task<IActionResult> AddDriver([FromBody] AddVehicle driver)
         {
+            driver.DriverId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = await _driverService.AddVehicle(driver.ToModel());
             if (!result.Success)
                 return BadRequest(result.Message);
             return Ok(result);
         }
 
-        [HttpPut("Driver")]
+        [HttpPut("EditDriver")]
         public async Task<IActionResult> EditDriver([FromBody] AddVehicle driver)
         {
+
             var result = await _driverService.EditVehicle(driver.ToModel());
             if (!result.Success)
                 return BadRequest(result.Message);

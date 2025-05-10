@@ -15,8 +15,8 @@ namespace Dalel.ViewModels
         public int Seats { get; set; }
         public string LicenseNumber { get; set; }
         public string PlateNumber { get; set; }
-        public string DriverId { get; set; }
-        public List<string> ImagePaths { get; set; } // Assuming images are uploaded and saved as paths
+        public string? DriverId { get; set; }
+        public List<string>? ImagePaths { get; set; } // Assuming images are uploaded and saved as paths
     }
 
 }
