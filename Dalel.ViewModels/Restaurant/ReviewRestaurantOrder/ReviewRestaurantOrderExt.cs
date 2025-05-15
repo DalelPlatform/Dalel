@@ -1,4 +1,5 @@
-﻿using Models.Restaurant;
+﻿using Dalel.ViewModels.Restaurant;
+using Models.Restaurant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +21,13 @@ namespace Dalel.ViewModels
         }
 
 
-        public static ReviewRestaurantOrder ToModel(this ReviewRestaurantOrderDetailsVM review)
+        public static ReviewRestaurantOrder ToModel(this AddReviewRestaurantOrderVM review)
         {
             return new ReviewRestaurantOrder
             {
                 Comments = review.Comments,
                 Rating = review.Rating,
+                ModificationDateTime = review.ModificationDateTime,
                 RestaurantOrderId = review.RestaurantOrderId
             };
         }

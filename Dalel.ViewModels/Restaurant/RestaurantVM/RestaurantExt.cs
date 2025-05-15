@@ -37,6 +37,8 @@ namespace Dalel.ViewModels
         {
             return new RestaurantDetailsVM
             {
+                //Id = 0,
+                Id= restaurant.Id,
                 Name = restaurant.Name,
                 Description = restaurant.Description,
                 NumberOfRooms = restaurant.NumberOfRooms,

@@ -37,7 +37,7 @@ namespace Dalel.Api.Controllers
                 roomTypeId, viewType, availability, descending, pageSize, pageIndex);
 
             var result = _hotelService.SearchRooms(
-                roomTypeId, viewType, availability,
+                roomTypeId, availability,
                 descending, pageSize, pageIndex);
 
             _logger.LogInformation(

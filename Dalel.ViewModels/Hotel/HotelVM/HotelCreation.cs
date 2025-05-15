@@ -44,13 +44,12 @@ namespace Dalel.ViewModels
         [Required(ErrorMessage = "Cancelation charges are required.")]
         public float CancelationCharges { get; set; }
 
-        [Required(ErrorMessage = "Owner Id is required.")]
-        public string OwnerId { get; set; }
+        public string? OwnerId { get; set; }
 
         // For uploading images: list of image paths or names (this collection can be populated after file saving)
         public List<string> Paths { get; set; } = new List<string>();
 
         // Files uploaded for the hotel images.
-        public IFormFileCollection HotelImage { get; set; }
+        public IFormFileCollection? HotelImage { get; set; }
     }
 }

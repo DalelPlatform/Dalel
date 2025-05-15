@@ -383,14 +383,14 @@ namespace Dalel.Services
 
         #region RestaurantOrder
 
-        public ServiceResult CreateOrder(AddRestaurantOrderItemVM order)
+        public ServiceResult CreateOrder(AddRestaurantOrderVM order)
         {
             try
             {
                 var NewOrder = order.ToModel();
-                _restaurantOrderItemRepository.Add(NewOrder);
+                _restaurantOrderRepository.Add(NewOrder);
 
-                return ServiceResult.SuccessResult("Meal added successfully.");
+                return ServiceResult.SuccessResult("Order added successfully.");
             }
             catch (Exception ex)
             {
@@ -413,7 +413,7 @@ namespace Dalel.Services
                 _restaurantOrderRepository.Update(orderVM.ToEditModel(oldMeal));
 
 
-                return ServiceResult.SuccessResult("Meal Updated successfully.");
+                return ServiceResult.SuccessResult("Order Updated successfully.");
             }
             catch (Exception ex)
             {

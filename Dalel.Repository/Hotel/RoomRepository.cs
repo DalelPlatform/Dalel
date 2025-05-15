@@ -15,7 +15,6 @@ namespace Dalel.Repository
 
         public PaginationViewModel<RoomDetails> Search(
             int? roomTypeId = null,
-            string viewType = null,
             AvaliabilityStatus? availability = null,
             bool descending = false,
             int pageSize = 5,
@@ -23,7 +22,6 @@ namespace Dalel.Repository
         {
             Expression<Func<Room, bool>> filter = r =>
                 (!roomTypeId.HasValue || r.RoomTypeId == roomTypeId) &&
-                (string.IsNullOrEmpty(viewType) || r.ViewType.Contains(viewType)) &&
                 (!availability.HasValue || r.Availability == availability);
             Expression<Func<Room, object>> orderBy = r => r.Id;
             return Search(filter, orderBy, r => r.ToDetailsViewModel(), descending, pageSize, pageIndex);

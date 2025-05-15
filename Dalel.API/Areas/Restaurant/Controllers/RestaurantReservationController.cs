@@ -21,7 +21,7 @@ namespace Dalel.API.Areas.Restaurant.Controllers
 
 
 
-        [Authorize(Roles = "Client,Admin,RestaurantOwner")]
+        [Authorize(Roles = "Client")]
         [HttpPost("addReservation")]
 
         public IActionResult AddReservation(AddRestaurantReservationVM vm)

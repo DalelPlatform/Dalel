@@ -13,11 +13,11 @@ namespace Utilities
         public int StatusCode { get; set; }
 
 
-        public static ServiceResult SuccessResult(string message = "Success") =>
-            new() { Success = true, Message = message , StatusCode = 200 };
+        public static ServiceResult SuccessResult(string message = "Success", int statusCode = 200) =>
+            new() { Success = true, Message = message , StatusCode = statusCode };
 
-        public static ServiceResult FailureResult(string message = "An error occurred.") =>
-            new() { Success = false, Message = message ,StatusCode = 400 };
+        public static ServiceResult FailureResult(string message = "An error occurred.", int statusCode = 400) =>
+            new() { Success = false, Message = message ,StatusCode = statusCode };
     }
 
     public class ServiceResult<T> : ServiceResult

@@ -55,7 +55,7 @@ namespace Dalel.API.Areas
             return new JsonResult(result);
         }
 
-        [HttpPost]
+        [HttpPost("AddMeal")]
         [Authorize(Roles = "RestaurantOwner")]
         public IActionResult AddMeal([FromBody] AddRestaurantMenuItemVM meal)
         {
