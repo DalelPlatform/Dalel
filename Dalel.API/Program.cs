@@ -220,7 +220,11 @@ builder.Services.AddAuthentication(option =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWT:PrivateKey"]))
     };
 });
-
+builder.Services.AddCors(option => option.AddDefaultPolicy
+    (
+        i => i.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin()
+    )
+);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -235,6 +239,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors();
 // Add this to your Program.cs
 
 app.MapControllerRoute(
