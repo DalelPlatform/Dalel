@@ -37,15 +37,32 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
             return new ServiceProviderDetailsVM
             {
                 UserId = model.UserId,
-                UserName = model.AppUser?.UserName ?? "Not Provided",
-                CategoryServicesId = model.CategoryServicesId,
-                CategoryName = model.CategoryServices?.Name ?? "Not Provided",
-                Address = model.Address?? "",
+                UserName = model.AppUser?.UserName,
+                Address = model.Address,
                 City = model.City,
-                AverageRating = avgRating,
-                ProjectCount = model.Projects?.Count ?? 0,
-                ScheduleCount = model.Schedules?.Count ?? 0,
-                ProposalCount = model.Propsals?.Count ?? 0
+                Price = model.Price,
+                PriceUnit = model.PriceUnit,
+                About = model.About,
+                Website = model.Website,
+                CategoryServicesId = model.CategoryServicesId,
+                VerificationStatus = model.VerificationStatus,
+                Schedules = model.Schedules?.Select(s => new ServiceProviderScheduleDetailsVM
+                {
+                    Id = s.Id,
+                    WorKDay = s.WorKDay,
+                    AvailableFrom = s.AvailableFrom,
+                    AvailableTo = s.AvailableTo
+                }).ToList(),
+                Projects = model.Projects?.Select(p => new ServiceProviderProjectDetailsVM
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    ApproximatePrice = p.ApproximatePrice,
+                    PriceUnit = p.PriceUnit,
+                    VideoLink = p.VideoLink,
+                    ImagePaths = p.ServiceProviderProjectImages?.Select(i => i.ImagePath).ToList() ?? new List<string>()
+                }).ToList()
             };
         }
     }

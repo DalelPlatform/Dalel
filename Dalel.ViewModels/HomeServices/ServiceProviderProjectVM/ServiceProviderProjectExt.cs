@@ -9,20 +9,46 @@ namespace Dalel.ViewModels
     {
         public static ServiceProviderProject ToModel(this AddServiceProviderProjectVM vm)
         {
-            return new ServiceProviderProject
+            var project = new ServiceProviderProject
             {
-                ServiceProviderId = vm.ServiceProviderId,
                 Name = vm.Name,
                 Description = vm.Description,
-                ProjectImages = vm.ImagePath
+                ApproximatePrice = vm.ApproximatePrice,
+                PriceUnit = vm.PriceUnit,
+                VideoLink = vm.VideoLink,
+                ServiceProviderId = vm.ServiceProviderId 
             };
+            project.ServiceProviderProjectImages = new List<ServiceProviderProjectImages>();
+
+            if (!string.IsNullOrEmpty(vm.ImagePath))
+            {
+                project.ServiceProviderProjectImages.Add(new ServiceProviderProjectImages
+                {
+                    ImagePath = vm.ImagePath
+                });
+            }
+
+            return project;
         }
+
         public static ServiceProviderProject ToEditModel(this AddServiceProviderProjectVM vm, ServiceProviderProject existing)
         {
-            existing.ServiceProviderId = vm.ServiceProviderId;
             existing.Name = vm.Name;
             existing.Description = vm.Description;
-            existing.ProjectImages = vm.ImagePath ?? existing.ProjectImages;
+            existing.ApproximatePrice = vm.ApproximatePrice;
+            existing.PriceUnit = vm.PriceUnit;
+            existing.VideoLink = vm.VideoLink;
+
+            if (!string.IsNullOrEmpty(vm.ImagePath))
+            {
+                // Clear existing images and add the new one
+                //existing.ServiceProviderProjectImages.Clear();
+                existing.ServiceProviderProjectImages.Add(new ServiceProviderProjectImages
+                {
+                    ImagePath = vm.ImagePath
+                });
+            }
+
             return existing;
         }
 
@@ -31,11 +57,12 @@ namespace Dalel.ViewModels
             return new ServiceProviderProjectDetailsVM
             {
                 Id = model.Id,
-                ServiceProviderId = model.ServiceProviderId,
-                ServiceProviderName = model.ServiceProvider?.AppUser?.UserName ?? "Not Provided",
                 Name = model.Name,
                 Description = model.Description,
-                ProjectImages = model.ProjectImages
+                ApproximatePrice = model.ApproximatePrice,
+                PriceUnit = model.PriceUnit,
+                VideoLink = model.VideoLink,
+                ImagePaths = model.ServiceProviderProjectImages?.Select(i => i.ImagePath).ToList() ?? new List<string>()
             };
         }
     }

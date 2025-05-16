@@ -186,7 +186,7 @@ namespace Models
             builder.ApplyConfiguration(new PropertyImagesConfiguration());
             builder.ApplyConfiguration(new ReviewPropertiesConfiguration());
             #endregion
-
+            
             #region Restaurant 
             builder.ApplyConfiguration(new PaymentRestaurantOrderConfiguration());
             builder.ApplyConfiguration(new RestaurantConfiguration());

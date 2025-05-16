@@ -19,7 +19,10 @@ namespace Models.HomeService
     {
         public void Configure(EntityTypeBuilder<ServiceProviderSchedule> builder)
         {
-            builder.HasOne(s => s.ServiceProvider).WithMany(p => p.Schedules).HasForeignKey(s => s.ServiceProviderId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(s => s.ServiceProvider)
+                .WithMany(p => p.Schedules)
+                .HasForeignKey(s => s.ServiceProviderId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

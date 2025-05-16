@@ -1359,7 +1359,21 @@ public ServiceResult DeletePayment(int paymentId)
                 return ServiceResult<ServiceProviderDetailsVM>.FailureResult($"Error: {errorMessage}");
             }
         }
+        public ServiceResult<bool> CheckProfileCompleteness(string userId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(userId))
+                    return ServiceResult<bool>.FailureResult("User ID cannot be null or empty.");
 
+                var isComplete = _serviceProviderRepository.CheckProfileCompleteness(userId);
+                return ServiceResult<bool>.SuccessResult(isComplete, isComplete ? "Profile is complete." : "Profile is incomplete.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<bool>.FailureResult("Error: " + ex.Message);
+            }
+        }
         public ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>> SearchServiceProviders(
            string? searchText = "",
            int? categoryId = null,
@@ -1424,56 +1438,6 @@ public ServiceResult DeletePayment(int paymentId)
         }
 
 
-        //    public ServiceResult<PaginationViewModel<AddServiceProviderVM>> SearchProviders(
-        //string searchText = null,
-        //int? categoryId = null,
-        //string address = null,
-        //int? verificationStatus = null,
-        //string sortBy = "Name",
-        //bool descending = false,
-        //int pageSize = 5,
-        //int pageNumber = 1)
-        //    {
-        //        try
-        //        {
-        //            if (pageSize <= 0 || pageNumber <= 0)
-        //                return ServiceResult<PaginationViewModel<AddServiceProviderVM>>.FailureResult("Page size and number must be greater than zero");
-
-        //            var baseQuery = _serviceProviderRepository.SearchProviders(
-        //                searchText,
-        //                categoryId,
-        //                address,
-        //                verificationStatus,
-        //                sortBy,
-        //                descending);
-
-        //            var totalCount = baseQuery.Count();
-
-        //            var data = baseQuery
-        //                .Skip((pageNumber - 1) * pageSize)
-        //                .Take(pageSize)
-        //                .AsQueryable()
-        //                .Select(p => p.ToDetailsViewModel())
-        //            .ToList();
-
-        //            var result = new PaginationViewModel<AddServiceProviderVM>
-        //            {
-        //                Data = data,
-        //                PageNumber = pageNumber,
-        //                PageSize = pageSize,
-        //                TotalCount = totalCount
-        //            };
-
-        //            return ServiceResult<PaginationViewModel<AddServiceProviderVM>>.SuccessResult(result);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return ServiceResult<PaginationViewModel<AddServiceProviderVM>>.FailureResult("An error occurred while searching providers");
-        //        }
-        //    }
-
-
-
         public ServiceResult<ServiceProviderDetailsVM> GetServiceProviderById(string providerId)
         {
             try
@@ -1492,35 +1456,6 @@ public ServiceResult DeletePayment(int paymentId)
                 return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Error: " + ex.Message);
             }
         }
-
-        //public ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>> GetProvidersByCategory(
-        //    int categoryId, int pageSize = 5, int pageNumber = 1)
-        //{
-        //    try
-        //    {
-        //        if (categoryId <= 0)
-        //            return ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>>.FailureResult("Category ID must be greater than zero.");
-
-        //        var totalCount = _serviceProviderRepository.GetProvidersByCategory(categoryId).Count();
-        //        var providers = _serviceProviderRepository.GetProvidersByCategory(categoryId);
-        //        var data = providers.Select(p => p.ToDetailsViewModel());
-
-        //        var paginationResult = new PaginationViewModel<ServiceProviderDetailsVM>
-        //        {
-        //            Data = data,
-        //            PageNumber = pageNumber,
-        //            PageSize = pageSize,
-        //            TotalCount = totalCount
-        //        };
-
-        //        return ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>>.SuccessResult(paginationResult, "Service providers retrieved.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>>.FailureResult("Error: " + ex.Message);
-        //    }
-        //}
-
 
         public ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>> GetProvidersByCategory(
     int categoryId, int pageSize = 5, int pageNumber = 1)
