@@ -1,0 +1,1121 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Dalel.Repository;
+using Dalel.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using Models.Enums;
+using Models.HomeChef;
+using Models.WeddingPlaces;
+using Utilities;
+
+namespace Dalel.Services
+{
+    public class HomeChefService
+    {
+        private readonly HomeChefDeliveryRepository _HomeChefDeliveryRepository;
+        //private readonly HomeChefMealImageRepository _HomeChefMealImageRepository;
+        private readonly HomeChefMealRepository _HomeChefMealRepository;
+        private readonly HomeChefOrderMealRepository _HomeChefOrderMealRepository;
+        private readonly HomeChefOrderRepository _HomeChefOrderRepository;
+        private readonly PaymentHomeChefOrderRepasitory _PaymentHomeChefOrderRepasitory;
+        private readonly ReviewHomeChefOrderRepository _ReviewHomeChefOrderRepository;
+
+
+
+        public HomeChefService(
+            HomeChefDeliveryRepository homeChefDeliveryRepository,
+            //HomeChefMealImageRepository homeChefMealImageRepository,
+            HomeChefMealRepository homeChefMealRepository,
+            HomeChefOrderMealRepository homeChefOrderMealRepository,
+            HomeChefOrderRepository homeChefOrderRepository,
+            PaymentHomeChefOrderRepasitory paymentHomeChefOrderRepasitory,
+            ReviewHomeChefOrderRepository reviewHomeChefOrderRepository)
+        {
+            _HomeChefDeliveryRepository = homeChefDeliveryRepository;
+            //_HomeChefMealImageRepository = homeChefMealImageRepository;
+            _HomeChefMealRepository = homeChefMealRepository;
+            _HomeChefOrderMealRepository = homeChefOrderMealRepository;
+            _HomeChefOrderRepository = homeChefOrderRepository;
+            _PaymentHomeChefOrderRepasitory = paymentHomeChefOrderRepasitory;
+            _ReviewHomeChefOrderRepository = reviewHomeChefOrderRepository;
+        }
+
+
+
+
+
+        #region Deliveries
+
+        public ServiceResult AddDeliveryOrder(AddHomeChefDeliveryVM vm)
+        {
+            try
+            {
+                var delivery = vm.ToModel();
+                _HomeChefDeliveryRepository.Add(delivery);
+
+                return ServiceResult.SuccessResult("Delivery added successfully.");
+            }
+            catch (Exception ex)
+            {
+
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+
+        public ServiceResult UpdateDeliveryOrder(int id ,AddHomeChefDeliveryVM vm)
+        {
+            try
+            {
+                var oldDelivery = _HomeChefDeliveryRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if(oldDelivery == null)
+                {
+                    return ServiceResult.FailureResult("Delivery not found.");
+                }
+                _HomeChefDeliveryRepository.Update(vm.ToEditModel(oldDelivery));
+
+                return ServiceResult.SuccessResult("Delivery Updated successfully.");
+            }
+            catch (Exception ex)
+            {
+
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+
+
+        //Delete Order by id or by Dishname 
+
+        public ServiceResult DeleteDeliveryOrder(int id) // Delete Order by id
+        {
+            try
+            {
+                var order = _HomeChefOrderRepository.GetList(m => m.Id == id).FirstOrDefault();
+
+                if (order == null)
+                {
+                    return ServiceResult.FailureResult("Order not found.");
+                }
+
+
+                _HomeChefOrderRepository.Delete(order);
+
+                return ServiceResult.SuccessResult("Order Deleted Successfully!.");
+            }
+
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult($"Error : {ex.Message}");
+            }
+
+        }
+
+
+
+        ///////////////////////////Method 1 /////////////////////////
+
+        public ServiceResult<HomeChefDeliveryDetailsVM> GetDeliveryById(int id)
+        {
+            try
+            {
+                var delivery = _HomeChefDeliveryRepository.GetDeliveryById(id);
+
+                if (delivery == null)
+                {
+                    return ServiceResult<HomeChefDeliveryDetailsVM>.FailureResult("Delivery not found.");
+                }
+
+                return new ServiceResult<HomeChefDeliveryDetailsVM>
+                {
+                    Success = true,
+                    Message = "Data Requested Successfully!",
+                    StatusCode = 200,
+                    Data = delivery
+                };
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<HomeChefDeliveryDetailsVM>.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+        ///////////////////////////Method 2 /////////////////////////
+
+        public List<ServiceResult<HomeChefDeliveryDetailsVM>> GetAllDeliveries()
+        {
+            try
+            {
+                List<HomeChefDeliveryDetailsVM> list = _HomeChefDeliveryRepository.GetAllDeliveries();
+
+                if (list == null || !list.Any())
+                {
+                    return new List<ServiceResult<HomeChefDeliveryDetailsVM>>
+                    {
+                        ServiceResult<HomeChefDeliveryDetailsVM>.FailureResult("Sorry, no deliveries found.")
+                    };
+                }
+
+                return list.Select(d =>
+                    ServiceResult<HomeChefDeliveryDetailsVM>.SuccessResult(d, "Delivery fetched successfully.")
+                ).ToList();
+            }
+            catch (Exception ex)
+            {
+                return new List<ServiceResult<HomeChefDeliveryDetailsVM>>
+        {
+            ServiceResult<HomeChefDeliveryDetailsVM>.FailureResult($"Error: {ex.Message}")
+        };
+            }
+        }
+
+
+
+        //////////////////////Method 3 ////////////////////
+
+
+        public List<ServiceResult<HomeChefDeliveryDetailsVM>> GetDeliveriesByDate(DateTime date)
+        {
+            try
+            {
+                List<HomeChefDeliveryDetailsVM> deliveries = _HomeChefDeliveryRepository.GetDeliveriesByDate(date);
+                if (deliveries == null || deliveries.Any())
+                {
+                    return new List<ServiceResult<HomeChefDeliveryDetailsVM>>
+                    {
+                        ServiceResult<HomeChefDeliveryDetailsVM>.FailureResult("Sorry, no deliveries found.")
+                    };
+                }
+
+                return deliveries.Select(d =>
+
+                ServiceResult<HomeChefDeliveryDetailsVM>.SuccessResult(d, "Delivery fetched successfully.")
+                ).ToList();
+
+
+            }
+
+            catch (Exception ex)
+            {
+                return new List<ServiceResult<HomeChefDeliveryDetailsVM>>
+                {
+                    ServiceResult<HomeChefDeliveryDetailsVM>.FailureResult($"Error: {ex.Message}")
+                };
+            }
+        }
+
+
+        #endregion
+
+
+
+        #region Meal
+
+        public ServiceResult<PaginationViewModel<HomeChefMealDetailsVM>> Search(
+           string searchText = "",
+           bool? AvailabilityStatus = true, // default = true
+           string? owner = "",
+           FoodCategory? foodCategory = null, // now filtering by enum
+           decimal? Price = null,
+           int pageSize = 10,
+           int pageIndex = 1,
+           string OrderBy = "Id",
+           bool IsAscending = false)
+        {
+            try
+            {
+                var result = _HomeChefMealRepository.Search(
+                searchText,
+                AvailabilityStatus,
+                owner,
+                foodCategory,
+                Price,
+                pageSize,
+                pageIndex,
+                OrderBy,
+                IsAscending
+            );
+                return ServiceResult<PaginationViewModel<HomeChefMealDetailsVM>>.SuccessResult(result);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<HomeChefMealDetailsVM>>.FailureResult($"Error: {ex.Message}");
+            }
+        }
+        public ServiceResult AddMeal(AddHomeChefMealVM vm)
+        {
+            try
+            {
+                var meal = vm.ToModel();
+                _HomeChefMealRepository.Add(meal);
+
+                return ServiceResult.SuccessResult("Meal added successfully.");
+            }
+            catch (Exception ex)
+            {
+
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+
+        public ServiceResult UpdateMeal(int id , AddHomeChefMealVM vm)
+        {
+            try
+            {
+                var oldMeal = _HomeChefMealRepository.GetList(m => m.Id == id).FirstOrDefault();
+                
+                if (oldMeal == null)
+                {
+                    return ServiceResult.FailureResult("Order not found.");
+                }
+                _HomeChefMealRepository.Update(vm.ToEditModel(oldMeal));
+
+
+                return ServiceResult.SuccessResult("Meal Updated successfully.");
+            }
+            catch (Exception ex)
+            {
+
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+
+        //Delete meal by id or by Dishname 
+
+        public ServiceResult DeleteMeal(int id) // Delete meal by id
+        {
+            try
+            {
+                var meal = _HomeChefMealRepository.GetList(m => m.Id == id).FirstOrDefault();
+
+                if (meal == null)
+                {
+                    return ServiceResult.FailureResult("Meal not found.");
+                }
+
+
+                _HomeChefMealRepository.Delete(meal);
+
+                return ServiceResult.SuccessResult("Meal Deleted Successfully!.");
+            }
+
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult($"Error : {ex.Message}");
+            }
+
+        }
+
+        public ServiceResult DeleteMeal(string name) //Delete meal by Dishname
+        {
+            try
+            {
+                var meal = _HomeChefMealRepository.GetList(m => m.DishName.ToLower() == name.ToLower()).FirstOrDefault();
+
+                if (meal == null)
+                {
+                    return ServiceResult.FailureResult("Meal not found.");
+                }
+
+
+                _HomeChefMealRepository.Delete(meal);
+
+                return ServiceResult.SuccessResult("Meal Deleted Successfully!.");
+            }
+
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult($"Error : {ex.Message}");
+            }
+
+        }
+
+
+        ///////////////////////Method 1 ////////////////////////
+
+
+        public ServiceResult<HomeChefMealDetailsVM> GetMealById(int id)
+        {
+            try
+            {
+                var meal = _HomeChefMealRepository.GetMealById(id);
+                if (meal == null)
+                {
+                    return ServiceResult<HomeChefMealDetailsVM>.FailureResult("not Meal found");
+                }
+                return new ServiceResult<HomeChefMealDetailsVM>
+                {
+                    Success = true,
+                    Message = "Request Send Successfully! .",
+                    StatusCode = 200,
+                    Data = meal
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return ServiceResult<HomeChefMealDetailsVM>.FailureResult($"Error : {ex.Message}");
+            }
+        }
+
+        ///////////////////////Method 2 ////////////////////////
+
+
+        public List<ServiceResult<HomeChefMealDetailsVM>> GetAllMeals()
+        {
+            try
+            {
+
+
+                List<HomeChefMealDetailsVM> meals = _HomeChefMealRepository.GetAllMeals();
+                if (meals == null || meals.Any())
+                {
+                    return new List<ServiceResult<HomeChefMealDetailsVM>>
+                        {
+                            ServiceResult<HomeChefMealDetailsVM>.FailureResult("Sorry, no Meals found.")
+                        };
+                }
+
+
+                return meals.Select(m =>
+                ServiceResult<HomeChefMealDetailsVM>.SuccessResult(m, "Meals fetched successfully.")
+                ).ToList();
+
+            }
+
+
+            catch (Exception ex)
+            {
+                return new List<ServiceResult<HomeChefMealDetailsVM>>
+              {
+                  ServiceResult<HomeChefMealDetailsVM>.FailureResult($"Error : {ex.Message}")
+              };
+            }
+        }
+
+
+        ///////////////////////Method 3////////////////////////
+
+
+
+
+        public List<ServiceResult<HomeChefMealDetailsVM>> GetMealsByChefId(string chefId)
+        {
+            try
+            {
+
+
+                List<HomeChefMealDetailsVM> meals = _HomeChefMealRepository.GetMealsByChefId(chefId);
+                if (meals == null || meals.Any())
+                {
+                    return new List<ServiceResult<HomeChefMealDetailsVM>>
+                        {
+                            ServiceResult<HomeChefMealDetailsVM>.FailureResult("Sorry, no Meal found.")
+                        };
+                }
+
+
+                return meals.Select(m =>
+                ServiceResult<HomeChefMealDetailsVM>.SuccessResult(m, "Meals fetched successfully.")
+                ).ToList();
+
+            }
+
+            catch (Exception ex)
+            {
+                return new List<ServiceResult<HomeChefMealDetailsVM>>
+              {
+                  ServiceResult<HomeChefMealDetailsVM>.FailureResult($"Error : {ex.Message}")
+              };
+            }
+        }
+
+
+
+        ///////////////////////Method 4////////////////////////
+
+
+        public List<ServiceResult<HomeChefMealDetailsVM>> GetMealsByCategory(FoodCategory category, int pageNumber = 1, int pageSize = 4)
+        {
+            try
+            {
+
+
+                List<HomeChefMealDetailsVM> meals = _HomeChefMealRepository.GetMealsByCategory(category);
+                if (meals == null || meals.Any())
+                {
+                    return new List<ServiceResult<HomeChefMealDetailsVM>>
+                        {
+                            ServiceResult<HomeChefMealDetailsVM>.FailureResult("Sorry, no Meal found.")
+                        };
+                }
+
+
+                return meals.Select(m =>
+                ServiceResult<HomeChefMealDetailsVM>.SuccessResult(m, "Meals fetched successfully.")
+                ).ToList();
+
+            }
+
+            catch (Exception ex)
+            {
+                return new List<ServiceResult<HomeChefMealDetailsVM>>
+              {
+                  ServiceResult<HomeChefMealDetailsVM>.FailureResult($"Error : {ex.Message}")
+              };
+            }
+        }
+
+
+
+        ///////////////////////Method 5////////////////////////
+
+
+        public List<ServiceResult<HomeChefMealDetailsVM>> GetAvailableMeals(bool status)
+        {
+            try
+            {
+
+
+                List<HomeChefMealDetailsVM> meals = _HomeChefMealRepository.GetAvailableMeals(status);
+                if (meals == null || meals.Any())
+                {
+                    return new List<ServiceResult<HomeChefMealDetailsVM>>
+                        {
+                            ServiceResult<HomeChefMealDetailsVM>.FailureResult("Sorry, no Meals found.")
+                        };
+                }
+
+
+                return meals.Select(m =>
+                ServiceResult<HomeChefMealDetailsVM>.SuccessResult(m, "Meals fetched successfully.")
+                ).ToList();
+
+            }
+
+            catch (Exception ex)
+            {
+                return new List<ServiceResult<HomeChefMealDetailsVM>>
+              {
+                  ServiceResult<HomeChefMealDetailsVM>.FailureResult($"Error : {ex.Message}")
+              };
+            }
+        }
+
+
+
+        ///////////////////////Method 6////////////////////////
+
+
+        public List<ServiceResult<HomeChefMealDetailsVM>> SearchMeals(string keyword)
+        {
+            try
+            {
+
+
+                List<HomeChefMealDetailsVM> meals = _HomeChefMealRepository.SearchMeals(keyword);
+                if (meals == null || meals.Any())
+                {
+                    return new List<ServiceResult<HomeChefMealDetailsVM>>
+                        {
+                            ServiceResult<HomeChefMealDetailsVM>.FailureResult("Sorry, no Meals found.")
+                        };
+                }
+
+
+                return meals.Select(m =>
+                ServiceResult<HomeChefMealDetailsVM>.SuccessResult(m, "Meals fetched successfully.")
+                ).ToList();
+
+            }
+
+            catch (Exception ex)
+            {
+                return new List<ServiceResult<HomeChefMealDetailsVM>>
+              {
+                  ServiceResult<HomeChefMealDetailsVM>.FailureResult($"Error : {ex.Message}")
+              };
+            }
+        }
+
+
+
+        #endregion
+
+
+
+        #region Order
+        public ServiceResult<PaginationViewModel<HomeChefOrderDetailsVM>> Search(
+        string searchText = "",
+        string? customerId = "",
+        OrderStatus? status = null,
+        DateTime? fromDate = null,
+        DateTime? toDate = null,
+        int pageSize = 10,
+        int pageIndex = 1,
+        string orderBy = "Id",
+        bool IsAscending = false)
+        {
+            try
+            {
+                var result = _HomeChefOrderRepository.Search(
+                searchText,
+                customerId,
+                status,
+                fromDate,
+                toDate,
+                pageSize,
+                pageIndex,
+                orderBy,
+                IsAscending
+            );
+                return ServiceResult<PaginationViewModel<HomeChefOrderDetailsVM>>.SuccessResult(result);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<HomeChefOrderDetailsVM>>.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+        public ServiceResult AddOrder(AddHomeChefOrderVM vm)
+        {
+            try
+            {
+                var order = vm.ToModel();
+                _HomeChefOrderRepository.Add(order);
+
+                return ServiceResult.SuccessResult("Order added successfully.");
+            }
+            catch (Exception ex)
+            {
+
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+
+        public ServiceResult UpdateOrder(int id, AddHomeChefOrderVM vm)
+        {
+            try
+            {
+                var oldOrder = _HomeChefOrderRepository.GetList(m => m.Id == id).FirstOrDefault();
+
+                if (oldOrder == null)
+                {
+                    return ServiceResult.FailureResult("Order not found.");
+                }
+
+                _HomeChefOrderRepository.Update(vm.ToEditModel(oldOrder));
+
+                return ServiceResult.SuccessResult("Order updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+
+
+
+        public ServiceResult DeleteOrder(int id) // Delete Order by id
+        {
+            try
+            {
+                var order = _HomeChefOrderRepository.GetList(m => m.Id == id).FirstOrDefault();
+
+                if (order == null)
+                {
+                    return ServiceResult.FailureResult("Order not found.");
+                }
+
+
+                _HomeChefOrderRepository.Delete(order);
+
+                return ServiceResult.SuccessResult("Order Deleted Successfully!.");
+            }
+
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult($"Error : {ex.Message}");
+            }
+
+        }
+
+        ///////////////////////Method 1 ////////////////////////
+
+        public ServiceResult<HomeChefOrderDetailsVM> GetOrderById(int id)
+        {
+            try
+            {
+                var order = _HomeChefOrderRepository.GetOrderById(id);
+                if (order == null)
+                {
+                    return ServiceResult<HomeChefOrderDetailsVM>.FailureResult("Sorry, No Order found !. ");
+                }
+
+                return new ServiceResult<HomeChefOrderDetailsVM>
+                {
+                    Success = true,
+                    Message = "Request Send Successfully! .",
+                    StatusCode = 200,
+                    Data = order
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return ServiceResult<HomeChefOrderDetailsVM>.FailureResult($"Error : {ex.Message}");
+            }
+        }
+
+
+        ///////////////////////Method 2 ////////////////////////
+        public List<ServiceResult<HomeChefOrderDetailsVM>> GetAllOrders()
+        {
+            try
+            {
+                List<HomeChefOrderDetailsVM> orders = _HomeChefOrderRepository.GetAllOrders();
+
+                if (orders == null || orders.Any())
+                {
+                    return new List<ServiceResult<HomeChefOrderDetailsVM>>
+                    {
+                        ServiceResult<HomeChefOrderDetailsVM>.FailureResult("No Orders Found !")
+                    };
+                }
+
+                return orders.Select(o =>
+                ServiceResult<HomeChefOrderDetailsVM>.SuccessResult(o, "Orders fetched successfully.")
+                ).ToList();
+            }
+
+            catch (Exception ex)
+            {
+                return new List<ServiceResult<HomeChefOrderDetailsVM>>
+              {
+                  ServiceResult<HomeChefOrderDetailsVM>.FailureResult($"Error : {ex.Message}")
+              };
+            }
+
+
+        }
+
+
+        ///////////////////////Method 3 ////////////////////////
+
+        public List<ServiceResult<HomeChefOrderDetailsVM>> GetOrdersByChefId(string id)
+        {
+            try
+            {
+                List<HomeChefOrderDetailsVM> orders = _HomeChefOrderRepository.GetOrdersByChefId(id);
+
+                if (orders == null || orders.Any())
+                {
+                    return new List<ServiceResult<HomeChefOrderDetailsVM>>
+                    {
+                        ServiceResult<HomeChefOrderDetailsVM>.FailureResult("No Orders Found !")
+                    };
+                }
+
+                return orders.Select(o =>
+                ServiceResult<HomeChefOrderDetailsVM>.SuccessResult(o, "Orders fetched successfully.")
+                ).ToList();
+            }
+
+            catch (Exception ex)
+            {
+                return new List<ServiceResult<HomeChefOrderDetailsVM>>
+              {
+                  ServiceResult<HomeChefOrderDetailsVM>.FailureResult($"Error : {ex.Message}")
+              };
+            }
+
+        }
+
+
+        ///////////////////////Method 4 ////////////////////////
+        public List<ServiceResult<HomeChefOrderDetailsVM>> GetOrdersByCustomerId(string id)
+        {
+            try
+            {
+                List<HomeChefOrderDetailsVM> orders = _HomeChefOrderRepository.GetOrdersByCustomerId(id);
+
+                if (orders == null || orders.Any())
+                {
+                    return new List<ServiceResult<HomeChefOrderDetailsVM>>
+                    {
+                        ServiceResult<HomeChefOrderDetailsVM>.FailureResult("No Orders Found !")
+                    };
+                }
+
+                return orders.Select(o =>
+                ServiceResult<HomeChefOrderDetailsVM>.SuccessResult(o, "Orders fetched successfully.")
+                ).ToList();
+            }
+
+            catch (Exception ex)
+            {
+                return new List<ServiceResult<HomeChefOrderDetailsVM>>
+              {
+                  ServiceResult<HomeChefOrderDetailsVM>.FailureResult($"Error : {ex.Message}")
+              };
+            }
+
+        }
+
+        ///////////////////////Method 5 ////////////////////////
+
+        public List<ServiceResult<HomeChefOrderDetailsVM>> GetOrdersByStatus(OrderStatus status)
+        {
+            try
+            {
+                List<HomeChefOrderDetailsVM> orders = _HomeChefOrderRepository.GetOrdersByStatus(status);
+
+                if (orders == null || orders.Any())
+                {
+                    return new List<ServiceResult<HomeChefOrderDetailsVM>>
+                    {
+                        ServiceResult<HomeChefOrderDetailsVM>.FailureResult("No Orders Found !")
+                    };
+                }
+
+                return orders.Select(o =>
+                ServiceResult<HomeChefOrderDetailsVM>.SuccessResult(o, "Orders fetched successfully.")
+                ).ToList();
+            }
+
+            catch (Exception ex)
+            {
+                return new List<ServiceResult<HomeChefOrderDetailsVM>>
+              {
+                  ServiceResult<HomeChefOrderDetailsVM>.FailureResult($"Error : {ex.Message}")
+              };
+            }
+
+        }
+
+
+        ///////////////////////Method 6 ////////////////////////
+        public List<ServiceResult<HomeChefOrderDetailsVM>> GetOrdersByDate(DateTime date)
+        {
+            try
+            {
+                List<HomeChefOrderDetailsVM> orders = _HomeChefOrderRepository.GetOrdersByDate(date);
+
+                if (orders == null || orders.Any())
+                {
+                    return new List<ServiceResult<HomeChefOrderDetailsVM>>
+              {
+                  ServiceResult<HomeChefOrderDetailsVM>.FailureResult("No Orders Found !")
+              };
+                }
+
+                return orders.Select(o =>
+                ServiceResult<HomeChefOrderDetailsVM>.SuccessResult(o, "Orders fetched successfully.")
+                ).ToList();
+            }
+
+            catch (Exception ex)
+            {
+                return new List<ServiceResult<HomeChefOrderDetailsVM>>
+        {
+            ServiceResult<HomeChefOrderDetailsVM>.FailureResult($"Error : {ex.Message}")
+        };
+            }
+
+        }
+
+
+
+
+
+
+
+
+        #endregion
+
+
+        #region HomeChefOrderMeal
+
+        public ServiceResult<PaginationViewModel<HomeChefOrderMealDetailsVM>> Search(
+        string searchText = "",
+        string? customerId = "",
+        int pageSize = 10,
+        int pageIndex = 1,
+        string orderBy = "Id",
+        bool IsAscending = false)
+        {
+            try
+            {
+                var result = _HomeChefOrderMealRepository.Search(
+                searchText,
+                customerId,
+                pageSize,
+                pageIndex,
+                orderBy,
+                IsAscending
+            );
+                return ServiceResult<PaginationViewModel<HomeChefOrderMealDetailsVM>>.SuccessResult(result);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<HomeChefOrderMealDetailsVM>>.FailureResult($"Error: {ex.Message}");
+            }
+        }
+        public ServiceResult AddOrderMeal(AddHomeChefOrderMealVM vm)
+        {
+            try
+            {
+                var orderMeal = vm.ToModel();
+                _HomeChefOrderMealRepository.Add(orderMeal);
+
+                return ServiceResult.SuccessResult("OrderMeal added successfully.");
+            }
+            catch (Exception ex)
+            {
+
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+
+        public ServiceResult UpdateOrderMeal(int id ,AddHomeChefOrderMealVM vm)
+        {
+            try
+            {
+                var oldOrderMeal = _HomeChefOrderMealRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if(oldOrderMeal == null)
+                {
+                    return ServiceResult.FailureResult("OrderMeal not found.");
+                }
+                _HomeChefOrderMealRepository.Update(vm.ToEditModel(oldOrderMeal));
+
+                return ServiceResult.SuccessResult("OrderMeal Updated successfully.");
+            }
+            catch (Exception ex)
+            {
+
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+
+
+        public ServiceResult DeleteOrderMeal(int id) // Delete meal by id
+        {
+            try
+            {
+                var Ordermeal = _HomeChefOrderMealRepository.GetList(m => m.Id == id).FirstOrDefault();
+
+                if (Ordermeal == null)
+                {
+                    return ServiceResult.FailureResult("Meal not found.");
+                }
+
+
+                _HomeChefOrderMealRepository.Delete(Ordermeal);
+
+                return ServiceResult.SuccessResult("Meal Deleted Successfully!.");
+            }
+
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult($"Error : {ex.Message}");
+            }
+
+        }
+
+        #endregion
+
+
+
+        #region PaymentHomeChefOrder
+      
+
+
+        public ServiceResult UpdatePayment(int id ,AddPaymentHomeChefOrderVM vm)
+        {
+            try
+            {
+                var oldPayment = _PaymentHomeChefOrderRepasitory.GetList(m => m.Id == id).FirstOrDefault();
+                if (oldPayment == null)
+                {
+                    return ServiceResult.FailureResult("Payment not found.");
+                }
+                _PaymentHomeChefOrderRepasitory.Update(vm.ToEditModel(oldPayment));
+
+                return ServiceResult.SuccessResult("Payment Updated successfully.");
+            }
+            catch (Exception ex)
+            {
+
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+
+
+        public ServiceResult DeletePayment(int id) // Delete meal by id
+        {
+            try
+            {
+                var payment = _PaymentHomeChefOrderRepasitory.GetList(m => m.Id == id).FirstOrDefault();
+
+                if (payment == null)
+                {
+                    return ServiceResult.FailureResult("Payment not found.");
+                }
+
+
+                _PaymentHomeChefOrderRepasitory.Delete(payment);
+
+                return ServiceResult.SuccessResult("Payment Deleted Successfully!.");
+            }
+
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult($"Error : {ex.Message}");
+            }
+
+        }
+
+        #endregion
+
+
+
+        #region ReviewHomeChefOrder
+
+        public ServiceResult<PaginationViewModel<ReviewHomeChefOrderDetailsVM>> Search(
+      string searchText = "",
+      float? rating = null,
+      DateTime? fromDate = null,
+      DateTime? toDate = null,
+      string? homeChefId = null,
+      int? orderId = null,
+      int pageSize = 10,
+      int pageIndex = 1,
+      string orderBy = "Id",
+      bool isAscending = false)
+        {
+            try
+            {
+                var result = _ReviewHomeChefOrderRepository.Search(
+                searchText,
+                rating,
+                fromDate,
+                toDate,
+                homeChefId,
+                orderId,
+                pageSize,
+                pageIndex,
+                orderBy,
+                isAscending
+            );
+                return ServiceResult<PaginationViewModel<ReviewHomeChefOrderDetailsVM>>.SuccessResult(result);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<ReviewHomeChefOrderDetailsVM>>.FailureResult($"Error: {ex.Message}");
+            }
+        }
+        public ServiceResult AddPayment(AddPaymentHomeChefOrderVM vm)
+        {
+            try
+            {
+                var payment = vm.ToModel();
+                _PaymentHomeChefOrderRepasitory.Add(payment);
+
+                return ServiceResult.SuccessResult("Payment added successfully.");
+            }
+            catch (Exception ex)
+            {
+
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+        public ServiceResult AddReview(AddReviewHomeChefOrderVM vm)
+        {
+            try
+            {
+                var review = vm.ToModel();
+                _ReviewHomeChefOrderRepository.Add(review);
+
+                return ServiceResult.SuccessResult("Review added successfully.");
+            }
+            catch (Exception ex)
+            {
+
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+
+        public ServiceResult UpdateReview(int id ,AddReviewHomeChefOrderVM vm)
+        {
+            try
+            {
+                var oldReview = _ReviewHomeChefOrderRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if (oldReview == null)
+                {
+                    return ServiceResult.FailureResult("Review not found.");
+                }
+                _ReviewHomeChefOrderRepository.Update(vm.ToEditModel(oldReview));
+
+                return ServiceResult.SuccessResult("Review Updated successfully.");
+            }
+            catch (Exception ex)
+            {
+
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+
+
+        public ServiceResult DeleteReview(int id) // Delete review by id
+        {
+            try
+            {
+                var review = _ReviewHomeChefOrderRepository.GetList(m => m.Id == id).FirstOrDefault();
+
+                if (review == null)
+                {
+                    return ServiceResult.FailureResult("Payment not found.");
+                }
+
+
+                _ReviewHomeChefOrderRepository.Delete(review);
+
+                return ServiceResult.SuccessResult("Payment Deleted Successfully!.");
+            }
+
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult($"Error : {ex.Message}");
+            }
+
+        }
+
+        #endregion
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+}
+

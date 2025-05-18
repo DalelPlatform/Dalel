@@ -1,0 +1,87 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Dalel.Services;
+using Dalel.ViewModels.HomeServices.CategoryServices;
+
+namespace Controllers
+{
+    //[Authorize(Roles = "Admin")]
+    public class CategoryController : Controller
+    {
+        private readonly HomeServiceService _service;
+
+        public CategoryController(HomeServiceService service)
+        {
+            _service = service;
+        }
+        
+        public IActionResult Index()
+        {
+            var categories = _service.SearchCategories();
+            return View(categories.Data);
+        }
+
+
+        public IActionResult Details(int id)
+        {
+            var categoryResult = _service.GetCategoryById(id);
+
+            if (!categoryResult.Success || categoryResult.Data == null)
+            {
+                TempData["Error"] = categoryResult.Message;
+                return RedirectToAction("Index"); 
+            }
+
+            return View(categoryResult.Data);
+        }
+
+        public IActionResult Create()
+        {
+            return View(new AddCategoryServicesVM());
+        }
+
+        [HttpPost]
+        public IActionResult Create(AddCategoryServicesVM vm)
+        {
+            if (ModelState.IsValid)
+            {
+                _service.CreateCategory(vm);
+                return RedirectToAction("Index");
+            }
+            return View(vm);
+        }
+
+        public IActionResult Edit(int id)
+        {
+            var category = _service.GetCategoryById(id);
+            if (category == null) return NotFound();
+            return View(category.Data);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Edit(int id,AddCategoryServicesVM vm)
+        {
+            if (ModelState.IsValid)
+            {
+                _service.UpdateCategory(id,vm);
+                return RedirectToAction("Index");
+            }
+            return View(vm);
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var category = _service.GetCategoryById(id);
+            if (category == null) return NotFound();
+            return View(category.Data);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            _service.DeleteCategory(id);
+            return RedirectToAction("Index");
+        }
+
+    }
+}

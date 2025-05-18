@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "Dashboard";
+}
+
+
+@model Dalel.ViewModels.HomeServices.CategoryServices.CategoryServicesDetailsVM
+<h2>Edit Category</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<form asp-controller="Category" asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label asp-for="Image"></label>
+        <input asp-for="Image" />
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description"></textarea>
+    </div>
+    <button type="submit">Update</button>
+</form>

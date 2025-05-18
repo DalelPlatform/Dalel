@@ -1,0 +1,59 @@
+﻿using Dalel.Services.Agency;
+using Dalel.ViewModels;
+using Dalel.ViewModels.Agency.PackageStep;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Models.Agency;
+using Utilities;
+
+namespace Dalel.API.Areas.Agency.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PackageStepController : ControllerBase
+    {
+        private readonly AgencyPakageService _pakageService;
+        public PackageStepController(AgencyPakageService pakageService)
+        {
+            _pakageService = pakageService;
+        }
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var steps = _pakageService.GetAllPackageStep();
+            return new JsonResult(steps);
+        }
+        [HttpPost]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
+        public IActionResult Create([FromBody] addPackageStepVM step)
+        {
+            var result = _pakageService.CreatePackageStep(step);
+            try
+            {
+                return new JsonResult(result);
+            }
+            catch (Exception ex)
+            {
+                return (IActionResult)ServiceResult<PackageStep>.FailureResult("Error: " + ex.Message);
+            }
+
+
+        }
+        [HttpPut("{Id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
+        public IActionResult Update(int Id, [FromBody] addPackageStepVM step)
+        {
+            var result = _pakageService.UpdatePackageStep(Id, step);
+            return new JsonResult(result);
+        }
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
+        public IActionResult Delete(int id)
+        {
+            _pakageService.deletePackageStep(id);
+            return new JsonResult(false);
+        }
+    }
+}

@@ -1,0 +1,10 @@
+1 Name Camel Case ALL
+2 Add virtual
+3 no poler names exept for Icollection objects
+4 onCascade Delete No Action
+5 add IsDelete for Soft Delete (On Imaportant Tables)
+6 Any Status is Enum
+------------IMPORTANT-------------------
+7 PaymentMethod
+8 Notifications
+9 Background task hangfire
