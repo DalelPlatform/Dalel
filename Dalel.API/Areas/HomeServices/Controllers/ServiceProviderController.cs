@@ -20,14 +20,23 @@ namespace Dalel.API.Areas
             _homeServiceService = homeServiceService;
         }
 
+        [HttpGet("check-profile/{userId}")]
+        public IActionResult CheckServiceProviderProfile(string userId)
+        {
+            var result = _homeServiceService.CheckProfileCompleteness(userId);
+            if (!result.Success)
+                return new JsonResult(new { Success = false, Message = result.Message });
+            return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
+        }
+
         [HttpPost("create")]
-        //[Authorize(Roles = "ServiceProvider")]
+        [Authorize(Roles = "ServiceProvider")]
         public IActionResult CreateServiceProvider([FromForm] AddServiceProviderVM model)
         {
             var result = _homeServiceService.CreateServiceProvider(model);
             if (!result.Success)
                 return new JsonResult(new { Success = false, Message = result.Message });
-            return new JsonResult(new { Success = true, Message = result.Message, Data = result.Data });
+            return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
         [HttpGet("search")]
@@ -43,8 +52,8 @@ namespace Dalel.API.Areas
         {
             var result = _homeServiceService.SearchServiceProviders(searchText, categoryId, address, verificationStatus, sortBy, descending, pageSize, pageIndex);
             if (!result.Success)
-                return new JsonResult(result.Message);
-            return new JsonResult(result);
+                return new JsonResult(new { Success = false, Message = result.Message });
+            return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
         [HttpGet("{id}")]
@@ -52,8 +61,8 @@ namespace Dalel.API.Areas
         {
             var result = _homeServiceService.GetServiceProviderById(id);
             if (!result.Success)
-                return new JsonResult(result.Message);
-            return new JsonResult(result);
+                return new JsonResult(new { Success = false, Message = result.Message });
+            return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
         [HttpGet("category/{categoryId}")]
@@ -64,8 +73,8 @@ namespace Dalel.API.Areas
         {
             var result = _homeServiceService.GetProvidersByCategory(categoryId, pageSize, pageNumber);
             if (!result.Success)
-                return new JsonResult(result.Message);
-            return new JsonResult(result);
+                return new JsonResult(new { Success = false, Message = result.Message });
+            return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
         [HttpGet("top-rated/{count}")]
@@ -73,8 +82,8 @@ namespace Dalel.API.Areas
         {
             var result = _homeServiceService.GetTopRatedProviders(count);
             if (!result.Success)
-                return new JsonResult(result.Message);
-            return new JsonResult(result);
+                return new JsonResult(new { Success = false, Message = result.Message });
+            return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
         [HttpGet("exists/{id}")]
@@ -82,28 +91,28 @@ namespace Dalel.API.Areas
         {
             var result = _homeServiceService.ProviderExists(id);
             if (!result.Success)
-                return new JsonResult(result.Message);
-            return new JsonResult(result);
+                return new JsonResult(new { Success = false, Message = result.Message });
+            return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "ServiceProvider,Admin")]
-        public IActionResult UpdateServiceProvider(int id, [FromForm] AddServiceProviderVM model, VerificationStatus verificationStatus)
+        [Authorize(Roles = "ServiceProvider,Admin")]
+        public IActionResult UpdateServiceProvider(string id, [FromForm] AddServiceProviderVM model, [FromQuery] VerificationStatus? verificationStatus = null)
         {
-            var result = _homeServiceService.UpdateServiceProvider(id, model, verificationStatus);
+            var result = _homeServiceService.UpdateServiceProvider(int.Parse(id), model, verificationStatus ?? VerificationStatus.Pending);
             if (!result.Success)
-                return new JsonResult(result.Message);
-            return new JsonResult(result);
+                return new JsonResult(new { Success = false, Message = result.Message });
+            return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin")]
-        public IActionResult DeleteServiceProvider(int id)
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteServiceProvider(string id)
         {
-            var result = _homeServiceService.DeleteServiceProvider(id);
+            var result = _homeServiceService.DeleteServiceProvider(int.Parse(id));
             if (!result.Success)
-                return new JsonResult(result.Message);
-            return new JsonResult(result);
+                return new JsonResult(new { Success = false, Message = result.Message });
+            return new JsonResult(new { Success = true, Message = result.Message });
         }
     }
 }

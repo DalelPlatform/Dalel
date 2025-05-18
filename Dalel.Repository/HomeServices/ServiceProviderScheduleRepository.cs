@@ -17,6 +17,19 @@ namespace Dalel.Repository
         public ServiceProviderScheduleRepository(DelelContext context) : base(context)
         {
         }
+        public void AddSchedule(ServiceProviderSchedule schedule)
+        {
+            var existingSchedules = base.GetList(s => s.ServiceProviderId == schedule.ServiceProviderId && s.WorKDay == schedule.WorKDay).ToList();
+            if (existingSchedules.Any())
+            {
+                foreach (var existingSchedule in existingSchedules)
+                {
+                    base.Delete(existingSchedule);
+                }
+            }
+            base.Add(schedule);
+            base.Save();
+        }
 
         public bool DeleteSchedule(string providerId, DateTime date)
         {
@@ -27,7 +40,7 @@ namespace Dalel.Repository
                 return false;
 
             _context.ServiceProviderSchedules.RemoveRange(schedulesToDelete);
-            _context.SaveChanges();
+            base.Save();
             return true;
         }
 
@@ -64,69 +77,5 @@ namespace Dalel.Repository
             }
             base.Save();
         }
-
-        //public async Task<PagedResult<ServiceProviderSchedule>> FilterSchedulesAsync(
-        //    string providerId = null,
-        //    WorKDays? day = null,
-        //    TimeOnly? availableFrom = null,
-        //    TimeOnly? availableTo = null,
-        //    int pageNumber = 1,
-        //    int pageSize = 10,
-        //    string sortBy = "WorKDay",
-        //    bool ascending = true)
-        //{
-        //    var query = _context.ServiceProviderSchedules
-        //        .Include(s => s.ServiceProvider)
-        //        .AsQueryable();
-
-        //    if (!string.IsNullOrEmpty(providerId))
-        //    {
-        //        query = query.Where(s => s.ServiceProviderId == providerId);
-        //    }
-
-        //    if (day.HasValue)
-        //    {
-        //        query = query.Where(s => s.WorKDay == day.Value);
-        //    }
-
-        //    if (availableFrom.HasValue)
-        //    {
-        //        query = query.Where(s => s.AvailableFrom >= availableFrom.Value);
-        //    }
-
-        //    if (availableTo.HasValue)
-        //    {
-        //        query = query.Where(s => s.AvailableTo <= availableTo.Value);
-        //    }
-
-        //    // Sorting
-        //    query = sortBy switch
-        //    {
-        //        "WorKDay" => ascending
-        //            ? query.OrderBy(s => s.WorKDay).ThenBy(s => s.AvailableFrom)
-        //            : query.OrderByDescending(s => s.WorKDay).ThenByDescending(s => s.AvailableFrom),
-        //        "AvailableFrom" => ascending
-        //            ? query.OrderBy(s => s.AvailableFrom)
-        //            : query.OrderByDescending(s => s.AvailableFrom),
-        //        "AvailableTo" => ascending
-        //            ? query.OrderBy(s => s.AvailableTo)
-        //            : query.OrderByDescending(s => s.AvailableTo),
-        //        _ => query.OrderBy(s => s.WorKDay).ThenBy(s => s.AvailableFrom)
-        //    };
-
-        //    var result = new PagedResult<ServiceProviderSchedule>
-        //    {
-        //        PageNumber = pageNumber,
-        //        PageSize = pageSize,
-        //        TotalCount = await query.CountAsync()
-        //    };
-
-        //    result.Items = await query
-        //        .Skip((pageNumber - 1) * pageSize)
-        //        .Take(pageSize)
-        //        .ToListAsync();
-
-        //    return result;
-        //}
     }
 }

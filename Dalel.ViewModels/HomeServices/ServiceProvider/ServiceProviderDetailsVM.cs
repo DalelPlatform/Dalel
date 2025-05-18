@@ -21,5 +21,6 @@ namespace Dalel.ViewModels
         public VerificationStatus? VerificationStatus { get; set; }
         public List<ServiceProviderScheduleDetailsVM> Schedules { get; set; }
         public List<ServiceProviderProjectDetailsVM> Projects { get; set; }
+        public string? Image { get; set; }
     }
 }

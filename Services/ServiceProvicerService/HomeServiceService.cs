@@ -6,6 +6,7 @@ using Dalel.ViewModels.HomeServices;
 using Dalel.ViewModels.HomeServices.CategoryServices;
 using Dalel.ViewModels.HomeServices.ServiceProvider;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Models;
@@ -744,15 +745,26 @@ namespace Dalel.Services
 
         #region ServiceProviderProject
 
-        public ServiceResult<ServiceProviderProjectDetailsVM> CreateProject([FromForm] AddServiceProviderProjectVM vm)
+        public ServiceResult<ServiceProviderProjectDetailsVM> CreateProject([FromForm] AddServiceProviderProjectVM vm, List<IFormFile> imageFiles)
         {
             try
             {
                 var project = vm.ToModel();
+
                 if (string.IsNullOrEmpty(project.Name))
                     return ServiceResult<ServiceProviderProjectDetailsVM>.FailureResult("Project name cannot be null or empty.");
 
-                _serviceProviderProjectRepository.AddProject(project, vm.ImagePath);
+                List<string> imagePaths = new List<string>();
+                if (imageFiles != null && imageFiles.Any())
+                {
+                    foreach (var file in imageFiles)
+                    {
+                        var imagePath = SaveImageFile(file, project.ServiceProviderId);
+                        imagePaths.Add(imagePath);
+                    }
+                }
+
+                _serviceProviderProjectRepository.AddProject(project, imagePaths);
                 return ServiceResult<ServiceProviderProjectDetailsVM>.SuccessResult(project.ToDetailsViewModel(), "Project created successfully.");
             }
             catch (Exception ex)
@@ -761,29 +773,28 @@ namespace Dalel.Services
             }
         }
 
-        public ServiceResult<PaginationViewModel<ServiceProviderProjectDetailsVM>> GetProjectsByProvider(
-            string providerId, int pageSize = 5, int pageNumber = 1)
+        public ServiceResult<PaginationViewModel<ServiceProviderProjectDetailsVM>> GetProjectsByProvider(string providerId, int pageSize = 5, int pageNumber = 1)
         {
             try
             {
                 if (string.IsNullOrEmpty(providerId))
                     return ServiceResult<PaginationViewModel<ServiceProviderProjectDetailsVM>>.FailureResult("Provider ID cannot be null or empty.");
 
-                // Get the total count of projects for this ServiceProvider
-                var totalCount = _serviceProviderProjectRepository.GetProjects(providerId).Count();
-                // Get the paginated subset
-                var projects = _serviceProviderProjectRepository.GetProjects(providerId);
-                var data = projects.Select(p => p.ToDetailsViewModel()).ToList();
+                var query = _serviceProviderProjectRepository.GetProjects(providerId);
 
-                var paginationResult = new PaginationViewModel<ServiceProviderProjectDetailsVM>
+                var totalCount = query.Count();
+                var data = query.Skip((pageNumber - 1) * pageSize)
+                                .Take(pageSize)
+                                .Select(p => p.ToDetailsViewModel())
+                                .ToList();
+
+                return ServiceResult<PaginationViewModel<ServiceProviderProjectDetailsVM>>.SuccessResult(new PaginationViewModel<ServiceProviderProjectDetailsVM>
                 {
                     Data = data,
                     PageNumber = pageNumber,
                     PageSize = pageSize,
                     TotalCount = totalCount
-                };
-
-                return ServiceResult<PaginationViewModel<ServiceProviderProjectDetailsVM>>.SuccessResult(paginationResult, "Projects retrieved.");
+                }, "Projects retrieved.");
             }
             catch (Exception ex)
             {
@@ -807,18 +818,29 @@ namespace Dalel.Services
             }
         }
 
-        public ServiceResult UpdateProject(int projectId, [FromForm] AddServiceProviderProjectVM vm)
+        public ServiceResult UpdateProject(int projectId, [FromForm] AddServiceProviderProjectVM vm, List<IFormFile> imageFiles = null)
         {
             try
             {
-                var project = _serviceProviderProjectRepository.GetById(projectId);
-                if (project == null)
+                var existingProject = _serviceProviderProjectRepository.GetById(projectId);
+                if (existingProject == null)
                     return ServiceResult.FailureResult("Project not found.");
 
                 var updatedProject = vm.ToModel();
                 updatedProject.Id = projectId;
-                updatedProject.ServiceProviderId = project.ServiceProviderId;
-                _serviceProviderProjectRepository.UpdateProject(updatedProject, vm.ImagePath);
+                updatedProject.ServiceProviderId = existingProject.ServiceProviderId;
+
+                List<string> imagePaths = new List<string>();
+                if (imageFiles != null && imageFiles.Any())
+                {
+                    foreach (var file in imageFiles)
+                    {
+                        var imagePath = SaveImageFile(file, existingProject.ServiceProviderId);
+                        imagePaths.Add(imagePath);
+                    }
+                }
+
+                _serviceProviderProjectRepository.UpdateProject(updatedProject, imagePaths);
                 return ServiceResult.SuccessResult("Project updated successfully.");
             }
             catch (Exception ex)
@@ -826,19 +848,25 @@ namespace Dalel.Services
                 return ServiceResult.FailureResult("Error: " + ex.Message);
             }
         }
-        public ServiceResult UpdateProjectImage(int projectId, [FromForm] string newImagePath)
+
+        public ServiceResult UpdateProjectImage(int projectId, List<IFormFile> imageFiles)
         {
             try
             {
                 if (projectId <= 0)
-                    return ServiceResult.FailureResult("Project ID must be greater than zero.");
-                if (string.IsNullOrEmpty(newImagePath))
-                    return ServiceResult.FailureResult("Image path cannot be null or empty.");
+                    return ServiceResult.FailureResult("Invalid project ID.");
 
-               _serviceProviderProjectRepository.UpdateProjectImage(projectId, newImagePath);
-            
+                if (imageFiles == null || !imageFiles.Any())
+                    return ServiceResult.FailureResult("No image files provided.");
 
-                return ServiceResult.SuccessResult("Project image updated successfully.");
+                var project = _serviceProviderProjectRepository.GetById(projectId);
+                if (project == null)
+                    return ServiceResult.FailureResult("Project not found.");
+
+                var imagePaths = imageFiles.Select(file => SaveImageFile(file, project.ServiceProviderId)).ToList();
+                _serviceProviderProjectRepository.UpdateProjectImage(projectId, imagePaths);
+
+                return ServiceResult.SuccessResult("Project images updated successfully.");
             }
             catch (Exception ex)
             {
@@ -851,9 +879,9 @@ namespace Dalel.Services
             try
             {
                 if (projectId <= 0)
-                    return ServiceResult.FailureResult("Project ID must be greater than zero.");
-                var project = _serviceProviderProjectRepository.GetById(projectId);
-                _serviceProviderProjectRepository.Delete(project);
+                    return ServiceResult.FailureResult("Invalid project ID.");
+
+                _serviceProviderProjectRepository.DeleteProject(projectId);
                 return ServiceResult.SuccessResult("Project deleted successfully.");
             }
             catch (Exception ex)
@@ -862,7 +890,27 @@ namespace Dalel.Services
             }
         }
 
+        private string SaveImageFile(IFormFile file, string serviceProviderId)
+        {
+            string folder = Path.Combine("uploads", "projects", serviceProviderId);
+            string root = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folder);
+
+            if (!Directory.Exists(root))
+                Directory.CreateDirectory(root);
+
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            string fullPath = Path.Combine(root, fileName);
+
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            return Path.Combine(folder, fileName).Replace("\\", "/");
+        }
+
         #endregion
+
 
         #region CategoryServices
 
@@ -1343,12 +1391,15 @@ public ServiceResult DeletePayment(int paymentId)
 
                 var provider = vm.ToModel();
 
-
-                if (_categoryServicesRepository.GetById(provider.CategoryServicesId)!= null)
+                if (_categoryServicesRepository.GetById(provider.CategoryServicesId) == null)
                     return ServiceResult<ServiceProviderDetailsVM>.FailureResult($"Category with ID {provider.CategoryServicesId} does not exist.");
+
+                // Save profile image if provided
+                provider.Image = SaveProfileImage(vm.Image);
 
                 _serviceProviderRepository.Add(provider);
                 _serviceProviderRepository.Save();
+
                 return ServiceResult<ServiceProviderDetailsVM>.SuccessResult(provider.ToDetailsViewModel(), "Service provider created successfully.");
             }
             catch (Exception ex)
@@ -1359,6 +1410,7 @@ public ServiceResult DeletePayment(int paymentId)
                 return ServiceResult<ServiceProviderDetailsVM>.FailureResult($"Error: {errorMessage}");
             }
         }
+
         public ServiceResult<bool> CheckProfileCompleteness(string userId)
         {
             try
@@ -1374,15 +1426,16 @@ public ServiceResult DeletePayment(int paymentId)
                 return ServiceResult<bool>.FailureResult("Error: " + ex.Message);
             }
         }
+
         public ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>> SearchServiceProviders(
-           string? searchText = "",
-           int? categoryId = null,
-           string? address = null,
-           VerificationStatus? verificationStatus = null,
-           string sortBy = "Name",
-           bool descending = false,
-           int pageSize = 5,
-           int pageIndex = 1)
+            string? searchText = "",
+            int? categoryId = null,
+            string? address = null,
+            VerificationStatus? verificationStatus = null,
+            string sortBy = "Name",
+            bool descending = false,
+            int pageSize = 5,
+            int pageIndex = 1)
         {
             try
             {
@@ -1437,7 +1490,6 @@ public ServiceResult DeletePayment(int paymentId)
             }
         }
 
-
         public ServiceResult<ServiceProviderDetailsVM> GetServiceProviderById(string providerId)
         {
             try
@@ -1457,8 +1509,7 @@ public ServiceResult DeletePayment(int paymentId)
             }
         }
 
-        public ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>> GetProvidersByCategory(
-    int categoryId, int pageSize = 5, int pageNumber = 1)
+        public ServiceResult<PaginationViewModel<ServiceProviderDetailsVM>> GetProvidersByCategory(int categoryId, int pageSize = 5, int pageNumber = 1)
         {
             try
             {
@@ -1537,8 +1588,6 @@ public ServiceResult DeletePayment(int paymentId)
         {
             try
             {
-                if (providerId == null)
-                    return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Provider ID cannot be null or empty.");
                 if (string.IsNullOrEmpty(vm.UserName))
                     return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Name cannot be null or empty.");
 
@@ -1550,6 +1599,14 @@ public ServiceResult DeletePayment(int paymentId)
                 provider.Address = vm.Address;
                 provider.CategoryServicesId = vm.CategoryServicesId;
                 provider.VerificationStatus = verificationStatus;
+
+                // Save new image if provided
+                var newImagePath = SaveProfileImage(vm.Image);
+                if (!string.IsNullOrEmpty(newImagePath))
+                {
+                    provider.Image = newImagePath;
+                }
+
                 _serviceProviderRepository.Update(provider);
 
                 return ServiceResult<ServiceProviderDetailsVM>.SuccessResult(provider.ToDetailsViewModel(), "Service provider updated successfully.");
@@ -1564,9 +1621,6 @@ public ServiceResult DeletePayment(int paymentId)
         {
             try
             {
-                if (providerId == null)
-                    return ServiceResult.FailureResult("Provider ID cannot be null or empty.");
-
                 var success = _serviceProviderRepository.GetById(providerId);
                 if (success == null)
                     return ServiceResult.FailureResult("Service provider not found.");
@@ -1580,6 +1634,28 @@ public ServiceResult DeletePayment(int paymentId)
             }
         }
 
+        // Helper method to save image
+        private string? SaveProfileImage(IFormFile? imageFile)
+        {
+            if (imageFile == null || imageFile.Length == 0)
+                return null;
+
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "providers");
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+
+            var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                imageFile.CopyTo(fileStream);
+            }
+
+            return Path.Combine("uploads", "providers", uniqueFileName).Replace("\\", "/");
+        }
+
         #endregion
+
     }
 }
