@@ -13,7 +13,10 @@ using System.Numerics;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+<<<<<<< HEAD
 using Utilities;
+=======
+>>>>>>> 6ec404b5a71a40208de5a3636ace18bfaead3a46
 
 namespace Dalel.Services
 {
@@ -181,6 +184,7 @@ namespace Dalel.Services
         {
             await appUserRepository.Signout();
         }
+<<<<<<< HEAD
 
         // CHANGE PASSWORD
         public async Task<ServiceResult> ChangePasswordAsync(string userId, ChangePasswordVM vm)
@@ -232,5 +236,7 @@ namespace Dalel.Services
 
             return ServiceResult.SuccessResult("Password has been reset.");
         }
+=======
+>>>>>>> 6ec404b5a71a40208de5a3636ace18bfaead3a46
     }
 }
