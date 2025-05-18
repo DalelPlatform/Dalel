@@ -13,6 +13,7 @@ using System.Numerics;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 
 namespace Dalel.Services
 {
@@ -179,6 +180,57 @@ namespace Dalel.Services
         public async Task Signout()
         {
             await appUserRepository.Signout();
+        }
+
+        // CHANGE PASSWORD
+        public async Task<ServiceResult> ChangePasswordAsync(string userId, ChangePasswordVM vm)
+        {
+            var user = await appUserRepository.FindById(userId);
+            if (user == null)
+                return ServiceResult.FailureResult("User not found.", 404);
+
+            var result = await appUserRepository.ChangePasswordAsync(user, vm.CurrentPassword, vm.NewPassword);
+            if (!result.Succeeded)
+                return ServiceResult.FailureResult(
+                    string.Join("; ", result.Errors.Select(e => e.Description)),
+                    400);
+
+            return ServiceResult.SuccessResult("Password changed successfully.");
+        }
+
+        // FORGOT PASSWORD (generate token and email it)
+        public async Task<ServiceResult<string>> ForgotPasswordAsync(ForgotPasswordVM vm)
+        {
+            var user = await appUserRepository.FindByEmail(vm.Email);
+            if (user == null)
+                // do not reveal whether email exists
+                return ServiceResult.SuccessResult(string.Empty, "If that email is registered, you will receive a reset link.");
+
+            var token = await appUserRepository.GeneratePasswordResetTokenAsync(user);
+
+            // TODO: send the token via email+link here
+            return ServiceResult.SuccessResult(token, "Password reset token generated.");
+        }
+
+        // RESET PASSWORD
+        public async Task<ServiceResult> ResetPasswordAsync(ResetPasswordVM vm)
+        {
+            // We need to identify the user from the token. 
+            // ASP.NET Identity ResetPasswordAsync requires the user object.
+            // You may want to include the email or userId in the ResetPasswordVM.
+            // Here we assume token payload contains the user ID as part of the link.
+            // For clarity, let’s assume token was paired with email:
+            var user = await appUserRepository.FindByEmail(vm.Email);
+            if (user == null)
+                return ServiceResult.FailureResult("Invalid token or user.", 400);
+
+            var result = await appUserRepository.ResetPasswordAsync(user, vm.Token, vm.NewPassword);
+            if (!result.Succeeded)
+                return ServiceResult.FailureResult(
+                    string.Join("; ", result.Errors.Select(e => e.Description)),
+                    400);
+
+            return ServiceResult.SuccessResult("Password has been reset.");
         }
     }
 }
