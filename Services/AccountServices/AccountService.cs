@@ -13,10 +13,8 @@ using System.Numerics;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-<<<<<<< HEAD
 using Utilities;
-=======
->>>>>>> 6ec404b5a71a40208de5a3636ace18bfaead3a46
+
 
 namespace Dalel.Services
 {
@@ -61,7 +59,7 @@ namespace Dalel.Services
         public async Task<IdentityResult> CreateAccount(UserRegisterVM user)
         {
             var userRes = await appUserRepository.Register(user);
-            
+
             if (userRes.Succeeded)
             {
                 var currentUser = await appUserRepository.FindByUserName(user.UserName);
@@ -184,7 +182,6 @@ namespace Dalel.Services
         {
             await appUserRepository.Signout();
         }
-<<<<<<< HEAD
 
         // CHANGE PASSWORD
         public async Task<ServiceResult> ChangePasswordAsync(string userId, ChangePasswordVM vm)
@@ -206,24 +203,27 @@ namespace Dalel.Services
         public async Task<ServiceResult<string>> ForgotPasswordAsync(ForgotPasswordVM vm)
         {
             var user = await appUserRepository.FindByEmail(vm.Email);
+            // Always return success payload so as not to reveal whether the email exists
             if (user == null)
-                // do not reveal whether email exists
-                return ServiceResult.SuccessResult(string.Empty, "If that email is registered, you will receive a reset link.");
+            {
+                return ServiceResult<string>.SuccessResult(
+                    string.Empty,
+                    "If that email is registered, you will receive a reset link."
+                );
+            }
 
             var token = await appUserRepository.GeneratePasswordResetTokenAsync(user);
 
             // TODO: send the token via email+link here
-            return ServiceResult.SuccessResult(token, "Password reset token generated.");
+            return ServiceResult<string>.SuccessResult(
+                token,
+                "Password reset token generated."
+            );
         }
 
         // RESET PASSWORD
         public async Task<ServiceResult> ResetPasswordAsync(ResetPasswordVM vm)
         {
-            // We need to identify the user from the token. 
-            // ASP.NET Identity ResetPasswordAsync requires the user object.
-            // You may want to include the email or userId in the ResetPasswordVM.
-            // Here we assume token payload contains the user ID as part of the link.
-            // For clarity, let’s assume token was paired with email:
             var user = await appUserRepository.FindByEmail(vm.Email);
             if (user == null)
                 return ServiceResult.FailureResult("Invalid token or user.", 400);
@@ -236,7 +236,7 @@ namespace Dalel.Services
 
             return ServiceResult.SuccessResult("Password has been reset.");
         }
-=======
->>>>>>> 6ec404b5a71a40208de5a3636ace18bfaead3a46
+
     }
+      
 }

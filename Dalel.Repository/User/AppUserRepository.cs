@@ -88,7 +88,7 @@ namespace Dalel.Repository
             await signInManager.SignOutAsync();
         }
 
-<<<<<<< HEAD
+
         public async Task<IdentityResult> ChangePasswordAsync(AppUser user, string currentPassword, string newPassword)
         {
             return await userManager.ChangePasswordAsync(user, currentPassword, newPassword);
@@ -106,8 +106,7 @@ namespace Dalel.Repository
             return await userManager.ResetPasswordAsync(user, token, newPassword);
         }
 
-=======
->>>>>>> 6ec404b5a71a40208de5a3636ace18bfaead3a46
+
 
     }
 }

@@ -1,18 +1,16 @@
 ﻿using Dalel.Services;
 using Dalel.ViewModels;
 using LinqKit;
-<<<<<<< HEAD
+
 using Microsoft.AspNetCore.Authorization;
-=======
->>>>>>> 6ec404b5a71a40208de5a3636ace18bfaead3a46
+
 using Microsoft.AspNetCore.Mvc;
 using Models.User;
 using System.Security.Claims;
 using System.Text;
-<<<<<<< HEAD
+
 using Utilities;
-=======
->>>>>>> 6ec404b5a71a40208de5a3636ace18bfaead3a46
+
 
 namespace Dalel.API.Controllers
 {
@@ -167,7 +165,7 @@ namespace Dalel.API.Controllers
             });
         }
 
-<<<<<<< HEAD
+
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordVM vm)
         {
@@ -211,9 +209,6 @@ namespace Dalel.API.Controllers
                 result.Message
             });
         }
-
-=======
->>>>>>> 6ec404b5a71a40208de5a3636ace18bfaead3a46
 
     }
 }
