@@ -20,12 +20,15 @@ namespace Dalel.ViewModels
             };
             project.ServiceProviderProjectImages = new List<ServiceProviderProjectImages>();
 
-            if (!string.IsNullOrEmpty(vm.ImagePath))
+            if(vm.ImageFiles != null && vm.ImageFiles.Any())
             {
-                project.ServiceProviderProjectImages.Add(new ServiceProviderProjectImages
+                foreach (var imageFile in vm.ImageFiles)
                 {
-                    ImagePath = vm.ImagePath
-                });
+                    project.ServiceProviderProjectImages.Add(new ServiceProviderProjectImages
+                    {
+                        ImagePath = imageFile.FileName 
+                    });
+                }
             }
 
             return project;
@@ -39,15 +42,19 @@ namespace Dalel.ViewModels
             existing.PriceUnit = vm.PriceUnit;
             existing.VideoLink = vm.VideoLink;
 
-            if (!string.IsNullOrEmpty(vm.ImagePath))
+            if(vm.ImageFiles != null && vm.ImageFiles.Any())
             {
-                // Clear existing images and add the new one
-                //existing.ServiceProviderProjectImages.Clear();
-                existing.ServiceProviderProjectImages.Add(new ServiceProviderProjectImages
+                // Clear existing images and add the new ones
+                existing.ServiceProviderProjectImages.Clear();
+                foreach (var imageFile in vm.ImageFiles)
                 {
-                    ImagePath = vm.ImagePath
-                });
+                    existing.ServiceProviderProjectImages.Add(new ServiceProviderProjectImages
+                    {
+                        ImagePath = imageFile.FileName 
+                    });
+                }
             }
+
 
             return existing;
         }

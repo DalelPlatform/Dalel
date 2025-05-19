@@ -30,12 +30,11 @@ namespace Dalel.Repository
             {
                 return false;
             }
-            bool flag = !string.IsNullOrWhiteSpace(serviceProvider.Address) &&
+            return !string.IsNullOrWhiteSpace(serviceProvider.Address) &&
                    !string.IsNullOrWhiteSpace(serviceProvider.City) &&
                    serviceProvider.Price.HasValue &&
                    !string.IsNullOrWhiteSpace(serviceProvider.PriceUnit) &&
                    serviceProvider.Schedules != null && serviceProvider.Schedules.Any();
-            return flag;
         }
         // Get providers by category with pagination
         public IQueryable<ServiceProvider> GetProvidersByCategory(int categoryId)

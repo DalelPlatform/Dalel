@@ -1,4 +1,5 @@
 ﻿using Dalel.ViewModels.HomeServices.ServiceProviderSchedule;
+using Microsoft.AspNetCore.Http;
 using Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -34,5 +35,6 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
         public int CategoryServicesId { get; set; }
         public VerificationStatus? VerificationStatus { get; set; }
         public List<AddServiceProviderScheduleItemVM> Schedules { get; set; }
+        public IFormFile? Image { get; set; }
     }
 }
