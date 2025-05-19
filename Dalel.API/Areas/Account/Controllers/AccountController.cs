@@ -123,9 +123,7 @@ namespace Dalel.API.Controllers
                 Status = 200
             });
         }
-        //http get check email
-        //http get check national
-        //http get check username
+
         [HttpGet("CheckUsername")]
         public async Task<IActionResult> CheckUsername([FromQuery] string username)
         {

@@ -12,9 +12,8 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
 {
     public class AddServiceProviderVM
     {
-        [Required(ErrorMessage = "User ID is required.")]
+       
         public string UserId { get; set; }
-
         [Required(ErrorMessage = "Username is required.")]
         public string UserName { get; set; }
 
@@ -32,6 +31,7 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
 
         public string About { get; set; }
         public string Website { get; set; }
+        [Required(ErrorMessage = "Category number is required.")]
         public int CategoryServicesId { get; set; }
         public VerificationStatus? VerificationStatus { get; set; }
         public List<AddServiceProviderScheduleItemVM> Schedules { get; set; }

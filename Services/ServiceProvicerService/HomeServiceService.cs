@@ -1386,9 +1386,7 @@ public ServiceResult DeletePayment(int paymentId)
             {
                 if (string.IsNullOrEmpty(vm.UserName))
                     return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Name cannot be null or empty.");
-                if (string.IsNullOrEmpty(vm.UserId))
-                    return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Owner ID cannot be null or empty.");
-
+               
                 var provider = vm.ToModel();
 
                 if (_categoryServicesRepository.GetById(provider.CategoryServicesId) == null)
