@@ -1,10 +1,16 @@
 ﻿using Dalel.Services;
 using Dalel.ViewModels;
 using LinqKit;
+
+using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc;
 using Models.User;
 using System.Security.Claims;
 using System.Text;
+
+using Utilities;
+
 
 namespace Dalel.API.Controllers
 {
@@ -157,6 +163,50 @@ namespace Dalel.API.Controllers
             });
         }
 
+
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordVM vm)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var result = await accountService.ForgotPasswordAsync(vm);
+            return StatusCode(result.StatusCode, new
+            {
+                result.Success,
+                result.Message,
+                Token = result is ServiceResult<string> sr ? sr.Data : null
+            });
+        }
+
+        // POST: api/Account/ResetPassword
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordVM vm)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var result = await accountService.ResetPasswordAsync(vm);
+            return StatusCode(result.StatusCode, new
+            {
+                result.Success,
+                result.Message
+            });
+        }
+
+        // POST: api/Account/ChangePassword
+        [Authorize]
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordVM vm)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await accountService.ChangePasswordAsync(userId, vm);
+            return StatusCode(result.StatusCode, new
+            {
+                result.Success,
+                result.Message
+            });
+        }
 
     }
 }
