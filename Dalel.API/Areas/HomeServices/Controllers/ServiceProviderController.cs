@@ -20,9 +20,10 @@ namespace Dalel.API.Areas
             _homeServiceService = homeServiceService;
         }
 
-        [HttpGet("check-profile/{userId}")]
-        public IActionResult CheckServiceProviderProfile(string userId)
+        [HttpGet("check-profile")]
+        public IActionResult CheckServiceProviderProfile()
         {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = _homeServiceService.CheckProfileCompleteness(userId);
             if (!result.Success)
                 return new JsonResult(new { Success = false, Message = result.Message });
