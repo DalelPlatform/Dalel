@@ -159,6 +159,14 @@ namespace Dalel.API.Controllers
             });
         }
 
+        [HttpGet("GetProfile")]
+        public async Task<IActionResult> GetUserProfile()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user =  accountService.GetUserById(userId);
+            return  new JsonResult(user);
+        }
+
 
     }
 }
