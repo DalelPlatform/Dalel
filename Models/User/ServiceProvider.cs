@@ -21,9 +21,12 @@ namespace Models.User
         public int CategoryServicesId { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
         public virtual ICollection<ServiceProviderProject>? Projects { get; set; }
-        public virtual ICollection<ServiceProviderSchedule>? Schedules { get; internal set; }
+        public virtual ICollection<ServiceProviderSchedule>? Schedules { get; set; }
         public virtual ICollection<ServiceProviderPropsal>? Propsals { get; set; }
         public int? AverageRating { get; set; }
+        public string? Website { get; set; }
+        public decimal? Price { get; set; }
+        public string? PriceUnit { get; set; }
     }
     public class ServiceProviderConfiguration : IEntityTypeConfiguration<ServiceProvider>
     {
@@ -52,6 +55,10 @@ namespace Models.User
             .WithMany(cs => cs.ServiceProviders)
             .HasForeignKey(sp => sp.CategoryServicesId)
             .OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(sp => sp.Schedules)
+                .WithOne(s => s.ServiceProvider)
+                .HasForeignKey(s => s.ServiceProviderId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

@@ -6,17 +6,21 @@ namespace Dalel.ViewModels
 {
     public class AddServiceProviderProjectVM
     {
-        [Required(ErrorMessage = "Service provider ID is required.")]
-        public string ServiceProviderId { get; set; }
-
         [Required(ErrorMessage = "Project name is required.")]
-        [StringLength(100, ErrorMessage = "Project name cannot exceed 100 characters.")]
         public string Name { get; set; }
 
-        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
+        [Required(ErrorMessage = "Description is required.")]
         public string Description { get; set; }
 
-        public IFormFile ImageFile { get; set; }
-        public string ImagePath { get; set; }
+        [Required(ErrorMessage = "Approximate price is required.")]
+        public decimal ApproximatePrice { get; set; }
+
+        [Required(ErrorMessage = "Price unit is required.")]
+        public string PriceUnit { get; set; }
+
+        public string VideoLink { get; set; }
+        public List<IFormFile> ImageFiles { get; set; } 
+        public string ServiceProviderId { get; set; }
+
     }
 }

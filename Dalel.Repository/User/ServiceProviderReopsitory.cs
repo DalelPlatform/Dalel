@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Enums;
 using Models.User;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
@@ -15,18 +16,26 @@ namespace Dalel.Repository
             DelelContext = delelContext;
         }
 
+
         // Get provider with details
         public ServiceProvider GetProviderWithDetails(string providerId)
         {
-            return base.GetList()
-        .Include(p => p.Schedules)
-        .Include(p => p.Projects)
-        .Include(p => p.Propsals)
-            .ThenInclude(pr => pr.ServiceRequest)
-        .Include(p => p.CategoryServices)
-        .FirstOrDefault(p => p.UserId == providerId);
+            return base.GetList(sp => sp.UserId == providerId).FirstOrDefault();
+            
         }
-
+        public bool CheckProfileCompleteness(string userId)
+        {
+            var serviceProvider = GetProviderWithDetails(userId);
+            if (serviceProvider == null)
+            {
+                return false;
+            }
+            return !string.IsNullOrWhiteSpace(serviceProvider.Address) &&
+                   !string.IsNullOrWhiteSpace(serviceProvider.City) &&
+                   serviceProvider.Price.HasValue &&
+                   !string.IsNullOrWhiteSpace(serviceProvider.PriceUnit) &&
+                   serviceProvider.Schedules != null && serviceProvider.Schedules.Any();
+        }
         // Get providers by category with pagination
         public IQueryable<ServiceProvider> GetProvidersByCategory(int categoryId)
         {
