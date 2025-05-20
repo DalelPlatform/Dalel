@@ -28,8 +28,8 @@ namespace Dalel.ViewModels
                 BusinessCategory = book.BusinessCategory,
                 ContactInfo = book.ContactInfo,
 
-                AgencyPackages = book.AgencyPackage.Select(i => i.ToModel()).ToList(),
-                agencyPromotions = book.AgencyPromotion.Select(i => i.ToModel()).ToList(),
+                //AgencyPackages = book.AgencyPackage.Select(i => i.ToModel()).ToList(),
+                //agencyPromotions = book.AgencyPromotion.Select(i => i.ToModel()).ToList(),
                 AgencyVerificationDocuments = book.VerificationDocument.Select(i => i.ToModel()).ToList(),
                 OwnerId = book.ownerId,
 

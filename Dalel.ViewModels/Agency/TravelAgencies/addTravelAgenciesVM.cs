@@ -47,9 +47,9 @@ namespace Dalel.ViewModels.Agency.TravelAgencies
 
         [Required(ErrorMessage = "Please Provide valid Status")]
         public VerificationStatus VerificationStatus { get; set; }
-        public List<AddAgencyPackageVM> AgencyPackage { get; set; }
+        //public List<AddAgencyPackageVM> AgencyPackage { get; set; }
         public List<addAgencyVerificationDocumentVM> VerificationDocument { get; set; }
-        public List<AddAgencyPromotionVM> AgencyPromotion { get; set; }
+        //public List<AddAgencyPromotionVM> AgencyPromotion { get; set; }
 
         public string ownerId { get; set; } = "";
     }

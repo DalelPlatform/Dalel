@@ -60,10 +60,13 @@ namespace Dalel.API.Areas.Agency.Controllers
         [HttpPost]
 
         [Authorize(Roles = "TravelAgencyOwner,Admin")]
-        public IActionResult AddTravelAgency(addTravelAgenciesVM trvelAgency)
+        [Consumes("multipart/form-data")]
+        public IActionResult AddTravelAgency([FromForm] addTravelAgenciesVM trvelAgency)
         {
 
             trvelAgency.ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Console.WriteLine("ownerId from JWT: " + trvelAgency.ownerId);
+
             var res = _pakageService.CreateTravelAgencies(trvelAgency);
             return new JsonResult(res);
         }
