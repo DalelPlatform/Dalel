@@ -58,9 +58,11 @@ namespace Dalel.API.Areas
             return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetServiceProviderById(string id)
+        [HttpGet]
+        public IActionResult GetServiceProviderById()
         {
+
+            string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = _homeServiceService.GetServiceProviderById(id);
             if (!result.Success)
                 return new JsonResult(new { Success = false, Message = result.Message });
