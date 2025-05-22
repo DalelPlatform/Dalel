@@ -50,6 +50,10 @@ namespace Dalel.API.Areas
         public  IActionResult AddProperty([FromBody] AddPropertiesVM property)
         {
             property.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+
+            
+            
             var result =  propertyService.AddProperty(property.ToModel());
             if (!result.Success)
                 return new JsonResult(result.Message);

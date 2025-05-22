@@ -67,9 +67,9 @@ namespace Dalel.Repository
         {
             return await base.GetList(r => r.NationalId == NationalId).FirstOrDefaultAsync();
         }
-        public async Task<AppUser> FindById(string NationalId)
+        public async Task<AppUser> FindById(string Id)
         {
-            return await userManager.FindByIdAsync(NationalId);
+            return await userManager.FindByIdAsync(Id);
         }
 
         public async Task<IList<string>> GetUserRoles(AppUser user)
