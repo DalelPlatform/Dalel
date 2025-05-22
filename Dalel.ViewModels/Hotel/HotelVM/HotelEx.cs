@@ -51,7 +51,7 @@ namespace Dalel.ViewModels
         }
 
  
-        public static void UpdateModel(this Models.Hotel.Hotel hotel, HotelCreation hotelVM)
+        public static Models.Hotel.Hotel UpdateModel(this HotelCreation hotelVM, Models.Hotel.Hotel hotel)
         {
             hotel.Name = hotelVM.Name;
             hotel.Description = hotelVM.Description;
@@ -63,10 +63,12 @@ namespace Dalel.ViewModels
             hotel.PhoneNumber = hotelVM.PhoneNumber;
             hotel.CancelationOptions = hotelVM.CancelationOptions;
             hotel.CancelationCharges = hotelVM.CancelationCharges;
-            hotel.OwnerId = hotelVM.OwnerId;
+
 
             // Optional: clear and replace images
             hotel.HotelImages = hotelVM.Paths.Select(p => new HotelImage { Image = p }).ToList();
+            return hotel;
+
         }
     }
 }

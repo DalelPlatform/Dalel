@@ -89,5 +89,24 @@ namespace Dalel.Repository
         }
 
 
+        public async Task<IdentityResult> ChangePasswordAsync(AppUser user, string currentPassword, string newPassword)
+        {
+            return await userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        }
+
+        // 2. Generate a password-reset token
+        public async Task<string> GeneratePasswordResetTokenAsync(AppUser user)
+        {
+            return await userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        // 3. Reset password using a token
+        public async Task<IdentityResult> ResetPasswordAsync(AppUser user, string token, string newPassword)
+        {
+            return await userManager.ResetPasswordAsync(user, token, newPassword);
+        }
+
+
+
     }
 }

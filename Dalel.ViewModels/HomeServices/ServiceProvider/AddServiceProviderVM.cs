@@ -1,4 +1,6 @@
-﻿using Models.Enums;
+﻿using Dalel.ViewModels.HomeServices.ServiceProviderSchedule;
+using Microsoft.AspNetCore.Http;
+using Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,21 +12,29 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
 {
     public class AddServiceProviderVM
     {
-        [Required(ErrorMessage = "User ID is required.")]
+       
         public string UserId { get; set; }
-        [Required(ErrorMessage = "User Name is required.")]
+        [Required(ErrorMessage = "Username is required.")]
         public string UserName { get; set; }
-        [Required(ErrorMessage = "Category ID is required.")]
-        public int CategoryServicesId { get; set; } = 1;
 
         [Required(ErrorMessage = "Address is required.")]
-        [StringLength(200, ErrorMessage = "Address cannot exceed 200 characters.")]
         public string Address { get; set; }
 
         [Required(ErrorMessage = "City is required.")]
-        [StringLength(100, ErrorMessage = "City cannot exceed 100 characters.")]
         public string City { get; set; }
-        public VerificationStatus? VerificationStatus { get; set; }
 
+        [Required(ErrorMessage = "Price is required.")]
+        public decimal Price { get; set; }
+
+        [Required(ErrorMessage = "Price unit is required.")]
+        public string PriceUnit { get; set; }
+
+        public string About { get; set; }
+        public string Website { get; set; }
+        [Required(ErrorMessage = "Category number is required.")]
+        public int CategoryServicesId { get; set; }
+        public VerificationStatus? VerificationStatus { get; set; }
+        public List<AddServiceProviderScheduleItemVM> Schedules { get; set; }
+        public IFormFile? Image { get; set; }
     }
 }

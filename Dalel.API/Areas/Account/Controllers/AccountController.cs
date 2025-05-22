@@ -1,10 +1,16 @@
 ﻿using Dalel.Services;
 using Dalel.ViewModels;
 using LinqKit;
+
+using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc;
 using Models.User;
 using System.Security.Claims;
 using System.Text;
+
+using Utilities;
+
 
 namespace Dalel.API.Controllers
 {
@@ -62,7 +68,7 @@ namespace Dalel.API.Controllers
 
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody]UserLoginVM vmodel)
+        public async Task<IActionResult> Login([FromBody] UserLoginVM vmodel)
         {
             if (ModelState.IsValid)
             {
@@ -123,9 +129,7 @@ namespace Dalel.API.Controllers
                 Status = 200
             });
         }
-        //http get check email
-        //http get check national
-        //http get check username
+
         [HttpGet("CheckUsername")]
         public async Task<IActionResult> CheckUsername([FromQuery] string username)
         {
@@ -173,6 +177,37 @@ namespace Dalel.API.Controllers
          
         }
 
+        [Authorize]
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                StringBuilder errorMessages = new StringBuilder();
+                foreach (var item in ModelState.Values)
+                {
+                    foreach (var error in item.Errors)
+                    {
+                        errorMessages.Append(error.ErrorMessage + " ");
+                    }
+                }
+
+                return new JsonResult(new
+                {
+                    Message = errorMessages.ToString().Trim(),
+                    Status = 400
+                });
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await accountService.ChangePasswordAsync(userId, vm);
+
+            return new JsonResult(new
+            {
+                Message = result.Message,
+                Status = result.Success ? 200 : 400
+            });
+        }
 
     }
 }

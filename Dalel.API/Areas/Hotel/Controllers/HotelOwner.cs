@@ -4,6 +4,7 @@ using Dalel.Services;
 using Dalel.ViewModels;
 using Models.Enums;
 using Serilog;
+using System.Security.Claims;
 
 namespace Dalel.Api.Controllers
 {
@@ -28,6 +29,7 @@ namespace Dalel.Api.Controllers
         [HttpPost("hotels")]
         public IActionResult CreateHotel([FromBody] HotelCreation model)
         {
+            model.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             _logger.LogInformation("Creating hotel");
             var result = _hotelService.CreateHotel(model);
             return new JsonResult(result);
@@ -189,13 +191,12 @@ namespace Dalel.Api.Controllers
         [HttpGet("rooms/search")]
         public IActionResult SearchRooms(
             [FromQuery] int? roomTypeId,
-            [FromQuery] string viewType,
             [FromQuery] AvaliabilityStatus? availability,
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageIndex = 1)
         {
             _logger.LogInformation("SearchRooms called");
-            var result = _hotelService.SearchRooms(roomTypeId, viewType, availability, false, pageSize, pageIndex);
+            var result = _hotelService.SearchRooms(roomTypeId, availability, false, pageSize, pageIndex);
             return new JsonResult(result);
         }
         [HttpGet("rooms/availability")]

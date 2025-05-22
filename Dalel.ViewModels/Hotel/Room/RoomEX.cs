@@ -14,7 +14,6 @@ namespace Dalel.ViewModels
             return new Room
             {
                 RoomTypeId = vm.RoomTypeId,
-                ViewType = vm.ViewType,
                 Availability = vm.Availability
             };
         }
@@ -23,7 +22,6 @@ namespace Dalel.ViewModels
         public static void UpdateModel(this Room model, RoomCreation vm)
         {
             model.RoomTypeId = vm.RoomTypeId;
-            model.ViewType = vm.ViewType;
             model.Availability = vm.Availability;
         }
 
@@ -34,7 +32,6 @@ namespace Dalel.ViewModels
             {
                 Id = model.Id,
                 RoomTypeId = model.RoomTypeId,
-                ViewType = model.ViewType,
                 Availability = model.Availability.ToString(),
             };
         }
