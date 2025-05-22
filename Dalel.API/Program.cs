@@ -245,6 +245,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors();
 // Add this to your Program.cs
 
 app.MapControllerRoute(

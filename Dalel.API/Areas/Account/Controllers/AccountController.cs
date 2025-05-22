@@ -68,7 +68,7 @@ namespace Dalel.API.Controllers
 
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody]UserLoginVM vmodel)
+        public async Task<IActionResult> Login([FromBody] UserLoginVM vmodel)
         {
             if (ModelState.IsValid)
             {
@@ -163,48 +163,35 @@ namespace Dalel.API.Controllers
             });
         }
 
-
-        [HttpPost("ForgotPassword")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordVM vm)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var result = await accountService.ForgotPasswordAsync(vm);
-            return StatusCode(result.StatusCode, new
-            {
-                result.Success,
-                result.Message,
-                Token = result is ServiceResult<string> sr ? sr.Data : null
-            });
-        }
-
-        // POST: api/Account/ResetPassword
-        [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordVM vm)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var result = await accountService.ResetPasswordAsync(vm);
-            return StatusCode(result.StatusCode, new
-            {
-                result.Success,
-                result.Message
-            });
-        }
-
-        // POST: api/Account/ChangePassword
         [Authorize]
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordVM vm)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                StringBuilder errorMessages = new StringBuilder();
+                foreach (var item in ModelState.Values)
+                {
+                    foreach (var error in item.Errors)
+                    {
+                        errorMessages.Append(error.ErrorMessage + " ");
+                    }
+                }
+
+                return new JsonResult(new
+                {
+                    Message = errorMessages.ToString().Trim(),
+                    Status = 400
+                });
+            }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await accountService.ChangePasswordAsync(userId, vm);
-            return StatusCode(result.StatusCode, new
+
+            return new JsonResult(new
             {
-                result.Success,
-                result.Message
+                Message = result.Message,
+                Status = result.Success ? 200 : 400
             });
         }
 
