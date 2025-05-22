@@ -254,7 +254,37 @@ namespace Dalel.Services.Agency
 
         public ServiceResult CreateTravelAgencies(addTravelAgenciesVM agency)
         {
-            TravelAgenciesRepo.Add(agency.ToModel());
+            var travelAgency = agency.ToModel();
+            TravelAgenciesRepo.Add(travelAgency);
+            if (agency.VerificationDocument != null && agency.VerificationDocument.Any())
+            {
+                string basePath = Path.Combine(Directory.GetCurrentDirectory(), 
+                    "wwwroot", "Uploads", "AgencyDocuments");
+                if (!Directory.Exists(basePath))
+                {
+                    Directory.CreateDirectory(basePath);
+                }
+                foreach (var doc in agency.VerificationDocument)
+                {
+                    if (doc.DocumentFile != null && doc.DocumentFile.Length > 0)
+                    {
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(doc.DocumentFile.FileName);
+                        string filePath = Path.Combine(basePath, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            doc.DocumentFile.CopyTo(stream);
+                        }
+                        doc.DocumentFileName = fileName;
+                        var documentEntity = doc.ToModel(); 
+                        documentEntity.AgencyId = travelAgency.Id;
+
+                        AgencyVerificationDocumentRepo.Add(documentEntity);
+                    }
+                }
+
+                }
+          
             return new ServiceResult
             {
                 Success = true,

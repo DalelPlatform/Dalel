@@ -51,6 +51,7 @@ namespace Dalel.Services
             {
                 var model = vm.ToModel();
                 _restaurantRepo.Add(model);
+                //_restaurantRepo.Save();
                 return ServiceResult.SuccessResult("Restaurant added successfully.");
             }
             catch (Exception ex)

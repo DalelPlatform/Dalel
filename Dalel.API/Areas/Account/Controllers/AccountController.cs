@@ -68,7 +68,7 @@ namespace Dalel.API.Controllers
 
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody]UserLoginVM vmodel)
+        public async Task<IActionResult> Login([FromBody] UserLoginVM vmodel)
         {
             if (ModelState.IsValid)
             {
@@ -129,9 +129,7 @@ namespace Dalel.API.Controllers
                 Status = 200
             });
         }
-        //http get check email
-        //http get check national
-        //http get check username
+
         [HttpGet("CheckUsername")]
         public async Task<IActionResult> CheckUsername([FromQuery] string username)
         {
@@ -155,66 +153,59 @@ namespace Dalel.API.Controllers
         }
 
         [HttpGet("CheckNationalId")]
-        public async Task<IActionResult> CheckNationalId([FromQuery] string nationalId)
+        public IActionResult CheckNationalId([FromQuery] string nationalId)
         {
-            var isTaken = await accountService.IsNationalIdTaken(nationalId);
-            return new JsonResult(new
+            try
             {
-                Status = isTaken ? 400 : 200,
-                Message = isTaken ? "National ID is already used" : "National ID is available"
-            });
-        }
+                var isTaken =  accountService.IsNationalIdTaken(nationalId);
 
-        [HttpGet("GetProfile")]
-        public async Task<IActionResult> GetUserProfile()
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user =  accountService.GetUserById(userId);
-            return  new JsonResult(user);
-        }
+                return new JsonResult(new
+                {
+                    Status = isTaken ? 400 : 200,
+                    Message = isTaken ? "National ID is already used" : "National ID is available"
+                });
+            }
 
-
-        [HttpPost("ForgotPassword")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordVM vm)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var result = await accountService.ForgotPasswordAsync(vm);
-            return StatusCode(result.StatusCode, new
+            catch (Exception ex)
             {
-                result.Success,
-                result.Message,
-                Token = result is ServiceResult<string> sr ? sr.Data : null
-            });
+                return new JsonResult(new
+                {
+                    Status = 500,
+                    Message = $"{ex.Message}"
+                });
+            }
+         
         }
 
-        // POST: api/Account/ResetPassword
-        [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordVM vm)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var result = await accountService.ResetPasswordAsync(vm);
-            return StatusCode(result.StatusCode, new
-            {
-                result.Success,
-                result.Message
-            });
-        }
-
-        // POST: api/Account/ChangePassword
         [Authorize]
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordVM vm)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                StringBuilder errorMessages = new StringBuilder();
+                foreach (var item in ModelState.Values)
+                {
+                    foreach (var error in item.Errors)
+                    {
+                        errorMessages.Append(error.ErrorMessage + " ");
+                    }
+                }
+
+                return new JsonResult(new
+                {
+                    Message = errorMessages.ToString().Trim(),
+                    Status = 400
+                });
+            }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await accountService.ChangePasswordAsync(userId, vm);
-            return StatusCode(result.StatusCode, new
+
+            return new JsonResult(new
             {
-                result.Success,
-                result.Message
+                Message = result.Message,
+                Status = result.Success ? 200 : 400
             });
         }
 

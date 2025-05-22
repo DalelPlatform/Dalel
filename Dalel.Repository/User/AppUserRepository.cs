@@ -63,9 +63,9 @@ namespace Dalel.Repository
             return await userManager.FindByEmailAsync(email);
         }
 
-        public async Task<AppUser> FindByNationalId(string NationalId)
+        public AppUser FindByNationalId(string NationalId)
         {
-            return await base.GetList(r => r.NationalId == NationalId).FirstOrDefaultAsync();
+            return  base.GetList(r => r.NationalId == NationalId).FirstOrDefault();
         }
         public async Task<AppUser> FindById(string Id)
         {

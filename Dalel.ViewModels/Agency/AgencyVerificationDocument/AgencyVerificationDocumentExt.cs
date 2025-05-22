@@ -17,7 +17,7 @@ namespace Dalel.ViewModels
         {
             return new AgencyVerificationDocument
             {
-                DocumentFile = Document.DocumentFile,
+                DocumentFile = Document.DocumentFileName??"",
                 DocumentType = Document.DocumentType,
                 status = Document.status,
                 AgencyId = Document.AgencyId,
@@ -26,6 +26,7 @@ namespace Dalel.ViewModels
 
 
         }
+        
         public static AgencyVerificationDocumentDetails ToDetailsModels(this
             AgencyVerificationDocument doc)
         {
@@ -42,8 +43,8 @@ namespace Dalel.ViewModels
         AgencyVerificationDocument old)
         {
 
-            old.DocumentType = doc.DocumentType;
-            old.DocumentFile = doc.DocumentFile;
+            //old.DocumentType = doc.DocumentType;
+            old.DocumentFile = doc.DocumentFileName ?? old.DocumentFile;
             old.status = doc.status;
             return old;
         }

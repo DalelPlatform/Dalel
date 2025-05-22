@@ -23,7 +23,6 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
                 VerificationStatus = vm.VerificationStatus,
                 Schedules = vm.Schedules?.Select(s => new Models.HomeService.ServiceProviderSchedule
                 {
-                    ServiceProviderId = vm.UserId,
                     WorKDay = s.WorKDay,
                     AvailableFrom = s.AvailableFrom,
                     AvailableTo = s.AvailableTo
@@ -47,7 +46,6 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
             {
                 existing.Schedules = vm.Schedules.Select(s => new Models.HomeService.ServiceProviderSchedule
                 {
-                    ServiceProviderId = vm.UserId,
                     WorKDay = s.WorKDay,
                     AvailableFrom = s.AvailableFrom,
                     AvailableTo = s.AvailableTo
