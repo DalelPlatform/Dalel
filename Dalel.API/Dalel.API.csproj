@@ -39,4 +39,7 @@
     <ProjectReference Include="..\Dalel.Repository\Dalel.Repository.csproj" />
     <ProjectReference Include="..\Services\Dalel.Services.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
 </Project>

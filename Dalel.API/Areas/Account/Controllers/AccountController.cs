@@ -149,14 +149,28 @@ namespace Dalel.API.Controllers
         }
 
         [HttpGet("CheckNationalId")]
-        public async Task<IActionResult> CheckNationalId([FromQuery] string nationalId)
+        public IActionResult CheckNationalId([FromQuery] string nationalId)
         {
-            var isTaken = await accountService.IsNationalIdTaken(nationalId);
-            return new JsonResult(new
+            try
             {
-                Status = isTaken ? 400 : 200,
-                Message = isTaken ? "National ID is already used" : "National ID is available"
-            });
+                var isTaken =  accountService.IsNationalIdTaken(nationalId);
+
+                return new JsonResult(new
+                {
+                    Status = isTaken ? 400 : 200,
+                    Message = isTaken ? "National ID is already used" : "National ID is available"
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    Status = 500,
+                    Message = $"{ex.Message}"
+                });
+            }
+         
         }
 
 

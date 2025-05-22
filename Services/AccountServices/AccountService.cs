@@ -125,9 +125,9 @@ namespace Dalel.Services
             return user != null;
         }
 
-        public async Task<bool> IsNationalIdTaken(string nationalId)
+        public bool IsNationalIdTaken(string nationalId)
         {
-            var user = await appUserRepository.FindByNationalId(nationalId);
+            var user =  appUserRepository.FindByNationalId(nationalId);
             return user != null;
         }
 
