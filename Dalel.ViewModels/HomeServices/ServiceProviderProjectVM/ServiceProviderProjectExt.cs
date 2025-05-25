@@ -26,7 +26,7 @@ namespace Dalel.ViewModels
                 {
                     project.ServiceProviderProjectImages.Add(new ServiceProviderProjectImages
                     {
-                        ImagePath = imageFile.FileName 
+                        ImagePath = imageFile.Value 
                     });
                 }
             }
@@ -50,7 +50,7 @@ namespace Dalel.ViewModels
                 {
                     existing.ServiceProviderProjectImages.Add(new ServiceProviderProjectImages
                     {
-                        ImagePath = imageFile.FileName 
+                        ImagePath = imageFile.Value
                     });
                 }
             }

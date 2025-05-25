@@ -1138,6 +1138,23 @@ namespace Dalel.Services
             }
         }
 
+        public ServiceResult<List<CategoryServicesDetailsVM>> GetAllCategories()
+        {
+            try
+            {
+                var categories = _categoryServicesRepository.Get()
+                    .Select(c => c.ToDetailsViewModel())
+                    .ToList();
+
+                return ServiceResult<List<CategoryServicesDetailsVM>>.SuccessResult(categories, "Categories retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<CategoryServicesDetailsVM>>.FailureResult($"Error retrieving categories: {ex.Message}");
+            }
+        }
+
+
         #endregion
 
         #region ServiceProviderReview
@@ -1448,9 +1465,6 @@ public ServiceResult DeletePayment(int paymentId)
                 if (!string.IsNullOrEmpty(address))
                     providers = providers.Where(p => p.Address != null && p.Address.Contains(address, StringComparison.OrdinalIgnoreCase));
 
-                if (verificationStatus.HasValue)
-                    providers = providers.Where(p => p.VerificationStatus == verificationStatus.Value);
-
                 switch (sortBy.ToLower())
                 {
                     case "name":
@@ -1582,7 +1596,7 @@ public ServiceResult DeletePayment(int paymentId)
             }
         }
 
-        public ServiceResult<ServiceProviderDetailsVM> UpdateServiceProvider(int providerId, [FromForm] AddServiceProviderVM vm, VerificationStatus verificationStatus)
+        public ServiceResult<ServiceProviderDetailsVM> UpdateServiceProvider(int providerId, [FromForm] AddServiceProviderVM vm)
         {
             try
             {
@@ -1596,7 +1610,8 @@ public ServiceResult DeletePayment(int paymentId)
                 provider.AppUser.UserName = vm.UserName;
                 provider.Address = vm.Address;
                 provider.CategoryServicesId = vm.CategoryServicesId;
-                provider.VerificationStatus = verificationStatus;
+                provider.City = vm.City;
+                provider.Country = vm.Country;
 
                 // Save new image if provided
                 var newImagePath = SaveProfileImage(vm.Image);

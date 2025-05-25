@@ -103,7 +103,7 @@ namespace Dalel.API.Areas
         [Authorize(Roles = "ServiceProvider,Admin")]
         public IActionResult UpdateServiceProvider(int id, [FromForm] AddServiceProviderVM model, [FromQuery] VerificationStatus? verificationStatus = null)
         {
-            var result = _homeServiceService.UpdateServiceProvider(id, model, verificationStatus ?? VerificationStatus.Pending);
+            var result = _homeServiceService.UpdateServiceProvider(id, model);
             if (!result.Success)
                 return new JsonResult(new { Success = false, Message = result.Message });
             return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });

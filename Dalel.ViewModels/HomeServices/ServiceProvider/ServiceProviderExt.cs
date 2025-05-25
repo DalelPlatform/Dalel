@@ -16,11 +16,16 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
                 CategoryServicesId = vm.CategoryServicesId,
                 Address = vm.Address,
                 City = vm.City,
+                Country = vm.Country,
+                District = vm.District,
                 Price = vm.Price,
                 PriceUnit = vm.PriceUnit,
                 About = vm.About,
                 Website = vm.Website,
-                VerificationStatus = vm.VerificationStatus,
+                ServiceArea = vm.ServiceArea,
+                ZipCode = vm.ZipCode,
+                Image = vm.Image != null ? $"/images/serviceprovider/{vm.UserId}/{vm.Image.FileName}" : null,
+
                 Schedules = vm.Schedules?.Select(s => new Models.HomeService.ServiceProviderSchedule
                 {
                     WorKDay = s.WorKDay,
@@ -40,8 +45,10 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
             existing.PriceUnit = vm.PriceUnit;
             existing.About = vm.About;
             existing.Website = vm.Website;
-            existing.VerificationStatus = vm.VerificationStatus;
-
+            existing.ServiceArea = vm.ServiceArea;
+            existing.ZipCode = vm.ZipCode;
+            existing.Image = vm.Image != null ? $"/images/serviceprovider/{vm.UserId}/{vm.Image.FileName}" : existing.Image;
+            existing.Country = vm.Country;
             if (vm.Schedules != null)
             {
                 existing.Schedules = vm.Schedules.Select(s => new Models.HomeService.ServiceProviderSchedule
@@ -76,7 +83,10 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
                 About = model.About,
                 Website = model.Website,
                 CategoryServicesId = model.CategoryServicesId,
-                VerificationStatus = model.VerificationStatus,
+                Country = model.Country ?? "",
+                ServiceArea = model.ServiceArea ?? "",
+                ZipCode = model.ZipCode ?? "",
+                District = model.District ?? "",
                 Image = model.Image,
                 Schedules = model.Schedules?.Select(s => new ServiceProviderScheduleDetailsVM
                 {
