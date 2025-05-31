@@ -11,73 +11,45 @@ namespace Utilities
 {
     public class UploadMedia
     {
-        private const string ApiKey = "4e605ee2af96816038aecb5232984a8b";
-        private const string UploadUrl = "https://api.imgbb.com/1/upload";
+      //  private const string ApiKey = "4e605ee2af96816038aecb5232984a8b";
+      // private const string UploadUrl = "https://api.imgbb.com/1/upload";
 
-        public static List<string> UploadImgaes(IFormFileCollection files)
+        
+        public List<string> addimage(IFormFileCollection files)
         {
-            List<string> uploadedImageUrls = new();
-
-            using HttpClient client = new();
+            List<string> imagePaths = new List<string>();
+            var client = new HttpClient();
 
             foreach (var file in files)
             {
-                using var ms = new MemoryStream();
-                file.CopyTo(ms); // Sync
-                var fileBytes = ms.ToArray();
-                string base64Image = Convert.ToBase64String(fileBytes);
-
-                var content = new MultipartFormDataContent
+                if (file.Length > 0)
                 {
-                    { new StringContent(ApiKey), "key" },
-                    { new StringContent(base64Image), "image" }
-                };
+                    using var ms = new MemoryStream();
+                    file.CopyTo(ms); 
+                    var fileBytes = ms.ToArray();
+                    var base64Image = Convert.ToBase64String(fileBytes);
 
-                var response = client.PostAsync(UploadUrl, content).GetAwaiter().GetResult();
+                    var content = new MultipartFormDataContent
+                    {
+                        { new StringContent("4e605ee2af96816038aecb5232984a8b"), "key" },
+                        { new StringContent(base64Image), "image" }
+                    };
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                    var result = JsonDocument.Parse(json);
-                    var url = result.RootElement.GetProperty("data").GetProperty("url").GetString();
-                    if (url != null)
-                        uploadedImageUrls.Add(url);
+                    var response = client.PostAsync("https://api.imgbb.com/1/upload", content).GetAwaiter().GetResult();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                        var result = JsonDocument.Parse(json);
+                        var url = result.RootElement.GetProperty("data").GetProperty("url").GetString();
+                        if (url != null)
+                        {
+                            imagePaths.Add(url);
+                        }
+                    }
                 }
             }
 
-            return uploadedImageUrls;
-        }
-        public static async Task<List<string>> UploadImgaesAsync(IFormFileCollection files)
-        {
-            List<string> uploadedImageUrls = new();
-
-            using HttpClient client = new();
-
-            foreach (var file in files)
-            {
-                using var ms = new MemoryStream();
-                await file.CopyToAsync(ms);
-                var fileBytes = ms.ToArray();
-                string base64Image = Convert.ToBase64String(fileBytes);
-
-                var content = new MultipartFormDataContent
-                {
-                    { new StringContent(ApiKey), "key" },
-                    { new StringContent(base64Image), "image" }
-                };
-
-                var response = await client.PostAsync(UploadUrl, content);
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = await response.Content.ReadAsStringAsync();
-                    var result = JsonDocument.Parse(json);
-                    var url = result.RootElement.GetProperty("data").GetProperty("url").GetString();
-                    if (url != null)
-                        uploadedImageUrls.Add(url);
-                }
-            }
-
-            return uploadedImageUrls;
+            return imagePaths;
         }
     }
 }

@@ -198,6 +198,8 @@ builder.Services.AddScoped<IPaymentProcessor<PaymentVehicle>, DriverPaymentProce
 
 #endregion
 
+builder.Services.AddScoped<UploadMedia>();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {

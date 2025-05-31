@@ -17,9 +17,11 @@ namespace Dalel.API.Areas
     public class PropertyController : ControllerBase
     {
         private PropertyService propertyService;
-        public PropertyController(PropertyService propertyService)
+        private UploadMedia uploader;
+        public PropertyController(PropertyService propertyService, UploadMedia uploader)
         {
             this.propertyService = propertyService;
+            this.uploader = uploader;
         }
         [HttpGet("search")]
         public IActionResult SearchProperties(
@@ -47,13 +49,11 @@ namespace Dalel.API.Areas
 
         [HttpPost("Property")]
         [Authorize(Roles = "PropertyOwner")]
-        public  IActionResult AddProperty([FromBody] AddPropertiesVM property)
+        public  IActionResult AddProperty([FromForm] AddPropertiesVM property)
         {
+            if (!ModelState.IsValid)
             property.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-
-            
-            
+            property.Paths = uploader.addimage(property.PropertyImages);
             var result =  propertyService.AddProperty(property.ToModel());
             if (!result.Success)
                 return new JsonResult(result.Message);
