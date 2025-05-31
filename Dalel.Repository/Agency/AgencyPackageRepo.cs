@@ -25,6 +25,7 @@ namespace Dalel.Repository.Agency
         }
         public IQueryable<AgencyPackageDetails> GetAgencyPackage(int pckg_id)
         {
+
             return base.GetList(agenc => agenc.AgencyId == pckg_id)
                 .Select(i => i.ToDetailsModels());
 

@@ -21,7 +21,7 @@ namespace Dalel.ViewModels
                 Image = step.Image,
                 Description = step.Description,
                 Duration = step.Duration,
-                PackageId = step.PackageId,
+                //PackageId = step.PackageId,
 
             };
 
@@ -49,7 +49,7 @@ namespace Dalel.ViewModels
             old.Image = step.Image;
             old.Description = step.Description;
             old.Duration = step.Duration;
-            old.PackageId = step.PackageId;
+            //old.PackageId = (int)step.PackageId;
 
 
             return old;

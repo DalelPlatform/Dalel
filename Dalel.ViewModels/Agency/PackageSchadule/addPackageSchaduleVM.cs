@@ -15,7 +15,7 @@ namespace Dalel.ViewModels.Agency.PackageSchadule
         public DateTime Date { get; set; }
         [Required(ErrorMessage = "this field is Required ")]
         public int SlotsAvailable { get; set; }
-        public int PackageId { get; set; }
-        public List<AddPackagebookingVM> PackageBookings { get; set; }
+        public int? PackageId { get; set; }
+        //public List<AddPackagebookingVM> PackageBookings { get; set; }
     }
 }

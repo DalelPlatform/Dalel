@@ -119,6 +119,7 @@ namespace Dalel.Services.Agency
 
         public List<AgencyPackageDetails> GetAllAgencyPackage(int id)
         {
+            Console.WriteLine(AgencyPackageRepo.GetAgencyPackage(id).ToList());
             return AgencyPackageRepo.GetAgencyPackage(id).ToList();
         }
 
@@ -235,11 +236,11 @@ namespace Dalel.Services.Agency
                 );
             }
         }
-        public ServiceResult<List<TravelAgenciesDetails>> GetAllTravelAgency()
+        public ServiceResult<List<TravelAgenciesDetails>> GetAllTravelAgency(string ownerId)
         {
             try
             {
-                var list = TravelAgenciesRepo.GetList().
+                var list = TravelAgenciesRepo.GetList(a => a.OwnerId == ownerId).
                     Select(t => t.ToDetailsModels()).ToList();
                 return ServiceResult<List<TravelAgenciesDetails>>.
                     SuccessResult(list, "TravelAgencies fetched successfully.");

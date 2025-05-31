@@ -19,7 +19,7 @@ namespace Dalel.ViewModels
         public string PriceUnit { get; set; }
 
         public string VideoLink { get; set; }
-        public List<IFormFile> ImageFiles { get; set; } 
+        public IFormCollection ImageFiles { get; set; } 
         public string ServiceProviderId { get; set; }
 
     }

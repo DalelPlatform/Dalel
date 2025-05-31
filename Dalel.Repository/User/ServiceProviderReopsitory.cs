@@ -85,9 +85,6 @@ namespace Dalel.Repository
             if (!string.IsNullOrEmpty(address))
                 query = query.Where(p => p.Address.Contains(address));
 
-            if (verificationStatus.HasValue)
-                query = query.Where(p => (int?)p.VerificationStatus == verificationStatus.Value);
-
             query = sortBy.ToLower() switch
             {
                 "name" => descending ? query.OrderByDescending(p => p.AppUser.UserName) : query.OrderBy(p => p.AppUser.UserName),

@@ -10,14 +10,15 @@ namespace Models.User
         public string UserId { get; set; }
         public virtual AppUser AppUser { get; set; }
         public string? Image { get; set; }
-        public List<string>? Skills { get; set; }//TODO
         public DateTime? StartProfisionalAt { get; set; }  
         public string? Address { get; set; }
+        public string? ServiceArea { get; set; } // Area of service, e.g., "Plumbing", "Electrical"
         public string? City { get; set; }
+        public string? Country { get; set; }
+        public string? District { get; set; }
+        public string? ZipCode { get; set; }
+        public string? ServiceAreas { get; set; }
         public string? About { get; set; }
-        public string? Licence { get; set; }
-        public string? Certificate { get; set; }
-        public VerificationStatus? VerificationStatus { get; set; }
         public int CategoryServicesId { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
         public virtual ICollection<ServiceProviderProject>? Projects { get; set; }
@@ -39,12 +40,6 @@ namespace Models.User
 
             builder.Property(sp => sp.About)
                 .HasMaxLength(1000);
-
-            builder.Property(sp => sp.Licence)
-                .HasMaxLength(50);
-
-            builder.Property(sp => sp.Certificate)
-                .HasMaxLength(50);
 
             builder.HasOne(sp => sp.AppUser)
                 .WithOne(cs => cs.ServiceProvider)
