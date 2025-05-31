@@ -19,7 +19,7 @@ namespace Dalel.ViewModels
             {
                 Date = schadule.Date,
                 SlotsAvailable = schadule.SlotsAvailable,
-                PabckageBookings = schadule.PackageBookings.Select(i => i.ToModel()).ToList(),
+                //PabckageBookings = schadule.PackageBookings.Select(i => i.ToModel()).ToList(),
 
             };
 
