@@ -28,6 +28,10 @@ using Utilities.Payments.Gateways;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
+
+builder.Services.AddDbContext<DelelContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
 // Register AutoMapper
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -37,6 +41,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull; // Ignore null values
 });
 
+builder.Services.AddEndpointsApiExplorer();
 //To Enable Swagger to test authentication token >>(Bearer space token)
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -69,6 +74,12 @@ builder.Services.AddDbContext<DelelContext>
     (i => i.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<DelelContext>();
+
+builder.Services.AddHttpClient();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 
 //Add srilog logging
 Log.Logger = new LoggerConfiguration()  
@@ -187,7 +198,14 @@ builder.Services.AddScoped<IPaymentProcessor<PaymentVehicle>, DriverPaymentProce
 
 #endregion
 
+builder.Services.AddScoped<UploadMedia>();
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.MaxDepth = 64;
+    });
 
 builder.Services.AddAuthentication(option =>
 {
@@ -230,6 +248,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+// Add this to your Program.cs
 
 app.MapControllerRoute(
     name: "default",
@@ -238,5 +257,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=admin}/{controller=Home}/{action=Index}");
+
+app.MapControllers();
 
 app.Run();

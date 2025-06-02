@@ -54,6 +54,7 @@ namespace Dalel.Services
                 var result = _propertiesRepo.SearchProperties(
                     searchText, city, region, street, address, NumberOfRooms, BuildingNo, FloorNo, verificationStatus,
                     sortBy, descending, pageSize, pageIndex);
+                
 
                 return ServiceResult<PaginationViewModel<PropertiesDetailsVM>>.SuccessResult(result, "Search completed.");
             }

@@ -53,8 +53,8 @@ namespace Dalel.API.Areas.Agency.Controllers
         [HttpGet]
         public IActionResult GetAllTravels()
         {
-
-            var res = _pakageService.GetAllTravelAgency();
+            var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var res = _pakageService.GetAllTravelAgency(ownerId);
             return new JsonResult(res);
         }
         [HttpPost]

@@ -20,7 +20,7 @@ namespace Dalel.ViewModels.Agency.PackageStep
 
         public string? Image { get; set; }
         public IFormFile? ImageFile { get; set; }
-        public int PackageId { get; set; }
+        public int? PackageId { get; set; }
 
     }
 }
