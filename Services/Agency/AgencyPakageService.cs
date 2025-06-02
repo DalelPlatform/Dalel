@@ -11,6 +11,7 @@ using Dalel.ViewModels.Agency.Packagebooking;
 using Dalel.ViewModels.Agency.PackageSchadule;
 using Dalel.ViewModels.Agency.PackageStep;
 using Dalel.ViewModels.Agency.TravelAgencies;
+using Microsoft.AspNetCore.Http;
 using Models.Agency;
 using Models.Enums;
 using Models.Restaurant;
@@ -46,6 +47,27 @@ namespace Dalel.Services.Agency
         #region AgencyPackage
         public ServiceResult CreateAgencyPackage(AddAgencyPackageVM agency)
         {
+            var files = new FormFileCollection();
+
+            foreach (var step in agency.Steps)
+            {
+                Console.WriteLine(step.ImageFile);
+                if (step.ImageFile != null && step.ImageFile.Length > 0)
+                {
+                    files.Add(step.ImageFile);
+                }
+            }
+            var uploader = new UploadMedia();
+            var uploadedUrls = uploader.addimage(files);
+            int index = 0;
+            for (int i = 0; i < agency.Steps.Count; i++)
+            {
+                if (agency.Steps[i].ImageFile != null && index < uploadedUrls.Count)
+                {
+                    agency.Steps[i].Image = uploadedUrls[index];
+                    index++;
+                }
+            }
             AgencyPackageRepo.Add(agency.ToModel());
             return new ServiceResult
             {
