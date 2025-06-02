@@ -46,7 +46,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpGet("client")]
-        //[Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client")]
         public IActionResult GetRequestsByClient(
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1)
@@ -59,7 +59,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpGet("status/{status}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetRequestsByStatus(
             RequestStatus status,
             [FromQuery] int pageSize = 5,
@@ -72,7 +72,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client")]
         public IActionResult UpdateServiceRequest(int id, [FromForm] AddServiceRequestVM model)
         {
             var result = _homeServiceService.UpdateServiceRequest(id, model);
@@ -82,7 +82,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client")]
         public IActionResult DeleteServiceRequest(int id)
         {
             var result = _homeServiceService.DeleteServiceRequest(id);

@@ -30,7 +30,7 @@ namespace Dalel.API.Areas
             return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
-        [HttpPost("create")]
+        [HttpPut("create")]
         [Authorize(Roles = "ServiceProvider")]
         public IActionResult CreateServiceProvider([FromForm] AddServiceProviderVM model)
         {
@@ -58,7 +58,7 @@ namespace Dalel.API.Areas
             return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
-        [HttpGet]
+        [HttpGet("profile")]
         public IActionResult GetServiceProviderById()
         {
 

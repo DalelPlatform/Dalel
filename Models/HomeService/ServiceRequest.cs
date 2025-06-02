@@ -11,7 +11,7 @@ namespace Models.HomeService
         public string ClientId { get; set; }
         public DateTime Date { get; set; }
         public RequestStatus Status { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } 
         public double StartPrice { get; set; }
         public string Description { get; set; }
         public string Address { get; set; }

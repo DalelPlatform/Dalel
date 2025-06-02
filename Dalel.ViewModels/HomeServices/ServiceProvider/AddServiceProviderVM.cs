@@ -37,6 +37,7 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
         [Required(ErrorMessage = "Category number is required.")]
         public int CategoryServicesId { get; set; }
         public List<AddServiceProviderScheduleItemVM> Schedules { get; set; }
+
         public IFormFile? Image { get; set; }
     }
 }

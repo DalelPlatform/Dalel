@@ -17,6 +17,7 @@ namespace Dalel.ViewModels
                 ClientId = vm.ClientId,
                 CategoryServicesId = vm.CategoryServicesId,
                 Description = vm.Description,
+                Address =vm.Address,
                 Date = vm.Date,
                 Status = vm.Status
             };
@@ -27,6 +28,7 @@ namespace Dalel.ViewModels
             existing.ClientId = vm.ClientId;
             existing.CategoryServicesId = vm.CategoryServicesId;
             existing.Description = vm.Description;
+            existing.Address = vm.Address;
             existing.Date = vm.Date;
             existing.Status = vm.Status;
             return existing;
@@ -38,11 +40,11 @@ namespace Dalel.ViewModels
             {
                 Id = model.Id,
                 ClientId = model.ClientId,
-                ClientName = model.Client.User.UserName ?? "Not Provided",
                 CategoryServicesId = model.CategoryServicesId,
                 Description = model.Description,
+                Address = model.Address,
                 Date = model.Date,
-                Status = model.Status
+                Status = model.Status,
             };
         }
     }

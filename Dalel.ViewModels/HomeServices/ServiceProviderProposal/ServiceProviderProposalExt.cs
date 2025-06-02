@@ -36,9 +36,7 @@ namespace Dalel.ViewModels
             {
                 Id = model.Id,
                 ServiceProviderId = model.ServiceProviderId,
-                ServiceProviderName = model.ServiceProvider?.AppUser?.UserName ?? "Not Provided",
                 ServiceRequestId = model.ServiceRequestId,
-                ServiceRequestDescription = model.ServiceRequest?.Description ?? "Not Provided",
                 Description = model.Description,
                 SuggestedPrice = model.SuggestedPrice,
                 Status = model.Status
