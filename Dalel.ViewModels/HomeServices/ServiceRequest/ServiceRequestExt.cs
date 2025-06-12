@@ -15,6 +15,7 @@ namespace Dalel.ViewModels
             return new ServiceRequest
             {
                 ClientId = vm.ClientId,
+                Title = vm.Title,
                 CategoryServicesId = vm.CategoryServicesId,
                 Description = vm.Description,
                 Address =vm.Address,
@@ -26,6 +27,7 @@ namespace Dalel.ViewModels
         public static ServiceRequest ToEditModel(this AddServiceRequestVM vm, ServiceRequest existing)
         {
             existing.ClientId = vm.ClientId;
+            existing.Title = vm.Title;
             existing.CategoryServicesId = vm.CategoryServicesId;
             existing.Description = vm.Description;
             existing.Address = vm.Address;
@@ -39,6 +41,7 @@ namespace Dalel.ViewModels
             return new ServiceRequestDetailsVM
             {
                 Id = model.Id,
+                Title = model.Title,
                 ClientId = model.ClientId,
                 CategoryServicesId = model.CategoryServicesId,
                 Description = model.Description,

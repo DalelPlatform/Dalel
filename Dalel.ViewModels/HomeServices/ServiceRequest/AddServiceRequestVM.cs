@@ -11,6 +11,8 @@ namespace Dalel.ViewModels
     public class AddServiceRequestVM
     {
         public string? ClientId { get; set; }
+        [Required(ErrorMessage = "Title is required.")]
+        public string Title { get; set; }
 
         [Required(ErrorMessage = "Category ID is required.")]
         public int CategoryServicesId { get; set; }

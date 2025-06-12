@@ -10,6 +10,7 @@ namespace Dalel.ViewModels
     public class ServiceRequestDetailsVM
     {
         public int Id { get; set; }
+        public string Title { get; set; }
         public string ClientId { get; set; }
         public int CategoryServicesId { get; set; }
         public string Address { get; set; }

@@ -32,6 +32,11 @@ namespace Dalel.Repository
             }
             return !string.IsNullOrWhiteSpace(serviceProvider.Address) &&
                    !string.IsNullOrWhiteSpace(serviceProvider.City) &&
+                   !string.IsNullOrWhiteSpace(serviceProvider.Country)&&
+                   !string.IsNullOrWhiteSpace(serviceProvider.District) &&
+                   !string.IsNullOrWhiteSpace(serviceProvider.ZipCode) &&
+                   !string.IsNullOrWhiteSpace(serviceProvider.ServiceArea) &&
+                   !string.IsNullOrWhiteSpace(serviceProvider.About) &&
                    serviceProvider.Price.HasValue &&
                    !string.IsNullOrWhiteSpace(serviceProvider.PriceUnit) &&
                    serviceProvider.Schedules != null && serviceProvider.Schedules.Any();

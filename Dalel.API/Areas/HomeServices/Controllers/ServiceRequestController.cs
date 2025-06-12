@@ -2,6 +2,7 @@
 using Dalel.ViewModels;
 using Dalel.ViewModels.HomeServices;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 using System.Security.Claims;
@@ -33,7 +34,7 @@ namespace Dalel.API.Areas
             if (!result.Success)
                 return new JsonResult(result.Message) { StatusCode = 400 };
 
-            return new JsonResult(result);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
