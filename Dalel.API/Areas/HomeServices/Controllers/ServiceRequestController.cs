@@ -91,5 +91,51 @@ namespace Dalel.API.Areas
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
+        [HttpGet("AcceptedRequest")]
+        public IActionResult GetAcceptedRequests(
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1)
+        {
+            var result = _homeServiceService.GetAcceptedRequests(pageSize, pageNumber);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+        [HttpGet("PendingRequest")]
+        public IActionResult GetPendingRequests(
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1)
+        {
+            var result = _homeServiceService.GetPendingRequests(pageSize, pageNumber);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+
+
+        [HttpGet("CompletedRequest")]
+        public IActionResult GetCompletedRequests(
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1)
+        {
+            var result = _homeServiceService.GetCompletedRequests(pageSize, pageNumber);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+
+
+        [HttpGet("RejectedRequest")]
+        public IActionResult GetRejectedRequests(
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1)
+        {
+            var result = _homeServiceService.GetRejectedRequests(pageSize, pageNumber);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+
+
     }
 }
