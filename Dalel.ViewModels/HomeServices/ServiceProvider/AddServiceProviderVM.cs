@@ -13,9 +13,7 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
     public class AddServiceProviderVM
     {
        
-        public string UserId { get; set; }
-        [Required(ErrorMessage = "Username is required.")]
-        public string UserName { get; set; }
+        public string? UserId { get; set; }
 
         [Required(ErrorMessage = "Address is required.")]
         public string Address { get; set; }
@@ -36,8 +34,9 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
         public string Website { get; set; }
         [Required(ErrorMessage = "Category number is required.")]
         public int CategoryServicesId { get; set; }
-        public List<AddServiceProviderScheduleItemVM> Schedules { get; set; }
+        public List<AddServiceProviderScheduleItemVM>? Schedules { get; set; }  = new List<AddServiceProviderScheduleItemVM>();
 
         public IFormFile? Image { get; set; }
+        public string? Imagepath { get; set; } = "";
     }
 }

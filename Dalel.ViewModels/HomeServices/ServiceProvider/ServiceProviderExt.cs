@@ -47,7 +47,7 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
             existing.Website = vm.Website;
             existing.ServiceArea = vm.ServiceArea;
             existing.ZipCode = vm.ZipCode;
-            existing.Image = vm.Image != null ? $"/images/serviceprovider/{vm.UserId}/{vm.Image.FileName}" : existing.Image;
+            existing.Image = vm.Image != null ? vm.Imagepath : existing.Image;
             existing.Country = vm.Country;
             if (vm.Schedules != null)
             {

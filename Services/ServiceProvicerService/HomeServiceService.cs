@@ -31,6 +31,7 @@ namespace Dalel.Services
         private readonly ServiceProviderPaymentRepository _serviceProviderPaymentRepository;
         private readonly ServiceProviderRepository _serviceProviderRepository;
         private readonly ClientRepository _clientRepository;
+        private UploadMedia uploader;
 
         public HomeServiceService(
             ServiceRequestRepository serviceRequestRepository,
@@ -42,7 +43,8 @@ namespace Dalel.Services
             ServiceProviderReviewRepository serviceProviderReviewRepository,
             ServiceProviderPaymentRepository serviceProviderPaymentRepository,
             ServiceProviderRepository serviceProviderRepository,
-            ClientRepository clientRepository)
+            ClientRepository clientRepository,
+            UploadMedia uploader)
         {
             _serviceRequestRepository = serviceRequestRepository;
             _serviceQuariesRepository = serviceQuariesRepository;
@@ -54,6 +56,7 @@ namespace Dalel.Services
             _serviceProviderPaymentRepository = serviceProviderPaymentRepository;
             _serviceProviderRepository = serviceProviderRepository;
             _clientRepository = clientRepository;
+            this.uploader = uploader;
         }
         #region Service Request
         public ServiceResult<ServiceRequestDetailsVM> CreateServiceRequest(AddServiceRequestVM vm)
@@ -578,7 +581,31 @@ namespace Dalel.Services
                 return ServiceResult<bool>.FailureResult("Error: " + ex.Message);
             }
         }
+        public ServiceResult AddProviderSchedule(AddServiceProviderScheduleVM vm)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(vm.ServiceProviderId))
+                    return ServiceResult.FailureResult("Provider ID cannot be null or empty.");
+                if (vm.Schedules == null || !vm.Schedules.Any())
+                    return ServiceResult.FailureResult("Schedules cannot be null or empty.");
 
+                var schedules = vm.Schedules.Select(s => s.ToModel(vm.ServiceProviderId)).AsQueryable();
+                foreach (var schedule in schedules)
+                {
+                    if (schedule.AvailableTo <= schedule.AvailableFrom)
+                        return ServiceResult.FailureResult("AvailableTo must be greater than AvailableFrom.");
+                }
+
+                _serviceProviderScheduleRepository.AddSchedule(schedules);
+                _serviceProviderScheduleRepository.Save();
+                return ServiceResult.SuccessResult("Provider schedules updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult("Error: " + ex.Message);
+            }
+        }
         public ServiceResult UpdateProviderSchedule([FromForm] AddServiceProviderScheduleVM vm)
         {
             try
@@ -588,7 +615,7 @@ namespace Dalel.Services
                 if (vm.Schedules == null || !vm.Schedules.Any())
                     return ServiceResult.FailureResult("Schedules cannot be null or empty.");
 
-                var schedules = vm.Schedules.Select(s => s.ToModel()).AsQueryable(); 
+                var schedules = vm.Schedules.Select(s => s.ToModel(vm.ServiceProviderId)).AsQueryable(); 
                 foreach (var schedule in schedules)
                 {
                     if (schedule.AvailableTo <= schedule.AvailableFrom)
@@ -1507,18 +1534,17 @@ public ServiceResult DeletePayment(int paymentId)
         {
             try
             {
-                if (string.IsNullOrEmpty(vm.UserName))
-                    return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Name cannot be null or empty.");
-               
-                var provider = vm.ToModel();
 
-                if (_categoryServicesRepository.GetById(provider.CategoryServicesId) == null)
-                    return ServiceResult<ServiceProviderDetailsVM>.FailureResult($"Category with ID {provider.CategoryServicesId} does not exist.");
+                if (_categoryServicesRepository.GetById(vm.CategoryServicesId) == null)
+                    return ServiceResult<ServiceProviderDetailsVM>.FailureResult($"Category with ID {vm.CategoryServicesId} does not exist.");
+                vm.Imagepath = uploader.addimage(vm.Image);
+
+                var current =  _serviceProviderRepository.GetProviderWithDetails(providerId: vm.UserId);
+                var provider = vm.ToEditModel(current);
 
                 // Save profile image if provided
-                provider.Image = SaveProfileImage(vm.Image);
 
-                _serviceProviderRepository.Add(provider);
+                _serviceProviderRepository.Update(provider);
                 _serviceProviderRepository.Save();
 
                 return ServiceResult<ServiceProviderDetailsVM>.SuccessResult(provider.ToDetailsViewModel(), "Service provider created successfully.");
@@ -1706,14 +1732,14 @@ public ServiceResult DeletePayment(int paymentId)
         {
             try
             {
-                if (string.IsNullOrEmpty(vm.UserName))
+                if (string.IsNullOrEmpty(vm.UserId))
                     return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Name cannot be null or empty.");
 
                 var provider = _serviceProviderRepository.GetById(providerId);
                 if (provider == null)
                     return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Service provider not found.");
 
-                provider.AppUser.UserName = vm.UserName;
+                //provider.AppUser.UserName = vm.UserName;
                 provider.Address = vm.Address;
                 provider.CategoryServicesId = vm.CategoryServicesId;
                 provider.City = vm.City;
