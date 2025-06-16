@@ -75,7 +75,7 @@ builder.Services.AddDbContext<DelelContext>
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<DelelContext>();
 
-
+builder.Services.AddHttpClient();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -198,6 +198,8 @@ builder.Services.AddScoped<IPaymentProcessor<PaymentVehicle>, DriverPaymentProce
 
 #endregion
 
+builder.Services.AddScoped<UploadMedia>();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -226,7 +228,8 @@ builder.Services.AddCors(options => {
     options.AddPolicy("AllowAngular", policy => {
         policy.WithOrigins("http://localhost:4200")
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -245,7 +248,6 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors();
 // Add this to your Program.cs
 
 app.MapControllerRoute(

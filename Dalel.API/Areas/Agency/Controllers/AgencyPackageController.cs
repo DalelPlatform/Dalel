@@ -1,4 +1,5 @@
-﻿using Dalel.Services;
+﻿using System.Security.Claims;
+using Dalel.Services;
 using Dalel.Services.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Hotel;
+using Newtonsoft.Json.Linq;
 
 namespace Dalel.API.Areas.Agency.Controllers
 {
@@ -31,8 +33,11 @@ namespace Dalel.API.Areas.Agency.Controllers
         [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult createAgencyPackage([FromForm] AddAgencyPackageVM packageAgency)
         {
-            //user claim    
+           
+            //packageAgency.AgencyId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Console.WriteLine(User.Claims);
             var res = _pakageService.CreateAgencyPackage(packageAgency);
+
             return new JsonResult(res);
         }
         [HttpPut("{Id}")]

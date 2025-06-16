@@ -10,14 +10,14 @@ namespace Models.User
         public string UserId { get; set; }
         public virtual AppUser AppUser { get; set; }
         public string? Image { get; set; }
-        public List<string>? Skills { get; set; }//TODO
         public DateTime? StartProfisionalAt { get; set; }  
         public string? Address { get; set; }
+        public string? ServiceArea { get; set; }
         public string? City { get; set; }
+        public string? Country { get; set; }
+        public string? District { get; set; }
+        public string? ZipCode { get; set; }
         public string? About { get; set; }
-        public string? Licence { get; set; }
-        public string? Certificate { get; set; }
-        public VerificationStatus? VerificationStatus { get; set; }
         public int CategoryServicesId { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
         public virtual ICollection<ServiceProviderProject>? Projects { get; set; }
@@ -36,15 +36,22 @@ namespace Models.User
 
             builder.Property(sp => sp.Image)
                 .HasMaxLength(255);
-
+            builder.Property(sp => sp.Address)
+                .HasMaxLength(500);
             builder.Property(sp => sp.About)
                 .HasMaxLength(1000);
+            builder.Property(sp => sp.ServiceArea)
+                .HasMaxLength(100);
+            builder.Property(sp => sp.City)
+                .HasMaxLength(100);
+            builder.Property(sp => sp.Country)
+                .HasMaxLength(100);
+            builder.Property(sp => sp.District)
+                .HasMaxLength(100);
+            builder.Property(sp => sp.ZipCode)
+                .HasMaxLength(20);
 
-            builder.Property(sp => sp.Licence)
-                .HasMaxLength(50);
 
-            builder.Property(sp => sp.Certificate)
-                .HasMaxLength(50);
 
             builder.HasOne(sp => sp.AppUser)
                 .WithOne(cs => cs.ServiceProvider)
@@ -55,6 +62,7 @@ namespace Models.User
             .WithMany(cs => cs.ServiceProviders)
             .HasForeignKey(sp => sp.CategoryServicesId)
             .OnDelete(DeleteBehavior.NoAction);
+
             builder.HasMany(sp => sp.Schedules)
                 .WithOne(s => s.ServiceProvider)
                 .HasForeignKey(s => s.ServiceProviderId)

@@ -112,5 +112,13 @@ namespace Dalel.API.Areas
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
+        [HttpGet("categories")]
+        public IActionResult GetCategories()
+        {
+            var result = _homeServiceService.GetAllCategories();
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
     }
 }

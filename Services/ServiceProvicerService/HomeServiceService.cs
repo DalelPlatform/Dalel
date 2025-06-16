@@ -31,6 +31,7 @@ namespace Dalel.Services
         private readonly ServiceProviderPaymentRepository _serviceProviderPaymentRepository;
         private readonly ServiceProviderRepository _serviceProviderRepository;
         private readonly ClientRepository _clientRepository;
+        private UploadMedia uploader;
 
         public HomeServiceService(
             ServiceRequestRepository serviceRequestRepository,
@@ -42,7 +43,8 @@ namespace Dalel.Services
             ServiceProviderReviewRepository serviceProviderReviewRepository,
             ServiceProviderPaymentRepository serviceProviderPaymentRepository,
             ServiceProviderRepository serviceProviderRepository,
-            ClientRepository clientRepository)
+            ClientRepository clientRepository,
+            UploadMedia uploader)
         {
             _serviceRequestRepository = serviceRequestRepository;
             _serviceQuariesRepository = serviceQuariesRepository;
@@ -54,6 +56,7 @@ namespace Dalel.Services
             _serviceProviderPaymentRepository = serviceProviderPaymentRepository;
             _serviceProviderRepository = serviceProviderRepository;
             _clientRepository = clientRepository;
+            this.uploader = uploader;
         }
         #region Service Request
         public ServiceResult<ServiceRequestDetailsVM> CreateServiceRequest(AddServiceRequestVM vm)
@@ -83,6 +86,122 @@ namespace Dalel.Services
                     $"Database error: {ex.InnerException?.Message ?? ex.Message}");
             }
         }
+        public ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>> GetRequestsByCategory(
+            int categoryId, int pageSize = 5, int pageNumber = 1)
+        {
+            try
+            {
+                if (categoryId <= 0)
+                    return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.FailureResult("Category ID must be greater than zero.");
+                var totalCount = _serviceRequestRepository.GetRequestsByCategory(categoryId).Count();
+                var requests = _serviceRequestRepository.GetRequestsByCategory(categoryId);
+                var data = requests.ToList();
+                var paginationResult = new PaginationViewModel<ServiceRequestDetailsVM>
+                {
+                    Data = data,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount
+                };
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.SuccessResult(paginationResult, "Requests retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.FailureResult("Error: " + ex.Message);
+            }
+        }
+        public ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>> GetAcceptedRequests(
+            int pageSize = 5, int pageNumber = 1)
+        {
+            try
+            {
+                var totalCount = _serviceRequestRepository.GetAcceptedRequests().Count();
+                var requests = _serviceRequestRepository.GetAcceptedRequests();
+                var data = requests.ToList();
+                var paginationResult = new PaginationViewModel<ServiceRequestDetailsVM>
+                {
+                    Data = data,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount
+                };
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.SuccessResult(paginationResult, "Accepted requests retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.FailureResult("Error: " + ex.Message);
+            }
+        }
+        public ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>> GetPendingRequests(
+            int pageSize = 5, int pageNumber = 1)
+        {
+            try
+            {
+                var totalCount = _serviceRequestRepository.GetPendingRequests().Count();
+                var requests = _serviceRequestRepository.GetPendingRequests();
+                var data = requests.ToList();
+                var paginationResult = new PaginationViewModel<ServiceRequestDetailsVM>
+                {
+                    Data = data,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount
+                };
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.SuccessResult(paginationResult, "Pending requests retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.FailureResult("Error: " + ex.Message);
+            }
+        }
+        public ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>> GetCompletedRequests(
+            int pageSize = 5, int pageNumber = 1)
+        {
+            try
+            {
+                var totalCount = _serviceRequestRepository.GetCompletedRequests().Count();
+                var requests = _serviceRequestRepository.GetCompletedRequests();
+                var data = requests.ToList();
+                var paginationResult = new PaginationViewModel<ServiceRequestDetailsVM>
+                {
+                    Data = data,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount
+                };
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.SuccessResult(paginationResult, "Completed requests retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.FailureResult("Error: " + ex.Message);
+            }
+        }
+
+        public ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>> GetRejectedRequests(
+            int pageSize = 5, int pageNumber = 1)
+        {
+            try
+            {
+                var totalCount = _serviceRequestRepository.GetRejectedRequests().Count();
+                var requests = _serviceRequestRepository.GetRejectedRequests();
+                var data = requests.ToList();
+                var paginationResult = new PaginationViewModel<ServiceRequestDetailsVM>
+                {
+                    Data = data,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount
+                };
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.SuccessResult(paginationResult, "Rejected requests retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.FailureResult("Error: " + ex.Message);
+            }
+        }
+
+
+
 
         //public ServiceResult<ServiceRequestDetailsVM> CreateServiceRequest([FromForm] AddServiceRequestVM vm)
         //{
@@ -90,7 +209,7 @@ namespace Dalel.Services
         //    {
         //        if (vm == null)
         //            return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Request data cannot be null");
-        //        if (string.IsNullOrWhiteSpace(vm.ClientId))
+        //        if (string.IsNullOrWhiteSpace(vm.ClientId))GetRequestsByCategory
         //            return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Client ID cannot be null or empty");
         //        if (!Guid.TryParse(vm.ClientId, out _))
         //            return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Invalid Client ID format");
@@ -462,7 +581,31 @@ namespace Dalel.Services
                 return ServiceResult<bool>.FailureResult("Error: " + ex.Message);
             }
         }
+        public ServiceResult AddProviderSchedule(AddServiceProviderScheduleVM vm)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(vm.ServiceProviderId))
+                    return ServiceResult.FailureResult("Provider ID cannot be null or empty.");
+                if (vm.Schedules == null || !vm.Schedules.Any())
+                    return ServiceResult.FailureResult("Schedules cannot be null or empty.");
 
+                var schedules = vm.Schedules.Select(s => s.ToModel(vm.ServiceProviderId)).AsQueryable();
+                foreach (var schedule in schedules)
+                {
+                    if (schedule.AvailableTo <= schedule.AvailableFrom)
+                        return ServiceResult.FailureResult("AvailableTo must be greater than AvailableFrom.");
+                }
+
+                _serviceProviderScheduleRepository.AddSchedule(schedules);
+                _serviceProviderScheduleRepository.Save();
+                return ServiceResult.SuccessResult("Provider schedules updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult("Error: " + ex.Message);
+            }
+        }
         public ServiceResult UpdateProviderSchedule([FromForm] AddServiceProviderScheduleVM vm)
         {
             try
@@ -472,7 +615,7 @@ namespace Dalel.Services
                 if (vm.Schedules == null || !vm.Schedules.Any())
                     return ServiceResult.FailureResult("Schedules cannot be null or empty.");
 
-                var schedules = vm.Schedules.Select(s => s.ToModel()).AsQueryable(); 
+                var schedules = vm.Schedules.Select(s => s.ToModel(vm.ServiceProviderId)).AsQueryable(); 
                 foreach (var schedule in schedules)
                 {
                     if (schedule.AvailableTo <= schedule.AvailableFrom)
@@ -537,31 +680,21 @@ namespace Dalel.Services
             }
         }
 
-        public ServiceResult<PaginationViewModel<ServiceProviderProposalDetailsVM>> GetProposalsByRequest(
-            int requestId, int pageSize = 5, int pageNumber = 1)
+        public ServiceResult<List<ServiceProviderProposalDetailsVM>> GetProposalsByRequest(int requestId)
         {
             try
             {
                 if (requestId <= 0)
-                    return ServiceResult<PaginationViewModel<ServiceProviderProposalDetailsVM>>.FailureResult("Request ID must be greater than zero.");
+                    return ServiceResult<List<ServiceProviderProposalDetailsVM>>.FailureResult("Request ID must be greater than zero.");
 
-                var totalCount = _serviceProviderProposalRepository.GetProposalsByRequest(requestId).Count();
                 var proposals = _serviceProviderProposalRepository.GetProposalsByRequest(requestId);
                 var data = proposals.Select(p => p.ToDetailsViewModel()).ToList();
 
-                var paginationResult = new PaginationViewModel<ServiceProviderProposalDetailsVM>
-                {
-                    Data = data,
-                    PageNumber = pageNumber,
-                    PageSize = pageSize,
-                    TotalCount = totalCount
-                };
-
-                return ServiceResult<PaginationViewModel<ServiceProviderProposalDetailsVM>>.SuccessResult(paginationResult, "Proposals retrieved.");
+                return ServiceResult<List<ServiceProviderProposalDetailsVM>>.SuccessResult(data, "Proposals retrieved.");
             }
             catch (Exception ex)
             {
-                return ServiceResult<PaginationViewModel<ServiceProviderProposalDetailsVM>>.FailureResult("Error: " + ex.Message);
+                return ServiceResult<List<ServiceProviderProposalDetailsVM>>.FailureResult("Error: " + ex.Message);
             }
         }
 
@@ -1138,6 +1271,23 @@ namespace Dalel.Services
             }
         }
 
+        public ServiceResult<List<CategoryServicesDetailsVM>> GetAllCategories()
+        {
+            try
+            {
+                var categories = _categoryServicesRepository.Get()
+                    .Select(c => c.ToDetailsViewModel())
+                    .ToList();
+
+                return ServiceResult<List<CategoryServicesDetailsVM>>.SuccessResult(categories, "Categories retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<CategoryServicesDetailsVM>>.FailureResult($"Error retrieving categories: {ex.Message}");
+            }
+        }
+
+
         #endregion
 
         #region ServiceProviderReview
@@ -1384,18 +1534,17 @@ public ServiceResult DeletePayment(int paymentId)
         {
             try
             {
-                if (string.IsNullOrEmpty(vm.UserName))
-                    return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Name cannot be null or empty.");
-               
-                var provider = vm.ToModel();
 
-                if (_categoryServicesRepository.GetById(provider.CategoryServicesId) == null)
-                    return ServiceResult<ServiceProviderDetailsVM>.FailureResult($"Category with ID {provider.CategoryServicesId} does not exist.");
+                if (_categoryServicesRepository.GetById(vm.CategoryServicesId) == null)
+                    return ServiceResult<ServiceProviderDetailsVM>.FailureResult($"Category with ID {vm.CategoryServicesId} does not exist.");
+                vm.Imagepath = uploader.addimage(vm.Image);
+
+                var current =  _serviceProviderRepository.GetProviderWithDetails(providerId: vm.UserId);
+                var provider = vm.ToEditModel(current);
 
                 // Save profile image if provided
-                provider.Image = SaveProfileImage(vm.Image);
 
-                _serviceProviderRepository.Add(provider);
+                _serviceProviderRepository.Update(provider);
                 _serviceProviderRepository.Save();
 
                 return ServiceResult<ServiceProviderDetailsVM>.SuccessResult(provider.ToDetailsViewModel(), "Service provider created successfully.");
@@ -1447,9 +1596,6 @@ public ServiceResult DeletePayment(int paymentId)
 
                 if (!string.IsNullOrEmpty(address))
                     providers = providers.Where(p => p.Address != null && p.Address.Contains(address, StringComparison.OrdinalIgnoreCase));
-
-                if (verificationStatus.HasValue)
-                    providers = providers.Where(p => p.VerificationStatus == verificationStatus.Value);
 
                 switch (sortBy.ToLower())
                 {
@@ -1582,21 +1728,22 @@ public ServiceResult DeletePayment(int paymentId)
             }
         }
 
-        public ServiceResult<ServiceProviderDetailsVM> UpdateServiceProvider(int providerId, [FromForm] AddServiceProviderVM vm, VerificationStatus verificationStatus)
+        public ServiceResult<ServiceProviderDetailsVM> UpdateServiceProvider(int providerId, [FromForm] AddServiceProviderVM vm)
         {
             try
             {
-                if (string.IsNullOrEmpty(vm.UserName))
+                if (string.IsNullOrEmpty(vm.UserId))
                     return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Name cannot be null or empty.");
 
                 var provider = _serviceProviderRepository.GetById(providerId);
                 if (provider == null)
                     return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Service provider not found.");
 
-                provider.AppUser.UserName = vm.UserName;
+                //provider.AppUser.UserName = vm.UserName;
                 provider.Address = vm.Address;
                 provider.CategoryServicesId = vm.CategoryServicesId;
-                provider.VerificationStatus = verificationStatus;
+                provider.City = vm.City;
+                provider.Country = vm.Country;
 
                 // Save new image if provided
                 var newImagePath = SaveProfileImage(vm.Image);

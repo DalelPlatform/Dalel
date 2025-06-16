@@ -1,0 +1,16 @@
+Lab 1
+
+Transform and clean data
+Use measures  + create dax table to store measures
+
+drill up and drill down
+
+use map chart
+
+use top N filters
+
+use slicer
+
+---------------------
+use bookmark (search)
+

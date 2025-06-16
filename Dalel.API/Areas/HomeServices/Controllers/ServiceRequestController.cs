@@ -2,6 +2,7 @@
 using Dalel.ViewModels;
 using Dalel.ViewModels.HomeServices;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 using System.Security.Claims;
@@ -33,7 +34,7 @@ namespace Dalel.API.Areas
             if (!result.Success)
                 return new JsonResult(result.Message) { StatusCode = 400 };
 
-            return new JsonResult(result);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
@@ -46,7 +47,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpGet("client")]
-        //[Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client")]
         public IActionResult GetRequestsByClient(
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1)
@@ -59,7 +60,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpGet("status/{status}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetRequestsByStatus(
             RequestStatus status,
             [FromQuery] int pageSize = 5,
@@ -72,7 +73,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client")]
         public IActionResult UpdateServiceRequest(int id, [FromForm] AddServiceRequestVM model)
         {
             var result = _homeServiceService.UpdateServiceRequest(id, model);
@@ -82,7 +83,7 @@ namespace Dalel.API.Areas
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client")]
         public IActionResult DeleteServiceRequest(int id)
         {
             var result = _homeServiceService.DeleteServiceRequest(id);
@@ -90,5 +91,51 @@ namespace Dalel.API.Areas
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
+        [HttpGet("AcceptedRequest")]
+        public IActionResult GetAcceptedRequests(
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1)
+        {
+            var result = _homeServiceService.GetAcceptedRequests(pageSize, pageNumber);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+        [HttpGet("PendingRequest")]
+        public IActionResult GetPendingRequests(
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1)
+        {
+            var result = _homeServiceService.GetPendingRequests(pageSize, pageNumber);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+
+
+        [HttpGet("CompletedRequest")]
+        public IActionResult GetCompletedRequests(
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1)
+        {
+            var result = _homeServiceService.GetCompletedRequests(pageSize, pageNumber);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+
+
+        [HttpGet("RejectedRequest")]
+        public IActionResult GetRejectedRequests(
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1)
+        {
+            var result = _homeServiceService.GetRejectedRequests(pageSize, pageNumber);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+
+
     }
 }

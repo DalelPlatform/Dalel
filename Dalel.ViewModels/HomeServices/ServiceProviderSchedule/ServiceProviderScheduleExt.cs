@@ -10,13 +10,14 @@ namespace Dalel.ViewModels
 {
     public static class ServiceProviderScheduleExt
     {
-        public static ServiceProviderSchedule ToModel(this AddServiceProviderScheduleItemVM vm)
+        public static ServiceProviderSchedule ToModel(this AddServiceProviderScheduleItemVM vm ,string ServiceProviderId)
         {
             return new ServiceProviderSchedule
             {
                 WorKDay = vm.WorKDay,
                 AvailableFrom = vm.AvailableFrom,
-                AvailableTo = vm.AvailableTo
+                AvailableTo = vm.AvailableTo,
+                ServiceProviderId = ServiceProviderId
             };
         }
 

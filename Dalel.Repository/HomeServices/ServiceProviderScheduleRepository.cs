@@ -30,6 +30,16 @@ namespace Dalel.Repository
             base.Add(schedule);
             base.Save();
         }
+        public void AddSchedule(IQueryable<ServiceProviderSchedule> schedules)
+        {
+            foreach (var item in schedules)
+            {
+                base.Add(item);
+                base.Save();
+                
+            }
+
+        }
 
         public bool DeleteSchedule(string providerId, DateTime date)
         {
