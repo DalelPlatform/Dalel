@@ -22,7 +22,10 @@ namespace Dalel.ViewModels
         [Required(ErrorMessage = "Suggested price is required.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Suggested price must be greater than zero.")]
         public double SuggestedPrice { get; set; }
-        
+        public DateTime? Date { get; set; }
+
+        public string? ServiceProviderName;
+
         public ProposalStatus Status { get; set; } = ProposalStatus.Pending;
     }
 }

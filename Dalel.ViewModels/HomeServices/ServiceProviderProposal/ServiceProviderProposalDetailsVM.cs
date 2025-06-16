@@ -14,6 +14,8 @@ namespace Dalel.ViewModels
         public int ServiceRequestId { get; set; }
         public string Description { get; set; }
         public double SuggestedPrice { get; set; }
+        public string ServiceProviderName { get; set; }
+        public DateTime? Date { get; set; }
         public ProposalStatus Status { get; set; }
 
     }
