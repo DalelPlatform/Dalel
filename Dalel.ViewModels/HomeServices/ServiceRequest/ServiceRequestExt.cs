@@ -20,7 +20,8 @@ namespace Dalel.ViewModels
                 Description = vm.Description,
                 Address =vm.Address,
                 Date = vm.Date,
-                Status = vm.Status
+                Status = vm.Status,
+                
             };
         }
 
@@ -33,6 +34,7 @@ namespace Dalel.ViewModels
             existing.Address = vm.Address;
             existing.Date = vm.Date;
             existing.Status = vm.Status;
+            
             return existing;
         }
 

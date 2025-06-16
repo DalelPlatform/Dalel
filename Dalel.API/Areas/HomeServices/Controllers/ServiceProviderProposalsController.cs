@@ -31,11 +31,9 @@ namespace Dalel.API.Areas
 
         [HttpGet("request/{requestId}")]
         public IActionResult GetProposalsByRequest(
-            int requestId,
-            [FromQuery] int pageSize = 5,
-            [FromQuery] int pageNumber = 1)
+            int requestId)
         {
-            var result = _homeServiceService.GetProposalsByRequest(requestId, pageSize, pageNumber);
+            var result = _homeServiceService.GetProposalsByRequest(requestId);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);

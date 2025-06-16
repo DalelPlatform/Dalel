@@ -54,7 +54,7 @@ namespace Dalel.API.Areas
             return new JsonResult(result);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Edit/{id}")]
        [Authorize(Roles = "RestaurantOwner")]
         public IActionResult EditRestaurant([FromBody] AddRestaurantVM model,int id)
         {
@@ -72,7 +72,7 @@ namespace Dalel.API.Areas
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
-        [HttpGet]
+        [HttpGet("getAllRestaurants")]
         public IActionResult GetAllRestaurants()
         {
             var result = restaurantService.GetAll();

@@ -15,12 +15,7 @@ namespace Dalel.ViewModels.HomeServices.ServiceProviderSchedule
 
         [Required(ErrorMessage = "Available to time is required.")]
         public TimeOnly AvailableTo { get; set; }
-        [Required(ErrorMessage = "Service provider ID is required.")]
-        public string ServiceProviderId { get; set; }
-
-        [Required(ErrorMessage = "At least one schedule is required.")]
-        public List<AddServiceProviderScheduleItemVM> Schedules { get; set; }
-        public WorKDays WorKDay { get; internal set; }
+        public WorKDays WorKDay { get; set; }
     }
 }
     

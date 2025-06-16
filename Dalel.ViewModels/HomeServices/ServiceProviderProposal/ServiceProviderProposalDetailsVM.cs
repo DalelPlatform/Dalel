@@ -15,5 +15,6 @@ namespace Dalel.ViewModels
         public string Description { get; set; }
         public double SuggestedPrice { get; set; }
         public ProposalStatus Status { get; set; }
+
     }
 }
