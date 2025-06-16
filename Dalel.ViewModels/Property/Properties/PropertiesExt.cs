@@ -50,6 +50,9 @@ namespace Dalel.ViewModels
                 PhoneNumber = property.PhoneNumber,
                 Region = property.Region,
                 Street = property.Street,
+                Rating = property.BookingProperties.Any() ?
+                    property.BookingProperties.Average(i => i.ReviewProperties == null ? 0 : i.ReviewProperties.Rating) : 0,
+
                 PropertyOwner = property.PropertyOwner.AppUser.UserName ?? "Not Provided",
                 Images = property.PropertyImages.Select(i => i.Image).ToList()
 
