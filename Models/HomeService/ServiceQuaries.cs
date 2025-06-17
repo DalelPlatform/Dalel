@@ -9,10 +9,10 @@ namespace Models.HomeService
         public int Id { get; set; }
         public string ServiceProviderId { get; set; }
         public string ClientId { get; set; }
-        public string Question { get; set; }
-        public string Answer { get; set; }
-        public DateTime QuestionDate { get; set; }
-        public DateTime AnswerDate { get; set; }
+        //public string? Question { get; set; }
+        public string Comment { get; set; }
+        //public DateTime QuestionDate { get; set; }
+        public DateTime CommentDate { get; set; }
         public int CategoryServicesId { get; set; }
         public virtual User.Client Client { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
@@ -27,10 +27,10 @@ namespace Models.HomeService
             builder.HasKey(sq => sq.Id);
 
             // Properties
-            builder.Property(sq => sq.Question)
-                .HasMaxLength(1000);
+            //builder.Property(sq => sq.Question)
+            //    .HasMaxLength(1000);
 
-            builder.Property(sq => sq.Answer)
+            builder.Property(sq => sq.Comment)
                 .HasMaxLength(1000);
 
             // Relationships

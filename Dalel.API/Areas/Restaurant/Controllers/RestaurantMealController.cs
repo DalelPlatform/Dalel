@@ -57,7 +57,7 @@ namespace Dalel.API.Areas
 
         [HttpPost("AddMeal")]
         [Authorize(Roles = "RestaurantOwner")]
-        public IActionResult AddMeal([FromBody] AddRestaurantMenuItemVM meal)
+        public IActionResult AddMeal([FromForm] AddRestaurantMenuItemVM meal)
         {
             meal.RestaurantOwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var Restaurant = restaurantService.GetRestaurantByOwnerId(meal.RestaurantOwnerId);

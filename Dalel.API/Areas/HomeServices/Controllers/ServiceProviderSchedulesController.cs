@@ -43,11 +43,22 @@ namespace Dalel.API.Areas
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
+        [HttpPost("add")]
+        [Authorize(Roles = "ServiceProvider")]
+        public IActionResult AddProviderSchedule(AddServiceProviderScheduleVM model)
+        {
+            model.ServiceProviderId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = _homeServiceService.AddProviderSchedule(model);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
         [HttpPut("update")]
-        //[Authorize(Roles = "ServiceProvider")]
+        [Authorize(Roles = "ServiceProvider")]
         public IActionResult UpdateProviderSchedule([FromForm] AddServiceProviderScheduleVM model)
         {
+            model.ServiceProviderId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = _homeServiceService.UpdateProviderSchedule(model);
             if (!result.Success)
                 return new JsonResult(result.Message);

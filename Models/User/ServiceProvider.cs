@@ -12,12 +12,11 @@ namespace Models.User
         public string? Image { get; set; }
         public DateTime? StartProfisionalAt { get; set; }  
         public string? Address { get; set; }
-        public string? ServiceArea { get; set; } // Area of service, e.g., "Plumbing", "Electrical"
+        public string? ServiceArea { get; set; }
         public string? City { get; set; }
         public string? Country { get; set; }
         public string? District { get; set; }
         public string? ZipCode { get; set; }
-        public string? ServiceAreas { get; set; }
         public string? About { get; set; }
         public int CategoryServicesId { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
@@ -28,6 +27,7 @@ namespace Models.User
         public string? Website { get; set; }
         public decimal? Price { get; set; }
         public string? PriceUnit { get; set; }
+
     }
     public class ServiceProviderConfiguration : IEntityTypeConfiguration<ServiceProvider>
     {
@@ -37,9 +37,22 @@ namespace Models.User
 
             builder.Property(sp => sp.Image)
                 .HasMaxLength(255);
-
+            builder.Property(sp => sp.Address)
+                .HasMaxLength(500);
             builder.Property(sp => sp.About)
                 .HasMaxLength(1000);
+            builder.Property(sp => sp.ServiceArea)
+                .HasMaxLength(100);
+            builder.Property(sp => sp.City)
+                .HasMaxLength(100);
+            builder.Property(sp => sp.Country)
+                .HasMaxLength(100);
+            builder.Property(sp => sp.District)
+                .HasMaxLength(100);
+            builder.Property(sp => sp.ZipCode)
+                .HasMaxLength(20);
+
+
 
             builder.HasOne(sp => sp.AppUser)
                 .WithOne(cs => cs.ServiceProvider)
@@ -50,6 +63,7 @@ namespace Models.User
             .WithMany(cs => cs.ServiceProviders)
             .HasForeignKey(sp => sp.CategoryServicesId)
             .OnDelete(DeleteBehavior.NoAction);
+
             builder.HasMany(sp => sp.Schedules)
                 .WithOne(s => s.ServiceProvider)
                 .HasForeignKey(s => s.ServiceProviderId)

@@ -15,9 +15,7 @@ namespace Dalel.ViewModels
         public string CategoryName { get; set; }
         public string ServiceProviderId { get; set; }
         public string ServiceProviderName { get; set; }
-        public string Question { get; set; }
-        public string Answer { get; set; }
-        public DateTime QuestionDate { get; set; }
-        public DateTime? AnswerDate { get; set; }
+        public string Comment { get; set; }
+        public DateTime? CommentDate { get; set; }
     }
 }
