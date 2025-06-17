@@ -27,12 +27,14 @@ namespace Dalel.Services.Agency
         TravelAgenciesRepo TravelAgenciesRepo { get; set; }
         PackageStepRepo PackageStepRepo { get; set; }
         PackageSchaduleRepo PackageSchaduleRepo { get; set; }
+        AgencyPromotionRepo AgencyPromotionRepo { get; set; }
         public AgencyPakageService(AgencyPackageRepo _AgencyPackageRepo,
             AgencyVerificationDocumentRepo _AgencyVerificationDocumentRepo,
              PackagebookingRepo _PackagebookingRepo,
                   TravelAgenciesRepo _TravelAgenciesRepo,
                     PackageStepRepo _PackageStepRepo,
-                      PackageSchaduleRepo _PackageSchaduleRepo
+                      PackageSchaduleRepo _PackageSchaduleRepo,
+            AgencyPromotionRepo _AgencyPromotionRepo
             )
         {
             AgencyPackageRepo = _AgencyPackageRepo;
@@ -41,6 +43,7 @@ namespace Dalel.Services.Agency
             TravelAgenciesRepo = _TravelAgenciesRepo;
             PackageStepRepo = _PackageStepRepo;
             PackageSchaduleRepo = _PackageSchaduleRepo;
+            AgencyPromotionRepo = _AgencyPromotionRepo;
 
         }
 
@@ -85,18 +88,32 @@ namespace Dalel.Services.Agency
                 Message = "update successfully."
             };
         }
-        public ServiceResult deleteAgencyPackage(int agencyId)
+        public ServiceResult deleteAgencyPackage(int id)
         {
-            var _agencyPackage = AgencyPackageRepo.GetList(i => i.Id == agencyId).FirstOrDefault();
+            var _agencyPackage = AgencyPackageRepo.GetList(i => i.Id == id).FirstOrDefault();
             if (_agencyPackage != null)
             {
+                var steps = PackageStepRepo.GetList(s => s.PackageId
+                == _agencyPackage.Id).ToList();
+                foreach (var step in steps)
+                {
+                    PackageStepRepo.Delete(step);
+                }
+                var schedules = PackageSchaduleRepo.GetList(s => s.PackageId == _agencyPackage.Id).ToList();
+                foreach (var sch in schedules)
+                {
+                    PackageSchaduleRepo.Delete(sch);
+                }
                 AgencyPackageRepo.Delete(_agencyPackage);
             }
-
+               
+         
             return new ServiceResult
             {
                 Success = true,
-                Message = "deleted successfully."
+                Message = "deleted successfully.",
+                StatusCode=200
+
             };
         }
 
@@ -144,6 +161,40 @@ namespace Dalel.Services.Agency
             Console.WriteLine(AgencyPackageRepo.GetAgencyPackage(id).ToList());
             return AgencyPackageRepo.GetAgencyPackage(id).ToList();
         }
+
+        public ServiceResult<AgencyPackageDetails> Getpackagebyid(int id)
+        {
+            try
+            {
+                var package = AgencyPackageRepo.GetList(a => a.Id == id).
+                    Select(t => t.ToDetailsModels()).FirstOrDefault();
+                if (package == null)
+                {
+                    return ServiceResult<AgencyPackageDetails>.
+                        FailureResult("package not found.");
+                }
+                return ServiceResult<AgencyPackageDetails>.
+                    SuccessResult(package, "package fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<AgencyPackageDetails>.FailureResult("Error: " + ex.Message);
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         #endregion
 
@@ -264,6 +315,7 @@ namespace Dalel.Services.Agency
             {
                 var list = TravelAgenciesRepo.GetList(a => a.OwnerId == ownerId).
                     Select(t => t.ToDetailsModels()).ToList();
+                Console.WriteLine(list);
                 return ServiceResult<List<TravelAgenciesDetails>>.
                     SuccessResult(list, "TravelAgencies fetched successfully.");
             }
@@ -274,40 +326,91 @@ namespace Dalel.Services.Agency
 
         }
 
+        public ServiceResult<TravelAgenciesDetails> GetTravelAgencybyid(int id)
+        {
+            try
+            {
+                var agency = TravelAgenciesRepo.GetList(a => a.Id == id).
+                    Select(t => t.ToDetailsModels()).FirstOrDefault();
+                if(agency == null)
+                {
+                    return ServiceResult<TravelAgenciesDetails>.FailureResult("Agency not found.");
+                }
+                return ServiceResult<TravelAgenciesDetails>.SuccessResult(agency, "Agency fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<TravelAgenciesDetails>.FailureResult("Error: " + ex.Message);
+            }
 
+        }
+
+        //public ServiceResult CreateTravelAgencies(addTravelAgenciesVM agency)
+        //{
+        //    var travelAgency = agency.ToModel();
+        //    TravelAgenciesRepo.Add(travelAgency);
+        //    if (agency.VerificationDocument != null && agency.VerificationDocument.Any())
+        //    {
+        //        string basePath = Path.Combine(Directory.GetCurrentDirectory(), 
+        //            "wwwroot", "Uploads", "AgencyDocuments");
+        //        if (!Directory.Exists(basePath))
+        //        {
+        //            Directory.CreateDirectory(basePath);
+        //        }
+        //        foreach (var doc in agency.VerificationDocument)
+        //        {
+        //            if (doc.DocumentFile != null && doc.DocumentFile.Length > 0)
+        //            {
+        //                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(doc.DocumentFile.FileName);
+        //                string filePath = Path.Combine(basePath, fileName);
+
+        //                using (var stream = new FileStream(filePath, FileMode.Create))
+        //                {
+        //                    doc.DocumentFile.CopyTo(stream);
+        //                }
+        //                doc.DocumentFileName = fileName;
+        //                var documentEntity = doc.ToModel(); 
+        //                documentEntity.AgencyId = travelAgency.Id;
+
+        //                AgencyVerificationDocumentRepo.Add(documentEntity);
+        //            }
+        //        }
+
+        //        }
+
+        //    return new ServiceResult
+        //    {
+        //        Success = true,
+        //        Message = "added successfully."
+        //    };
+        //}
         public ServiceResult CreateTravelAgencies(addTravelAgenciesVM agency)
         {
             var travelAgency = agency.ToModel();
-            TravelAgenciesRepo.Add(travelAgency);
+       
+
             if (agency.VerificationDocument != null && agency.VerificationDocument.Any())
             {
-                string basePath = Path.Combine(Directory.GetCurrentDirectory(), 
-                    "wwwroot", "Uploads", "AgencyDocuments");
-                if (!Directory.Exists(basePath))
-                {
-                    Directory.CreateDirectory(basePath);
-                }
+                var uploadService = new UploadMedia();
+
                 foreach (var doc in agency.VerificationDocument)
                 {
                     if (doc.DocumentFile != null && doc.DocumentFile.Length > 0)
                     {
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(doc.DocumentFile.FileName);
-                        string filePath = Path.Combine(basePath, fileName);
+                        var fileList = new FormFileCollection { doc.DocumentFile };
+                        var uploadedUrls = uploadService.addimage(fileList);
 
-                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        if (uploadedUrls.Any())
                         {
-                            doc.DocumentFile.CopyTo(stream);
+                            doc.DocumentFileName = uploadedUrls[0];
+                            var documentEntity = doc.ToModel();
+                            documentEntity.AgencyId = travelAgency.Id;
+                            AgencyVerificationDocumentRepo.Add(documentEntity);
                         }
-                        doc.DocumentFileName = fileName;
-                        var documentEntity = doc.ToModel(); 
-                        documentEntity.AgencyId = travelAgency.Id;
-
-                        AgencyVerificationDocumentRepo.Add(documentEntity);
                     }
                 }
-
-                }
-          
+            }
+            TravelAgenciesRepo.Add(travelAgency);
             return new ServiceResult
             {
                 Success = true,
@@ -318,29 +421,121 @@ namespace Dalel.Services.Agency
 
         public ServiceResult UpdateTravelAgencies(int id, addTravelAgenciesVM agency)
         {
-            var travelAgencies = TravelAgenciesRepo.GetList(p => p.Id == id).FirstOrDefault();
-            TravelAgenciesRepo.Update(agency.ToEditModel(travelAgencies));
-            return new ServiceResult
+            var travelAgency = TravelAgenciesRepo.GetList(p => p.Id == id).FirstOrDefault();
+            if (travelAgency == null)
             {
-                Success = true,
-                Message = "update successfully."
-            };
-        }
-        public ServiceResult deleteTravelAgencies(int agencyId)
-        {
-            var _TravelAgencies = TravelAgenciesRepo.
-                GetList(i => i.Id == agencyId).FirstOrDefault();
-            if (_TravelAgencies != null)
-            {
-                TravelAgenciesRepo.Delete(_TravelAgencies);
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "Agency not found."
+                };
             }
+
+            var updatedAgency = agency.ToEditModel(travelAgency);
+
+            if (agency.VerificationDocument != null && agency.VerificationDocument.Any())
+            {
+               
+                var oldDocs = AgencyVerificationDocumentRepo.
+                    GetList(d => d.AgencyId == id).ToList();
+                foreach (var doc in oldDocs)
+                {
+                    AgencyVerificationDocumentRepo.Delete(doc);
+                }
+
+                var uploadService = new UploadMedia();
+                foreach (var doc in agency.VerificationDocument)
+                {
+                    
+                    if (doc.keepPrevious && string.IsNullOrEmpty(doc.DocumentFileName))
+                    {
+                        continue; 
+                    }
+
+                    if (doc.keepPrevious && doc.DocumentFile == null)
+                    {
+                     
+                        var documentEntity = doc.ToModel();
+                        documentEntity.AgencyId = id;
+                        AgencyVerificationDocumentRepo.Add(documentEntity);
+                    }
+                 
+                    else if (doc.DocumentFile != null && doc.DocumentFile.Length > 0)
+                    {
+                        var fileList = new FormFileCollection { doc.DocumentFile };
+                        var uploadedUrls = uploadService.addimage(fileList);
+
+                        if (uploadedUrls.Any())
+                        {
+                            doc.DocumentFileName = uploadedUrls[0];
+                            var documentEntity = doc.ToModel();
+                            documentEntity.AgencyId = id;
+                            AgencyVerificationDocumentRepo.Add(documentEntity);
+                        }
+                    }
+                }
+            }
+
+            TravelAgenciesRepo.Update(updatedAgency);
 
             return new ServiceResult
             {
                 Success = true,
-                Message = "deleted successfully."
+                Message = "Agency updated successfully."
             };
         }
+
+
+        public ServiceResult deleteTravelAgencies(int agencyId)
+        {
+            var agency = TravelAgenciesRepo.GetList(i => i.Id == agencyId).FirstOrDefault();
+
+            if (agency == null)
+            {
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "Agency not found."
+                };
+            }
+
+            var relatedDocs = AgencyVerificationDocumentRepo.
+                GetList(d => d.AgencyId == agencyId).ToList();
+
+            if (relatedDocs.Any())
+            {
+                foreach (var doc in relatedDocs)
+                {
+                    AgencyVerificationDocumentRepo.Delete(doc);
+                }
+            }
+            var packages = AgencyPackageRepo.GetList(p => p.AgencyId == agencyId).ToList();
+            foreach (var pkg in packages)
+            {
+                var steps = PackageStepRepo.GetList(s => s.PackageId == pkg.Id).ToList();
+                foreach (var step in steps)
+                    PackageStepRepo.Delete(step);
+
+                var schedules = PackageSchaduleRepo.GetList(s => s.PackageId == pkg.Id).ToList();
+                foreach (var sch in schedules)
+                    PackageSchaduleRepo.Delete(sch);
+
+                AgencyPackageRepo.Delete(pkg);
+            }
+            
+            var promotion = AgencyPromotionRepo.GetList(p => p.AgencyId == agencyId).ToList();
+            foreach(var prom in promotion)
+                AgencyPromotionRepo.Delete(prom);
+            
+            TravelAgenciesRepo.Delete(agency);
+
+            return new ServiceResult
+            {
+                Success = true,
+                Message = " Agency deleted successfully."
+            };
+        }
+
 
         #endregion
 

@@ -4,6 +4,7 @@ using Dalel.Repository.HomeServices;
 using Dalel.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Models;
 using Models.User;
 using NuGet.Protocol.Core.Types;
@@ -13,7 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DelelContext>(i =>
 i.UseLazyLoadingProxies()
-.UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
+.UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")).ConfigureWarnings(warnings =>
+            warnings.Ignore(RelationalEventId.PendingModelChangesWarning)));
 
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()

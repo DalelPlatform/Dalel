@@ -50,7 +50,7 @@ namespace Dalel.ViewModels.Agency.TravelAgencies
         //public List<AddAgencyPackageVM> AgencyPackage { get; set; }
         public List<addAgencyVerificationDocumentVM> VerificationDocument { get; set; }
         //public List<AddAgencyPromotionVM> AgencyPromotion { get; set; }
-
+        public bool keepPrevious { get; set; } = true;
         public string ownerId { get; set; } = "";
     }
 }
