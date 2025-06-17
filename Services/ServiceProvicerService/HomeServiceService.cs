@@ -661,6 +661,7 @@ namespace Dalel.Services
         {
             try
             {
+
                 var proposal = vm.ToModel();
                 if (proposal.SuggestedPrice <= 0)
                     return ServiceResult<ServiceProviderProposalDetailsVM>.FailureResult("Suggested price must be greater than zero.");

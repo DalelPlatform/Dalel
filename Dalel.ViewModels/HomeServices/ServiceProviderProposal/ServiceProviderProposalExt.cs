@@ -11,7 +11,7 @@ namespace Dalel.ViewModels
 {
     public static class ServiceProviderProposalExt
     {
-        public static ServiceProviderPropsal ToModel(this AddServiceProviderProposalVM vm, AppUser serviceProviderUser)
+        public static ServiceProviderPropsal ToModel(this AddServiceProviderProposalVM vm)
         {
             return new ServiceProviderPropsal
             {
@@ -20,7 +20,6 @@ namespace Dalel.ViewModels
                 Description = vm.Description,
                 SuggestedPrice = vm.SuggestedPrice,
                 Status = vm.Status,
-                ServiceProviderName = serviceProviderUser?.UserName ?? "",
                 Date = vm.Date ?? DateTime.Now
 
             };
@@ -46,7 +45,6 @@ namespace Dalel.ViewModels
                 Date = model.Date,
                 SuggestedPrice = model.SuggestedPrice,
                 Status = model.Status,
-                ServiceProviderName = model.ServiceProviderName
 
             };
         }

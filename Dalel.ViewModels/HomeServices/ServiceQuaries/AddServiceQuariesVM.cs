@@ -17,7 +17,8 @@ namespace Dalel.ViewModels
 
         [Required(ErrorMessage = "Question is required.")]
         [StringLength(500, ErrorMessage = "Question cannot exceed 500 characters.")]
-        public string Question { get; set; }
+        public string Comment { get; set; }
+        public DateTime? CommentDate { get; set; } = DateTime.Now;
 
         public string ServiceProviderId { get; set; }
     }

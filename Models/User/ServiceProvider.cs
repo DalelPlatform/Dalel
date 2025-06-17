@@ -27,6 +27,7 @@ namespace Models.User
         public string? Website { get; set; }
         public decimal? Price { get; set; }
         public string? PriceUnit { get; set; }
+
     }
     public class ServiceProviderConfiguration : IEntityTypeConfiguration<ServiceProvider>
     {

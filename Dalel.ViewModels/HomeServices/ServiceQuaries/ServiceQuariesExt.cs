@@ -23,8 +23,7 @@ namespace Dalel.ViewModels
                 ClientId = vm.ClientId,
                 CategoryServicesId = vm.CategoryServicesId,
                 ServiceProviderId = vm.ServiceProviderId,
-                Question = vm.Question,
-                QuestionDate = DateTime.Now
+                CommentDate = DateTime.Now
             };
         }
         public static ServiceQuaries ToEditModel(this AddServiceQuariesVM vm, ServiceQuaries existing)
@@ -32,7 +31,7 @@ namespace Dalel.ViewModels
             existing.ClientId = vm.ClientId;
             existing.CategoryServicesId = vm.CategoryServicesId;
             existing.ServiceProviderId = vm.ServiceProviderId;
-            existing.Question = vm.Question;
+            existing.Comment = vm.Comment;
             return existing;
         }
         public static ServiceQuariesDetailsVM ToDetailsViewModel(this ServiceQuaries model)
@@ -46,10 +45,8 @@ namespace Dalel.ViewModels
                 CategoryName = model.CategoryServices?.Name ?? "Not Provided",
                 ServiceProviderId = model.ServiceProviderId,
                 ServiceProviderName = model.ServiceProvider?.AppUser?.UserName ?? "Not Provided",
-                Question = model.Question,
-                Answer = model.Answer,
-                QuestionDate = model.QuestionDate,
-                AnswerDate = model.AnswerDate
+                Comment = model.Comment,
+                CommentDate = model.CommentDate
             };
         }
     }
