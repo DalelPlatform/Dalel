@@ -51,7 +51,10 @@ namespace Dalel.Services.Agency
         public ServiceResult CreateAgencyPackage(AddAgencyPackageVM agency)
         {
             var files = new FormFileCollection();
-
+            if (agency.ImageFile != null && agency.ImageFile.Length > 0)
+            {
+                files.Add(agency.ImageFile);
+            }
             foreach (var step in agency.Steps)
             {
                 Console.WriteLine(step.ImageFile);
@@ -63,6 +66,11 @@ namespace Dalel.Services.Agency
             var uploader = new UploadMedia();
             var uploadedUrls = uploader.addimage(files);
             int index = 0;
+            if (agency.ImageFile != null && index < uploadedUrls.Count)
+            {
+                agency.ImagePath = uploadedUrls[index];
+                index++;
+            }
             for (int i = 0; i < agency.Steps.Count; i++)
             {
                 if (agency.Steps[i].ImageFile != null && index < uploadedUrls.Count)
@@ -78,6 +86,7 @@ namespace Dalel.Services.Agency
                 Message = "added successfully."
             };
         }
+       
         public ServiceResult UpdateAgencyPackage(int id, AddAgencyPackageVM agency)
         {
             var package = AgencyPackageRepo.GetList(p => p.Id == id).FirstOrDefault();
@@ -121,7 +130,7 @@ namespace Dalel.Services.Agency
         public ServiceResult<PaginationViewModel<AgencyPackageDetails>> SearchAgencyPackage(
             string searchText = "",
       string Name = "",
-      string Price = "",
+      float Price = 0,
 
       int pageSize = 10,
       int pageIndex = 1,
@@ -183,11 +192,49 @@ namespace Dalel.Services.Agency
 
         }
 
+        public ServiceResult BookPackage(AddPackagebookingVM booking)
+        {
+            try
+            {
+                var package = AgencyPackageRepo.GetPackageById(booking.PackageId);
+                if (package == null) 
+                    return ServiceResult.FailureResult("package not found.");
+                // shud_id check valid or not
+                // pack avalib for slots
+                // pricepck * reserved preple
+              
+
+            
+
+                booking.BookingStatus = BookingStatus.Panding;
+                //PackagebookingRepo.Add(booking.ToModel(totalPrice));
+                return ServiceResult.SuccessResult("Booking created.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult(ex.Message);
+            }
+        }
 
 
 
+        public async Task<ServiceResult> CancelBooking(int bookingId)
+        {
+            try
+            {
+                var booking = PackagebookingRepo.GetBookingById(bookingId);
+                if (booking == null)
+                    return ServiceResult.FailureResult("Booking not found.");
 
-
+                booking.BookingStatus = BookingStatus.Cancel;
+                PackagebookingRepo.Update(booking);
+                return ServiceResult.SuccessResult("Booking canceled.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult(ex.Message);
+            }
+        }
 
 
 

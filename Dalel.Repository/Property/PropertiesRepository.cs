@@ -83,7 +83,8 @@ namespace Dalel.Repository
         }
         public PropertiesDetailsVM GetPropertyById(int propertyId)
         {
-            return GetList(p => p.Id == propertyId && !p.IsDeleted).Select(p => p.ToDetailsViewModel()).FirstOrDefault();
+            return GetList(p => p.Id == propertyId && !p.IsDeleted).
+                Select(p => p.ToDetailsViewModel()).FirstOrDefault();
         }
 
         public IQueryable<PropertiesDetailsVM> GetPropertiesByOwner(string ownerId)

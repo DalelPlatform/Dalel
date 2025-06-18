@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
@@ -11,9 +12,11 @@ using Models;
 namespace Models.Migrations
 {
     [DbContext(typeof(DelelContext))]
-    partial class DelelContextModelSnapshot : ModelSnapshot
+    [Migration("20250617123717_agency")]
+    partial class agency
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -215,14 +218,16 @@ namespace Models.Migrations
                         .HasColumnType("real");
 
                     b.Property<string>("ImagePath")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
+                    b.Property<string>("Price")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TermsPolicies")
                         .IsRequired()
@@ -310,21 +315,12 @@ namespace Models.Migrations
                     b.Property<int>("BookingStatus")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CheckIn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CheckOut")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("PackageId")
-                        .HasColumnType("int");
 
                     b.Property<int>("PackageSchaduleId")
                         .HasColumnType("int");
@@ -338,8 +334,6 @@ namespace Models.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
-
-                    b.HasIndex("PackageId");
 
                     b.HasIndex("PackageSchaduleId");
 
@@ -2760,19 +2754,11 @@ namespace Models.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Models.Agency.AgencyPackage", "AgencyPackage")
-                        .WithMany("PabckageBookings")
-                        .HasForeignKey("PackageId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("Models.Agency.PackageSchadule", "PackageSchadule")
                         .WithMany("PabckageBookings")
                         .HasForeignKey("PackageSchaduleId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("AgencyPackage");
 
                     b.Navigation("Client");
 
@@ -3574,8 +3560,6 @@ namespace Models.Migrations
 
             modelBuilder.Entity("Models.Agency.AgencyPackage", b =>
                 {
-                    b.Navigation("PabckageBookings");
-
                     b.Navigation("PackageSchadules");
 
                     b.Navigation("PackageSteps");

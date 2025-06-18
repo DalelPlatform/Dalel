@@ -68,7 +68,7 @@ namespace Dalel.API.Areas.Agency.Controllers
         public IActionResult SearchAgencyPackage(
                [FromQuery] string searchText = "",
               [FromQuery] string Name = "",
-               [FromQuery] string Price = "",
+               [FromQuery] float Price = 0,
 
                [FromQuery] int pageSize = 10,
               [FromQuery] int pageIndex = 1,

@@ -13,16 +13,18 @@ namespace Dalel.ViewModels
 {
     public static class PackagebookingExt
     {
-        public static PackageBooking ToModel(this AddPackagebookingVM book)
+        public static PackageBooking ToModel(this AddPackagebookingVM book, float TotalPrice)
         {
             return new PackageBooking
             {
                 BookingStatus = book.BookingStatus,
                 Date = book.Date,
                 ReservedPeople = book.ReservedPeople,
-                TotalPrice = book.TotalPrice,
-
-
+                TotalPrice = TotalPrice,
+               
+                ClientId = book.ClientId,
+                
+                
             };
 
 

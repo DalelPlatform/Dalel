@@ -66,7 +66,7 @@ namespace Utilities
                     var content = new MultipartFormDataContent
                     {
                         { new StringContent("4e605ee2af96816038aecb5232984a8b"), "key" },
-                        { new StringContent(base64Image), "**" }
+                        { new StringContent(base64Image), "image" }
                     };
 
                     var response = client.PostAsync("https://api.imgbb.com/1/upload", content).GetAwaiter().GetResult();
