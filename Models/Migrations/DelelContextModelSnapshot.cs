@@ -193,7 +193,7 @@ namespace Models.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("AgencyCustomerInquiries");
+                    b.ToTable("AgencyCustomerInquiries", (string)null);
                 });
 
             modelBuilder.Entity("Models.Agency.AgencyPackage", b =>
@@ -221,8 +221,9 @@ namespace Models.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
+                    b.Property<string>("Price")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TermsPolicies")
                         .IsRequired()
@@ -235,7 +236,7 @@ namespace Models.Migrations
 
                     b.HasIndex("AgencyId");
 
-                    b.ToTable("AgencyPackages");
+                    b.ToTable("AgencyPackages", (string)null);
                 });
 
             modelBuilder.Entity("Models.Agency.AgencyPromotion", b =>
@@ -267,7 +268,7 @@ namespace Models.Migrations
 
                     b.HasIndex("AgencyId");
 
-                    b.ToTable("AgencyPromotions");
+                    b.ToTable("AgencyPromotions", (string)null);
                 });
 
             modelBuilder.Entity("Models.Agency.AgencyVerificationDocument", b =>
@@ -296,7 +297,7 @@ namespace Models.Migrations
 
                     b.HasIndex("AgencyId");
 
-                    b.ToTable("AgencyVerificationDocuments");
+                    b.ToTable("AgencyVerificationDocuments", (string)null);
                 });
 
             modelBuilder.Entity("Models.Agency.PackageBooking", b =>
@@ -310,21 +311,12 @@ namespace Models.Migrations
                     b.Property<int>("BookingStatus")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CheckIn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CheckOut")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("PackageId")
-                        .HasColumnType("int");
 
                     b.Property<int>("PackageSchaduleId")
                         .HasColumnType("int");
@@ -339,11 +331,9 @@ namespace Models.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("PackageId");
-
                     b.HasIndex("PackageSchaduleId");
 
-                    b.ToTable("PackageBookings");
+                    b.ToTable("PackageBookings", (string)null);
                 });
 
             modelBuilder.Entity("Models.Agency.PackageBookingPayment", b =>
@@ -383,7 +373,7 @@ namespace Models.Migrations
                     b.HasIndex("BookingId")
                         .IsUnique();
 
-                    b.ToTable("PackageBookingPayments");
+                    b.ToTable("PackageBookingPayments", (string)null);
                 });
 
             modelBuilder.Entity("Models.Agency.PackageBookingReview", b =>
@@ -412,7 +402,7 @@ namespace Models.Migrations
                     b.HasIndex("BookingId")
                         .IsUnique();
 
-                    b.ToTable("PackageBookingReviews");
+                    b.ToTable("PackageBookingReviews", (string)null);
                 });
 
             modelBuilder.Entity("Models.Agency.PackageSchadule", b =>
@@ -436,7 +426,7 @@ namespace Models.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("PackageSchadules");
+                    b.ToTable("PackageSchadules", (string)null);
                 });
 
             modelBuilder.Entity("Models.Agency.PackageStep", b =>
@@ -468,7 +458,7 @@ namespace Models.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("PackageSteps");
+                    b.ToTable("PackageSteps", (string)null);
                 });
 
             modelBuilder.Entity("Models.Agency.TravelAgencies", b =>
@@ -533,7 +523,7 @@ namespace Models.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("TravelAgencies");
+                    b.ToTable("TravelAgencies", (string)null);
                 });
 
             modelBuilder.Entity("Models.Driver.BookingVehicle", b =>
@@ -580,7 +570,7 @@ namespace Models.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("BookingVehicles");
+                    b.ToTable("BookingVehicles", (string)null);
                 });
 
             modelBuilder.Entity("Models.Driver.CarProposal", b =>
@@ -619,7 +609,7 @@ namespace Models.Migrations
 
                     b.HasIndex("DriverId");
 
-                    b.ToTable("CarProposals");
+                    b.ToTable("CarProposals", (string)null);
                 });
 
             modelBuilder.Entity("Models.Driver.PaymentVehicle", b =>
@@ -662,7 +652,7 @@ namespace Models.Migrations
                     b.HasIndex("BookingVehicleId")
                         .IsUnique();
 
-                    b.ToTable("PaymentVehicles");
+                    b.ToTable("PaymentVehicles", (string)null);
                 });
 
             modelBuilder.Entity("Models.Driver.ReviewVehicle", b =>
@@ -691,7 +681,7 @@ namespace Models.Migrations
                     b.HasIndex("BookingVehicleId")
                         .IsUnique();
 
-                    b.ToTable("ReviewVehicles");
+                    b.ToTable("ReviewVehicles", (string)null);
                 });
 
             modelBuilder.Entity("Models.Driver.Vehicle", b =>
@@ -742,7 +732,7 @@ namespace Models.Migrations
                     b.HasIndex("DriverId")
                         .IsUnique();
 
-                    b.ToTable("Vehicles");
+                    b.ToTable("Vehicles", (string)null);
                 });
 
             modelBuilder.Entity("Models.Driver.VehicleImage", b =>
@@ -765,7 +755,7 @@ namespace Models.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("VehicleImages");
+                    b.ToTable("VehicleImages", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeChef.HomeChefDelivery", b =>
@@ -803,7 +793,7 @@ namespace Models.Migrations
                     b.HasIndex("HomeChefOrderId")
                         .IsUnique();
 
-                    b.ToTable("HomeChefDeliveries");
+                    b.ToTable("HomeChefDeliveries", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeChef.HomeChefMeal", b =>
@@ -851,7 +841,7 @@ namespace Models.Migrations
 
                     b.HasIndex("HomeChefId");
 
-                    b.ToTable("HomeChefMeals");
+                    b.ToTable("HomeChefMeals", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeChef.HomeChefMealImage", b =>
@@ -873,7 +863,7 @@ namespace Models.Migrations
 
                     b.HasIndex("HomeChefMealsId");
 
-                    b.ToTable("HomeChefMealImages");
+                    b.ToTable("HomeChefMealImages", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeChef.HomeChefOrder", b =>
@@ -911,7 +901,7 @@ namespace Models.Migrations
 
                     b.HasIndex("HomeChefId");
 
-                    b.ToTable("HomeChefOrders");
+                    b.ToTable("HomeChefOrders", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeChef.HomeChefOrderMeal", b =>
@@ -940,7 +930,7 @@ namespace Models.Migrations
 
                     b.HasIndex("HomeChefOrdersId");
 
-                    b.ToTable("HomeChefOrderMeals");
+                    b.ToTable("HomeChefOrderMeals", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeChef.PaymentHomeChefOrder", b =>
@@ -984,7 +974,7 @@ namespace Models.Migrations
                     b.HasIndex("HomeChefOrderId")
                         .IsUnique();
 
-                    b.ToTable("PaymentHomeChefOrders");
+                    b.ToTable("PaymentHomeChefOrders", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeChef.ReviewHomeChefOrder", b =>
@@ -1019,7 +1009,7 @@ namespace Models.Migrations
                     b.HasIndex("HomeChefOrderId")
                         .IsUnique();
 
-                    b.ToTable("ReviewHomeChefOrders");
+                    b.ToTable("ReviewHomeChefOrders", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeService.CategoryServices", b =>
@@ -1047,7 +1037,7 @@ namespace Models.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryServices");
+                    b.ToTable("CategoryServices", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderPayment", b =>
@@ -1091,7 +1081,7 @@ namespace Models.Migrations
                     b.HasIndex("RequestId")
                         .IsUnique();
 
-                    b.ToTable("ServiceProviderPayments");
+                    b.ToTable("ServiceProviderPayments", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderProject", b =>
@@ -1132,7 +1122,7 @@ namespace Models.Migrations
 
                     b.HasIndex("ServiceProviderId");
 
-                    b.ToTable("ServiceProviderProjects");
+                    b.ToTable("ServiceProviderProjects", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderProjectImages", b =>
@@ -1155,7 +1145,7 @@ namespace Models.Migrations
 
                     b.HasIndex("ServiceProviderProjectId");
 
-                    b.ToTable("ServiceProviderProjectImages");
+                    b.ToTable("ServiceProviderProjectImages", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderPropsal", b =>
@@ -1197,7 +1187,7 @@ namespace Models.Migrations
 
                     b.HasIndex("ServiceRequestId");
 
-                    b.ToTable("ServiceProviderPropsals");
+                    b.ToTable("ServiceProviderPropsals", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderReview", b =>
@@ -1227,7 +1217,7 @@ namespace Models.Migrations
                     b.HasIndex("RequestId")
                         .IsUnique();
 
-                    b.ToTable("ServiceProviderReviews");
+                    b.ToTable("ServiceProviderReviews", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderSchedule", b =>
@@ -1255,7 +1245,7 @@ namespace Models.Migrations
 
                     b.HasIndex("ServiceProviderId");
 
-                    b.ToTable("ServiceProviderSchedules");
+                    b.ToTable("ServiceProviderSchedules", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceQuaries", b =>
@@ -1293,7 +1283,7 @@ namespace Models.Migrations
 
                     b.HasIndex("ServiceProviderId");
 
-                    b.ToTable("ServiceQuaries");
+                    b.ToTable("ServiceQuaries", (string)null);
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceRequest", b =>
@@ -1344,7 +1334,7 @@ namespace Models.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("ServiceRequests");
+                    b.ToTable("ServiceRequests", (string)null);
                 });
 
             modelBuilder.Entity("Models.Hotel.BookingGuestInRoom", b =>
@@ -1818,7 +1808,7 @@ namespace Models.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("BookingProperties");
+                    b.ToTable("BookingProperties", (string)null);
                 });
 
             modelBuilder.Entity("Models.Property.PaymentProperties", b =>
@@ -1858,7 +1848,7 @@ namespace Models.Migrations
                     b.HasIndex("BookingPropertyId")
                         .IsUnique();
 
-                    b.ToTable("PaymentProperties");
+                    b.ToTable("PaymentProperties", (string)null);
                 });
 
             modelBuilder.Entity("Models.Property.Properties", b =>
@@ -1947,7 +1937,7 @@ namespace Models.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Properties");
+                    b.ToTable("Properties", (string)null);
                 });
 
             modelBuilder.Entity("Models.Property.PropertyImages", b =>
@@ -1970,7 +1960,7 @@ namespace Models.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("PropertyImages");
+                    b.ToTable("PropertyImages", (string)null);
                 });
 
             modelBuilder.Entity("Models.Property.ReviewProperties", b =>
@@ -2000,7 +1990,7 @@ namespace Models.Migrations
                     b.HasIndex("BookingPropertyId")
                         .IsUnique();
 
-                    b.ToTable("ReviewProperties");
+                    b.ToTable("ReviewProperties", (string)null);
                 });
 
             modelBuilder.Entity("Models.Restaurant.PaymentRestaurantOrder", b =>
@@ -2044,7 +2034,7 @@ namespace Models.Migrations
                     b.HasIndex("RestaurantOrderId")
                         .IsUnique();
 
-                    b.ToTable("PaymentRestaurantOrders");
+                    b.ToTable("PaymentRestaurantOrders", (string)null);
                 });
 
             modelBuilder.Entity("Models.Restaurant.Restaurant", b =>
@@ -2137,7 +2127,7 @@ namespace Models.Migrations
                     b.HasIndex("OwnerId")
                         .IsUnique();
 
-                    b.ToTable("Restaurants");
+                    b.ToTable("Restaurants", (string)null);
                 });
 
             modelBuilder.Entity("Models.Restaurant.RestaurantImage", b =>
@@ -2161,7 +2151,7 @@ namespace Models.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("RestaurantImages");
+                    b.ToTable("RestaurantImages", (string)null);
                 });
 
             modelBuilder.Entity("Models.Restaurant.RestaurantMenuItem", b =>
@@ -2211,7 +2201,7 @@ namespace Models.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("RestaurantMenuItems");
+                    b.ToTable("RestaurantMenuItems", (string)null);
                 });
 
             modelBuilder.Entity("Models.Restaurant.RestaurantMenuItemImage", b =>
@@ -2233,7 +2223,7 @@ namespace Models.Migrations
 
                     b.HasIndex("RestaurantMenuItemId");
 
-                    b.ToTable("RestaurantMenuItemImages");
+                    b.ToTable("RestaurantMenuItemImages", (string)null);
                 });
 
             modelBuilder.Entity("Models.Restaurant.RestaurantOrder", b =>
@@ -2270,7 +2260,7 @@ namespace Models.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("RestaurantOrders");
+                    b.ToTable("RestaurantOrders", (string)null);
                 });
 
             modelBuilder.Entity("Models.Restaurant.RestaurantOrderItem", b =>
@@ -2299,7 +2289,7 @@ namespace Models.Migrations
 
                     b.HasIndex("RestaurantOrderId");
 
-                    b.ToTable("RestaurantOrderItems");
+                    b.ToTable("RestaurantOrderItems", (string)null);
                 });
 
             modelBuilder.Entity("Models.Restaurant.RestaurantReservation", b =>
@@ -2346,7 +2336,7 @@ namespace Models.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("RestaurantReservations");
+                    b.ToTable("RestaurantReservations", (string)null);
                 });
 
             modelBuilder.Entity("Models.Restaurant.ReviewRestaurantOrder", b =>
@@ -2375,7 +2365,7 @@ namespace Models.Migrations
                     b.HasIndex("RestaurantOrderId")
                         .IsUnique();
 
-                    b.ToTable("ReviewRestaurantOrders");
+                    b.ToTable("ReviewRestaurantOrders", (string)null);
                 });
 
             modelBuilder.Entity("Models.User.AppUser", b =>
@@ -2494,7 +2484,7 @@ namespace Models.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Client");
+                    b.ToTable("Client", (string)null);
                 });
 
             modelBuilder.Entity("Models.User.Drivers", b =>
@@ -2513,7 +2503,7 @@ namespace Models.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Drivers");
+                    b.ToTable("Drivers", (string)null);
                 });
 
             modelBuilder.Entity("Models.User.HomeChef", b =>
@@ -2544,7 +2534,7 @@ namespace Models.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("HomeChefs");
+                    b.ToTable("HomeChefs", (string)null);
                 });
 
             modelBuilder.Entity("Models.User.HotelOwners", b =>
@@ -2554,7 +2544,7 @@ namespace Models.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("HotelOwners");
+                    b.ToTable("HotelOwners", (string)null);
                 });
 
             modelBuilder.Entity("Models.User.PropertyOwner", b =>
@@ -2564,7 +2554,7 @@ namespace Models.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("PropertyOwners");
+                    b.ToTable("PropertyOwners", (string)null);
                 });
 
             modelBuilder.Entity("Models.User.RestaurantOwner", b =>
@@ -2574,7 +2564,7 @@ namespace Models.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("RestaurantOwners");
+                    b.ToTable("RestaurantOwners", (string)null);
                 });
 
             modelBuilder.Entity("Models.User.ServiceProvider", b =>
@@ -2636,7 +2626,7 @@ namespace Models.Migrations
 
                     b.HasIndex("CategoryServicesId");
 
-                    b.ToTable("ServiceProviders");
+                    b.ToTable("ServiceProviders", (string)null);
                 });
 
             modelBuilder.Entity("Models.User.TravelAgencyOwners", b =>
@@ -2646,7 +2636,7 @@ namespace Models.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("TravelAgencyOwners");
+                    b.ToTable("TravelAgencyOwners", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -2760,19 +2750,11 @@ namespace Models.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Models.Agency.AgencyPackage", "AgencyPackage")
-                        .WithMany("PabckageBookings")
-                        .HasForeignKey("PackageId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("Models.Agency.PackageSchadule", "PackageSchadule")
                         .WithMany("PabckageBookings")
                         .HasForeignKey("PackageSchaduleId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("AgencyPackage");
 
                     b.Navigation("Client");
 
@@ -3574,8 +3556,6 @@ namespace Models.Migrations
 
             modelBuilder.Entity("Models.Agency.AgencyPackage", b =>
                 {
-                    b.Navigation("PabckageBookings");
-
                     b.Navigation("PackageSchadules");
 
                     b.Navigation("PackageSteps");
