@@ -25,7 +25,8 @@ namespace Dalel.ViewModels
                 AgencyId = packageVM.AgencyId,
                 VerificationStatus = Models.Enums.VerificationStatus.Pending,
                 PackageSteps = packageVM.Steps.Select(i => i.ToModel()).ToList(),
-                PackageSchadules = packageVM.Schadules.Select(i => i.ToModel()).ToList(),
+                PackageSchadules = packageVM.Schadules.
+                Select(i => i.ToModel()).ToList(),
                 
             };
 

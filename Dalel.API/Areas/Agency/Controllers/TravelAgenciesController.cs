@@ -51,10 +51,21 @@ namespace Dalel.API.Areas.Agency.Controllers
             return new JsonResult(result);
         }
         [HttpGet]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult GetAllTravels()
         {
             var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var res = _pakageService.GetAllTravelAgency(ownerId);
+           
+            return new JsonResult(res);
+        }
+        [HttpGet("{Id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
+        public IActionResult GetTravelAgencyById(int id)
+        {
+          
+            var res = _pakageService.GetTravelAgencybyid(id);
+
             return new JsonResult(res);
         }
         [HttpPost]
@@ -72,7 +83,7 @@ namespace Dalel.API.Areas.Agency.Controllers
         }
         [HttpPut("{Id}")]
         [Authorize(Roles = "TravelAgencyOwner,Admin")]
-        public IActionResult UpdateTravelAgency(addTravelAgenciesVM trvelAgency,int Id)
+        public IActionResult UpdateTravelAgency(int Id, [FromForm] addTravelAgenciesVM trvelAgency)
         {
             var res = _pakageService.UpdateTravelAgencies(Id,trvelAgency);
             return new JsonResult(res);

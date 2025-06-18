@@ -23,6 +23,7 @@ using Models.Driver;
 using Dalel.Reopsitory;
 using Dalel.Repository.HomeServices;
 using Utilities.Payments.Gateways;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 
 
@@ -31,7 +32,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddDbContext<DelelContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DalelDB")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DalelDB"))
+    .ConfigureWarnings(warnings =>
+    warnings.Ignore(RelationalEventId.PendingModelChangesWarning)));
+    
 // Register AutoMapper
 
 builder.Services.AddControllers().AddJsonOptions(options =>
