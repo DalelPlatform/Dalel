@@ -15,7 +15,6 @@ namespace Models.HomeService
         public ProposalStatus Status { get; set; }  
         public int ServiceRequestId { get; set; }
         public DateTime Date { get; set; }
-        public string ServiceProviderName { get; set; }
         public virtual ServiceRequest ServiceRequest { get; set; }
     }
 
