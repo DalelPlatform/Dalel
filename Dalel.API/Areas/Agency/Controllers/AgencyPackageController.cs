@@ -29,6 +29,14 @@ namespace Dalel.API.Areas.Agency.Controllers
             var res = _pakageService.GetAllAgencyPackage(id);
             return new JsonResult(res);
         }
+        [HttpGet("{id}")]
+        public IActionResult GetAgencyPackagebyid(int id)
+        {
+
+            var res = _pakageService.Getpackagebyid(id);
+            return new JsonResult(res);
+        }
+
         [HttpPost]
         [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult createAgencyPackage([FromForm] AddAgencyPackageVM packageAgency)

@@ -21,14 +21,14 @@ namespace Dalel.Repository.HomeServices
         {
 
             return base.GetList(q => q.CategoryServicesId == categoryId)
-                          .OrderByDescending(q => q.QuestionDate);
+                          .OrderByDescending(q => q.CommentDate);
 
         }
 
         public IQueryable<ServiceQuaries> GetQueriesByClient(string clientId)
         {
             return base.GetList(q => q.ClientId == clientId)
-                          .OrderByDescending(q => q.QuestionDate);
+                          .OrderByDescending(q => q.CommentDate);
 
         }
 
@@ -36,7 +36,7 @@ namespace Dalel.Repository.HomeServices
         {
 
             return base.GetList(q => q.ServiceProviderId == providerId)
-                         .OrderByDescending(q => q.QuestionDate);
+                         .OrderByDescending(q => q.CommentDate);
         }
 
         public bool AnswerQuery(int queryId, string answer)
@@ -44,8 +44,7 @@ namespace Dalel.Repository.HomeServices
             var query = base.GetList(q => q.Id == queryId).FirstOrDefault(); 
             if (query != null)
             {
-                query.Answer = answer;
-                query.AnswerDate = DateTime.Now;
+                query.CommentDate = DateTime.Now;
                 base.Save();
                 return true;
             }

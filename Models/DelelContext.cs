@@ -129,6 +129,7 @@ namespace Models
             builder.ApplyConfiguration(new PackageBookingPaymentConfigration());
             builder.ApplyConfiguration(new PackageBookingReviewConfigration());
             builder.ApplyConfiguration(new PackageSchaduleConfigration());
+            builder.ApplyConfiguration(new PackageStepConfigration());
             builder.ApplyConfiguration(new TravelAgencyConfugeration());
             #endregion
 

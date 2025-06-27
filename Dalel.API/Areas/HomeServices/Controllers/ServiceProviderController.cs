@@ -69,6 +69,15 @@ namespace Dalel.API.Areas
             return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
+        [HttpGet("ProfileById")]//عشان اعرض بيانات اليوزر صاحب البروبوزال
+        public IActionResult GetServiceProviderDataById(string id)
+        {
+            var result = _homeServiceService.GetServiceProviderById(id);
+            if (!result.Success)
+                return new JsonResult(new { Success = false, Message = result.Message });
+            return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
+        }
+
         [HttpGet("category/{categoryId}")]
         public IActionResult GetProvidersByCategory(
             int categoryId,

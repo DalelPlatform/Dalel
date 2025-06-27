@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
@@ -11,9 +12,11 @@ using Models;
 namespace Models.Migrations
 {
     [DbContext(typeof(DelelContext))]
-    partial class DelelContextModelSnapshot : ModelSnapshot
+    [Migration("20250613090110_reem_testing")]
+    partial class reem_testing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1153,9 +1156,6 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -1249,6 +1249,14 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("AnswerDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("CategoryServicesId")
                         .HasColumnType("int");
 
@@ -1256,12 +1264,12 @@ namespace Models.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Comment")
+                    b.Property<string>("Question")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTime>("CommentDate")
+                    b.Property<DateTime>("QuestionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ServiceProviderId")
@@ -1318,10 +1326,6 @@ namespace Models.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -2570,8 +2574,7 @@ namespace Models.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Address")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("AverageRating")
                         .HasColumnType("int");
@@ -2580,16 +2583,13 @@ namespace Models.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("City")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("District")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
                         .HasMaxLength(255)
@@ -2602,8 +2602,10 @@ namespace Models.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ServiceArea")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ServiceAreas")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StartProfisionalAt")
                         .HasColumnType("datetime2");
@@ -2612,8 +2614,7 @@ namespace Models.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ZipCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
 

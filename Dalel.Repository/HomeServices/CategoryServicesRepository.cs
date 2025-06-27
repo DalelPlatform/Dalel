@@ -104,7 +104,7 @@ namespace Dalel.Repository
             }
 
             int skip = (pageNumber - 1) * pageSize;
-            return (IQueryable<ServiceQuaries>)queries.OrderByDescending(q => q.QuestionDate)
+            return (IQueryable<ServiceQuaries>)queries.OrderByDescending(q => q.CommentDate)
                         .Skip(skip)
                         .Take(pageSize)
                         .ToList();
