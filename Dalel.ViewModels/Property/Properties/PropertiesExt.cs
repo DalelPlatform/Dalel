@@ -16,6 +16,7 @@ namespace Dalel.ViewModels
             {
                 Description = viewModel.Description,
                 Amenities = viewModel.Amenities,
+                PricePerNight = viewModel.PricePerNight,
                 NumberOfRooms = viewModel.NumberOfRooms,
                 BuildingNo = viewModel.BuildingNo,
                 FloorNo = viewModel.FloorNo,
@@ -47,6 +48,7 @@ namespace Dalel.ViewModels
                 FloorNo = property.FloorNo,
                 IsForRent = property.IsForRent,
                 NumberOfRooms = property.NumberOfRooms,
+                PricePerNight = property.PricePerNight,
                 PhoneNumber = property.PhoneNumber,
                 Region = property.Region,
                 Street = property.Street,
@@ -63,6 +65,7 @@ namespace Dalel.ViewModels
 
             existingProperty.Description = string.IsNullOrEmpty(viewModel.Description) ? existingProperty.Description : viewModel.Description;
             existingProperty.Amenities = string.IsNullOrEmpty(viewModel.Amenities) ? existingProperty.Amenities : viewModel.Amenities;
+            existingProperty.PricePerNight = viewModel.PricePerNight == 0 ? existingProperty.PricePerNight : viewModel.PricePerNight;
             existingProperty.NumberOfRooms = viewModel.NumberOfRooms == 0 ? existingProperty.NumberOfRooms : viewModel.NumberOfRooms;
             existingProperty.BuildingNo = viewModel.BuildingNo == 0 ? existingProperty.BuildingNo : viewModel.BuildingNo;
             existingProperty.FloorNo = viewModel.FloorNo == 0 ? existingProperty.FloorNo : viewModel.FloorNo;
