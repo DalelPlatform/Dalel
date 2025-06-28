@@ -92,12 +92,18 @@ namespace Dalel.API.Controllers
                 else
                 {
                     var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+                    var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+                    var user = await accountService.GetUserById(userId);
+
                     return new JsonResult(new
                     {
                         Massage = "Logged in Successfully",
                         Status = 200,
                         Token = res,
-                        Role = role
+                        Role = role,
+                        Image = user.ProfileImg,
+                        FullName = user.FirstName + " " + user.LastName,
                     });
 
                 }
