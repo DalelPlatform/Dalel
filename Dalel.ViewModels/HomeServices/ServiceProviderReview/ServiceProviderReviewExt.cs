@@ -13,9 +13,11 @@ namespace Dalel.ViewModels
             return new Models.HomeService.ServiceProviderReview
             {
                 RequestId = vm.RequestId,
+                ServiceProviderId = vm.ServiceProviderId,
+                ClientId = vm.ClientId,
                 Review = vm.Review,
                 Rating = vm.Rating,
-                ReviewDate = DateTime.UtcNow
+                ReviewDate = vm.ReviewDate ?? DateTime.Now
             };
         }
 
@@ -24,9 +26,11 @@ namespace Dalel.ViewModels
             return new ServiceProviderReviewDetailsVM
             {
                 Id = model.Id,
-                ClientName = model.ServiceRequest?.Client?.User.UserName ?? string.Empty,
                 Review = model.Review,
                 Rating = model.Rating,
+                ServiceProviderId = model.ServiceProviderId,
+                ClientId = model.ClientId,
+                RequestId = model.RequestId,
                 ReviewDate = model.ReviewDate
             };
         }

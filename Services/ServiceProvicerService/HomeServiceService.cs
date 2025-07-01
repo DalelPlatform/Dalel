@@ -86,6 +86,7 @@ namespace Dalel.Services
                     $"Database error: {ex.InnerException?.Message ?? ex.Message}");
             }
         }
+
         public ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>> GetRequestsByCategory(
             int categoryId, int pageSize = 5, int pageNumber = 1)
         {
@@ -317,6 +318,77 @@ namespace Dalel.Services
             catch (Exception ex)
             {
                 return ServiceResult.FailureResult("Error: " + ex.Message);
+            }
+        }
+        public ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>> SearchServiceRequest(
+            string? Title = "",
+            string? Description = null,
+            string? Address = null,
+            int? CategoryId = null,
+            string sortBy = "Date",
+            bool descending = false,
+            int pageSize = 5,
+            int pageIndex = 1)
+        {
+            try
+            {
+                var providers = _serviceRequestRepository.GetList();
+
+                if (!string.IsNullOrEmpty(Title))
+                {
+                    string loweredTitle = Title.ToLower();
+                    providers = providers.Where(p => p.Title.ToLower().Contains(loweredTitle));
+                }
+                if (!string.IsNullOrEmpty(Description))
+                {
+                    string loweredDescription = Description.ToLower();
+                    providers = providers.Where(p => p.Description.ToLower().Contains(loweredDescription));
+                }
+                if (!string.IsNullOrEmpty(Address))
+                {
+                    string lowerAddress = Address.ToLower();
+                    providers = providers.Where(p => p.Address.ToLower().Contains(lowerAddress));
+                }
+                if (CategoryId.HasValue && CategoryId > 0)
+                {
+                    providers = providers.Where(p => p.CategoryServicesId == CategoryId.Value);
+                }
+
+
+                switch (sortBy)
+                {
+                    case "Date":
+                        providers = descending ? providers.OrderByDescending(p => p.Date) : providers.OrderBy(p => p.Date);
+                        break;
+                    //case "averagerating":
+                    //    providers = descending ? providers.OrderByDescending(p => p.Propsals.) : providers.OrderBy(p => p.AverageRating);
+                    //    break;
+                    default:
+                        providers = providers.OrderBy(p => p.Date);
+                        break;
+                }
+
+                var totalCount = providers.Count();
+                var paginatedProviders = providers
+                    .Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                var data = paginatedProviders.Select(p => p.ToDetailsViewModel()).ToList();
+
+                var paginationResult = new PaginationViewModel<ServiceRequestDetailsVM>
+                {
+                    Data = data,
+                    PageNumber = pageIndex,
+                    PageSize = pageSize,
+                    TotalCount = totalCount
+                };
+
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.SuccessResult(paginationResult, "Service providers retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.FailureResult("Error: " + ex.Message);
             }
         }
         public ServiceResult DeleteServiceRequest(int requestId)
@@ -781,7 +853,10 @@ namespace Dalel.Services
 
                 // Accept the selected proposal
                 _serviceProviderProposalRepository.AcceptProposal(proposalId);
-     
+                var updated = _serviceRequestRepository.UpdaterequestsStatus(proposal.ServiceRequestId, RequestStatus.InProgress);
+                if (!updated)
+                    return ServiceResult<bool>.FailureResult("Request not found");
+
 
                 var otherProposals = _serviceProviderProposalRepository.GetProposalsByRequest(proposal.ServiceRequestId)
                     .Where(p => p.Id != proposalId && p.Status == ProposalStatus.Pending)
@@ -1579,7 +1654,6 @@ public ServiceResult DeletePayment(int paymentId)
             string? searchText = "",
             int? categoryId = null,
             string? address = null,
-            VerificationStatus? verificationStatus = null,
             string sortBy = "Name",
             bool descending = false,
             int pageSize = 5,
