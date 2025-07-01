@@ -64,6 +64,18 @@ namespace Dalel.Services
             }
         }
 
+        public ServiceResult GetPropertyByID(int id)
+        {
+            try
+            {
+                var result = _propertiesRepo.GetPropertyById(id);
+                return ServiceResult<PropertiesDetailsVM>.SuccessResult(result, "Property Found");
+            }
+            catch(Exception ex)
+            {
+                return ServiceResult.FailureResult(ex.Message);
+            }
+        }
         public ServiceResult AddProperty(Properties property)
         {
             try
@@ -119,6 +131,11 @@ namespace Dalel.Services
                 var property = _propertiesRepo.GetPropertyById(booking.PropertyId);
                 if (property == null) // (property == null || property.IsDeleted)
                     return ServiceResult.FailureResult("Property not found.");
+
+                if(!_propertiesRepo.CheckPropertyAvaliability(booking.CheckIn, booking.CheckOut, booking.PropertyId))
+                {
+                    return ServiceResult.FailureResult("This property is already booked in this date");
+                }
 
                 var numberOfNights = (booking.CheckOut - booking.CheckIn).Days;
                 if (numberOfNights <= 0)

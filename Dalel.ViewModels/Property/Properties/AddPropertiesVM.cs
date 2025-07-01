@@ -19,6 +19,10 @@ namespace Dalel.ViewModels
         [StringLength(300, MinimumLength = 5, ErrorMessage = "Amenities must be between 5 and 300 characters.")]
         public string Amenities { get; set; }
 
+        [Required(ErrorMessage = "Price is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Price Must be above 0")]
+        public float PricePerNight { get; set; }
+
         [Required(ErrorMessage = "Number of rooms is required.")]
         [Range(1, int.MaxValue, ErrorMessage = "Rooms must be at least 1.")]
         public int NumberOfRooms { get; set; }
