@@ -59,6 +59,7 @@ namespace Dalel.Repository.Agency
         {
             return GetList(b => b.Id == bookingId).FirstOrDefault();
         }
+       
         //searching 
 
 

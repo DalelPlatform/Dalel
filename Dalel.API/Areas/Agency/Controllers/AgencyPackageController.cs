@@ -88,7 +88,7 @@ namespace Dalel.API.Areas.Agency.Controllers
             );
 
             if (!result.Success)
-                return new JsonResult(result);
+                return new JsonResult(result) { StatusCode = 400 };
 
             return new JsonResult(result);
         }

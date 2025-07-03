@@ -41,8 +41,10 @@ namespace Utilities
                 var orderId = payment.BookingId.ToString();
                 bool success = payment.PaymentMethod switch
                 {
-                    PaymentMethod.Stripe => _stripeService.Charge(payment.AmountPaid, orderId),
-                    PaymentMethod.Paypal => _payPalService.Charge(payment.AmountPaid, orderId),
+                    PaymentMethod.Stripe => _stripeService.
+                    Charge(payment.AmountPaid, orderId),
+                    PaymentMethod.Paypal => _payPalService.
+                    Charge(payment.AmountPaid, orderId),
                     _ => true // Cash 
                 };
 

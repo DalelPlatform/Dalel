@@ -57,9 +57,27 @@ namespace Dalel.API.Areas.Agency.Controllers
             return new JsonResult(false);
         }
 
+        [HttpGet("getBookingBySchadule/{id}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
+        public IActionResult getBookingBySchadule(int id)
+        {
+            var result = _pakageService.GetSchadulebyid(id);
+            if (!result.Success)
+                return new JsonResult(result.Message) { StatusCode = 400 };
 
+            return new JsonResult(result);
+        }
 
+        [HttpGet("getSchadulesByPackageId/{packageId}")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
+        public IActionResult GetSchadulesByPackageId(int packageId)
+        {
+            var result = _pakageService.GetSchadulesByPackageId(packageId);
+            if (!result.Success)
+                return new JsonResult(result.Message) { StatusCode = 400 };
 
+            return new JsonResult(result);
+        }
 
 
     }

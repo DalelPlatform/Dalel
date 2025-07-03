@@ -7,6 +7,7 @@ using Dalel.ViewModels.Agency.AgencyVerificationDocument;
 using Dalel.ViewModels.Agency.Packagebooking;
 using Dalel.ViewModels.Agency.PackageSchadule;
 using Models.Agency;
+using Models.Enums;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Dalel.ViewModels
@@ -17,11 +18,11 @@ namespace Dalel.ViewModels
         {
             return new PackageBooking
             {
-                BookingStatus = book.BookingStatus,
+                BookingStatus = BookingStatus.Panding,
                 Date = book.Date,
                 ReservedPeople = book.ReservedPeople,
                 TotalPrice = TotalPrice,
-               
+               PackageSchaduleId = book.PackageSchaduleId,
                 ClientId = book.ClientId,
                 
                 
@@ -38,7 +39,7 @@ namespace Dalel.ViewModels
                 BookingStatus = book.BookingStatus,
                 Date = book.Date,
                 ReservedPeople = book.ReservedPeople,
-                TotalPrice = book.TotalPrice,
+                //TotalPrice = book.TotalPrice,
 
             };
         }
@@ -47,10 +48,10 @@ namespace Dalel.ViewModels
                 PackageBooking old)
         {
 
-            old.BookingStatus = book.BookingStatus;
+            //old.BookingStatus = book.BookingStatus;
             old.Date = book.Date;
             old.ReservedPeople = book.ReservedPeople;
-            old.TotalPrice = book.TotalPrice;
+            //old.TotalPrice = book.TotalPrice;
             return old;
         }
     }

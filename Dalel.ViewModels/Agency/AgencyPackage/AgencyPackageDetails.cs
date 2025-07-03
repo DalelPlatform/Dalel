@@ -22,7 +22,7 @@ namespace Dalel.ViewModels.Agency.AgencyPackage
         public int AgencyId { get; set; }
         public string? ImagePath { get; set; }
         public virtual VerificationStatus VerificationStatus { get; set; }
-        public List<addPackageStepVM> Steps { get; set; }
-        public List<addPackageSchaduleVM> Schadules { get; set; }
+        public List<PackageStepDetails> Steps { get; set; }
+        public List<PackageSchaduleDetails> Schadules { get; set; }
     }
 }

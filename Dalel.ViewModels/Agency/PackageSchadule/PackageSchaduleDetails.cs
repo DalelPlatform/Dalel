@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dalel.ViewModels.Agency.Packagebooking;
 
 namespace Dalel.ViewModels.Agency.PackageSchadule
 {
@@ -11,5 +12,6 @@ namespace Dalel.ViewModels.Agency.PackageSchadule
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public int SlotsAvailable { get; set; }
+        public List <PackagebookingDetails> PackagebookingDetails { get; set; }
     }
 }

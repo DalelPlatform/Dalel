@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,13 @@ using Dalel.ViewModels.Agency.Packagebooking;
 using Dalel.ViewModels.Agency.PackageSchadule;
 using Dalel.ViewModels.Agency.PackageStep;
 using Dalel.ViewModels.Agency.TravelAgencies;
+using Dalel.ViewModels.notification;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Models.Agency;
 using Models.Enums;
+using Models.Notification;
+using Models.Property;
 using Models.Restaurant;
 using Utilities;
 
@@ -28,13 +33,19 @@ namespace Dalel.Services.Agency
         PackageStepRepo PackageStepRepo { get; set; }
         PackageSchaduleRepo PackageSchaduleRepo { get; set; }
         AgencyPromotionRepo AgencyPromotionRepo { get; set; }
+        NotificationRepo NotificationRepo { get; set; }
+     
+        private readonly IPaymentProcessor<PackageBookingPayment> paymentProcessor;
         public AgencyPakageService(AgencyPackageRepo _AgencyPackageRepo,
             AgencyVerificationDocumentRepo _AgencyVerificationDocumentRepo,
              PackagebookingRepo _PackagebookingRepo,
                   TravelAgenciesRepo _TravelAgenciesRepo,
                     PackageStepRepo _PackageStepRepo,
                       PackageSchaduleRepo _PackageSchaduleRepo,
-            AgencyPromotionRepo _AgencyPromotionRepo
+            AgencyPromotionRepo _AgencyPromotionRepo,
+             IPaymentProcessor<PackageBookingPayment> paymentProcessor,
+             NotificationRepo _notificationRepo
+
             )
         {
             AgencyPackageRepo = _AgencyPackageRepo;
@@ -44,6 +55,8 @@ namespace Dalel.Services.Agency
             PackageStepRepo = _PackageStepRepo;
             PackageSchaduleRepo = _PackageSchaduleRepo;
             AgencyPromotionRepo = _AgencyPromotionRepo;
+            this.paymentProcessor = paymentProcessor;
+            NotificationRepo = _notificationRepo;
 
         }
 
@@ -102,17 +115,20 @@ namespace Dalel.Services.Agency
             var _agencyPackage = AgencyPackageRepo.GetList(i => i.Id == id).FirstOrDefault();
             if (_agencyPackage != null)
             {
-                var steps = PackageStepRepo.GetList(s => s.PackageId
-                == _agencyPackage.Id).ToList();
-                foreach (var step in steps)
-                {
-                    PackageStepRepo.Delete(step);
-                }
-                var schedules = PackageSchaduleRepo.GetList(s => s.PackageId == _agencyPackage.Id).ToList();
-                foreach (var sch in schedules)
-                {
-                    PackageSchaduleRepo.Delete(sch);
-                }
+                //var steps = PackageStepRepo.GetList(s => s.PackageId
+                //== _agencyPackage.Id).ToList();
+                //foreach (var step in steps)
+                //{
+                //    PackageStepRepo.Delete(step);
+                //}
+                //var schedules = PackageSchaduleRepo.GetList(s => s.PackageId 
+                //== _agencyPackage.Id).ToList();
+                //foreach (var sch in schedules)
+                //{
+                //    PackageSchaduleRepo.Delete(sch);
+                //}
+                _agencyPackage.PackageSchadules.Clear();
+                _agencyPackage.PackageSteps.Clear();
                 AgencyPackageRepo.Delete(_agencyPackage);
             }
                
@@ -192,52 +208,7 @@ namespace Dalel.Services.Agency
 
         }
 
-        public ServiceResult BookPackage(AddPackagebookingVM booking)
-        {
-            try
-            {
-                var package = AgencyPackageRepo.GetPackageById(booking.PackageId);
-                if (package == null) 
-                    return ServiceResult.FailureResult("package not found.");
-                // shud_id check valid or not
-                // pack avalib for slots
-                // pricepck * reserved preple
-              
-
-            
-
-                booking.BookingStatus = BookingStatus.Panding;
-                //PackagebookingRepo.Add(booking.ToModel(totalPrice));
-                return ServiceResult.SuccessResult("Booking created.");
-            }
-            catch (Exception ex)
-            {
-                return ServiceResult.FailureResult(ex.Message);
-            }
-        }
-
-
-
-        public async Task<ServiceResult> CancelBooking(int bookingId)
-        {
-            try
-            {
-                var booking = PackagebookingRepo.GetBookingById(bookingId);
-                if (booking == null)
-                    return ServiceResult.FailureResult("Booking not found.");
-
-                booking.BookingStatus = BookingStatus.Cancel;
-                PackagebookingRepo.Update(booking);
-                return ServiceResult.SuccessResult("Booking canceled.");
-            }
-            catch (Exception ex)
-            {
-                return ServiceResult.FailureResult(ex.Message);
-            }
-        }
-
-
-
+     
 
 
 
@@ -314,6 +285,130 @@ namespace Dalel.Services.Agency
                 Message = "deleted successfully."
             };
         }
+
+
+
+        public ServiceResult BookPackage(AddPackagebookingVM booking)
+        {
+            try
+            {
+                // shud_id check valid or not
+                var schadule = PackageSchaduleRepo.GetById(booking.PackageSchaduleId);
+
+                if (schadule == null)
+                {
+                    return ServiceResult.FailureResult("Schedule not found ");
+                }
+                if (schadule.Date.Date < DateTime.Now.Date)
+                {
+                    return ServiceResult.FailureResult("Schedule date has already passed.");
+                }
+                if (booking.Date.Date > schadule.Date.Date)
+                {
+                    return ServiceResult.FailureResult("invalide time ");
+                }
+                // pack avalib for slots
+                var alreadyReserved = PackagebookingRepo.GetList(b =>
+                    b.PackageSchaduleId == booking.PackageSchaduleId &&
+                    b.BookingStatus == BookingStatus.PaymentConfirmed)
+                    .Sum(b => (int?)b.ReservedPeople) ?? 0;
+                var availableSlots = schadule.SlotsAvailable - alreadyReserved;
+
+                // pricepck * reserved preple
+                if (booking.ReservedPeople > availableSlots)
+                    return ServiceResult.FailureResult($"Only {availableSlots} slot(s) left on this date.");
+                float unitPrice = schadule.AgencyPackage.Price;
+                float totalprice = unitPrice * booking.ReservedPeople;
+
+
+                //booking.BookingStatus = BookingStatus.Panding;
+                var newBooking = booking.ToModel(totalprice);
+                   PackagebookingRepo.Add(newBooking);
+                return ServiceResult<PackageBooking>.SuccessResult(newBooking, "Booking created.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult(ex.Message);
+            }
+        }
+
+        public (string OwnerId, AgencyPackageDetails Package) GetOwnerIdBySchaduleId(int schaduleId)
+        {
+            var schadule = PackageSchaduleRepo.GetList(s => s.Id == schaduleId).FirstOrDefault();
+            if (schadule == null)
+                throw new Exception("Schadule not found");
+            var package = AgencyPackageRepo.GetList(p => p.Id == schadule.PackageId).FirstOrDefault();
+
+            if (package == null)
+                throw new Exception("Package not found");
+            var agency = TravelAgenciesRepo.GetList(a => a.Id == package.AgencyId)
+                   .FirstOrDefault();
+
+            if (agency == null)
+                throw new Exception("Agency not found");
+            var packageVM = package.ToDetailsModels();
+            return (agency.OwnerId,packageVM);
+        }
+        public ServiceResult showAllBooking(string clientId)
+        {
+            try
+            {
+                var allBooking = PackagebookingRepo.GetList(c => c.ClientId == clientId).
+                  Select(t => t.ToDetailsModels()).ToList();
+
+                return ServiceResult<List<PackagebookingDetails>>.
+                    SuccessResult(allBooking, "booking fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<TravelAgenciesDetails>>.FailureResult("Error: " + ex.Message);
+            }
+        }
+
+
+
+
+        public async Task<ServiceResult> CancelBooking(int bookingId)
+        {
+            try
+            {
+                var booking = PackagebookingRepo.GetBookingById(bookingId);
+                if (booking == null)
+                    return ServiceResult.FailureResult("Booking not found.");
+                if (booking.BookingStatus == BookingStatus.Cancel)
+                    return ServiceResult.FailureResult("Booking already canceled.");
+                booking.BookingStatus = BookingStatus.Cancel;
+                PackagebookingRepo.Update(booking);
+                return ServiceResult.SuccessResult("Booking canceled.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult(ex.Message);
+            }
+        }
+
+
+        public ServiceResult<PackageBooking> GetBookingById(int bookingId)
+        {
+            try
+            {
+                var booking = PackagebookingRepo.GetBookingById(bookingId);
+                if (booking == null)
+                    return ServiceResult<PackageBooking>.
+                        FailureResult("Booking not found.");
+
+
+                return ServiceResult<PackageBooking>.SuccessResult(booking, "Booking fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PackageBooking>.FailureResult(ex.Message);
+            }
+        }
+
+
+
+     
         #endregion
 
 
@@ -344,14 +439,16 @@ namespace Dalel.Services.Agency
                     IsAscending
                 );
 
-                return ServiceResult<PaginationViewModel<TravelAgenciesDetails>>.SuccessResult(
+                return ServiceResult<PaginationViewModel<TravelAgenciesDetails>>.
+                    SuccessResult(
                     data,
                     "TravelAgencies retrieved successfully"
                 );
             }
             catch (Exception ex)
             {
-                return ServiceResult<PaginationViewModel<TravelAgenciesDetails>>.FailureResult(
+                return ServiceResult<PaginationViewModel<TravelAgenciesDetails>>.
+                    FailureResult(
                     $"Error occurred while retrieving TravelAgencies: {ex.Message}"
                 );
             }
@@ -583,7 +680,28 @@ namespace Dalel.Services.Agency
             };
         }
 
+        public float GetOwnerEarnings(string ownerId)
+        {
+           var agencyIds = TravelAgenciesRepo.GetList(a => a.OwnerId == ownerId)
+        .Select(a => a.Id).ToList();
+            if (!agencyIds.Any())
+                return 0;
+            var packageIds = AgencyPackageRepo.
+                GetList(p => agencyIds.Contains(p.AgencyId)).Select(p => p.Id).ToList();
+            if (!packageIds.Any())
+                return 0;
+            var schaduleIds = PackageSchaduleRepo.
+                GetList(s => packageIds.Contains(s.PackageId)).Select(s => s.Id).ToList();
+            if (!schaduleIds.Any())
+                return 0;
+            var confirmedBookings = PackagebookingRepo.GetList(b => schaduleIds.Contains(b.PackageSchaduleId) 
+            && b.BookingStatus == BookingStatus.PaymentConfirmed).ToList();
+            if (!confirmedBookings.Any())
+                return 0;
+            var totalEarnings = confirmedBookings.Sum(b => b.TotalPrice);
 
+            return totalEarnings;
+        }
         #endregion
 
         #region PackageStep
@@ -695,46 +813,126 @@ namespace Dalel.Services.Agency
             };
         }
 
+
+
+        public ServiceResult<PackageSchaduleDetails> GetSchadulebyid(int id)
+        {
+            try
+            {
+                var PackageSchadule = PackageSchaduleRepo.GetList(a => a.Id == id).
+                    Select(t => t.ToDetailsModels()).FirstOrDefault();
+                if (PackageSchadule == null)
+                {
+                    return ServiceResult<PackageSchaduleDetails>.
+                        FailureResult("package not found.");
+                }
+                return ServiceResult<PackageSchaduleDetails>.
+                    SuccessResult(PackageSchadule, "package fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PackageSchaduleDetails>.FailureResult("Error: " + ex.Message);
+            }
+
+        }
+
+        public ServiceResult<List<PackageSchaduleDetails>> GetSchadulesByPackageId(int packageId)
+        {
+            try
+            {
+              
+                var schadules = PackageSchaduleRepo.GetList(s => s.PackageId == 
+                packageId)
+                    .ToList()
+                    .Select(s => s.ToDetailsModels())
+                    .ToList();
+
+                if (schadules == null || !schadules.Any())
+                    return ServiceResult<List<PackageSchaduleDetails>>.FailureResult("No schadules found for this package.");
+
+                return ServiceResult<List<PackageSchaduleDetails>>.SuccessResult(schadules, "Schadules fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<PackageSchaduleDetails>>.FailureResult(ex.Message);
+            }
+        }
+
+     
         #endregion
 
 
 
+            //payment 
+
+        public async Task<ServiceResult> AddPayment(PackageBookingPayment payment)
+        {
+            try
+            {
+                var result = paymentProcessor.ProcessPayment(payment);
+                if (!result.Success)
+                    return result;
+
+                // Booking confirmation logic
+                var booking = PackagebookingRepo.GetBookingById(payment.BookingId);
+                if (booking == null)
+                    return new ServiceResult
+                    {
+                        Success = false,
+                        Message = "Booking not found"
+                    };
+
+                booking.BookingStatus = BookingStatus.PaymentConfirmed;
+                payment.Date = DateTime.Now;
+                PackagebookingRepo.Update(booking);
+
+                return ServiceResult.SuccessResult("Payment done, booking confirmed.");
+
+            }
+            catch (Exception ex)
+            {
+                //return ServiceResult.FailureResult(ex.Message);
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
+            }
+        }
 
 
 
-        //Agency payment 
 
-        //public ServiceResult CreateAgencyPackage(PackageBookingPayment agency)
-        //{
-        //    AgencyPaymentRepo.Add(agency);
-        //    return new ServiceResult
-        //    {
-        //        Success = true,
-        //        Message = "added successfully."
-        //    };
-        //}
-        //public ServiceResult UpdateAgencyPackage(PackageBookingPayment agency)
-        //{
-        //    AgencyPaymentRepo.Update(agency);
-        //    return new ServiceResult
-        //    {
-        //        Success = true,
-        //        Message = "update successfully."
-        //    };
-        //}
-        //public ServiceResult deleteAgencyPackage(int agencyId)
-        //{
-        //    var _agencyPackage = AgencyPaymentRepo.GetList(i => i.Id == agencyId).FirstOrDefault();
-        //    if (_agencyPackage != null)
-        //    {
-        //        AgencyPaymentRepo.Delete(_agencyPackage);
-        //    }
+        //Notification
+        public Notification AddNotification(AddNotificationVM vm)
+        {
+            var notification = vm.ToModel();
+            NotificationRepo.Add(notification);
+            return notification;
+        }
+        public List<NotificationDetailsVM> GetUserNotifications(string userId)
+        {
+            return NotificationRepo.GetList(n => n.UserId == userId && !n.IsRead)
+                                    .OrderByDescending(n => n.CreatedAt)
+                                    .Select(n => n.ToDetailsVM())
+                                    .ToList();
+        }
 
-        //    return new ServiceResult
-        //    {
-        //        Success = true,
-        //        Message = "deleted successfully."
-        //    };
-        //}
+        public void MarkAsRead(int notificationId, string userId)
+        {
+            var notification = NotificationRepo.GetList(n => n.Id == notificationId && n.UserId == userId)
+                                                .FirstOrDefault();
+            if (notification != null)
+            {
+                notification.IsRead = true;
+                NotificationRepo.Update(notification);
+            }
+        }
+
+
+      
+
+
+
     }
 }

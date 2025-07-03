@@ -47,15 +47,17 @@ namespace Dalel.ViewModels
                ImagePath = package.ImagePath,
                 TermsPolicies = package.TermsPolicies,
                 
-                Steps = package.PackageSteps.Select(s => new addPackageStepVM
+                Steps = package.PackageSteps.Select(s => new PackageStepDetails
                 {
+                    Id= s.Id,
                     Name = s.Name,
                     Description = s.Description,
                     Duration = s.Duration,
                     Image = s.Image
                 }).ToList(),
-                Schadules = package.PackageSchadules.Select(s => new addPackageSchaduleVM
+                Schadules = package.PackageSchadules.Select(s => new PackageSchaduleDetails
                 {
+                    Id = s.Id,
                     Date = s.Date,
                     SlotsAvailable = s.SlotsAvailable
                 }).ToList()
