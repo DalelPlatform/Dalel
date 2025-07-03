@@ -1191,6 +1191,10 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
@@ -1205,10 +1209,18 @@ namespace Models.Migrations
                     b.Property<DateTime>("ReviewDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ServiceProviderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("RequestId")
                         .IsUnique();
+
+                    b.HasIndex("ServiceProviderId");
 
                     b.ToTable("ServiceProviderReviews");
                 });
@@ -1306,6 +1318,9 @@ namespace Models.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -3038,11 +3053,27 @@ namespace Models.Migrations
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderReview", b =>
                 {
+                    b.HasOne("Models.User.Client", "Client")
+                        .WithMany("ServiceProviderReviews")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Models.HomeService.ServiceRequest", "ServiceRequest")
                         .WithOne("Review")
                         .HasForeignKey("Models.HomeService.ServiceProviderReview", "RequestId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("Models.User.ServiceProvider", "ServiceProvider")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ServiceProviderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("ServiceProvider");
 
                     b.Navigation("ServiceRequest");
                 });
@@ -3763,6 +3794,8 @@ namespace Models.Migrations
 
                     b.Navigation("RestaurantReservations");
 
+                    b.Navigation("ServiceProviderReviews");
+
                     b.Navigation("ServiceQuaries");
 
                     b.Navigation("ServiceRequests");
@@ -3807,6 +3840,8 @@ namespace Models.Migrations
                     b.Navigation("Projects");
 
                     b.Navigation("Propsals");
+
+                    b.Navigation("Reviews");
 
                     b.Navigation("Schedules");
                 });

@@ -72,6 +72,8 @@ namespace Dalel.Services
                 // Check if the category exists
                 if (!_categoryServicesRepository.GetList(c => c.Id == entity.CategoryServicesId).Any())
                     return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Category not found");
+                vm.Imagepath = uploader.addimage(vm.Image);
+                
 
                 _serviceRequestRepository.Add(entity);
                 _serviceRequestRepository.Save(); // Save changes to the database
