@@ -10,5 +10,6 @@ namespace Dalel.ViewModels.notification
     {
         public string UserId { get; set; }
         public string Message { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

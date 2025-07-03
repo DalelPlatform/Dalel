@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Dalel.Repository.Agency;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.AgencyPackage;
+using Dalel.ViewModels.Agency.AgencyReview;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
 using Dalel.ViewModels.Agency.Packagebooking;
 using Dalel.ViewModels.Agency.PackageSchadule;
@@ -34,6 +35,7 @@ namespace Dalel.Services.Agency
         PackageSchaduleRepo PackageSchaduleRepo { get; set; }
         AgencyPromotionRepo AgencyPromotionRepo { get; set; }
         NotificationRepo NotificationRepo { get; set; }
+        PackageBookingReviewRepo PackageBookingReviewRepo { get; set; }
      
         private readonly IPaymentProcessor<PackageBookingPayment> paymentProcessor;
         public AgencyPakageService(AgencyPackageRepo _AgencyPackageRepo,
@@ -44,7 +46,8 @@ namespace Dalel.Services.Agency
                       PackageSchaduleRepo _PackageSchaduleRepo,
             AgencyPromotionRepo _AgencyPromotionRepo,
              IPaymentProcessor<PackageBookingPayment> paymentProcessor,
-             NotificationRepo _notificationRepo
+             NotificationRepo _notificationRepo,
+              PackageBookingReviewRepo _PackageBookingReviewRepo
 
             )
         {
@@ -57,6 +60,7 @@ namespace Dalel.Services.Agency
             AgencyPromotionRepo = _AgencyPromotionRepo;
             this.paymentProcessor = paymentProcessor;
             NotificationRepo = _notificationRepo;
+           PackageBookingReviewRepo = _PackageBookingReviewRepo;
 
         }
 
@@ -912,10 +916,16 @@ namespace Dalel.Services.Agency
         }
         public List<NotificationDetailsVM> GetUserNotifications(string userId)
         {
-            return NotificationRepo.GetList(n => n.UserId == userId && !n.IsRead)
-                                    .OrderByDescending(n => n.CreatedAt)
-                                    .Select(n => n.ToDetailsVM())
-                                    .ToList();
+
+            var notifications = NotificationRepo.GetList(n => n.UserId == userId && !n.IsRead);
+
+            if (notifications == null)
+                return new List<NotificationDetailsVM>();
+            Console.WriteLine($"Notifications Count: {notifications}");
+
+            return notifications.OrderByDescending(n => n.CreatedAt)
+                                .Select(n => n.ToDetailsVM())
+                                .ToList();
         }
 
         public void MarkAsRead(int notificationId, string userId)
@@ -930,9 +940,43 @@ namespace Dalel.Services.Agency
         }
 
 
-      
+        //Hangfire 
+
+        public async Task SendReviewNotifications()
+        {
+            var finishedBookings =PackagebookingRepo.GetList(
+                b=>b.BookingStatus == BookingStatus.PaymentConfirmed&&
+                b.PackageSchadule.Date.Date <DateTime.Now.Date &&
+                b.Review ==null
+                ).ToList();
+            foreach (var booking in finishedBookings)
+            {
+                var notification = new AddNotificationVM
+                {
+                    UserId = booking.ClientId,
+                    Message = $"يرجى تقييم الباكج: {booking.PackageSchadule.AgencyPackage.Name}",
+                    CreatedAt = DateTime.Now
+                };
+                AddNotification(notification);
+            }
+
+        }
 
 
+        public ServiceResult AddPackageReview(AddAgencyReview reviewVM)
+        {
+
+            var booking = PackagebookingRepo.GetBookingById(reviewVM.BookingId);
+            if (booking == null)
+                return ServiceResult.FailureResult("Booking not found.");
+            if (booking.PackageSchadule.Date > DateTime.Now)
+                return ServiceResult.FailureResult("You can only review after the package date is finished.");
+            if (booking.Review != null)
+                return ServiceResult.FailureResult("You have already reviewed this booking.");
+            PackageBookingReviewRepo.Add(reviewVM.ToModel());
+            return ServiceResult.SuccessResult("Review added successfully.");
+
+        }
 
     }
 }

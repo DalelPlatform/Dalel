@@ -27,6 +27,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Dalel.API.Areas.Agency.Hup;
 using Dalel.API.Areas.Agency.UserIdProviders;
 using Microsoft.AspNetCore.SignalR;
+using Hangfire;
 
 
 
@@ -85,7 +86,13 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 builder.Services.AddHttpClient();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
+
+//Hangfire 
+
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DalelDB")));
+builder.Services.AddHangfireServer();
 
 
 //Add srilog logging
@@ -276,6 +283,8 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHangfireDashboard();
+RecurringJob.AddOrUpdate<AgencyPakageService>("SendReviewNotificationsJob", x => x.SendReviewNotifications(), Cron.Daily);
 // Add this to your Program.cs
 app.MapHub<NotificationHub>("/notificationhub");
 app.MapControllerRoute(
