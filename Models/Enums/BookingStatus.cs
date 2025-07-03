@@ -2,11 +2,12 @@
 {
     public enum BookingStatus
     {
-        Panding,
-        Confirmed,
-        Rejected,
-        Cancel ,////recend added
+        Panding, // Client Booked but owner still waiting
+        Confirmed, // Owner confirmed booking
+        Rejected, //Owner reject because problems in property
+        Cancel ,// Client withdraw from booking
         All,
-        PaymentConfirmed
+        Done, // Client finished his time
+        PaymentConfirmed // Client payed to owner account
     }
 }

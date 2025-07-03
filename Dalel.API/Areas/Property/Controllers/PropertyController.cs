@@ -46,6 +46,14 @@ namespace Dalel.API.Areas
                 return new JsonResult(result);
             return new JsonResult(result);
         }
+        [HttpGet("{id}")]
+        public IActionResult GetProperty(int id)
+        {
+            var result =  propertyService.GetPropertyByID(id);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
         [HttpPost("Property")]
         [Authorize(Roles = "PropertyOwner")]
@@ -68,7 +76,7 @@ namespace Dalel.API.Areas
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("delete-property/{id}")]
         public async Task<IActionResult> DeleteProperty(int id)
         {
             var result = await propertyService.DeleteProperty(id);
@@ -84,12 +92,12 @@ namespace Dalel.API.Areas
             booking.ClientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result =  propertyService.BookProperty(booking);
             if (!result.Success)
-                return new JsonResult(result.Message);
+                return new JsonResult(result);
             return new JsonResult(result);
         }
 
-        [HttpDelete("{bookingId}")]
-        [Authorize("Client")]
+        [HttpDelete("cancel-booking/{bookingId}")]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> CancelBooking(int bookingId)
         {
             var result = await propertyService.CancelBooking(bookingId);

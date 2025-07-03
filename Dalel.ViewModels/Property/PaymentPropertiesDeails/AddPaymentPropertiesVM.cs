@@ -12,7 +12,7 @@ namespace Dalel.ViewModels.Property.PaymentPropertiesDeails
     {
         [Required(ErrorMessage = "Amount is required.")]
         [Range(0.01, float.MaxValue, ErrorMessage = "Amount must be greater than 0.")]
-        public float Amount { get; set; }
+        public float Amount { get; set; }   
 
         [Required(ErrorMessage = "Payment method is required.")]
         public PaymentMethod PaymentMethod { get; set; }

@@ -5,8 +5,9 @@
         Pending = 1,
         Accepted = 2,
         Rejected = 3,
-        Completed = 4,
-        Cancelled = 5
+        InProgress = 4,
+        Completed = 5,
+        Cancelled = 6
 
     }
 }

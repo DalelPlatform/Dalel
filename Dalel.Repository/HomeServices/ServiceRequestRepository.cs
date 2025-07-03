@@ -60,6 +60,11 @@ namespace Dalel.Repository
             return GetList(p => p.Status == RequestStatus.Accepted).
                 Select(req => req.ToDetailsViewModel());
         }
+        public IQueryable<ServiceRequestDetailsVM> GetInProgressRequests()
+        {
+            return GetList(p => p.Status == RequestStatus.InProgress).
+                Select(req => req.ToDetailsViewModel());
+        }
         public IQueryable<ServiceRequestDetailsVM> GetRejectedRequests()
         {
             return GetList(p => p.Status == RequestStatus.Rejected).

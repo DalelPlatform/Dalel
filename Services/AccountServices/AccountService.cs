@@ -132,6 +132,7 @@ namespace Dalel.Services
             return user != null;
         }
 
+
         public bool IsNationalIdTaken(string nationalId)
         {
             var user =  appUserRepository.FindByNationalId(nationalId);
