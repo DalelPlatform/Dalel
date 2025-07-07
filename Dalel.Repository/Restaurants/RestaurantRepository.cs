@@ -66,7 +66,8 @@ namespace Dalel.Repository
                 predicate = predicate.And(r => r.NumberOfRooms == NumberOfRooms);
             }
 
-            predicate = predicate.And(r => !r.IsDeleted);
+            predicate = predicate.And(r => !r.IsDeleted && r.VerificationStatus==VerificationStatus.Confirmed);
+
 
             Expression<Func<Restaurant, object>> orderBy = sortBy.ToLower() switch
             {
@@ -75,6 +76,8 @@ namespace Dalel.Repository
                 "Region" => m => m.Region,
                 _ => m => m.Name
             };
+
+            
 
             return  Search(predicate, orderBy, m => m.ToDetailsViewModel(), descending, pageSize, pageIndex);
         }

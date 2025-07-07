@@ -184,12 +184,13 @@ namespace Dalel.Services
         #region RestaurantMeal
 
         public ServiceResult<PaginationViewModel<RestaurantMenuItemDetailsVM>> SearchMeals(
-            string search = "",
+            string searchText = "",
             float? minPrice = null,
             float? maxPrice = null,
-            AvaliabilityStatus? avaliabilityStatus = null,
-            FoodCategory? foodCategory = null,
-            SizeOfPiece? sizeOfPiece = null,
+            List<AvaliabilityStatus>? avaliabilityStatus = null,
+            List<FoodCategory>? foodCategory = null,
+            List<SizeOfPiece>? sizeOfPiece = null,
+            //List<RestaurantType>? RestaurantType = null,
             double? duration = null,
             string sortBy = "Name",
             bool descending = false,
@@ -199,17 +200,19 @@ namespace Dalel.Services
             try
             {
                 var data = _menuItemRepository.SearchMeals(
-                    search,
+                    searchText,
                     minPrice,
                     maxPrice,
                     avaliabilityStatus,
                     foodCategory,
                     sizeOfPiece,
+                    //RestaurantType,
                     duration,
                     sortBy,
                     descending,
                     pageSize,
-                    pageIndex);
+                    pageIndex
+                    );
 
                 return ServiceResult<PaginationViewModel<RestaurantMenuItemDetailsVM>>.SuccessResult(
                     data,
@@ -312,6 +315,38 @@ namespace Dalel.Services
                 return ServiceResult<RestaurantMenuItemDetailsVM>.FailureResult($"Error retrieving meal: {ex.Message}");
             }
         }
+
+
+
+        public ServiceResult<List<RestaurantMenuItemDetailsVM>> GetAllMeals()
+        {
+            try
+            {
+                var meals = _menuItemRepository.GetMeals();
+                return ServiceResult<List<RestaurantMenuItemDetailsVM>>.SuccessResult(meals, "Meals loaded successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<RestaurantMenuItemDetailsVM>>.FailureResult($"Failed to load meals: {ex.Message}");
+            }
+        }
+
+
+
+        public ServiceResult<List<RestaurantMenuItemDetailsVM>> GetMealType(FoodCategory category)
+        {
+            try
+            {
+                var meals = _menuItemRepository.GetMealType(category);
+                return ServiceResult<List<RestaurantMenuItemDetailsVM>>.SuccessResult(meals, "Meals loaded successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<RestaurantMenuItemDetailsVM>>.FailureResult($"Failed to load meals: {ex.Message}");
+            }
+        }
+
+
         #endregion
 
         #region RestaurantOrderItem

@@ -11,6 +11,7 @@ namespace Models.Restaurant
         public string Name { get; set; }
         public string Description { get; set; }
         public float Price { get; set; }
+        public int? Discount { get; set; }
         public AvaliabilityStatus AvailabilityStatus { get; set; }
         public string DietaryTags { get; set; }
         public FoodCategory FoodCategory {  get; set; } // convert to int
@@ -22,6 +23,7 @@ namespace Models.Restaurant
         public virtual Restaurant Restaurant { get; set; }
         public virtual ICollection<RestaurantMenuItemImage> RestaurantMenuItemImages { get; set; }
         public virtual ICollection<RestaurantOrderItem> RestaurantOrderItems { get; set; }
+        public virtual ICollection<RestaurantCartItem> RestaurautCartItems { get; set; }
     }
 
     public class RestaurantMenuItemConfiguration : IEntityTypeConfiguration<RestaurantMenuItem>

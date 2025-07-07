@@ -103,10 +103,12 @@ namespace Models
         public DbSet<RestaurantOrderItem> RestaurantOrderItems { get; set; }
         public DbSet<RestaurantReservation> RestaurantReservations { get; set; }
         public DbSet<ReviewRestaurantOrder> ReviewRestaurantOrders { get; set; }
+        public DbSet<RestaurantCartItem> RestaurantCartItems { get; set; }
+
 
         //
 
-      
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // User & Client Configuration

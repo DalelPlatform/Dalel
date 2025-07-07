@@ -18,6 +18,8 @@ namespace Models.User
         //Relations 
 
         #region Restaurant
+        public virtual ICollection<RestaurantCartItem> RestaurautCartItems { get; set; }
+
         public virtual ICollection<RestaurantOrder> RestaurantOrders { get; set; }
         public virtual ICollection<RestaurantReservation> RestaurantReservations { get; set; }
         #endregion

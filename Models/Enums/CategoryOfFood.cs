@@ -2,9 +2,12 @@
 {
     public enum FoodCategory
     {
-        Drink ,
+        Appetizer,
+        MainCourse,
+        Dessert,
+        Beverage,
         Snacks,
-        Meal,
+        MeatSeafood,
         Other
     }
 }
