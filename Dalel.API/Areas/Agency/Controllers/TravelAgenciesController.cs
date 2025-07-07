@@ -105,5 +105,22 @@ namespace Dalel.API.Areas.Agency.Controllers
             var earnings = _pakageService.GetOwnerEarnings(ownerId);
             return new JsonResult(earnings);
         }
+        [HttpGet("GetOwnerTotalReviews")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
+        public IActionResult GetOwnerTotalReviews()
+        {
+            var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var totalReviews = _pakageService.GetOwnerTotalReviews(ownerId);
+            var averageRating = _pakageService.GetOwnerAverageRating(ownerId);
+
+            var result = new
+            {
+                TotalReviews = totalReviews,
+                AverageRating = averageRating
+            };
+
+            return new JsonResult(result);
+        }
+
     }
 }

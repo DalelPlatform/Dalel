@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Models.Agency;
 using Models.Enums;
+using Models.Migrations;
 using Models.Notification;
 using Models.Property;
 using Models.Restaurant;
@@ -706,6 +707,67 @@ namespace Dalel.Services.Agency
 
             return totalEarnings;
         }
+        public int GetOwnerTotalReviews(string ownerId)
+        {
+            var agencyIds = TravelAgenciesRepo.GetList(a => a.OwnerId == ownerId)
+                .Select(a => a.Id).ToList();
+
+            if (!agencyIds.Any())
+                return 0;
+
+            var packageIds = AgencyPackageRepo.GetList(p => agencyIds.Contains(p.AgencyId))
+                .Select(p => p.Id).ToList();
+
+            if (!packageIds.Any())
+                return 0;
+
+            var schaduleIds = PackageSchaduleRepo.GetList(s => packageIds.Contains(s.PackageId))
+                .Select(s => s.Id).ToList();
+
+            if (!schaduleIds.Any())
+                return 0;
+
+            var bookings = PackagebookingRepo.GetList(b => schaduleIds.Contains(b.PackageSchaduleId))
+                .Select(b => b.Id).ToList();
+
+            if (!bookings.Any())
+                return 0;
+
+            var totalReviews = PackageBookingReviewRepo.GetList(r => bookings.Contains(r.BookingId)).Count();
+
+            return totalReviews;
+        }
+        public double GetOwnerAverageRating(string ownerId)
+        {
+            var agencyIds = TravelAgenciesRepo.GetList(a => a.OwnerId == ownerId)
+                                              .Select(a => a.Id).ToList();
+            if (!agencyIds.Any())
+                return 0;
+
+            var packageIds = AgencyPackageRepo.GetList(p => agencyIds.Contains(p.AgencyId))
+                                              .Select(p => p.Id).ToList();
+            if (!packageIds.Any())
+                return 0;
+
+            var schaduleIds = PackageSchaduleRepo.GetList(s => packageIds.Contains(s.PackageId))
+                                                 .Select(s => s.Id).ToList();
+            if (!schaduleIds.Any())
+                return 0;
+
+            var bookingIds = PackagebookingRepo.GetList(b => schaduleIds.Contains(b.PackageSchaduleId))
+                                               .Select(b => b.Id).ToList();
+            if (!bookingIds.Any())
+                return 0;
+
+            var ratings = PackageBookingReviewRepo.GetList(r => bookingIds.Contains(r.BookingId))
+                                                  .Select(r => r.Rating);
+
+            if (!ratings.Any())
+                return 0;
+
+            return Math.Round(ratings.Average(), 1);
+        }
+
         #endregion
 
         #region PackageStep
@@ -946,29 +1008,35 @@ namespace Dalel.Services.Agency
         {
             var finishedBookings =PackagebookingRepo.GetList(
                 b=>b.BookingStatus == BookingStatus.PaymentConfirmed&&
-                b.PackageSchadule.Date.Date <DateTime.Now.Date &&
-                b.Review ==null
+              b.PackageSchadule.Date < DateTime.UtcNow &&
+                b.Review == null
                 ).ToList();
+            Console.WriteLine("b.PackageSchadule.Date.Date ", finishedBookings);
             foreach (var booking in finishedBookings)
             {
                 var notification = new AddNotificationVM
                 {
                     UserId = booking.ClientId,
-                    Message = $"يرجى تقييم الباكج: {booking.PackageSchadule.AgencyPackage.Name}",
+                    Message = $"please rate package: " +
+                    $"{booking.PackageSchadule.AgencyPackage.Name} | BookingId:{booking.Id}",
                     CreatedAt = DateTime.Now
                 };
                 AddNotification(notification);
-            }
 
+            }
+            Console.WriteLine("notification from back");
         }
 
 
-        public ServiceResult AddPackageReview(AddAgencyReview reviewVM)
+        public ServiceResult AddPackageReview(AddAgencyReview reviewVM, string userId)
         {
 
             var booking = PackagebookingRepo.GetBookingById(reviewVM.BookingId);
             if (booking == null)
                 return ServiceResult.FailureResult("Booking not found.");
+            if (booking.ClientId != userId)
+                return ServiceResult.FailureResult("You can only review your own bookings.");
+
             if (booking.PackageSchadule.Date > DateTime.Now)
                 return ServiceResult.FailureResult("You can only review after the package date is finished.");
             if (booking.Review != null)
@@ -976,6 +1044,11 @@ namespace Dalel.Services.Agency
             PackageBookingReviewRepo.Add(reviewVM.ToModel());
             return ServiceResult.SuccessResult("Review added successfully.");
 
+        }
+
+        public List<AgencyReviewDetails> getPackageReviews(int packageId)
+        {
+            return PackageBookingReviewRepo.GetReviewsByPackageId(packageId).ToList();
         }
 
     }

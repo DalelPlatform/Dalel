@@ -19,7 +19,7 @@ namespace Dalel.API.Areas.Agency.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var notifications = _pakageService.GetUserNotifications(userId);
-            return new JsonResult(notifications); ;
+            return new JsonResult(notifications);
         }
         [HttpPost("{id}/mark-as-read")]
         public IActionResult MarkAsRead(int id)

@@ -8,7 +8,7 @@ namespace Dalel.ViewModels.Agency.AgencyReview
 {
     public class AddAgencyReview
     {
-        public DateTime date { get; set; }
+      
         public int Rating { get; set; }
         public string Comment { get; set; }
         public int BookingId { get; set; }

@@ -283,8 +283,9 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHangfireDashboard();
-RecurringJob.AddOrUpdate<AgencyPakageService>("SendReviewNotificationsJob", x => x.SendReviewNotifications(), Cron.Daily);
+app.UseHangfireDashboard("/hungfire");
+RecurringJob.AddOrUpdate<AgencyPakageService>("SendReviewNotificationsJob", 
+    x => x.SendReviewNotifications(), Cron.Daily);
 // Add this to your Program.cs
 app.MapHub<NotificationHub>("/notificationhub");
 app.MapControllerRoute(
