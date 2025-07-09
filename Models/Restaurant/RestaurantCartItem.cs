@@ -23,6 +23,8 @@ namespace Models.Restaurant
         public int RestaurantMenuItemId { get; set; } 
 
         public virtual RestaurantMenuItem RestaurantMenuItem { get; set; }
+
+        public bool IsDeleted { get; set; } = false; // default value is false, not deleted
     }
 
     public class RestaurautCartItemConfiguration : IEntityTypeConfiguration<RestaurantCartItem>

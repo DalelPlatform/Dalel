@@ -21,9 +21,11 @@ namespace Dalel.Services
         private readonly ReviewRestaurantOrderRepository _reviewRestaurantOrderRepository;
         private readonly PaymentRestaurantOrderReopsitory _paymentRestaurantOrderReopsitory;
         private readonly ClientRepository _clientRepository;
+        private readonly RestaurantCartItemRepository _restaurantCartItemRepository;
 
         public RestaurantService(
             RestaurantRepository restaurantRepo,
+            RestaurantCartItemRepository restaurantCartItemRepository,
             RestaurantMenuItemRepository menuItemRepository,
             RestaurantReservationRepository restaurantReservationRepository,
             RestaurantOrderItemRepository restaurantOrderItemRepository,
@@ -39,6 +41,7 @@ namespace Dalel.Services
             _restaurantOrderItemRepository = restaurantOrderItemRepository;
             _restaurantOrderRepository = restaurantOrderRepository;
             _reviewRestaurantOrderRepository = reviewRestaurantOrderRepository;
+            _restaurantCartItemRepository = restaurantCartItemRepository;
             _paymentRestaurantOrderReopsitory = paymentRestaurantOrderReopsitory;
             _clientRepository = clientRepository;
 
@@ -348,6 +351,74 @@ namespace Dalel.Services
 
 
         #endregion
+
+        #region RestaurantCartItem
+        public ServiceResult AddCartItem(AddRestaurantCartItemVM cartVM)
+        {
+            try
+            {
+                var cartItem = cartVM.ToModel();
+                _restaurantCartItemRepository.Add(cartItem);
+                return ServiceResult.SuccessResult("Meal added successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+        public ServiceResult UpdateCartItem(int id, AddRestaurantCartItemVM cartVM)
+        {
+            try
+            {
+                var oldMeal = _restaurantCartItemRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if (oldMeal == null)
+                {
+                    return ServiceResult.FailureResult("Cart item not found.");
+                }
+                
+                _restaurantCartItemRepository.Update(cartVM.ToEditModel(oldMeal));
+                return ServiceResult.SuccessResult("Meal Updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult($"Error: {ex.Message}");
+            }
+        }
+
+
+        public ServiceResult DeleteCartItem(int id) // Delete cart item by id
+        {
+            try
+            {
+                var cartItem = _restaurantCartItemRepository.GetList(m => m.Id == id).FirstOrDefault();
+                if (cartItem == null)
+                {
+                    return ServiceResult.FailureResult("Cart item not found.");
+                }
+                _restaurantCartItemRepository.Delete(cartItem);
+                return ServiceResult.SuccessResult("Meal Deleted Successfully!.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult($"Error : {ex.Message}");
+            }
+        }
+
+        public ServiceResult<List<RestauranCartItemDetailsVM>> GetCartItemsByClientId(string clientId)
+        {
+            try
+            {
+                var cartItems = _restaurantCartItemRepository.GetCartItemsByClientId(clientId);
+                return ServiceResult<List<RestauranCartItemDetailsVM>>.SuccessResult(cartItems, "Cart items retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<RestauranCartItemDetailsVM>>.FailureResult($"Failed to retrieve cart items: {ex.Message}");
+            }
+        }
+        #endregion
+
 
         #region RestaurantOrderItem
         public ServiceResult AddOrderItem(AddRestaurantOrderItemVM orderVM)
