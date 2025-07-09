@@ -20,9 +20,9 @@ namespace Dalel.API.Areas
 
         [HttpPost("create")]
         //[Authorize(Roles = "Client")]
-        public IActionResult CreateReview([FromForm] AddServiceProviderReviewVM model, ServiceProviderReview review)
+        public IActionResult CreateReview([FromForm] AddServiceProviderReviewVM model)
         {
-            var result = _homeServiceService.CreateReview(model, review);
+            var result = _homeServiceService.CreateReview(model);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);

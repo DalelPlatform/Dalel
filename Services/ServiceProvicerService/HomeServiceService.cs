@@ -951,6 +951,26 @@ namespace Dalel.Services
                 return ServiceResult.FailureResult("Error: " + ex.Message);
             }
         }
+        public ServiceResult CompleteProposal(int proposalId)
+        {
+            try
+            {
+                if (proposalId <= 0)
+                    return ServiceResult.FailureResult("Proposal ID must be greater than zero.");
+                var proposal = _serviceProviderProposalRepository.GetProposalWithDetails(proposalId);
+                if (proposal == null)
+                    return ServiceResult.FailureResult("Proposal not found.");
+                if (proposal.Status != ProposalStatus.Accepted)
+                    return ServiceResult.FailureResult("Proposal must be accepted before it can be completed.");
+                _serviceProviderProposalRepository.CompleteProposal(proposalId);
+                _serviceRequestRepository.UpdaterequestsStatus(proposal.ServiceRequestId, RequestStatus.Completed);
+                return ServiceResult.SuccessResult("Proposal completed successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult("Error: " + ex.Message);
+            }
+        }
 
         #endregion
 
@@ -1370,24 +1390,25 @@ namespace Dalel.Services
 
         #region ServiceProviderReview
 
-        public ServiceResult<ServiceProviderReviewDetailsVM> CreateReview([FromForm] AddServiceProviderReviewVM vm, ServiceProviderReview review)
+        public ServiceResult<ServiceProviderReviewDetailsVM> CreateReview([FromForm] AddServiceProviderReviewVM vm)
         {
             try
             {
-                var ServiceProviderReviewDetails = vm.ToModel();
-                if (ServiceProviderReviewDetails.Rating < 1 || ServiceProviderReviewDetails.Rating > 5)
+                var review = vm.ToModel();
+                if (review.Rating < 1 || review.Rating > 5)
                     return ServiceResult<ServiceProviderReviewDetailsVM>.FailureResult("Rating must be between 1 and 5.");
-                if (string.IsNullOrEmpty(ServiceProviderReviewDetails.Review))
+                if (string.IsNullOrEmpty(review.Review))
                     return ServiceResult<ServiceProviderReviewDetailsVM>.FailureResult("Review text cannot be null or empty.");
 
-                _serviceProviderReviewRepository.AddReview(ServiceProviderReviewDetails);
-                return ServiceResult<ServiceProviderReviewDetailsVM>.SuccessResult(ServiceProviderReviewDetails.ToDetailsModel(), "Review created successfully.");
+                _serviceProviderReviewRepository.AddReview(review);
+                return ServiceResult<ServiceProviderReviewDetailsVM>.SuccessResult(review.ToDetailsModel(), "Review created successfully.");
             }
             catch (Exception ex)
             {
                 return ServiceResult<ServiceProviderReviewDetailsVM>.FailureResult("Error: " + ex.Message);
             }
         }
+
 
         public ServiceResult<ServiceProviderReviewDetailsVM> GetReviewByRequest(int requestId)
         {
@@ -1407,6 +1428,9 @@ namespace Dalel.Services
                 return ServiceResult<ServiceProviderReviewDetailsVM>.FailureResult("Error: " + ex.Message);
             }
         }
+
+
+
 
         public ServiceResult<PaginationViewModel<ServiceProviderReviewDetailsVM>> GetReviewsByProvider(
             string providerId, int pageSize = 5, int pageNumber = 1)

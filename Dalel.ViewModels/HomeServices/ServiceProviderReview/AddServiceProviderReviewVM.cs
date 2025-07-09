@@ -9,6 +9,7 @@ namespace Dalel.ViewModels
 {
     public class AddServiceProviderReviewVM
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "Request ID is required.")]
         public int RequestId { get; set; }
         [Required(ErrorMessage = "Service Provider ID is required.")]

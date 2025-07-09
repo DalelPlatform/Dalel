@@ -73,6 +73,15 @@ namespace Dalel.Repository
             }
         }
 
+        public void CompleteProposal(int proposalId)
+        {
+            var proposal = base.Get(p => p.Id == proposalId).FirstOrDefault();
+            if (proposal != null && proposal.Status == ProposalStatus.Accepted)
+            {
+                proposal.Status = ProposalStatus.Completed;
+                base.Save();
+            }
+        }
         public void AddProposal(ServiceProviderPropsal proposal)
         {
             base.Add(proposal);

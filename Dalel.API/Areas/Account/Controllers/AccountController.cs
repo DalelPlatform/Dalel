@@ -27,13 +27,23 @@ namespace Dalel.API.Controllers
 
 
         [HttpGet("MyAccount")]
+        [Authorize(Roles = "Client,ServiceProvider,Admin")]
         public IActionResult getMyAccount()
         {
             string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = accountService.GetUserById(id);
             if (result == null)
                 return new JsonResult(new { Success = false, Message = "User not found" });
-            return new JsonResult(new { Success = true, Data = result, Message = "User retrieved successfully" });
+            return new JsonResult(new { Success = true, 
+                Data = new
+                {
+                    result.Result.Id,
+                    result.Result.UserName,
+                    result.Result.Email,
+                    result.Result.PhoneNumber,
+                    result.Result.ProfileImg,
+                },
+                    Message = "User retrieved successfully" });
         }
 
         [HttpGet("GetUserById")]
