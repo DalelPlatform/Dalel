@@ -288,6 +288,7 @@ RecurringJob.AddOrUpdate<AgencyPakageService>("SendReviewNotificationsJob",
     x => x.SendReviewNotifications(), Cron.Daily);
 // Add this to your Program.cs
 app.MapHub<NotificationHub>("/notificationhub");
+app.MapHub<NotificationHub>("/NotificationServiceHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=index}");

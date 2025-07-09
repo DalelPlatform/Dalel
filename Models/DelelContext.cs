@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Models.Agency;
+using Models.Driver;
 using Models.HomeChef;
+using Models.HomeService;
+using Models.Hotel;
+using Models.Notification;
 using Models.Property;
 using Models.Restaurant;
 using Models.User;
-using Models.HomeService;
-using Models.Agency;
-using Models.Driver;
-using Models.Hotel;
 
 namespace Models
 {
@@ -66,6 +67,8 @@ namespace Models
         public DbSet<ServiceQuaries> ServiceQuaries { get; set; }
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
         public DbSet<ServiceProviderProjectImages> ServiceProviderProjectImages { get; set; }
+        public DbSet<ServicesNotifications> ServicesNotifications { get; set; }
+
 
         //Hotel
         public DbSet<BookingGuestInRoom> BookingGuestInRooms { get; set; }
@@ -163,6 +166,7 @@ namespace Models
             builder.ApplyConfiguration(new ServiceQuariesConfiguration());
             builder.ApplyConfiguration(new ServiceRequestConfiguration());
             builder.ApplyConfiguration(new ServiceProviderProjectImagesConfiguration());
+            builder.ApplyConfiguration(new ServicesNotificationsConfiguration());
             #endregion
 
             #region Hotel
