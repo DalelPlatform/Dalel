@@ -3,7 +3,9 @@
     public enum AvaliabilityStatus
     {
         Available,
-        Booked,
-        NotAvailable
+        OutOfStock,
+        SoldOut,
+        ComingSoon,
+        Seasonal
     }
 }

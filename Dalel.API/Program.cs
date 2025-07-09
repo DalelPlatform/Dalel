@@ -158,6 +158,9 @@ builder.Services.AddScoped<RestaurantReservationRepository>();
 builder.Services.AddScoped<RestaurantOrderItemRepository>();
 builder.Services.AddScoped<PaymentRestaurantOrderReopsitory>();
 builder.Services.AddScoped<ReviewRestaurantOrderRepository>();
+builder.Services.AddScoped<RestaurantCartItemRepository>();
+
+
 #endregion
 
 #region HomeChef

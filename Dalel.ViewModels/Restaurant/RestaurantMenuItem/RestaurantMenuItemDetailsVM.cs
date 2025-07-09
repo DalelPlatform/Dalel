@@ -19,7 +19,13 @@ namespace Dalel.ViewModels
         public SizeOfPiece PieceSize { get; set; }
         public string DietaryTags { get; set; }
 
+        
+        public double? Duration { get; set; }
+
         public string RestaurantName { get; set; }
+
+        public RestaurantType? RestaurantType { get; set; }
+        
 
         public List<string> Images {  get; set; }
 

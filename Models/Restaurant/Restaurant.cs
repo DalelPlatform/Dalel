@@ -32,6 +32,8 @@ namespace Models.Restaurant
 
         public float CancelationCharges     { get; set; }
 
+        //public RestaurantType? RestaurantType { get; set; }
+
         public VerificationStatus VerificationStatus { get; set; } //int 
 
         public DateTime ModificationDate { get; set; }
