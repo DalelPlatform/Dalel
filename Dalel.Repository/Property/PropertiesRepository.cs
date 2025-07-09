@@ -108,9 +108,9 @@ namespace Dalel.Repository
                 return true;
             }
         }
-        public IQueryable<PropertiesDetailsVM> GetPropertiesByOwner(string ownerId)
+        public List<PropertiesDetailsVM> GetPropertiesByOwner(string ownerId)
         {
-            return GetList(p => p.OwnerId == ownerId && !p.IsDeleted).Select(p => p.ToDetailsViewModel());
+            return GetList(p => p.OwnerId == ownerId && !p.IsDeleted).Select(p => p.ToDetailsViewModel()).ToList();
         }
         public IQueryable<PropertiesDetailsVM> GetPropertiesForRent()
         {
