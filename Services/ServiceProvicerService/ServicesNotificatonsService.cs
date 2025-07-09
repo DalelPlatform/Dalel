@@ -1,53 +1,63 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Dalel.Repository.HomeServices;
+using Dalel.ViewModels.HomeServices.ServiceNotification;
+using Dalel.ViewModels.notification;
+using Microsoft.AspNetCore.SignalR;
+using Models;
+using Models.Migrations;
 using Models.Notification;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models;
 
 namespace Dalel.Services
 {
-
-
-    public interface INotificationService
+    public class NotificationService 
     {
-        Task SendNotificationAsync(string toUserId, string message, int requestId, string fromUserId, bool isToClient);
-    }
+        private readonly ServiceNotificationRepository _repo;
+        private readonly IHubContext<NotificationServiceHub> _hub;
 
-    public class NotificationService : INotificationService
-    {
-        private readonly DelelContext _context;
-        private readonly IHubContext<NotificationServiceHub> _hubContext;
-
-        public NotificationService(DelelContext context, IHubContext<NotificationServiceHub> hubContext)
+        public NotificationService(ServiceNotificationRepository repo, IHubContext<NotificationServiceHub> hub)
         {
-            _context = context;
-            _hubContext = hubContext;
+            _repo = repo;
+            _hub = hub;
         }
 
-        public async Task SendNotificationAsync(string toUserId, string message, int requestId, string fromUserId, bool isToClient)
+        public async Task SendNotificationAsync(AddNotificationVM model)
         {
             var notification = new ServicesNotifications
             {
-                Message = message,
+                Message = model.Message,
                 CreatedAt = DateTime.Now,
-                RequestId = requestId,
-                ClientId = isToClient ? toUserId : fromUserId,
-                ServiceProviderId = isToClient ? fromUserId : toUserId
+                RequestId = model.RequestId,
+                ClientId = model.IsToClient ? model.ToUserId : model.FromUserId,
+                ServiceProviderId = model.IsToClient ? model.FromUserId : model.ToUserId
             };
 
-            _context.ServicesNotifications.Add(notification);
-            await _context.SaveChangesAsync();
+            await _repo.AddAsync(notification);
 
-            await _hubContext.Clients.User(toUserId).SendAsync("ReceiveNotification", new
+            await _hub.Clients.User(model.ToUserId).SendAsync("ReceiveNotification", new
             {
-                message = message,
-                requestId = requestId,
+                message = model.Message,
+                requestId = model.RequestId,
                 createdAt = notification.CreatedAt.ToString("g")
             });
         }
+
+        public async Task<List<ServiceNotificationDetailsVM>> GetNotificationsAsync(string userId)
+        {
+            var list = await _repo.GetUserNotificationsAsync(userId);
+            return list.Select(n => new ServiceNotificationDetailsVM
+            {
+                Id = n.Id,
+                Message = n.Message,
+                CreatedAt = n.CreatedAt,
+                UserType = n.ClientId == userId ? "ServiceProvider" : "Client"
+            }).ToList();
+        }
     }
+
 
 }

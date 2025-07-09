@@ -10,8 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ServiceProvider = Models.User.ServiceProvider;
+using Models;
 
-namespace Models.Notification
+namespace Models
 {
     public class ServicesNotifications
     {
@@ -34,24 +35,7 @@ public class ServicesNotificationsConfiguration : IEntityTypeConfiguration<Servi
 {
     public void Configure(EntityTypeBuilder<ServicesNotifications> modelBuilder)
     {
-        modelBuilder.HasKey(sn => sn.Id);
-
-        modelBuilder.HasOne(sn => sn.ServiceProvider)
-            .WithMany() 
-            .HasForeignKey(sn => sn.ServiceProviderId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.HasOne(sn => sn.Client)
-            .WithMany() 
-            .HasForeignKey(sn => sn.ClientId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.HasOne(sn => sn.ServiceRequest)
-            .WithMany() 
-            .HasForeignKey(sn => sn.RequestId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        
+        modelBuilder.HasKey(sn => sn.Id);        
         modelBuilder.Property(sn => sn.Message)
             .IsRequired()
             .HasMaxLength(1000);
