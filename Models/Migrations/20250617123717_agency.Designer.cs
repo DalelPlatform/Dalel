@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
@@ -11,9 +12,11 @@ using Models;
 namespace Models.Migrations
 {
     [DbContext(typeof(DelelContext))]
-    partial class DelelContextModelSnapshot : ModelSnapshot
+    [Migration("20250617123717_agency")]
+    partial class agency
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -215,14 +218,16 @@ namespace Models.Migrations
                         .HasColumnType("real");
 
                     b.Property<string>("ImagePath")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
+                    b.Property<string>("Price")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TermsPolicies")
                         .IsRequired()
@@ -1167,6 +1172,10 @@ namespace Models.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("ServiceProviderName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ServiceRequestId")
                         .HasColumnType("int");
 
@@ -1193,10 +1202,6 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
@@ -1211,18 +1216,10 @@ namespace Models.Migrations
                     b.Property<DateTime>("ReviewDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ServiceProviderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
 
                     b.HasIndex("RequestId")
                         .IsUnique();
-
-                    b.HasIndex("ServiceProviderId");
 
                     b.ToTable("ServiceProviderReviews");
                 });
@@ -1320,9 +1317,6 @@ namespace Models.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -1783,33 +1777,6 @@ namespace Models.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Service", (string)null);
-                });
-
-            modelBuilder.Entity("Models.Notification.Notification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("notifications");
                 });
 
             modelBuilder.Entity("Models.Property.BookingProperties", b =>
@@ -3082,27 +3049,11 @@ namespace Models.Migrations
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderReview", b =>
                 {
-                    b.HasOne("Models.User.Client", "Client")
-                        .WithMany("ServiceProviderReviews")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("Models.HomeService.ServiceRequest", "ServiceRequest")
                         .WithOne("Review")
                         .HasForeignKey("Models.HomeService.ServiceProviderReview", "RequestId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("Models.User.ServiceProvider", "ServiceProvider")
-                        .WithMany("Reviews")
-                        .HasForeignKey("ServiceProviderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-
-                    b.Navigation("ServiceProvider");
 
                     b.Navigation("ServiceRequest");
                 });
@@ -3823,8 +3774,6 @@ namespace Models.Migrations
 
                     b.Navigation("RestaurantReservations");
 
-                    b.Navigation("ServiceProviderReviews");
-
                     b.Navigation("ServiceQuaries");
 
                     b.Navigation("ServiceRequests");
@@ -3869,8 +3818,6 @@ namespace Models.Migrations
                     b.Navigation("Projects");
 
                     b.Navigation("Propsals");
-
-                    b.Navigation("Reviews");
 
                     b.Navigation("Schedules");
                 });

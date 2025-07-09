@@ -27,6 +27,7 @@ namespace Dalel.ViewModels
                 PackageSteps = packageVM.Steps.Select(i => i.ToModel()).ToList(),
                 PackageSchadules = packageVM.Schadules.
                 Select(i => i.ToModel()).ToList(),
+                ImagePath = packageVM.ImagePath,
                 
             };
 
@@ -41,15 +42,22 @@ namespace Dalel.ViewModels
                 Name = package.Name,
                 AgencyId = package.AgencyId,
                 VerificationStatus = package.VerificationStatus, ///???
-                Steps = package.PackageSteps.Select(s => new addPackageStepVM
+                Description=package.Description,
+               Duration = package.Duration ?? 0f,
+               ImagePath = package.ImagePath,
+                TermsPolicies = package.TermsPolicies,
+                
+                Steps = package.PackageSteps.Select(s => new PackageStepDetails
                 {
+                    Id= s.Id,
                     Name = s.Name,
                     Description = s.Description,
                     Duration = s.Duration,
                     Image = s.Image
                 }).ToList(),
-                Schadules = package.PackageSchadules.Select(s => new addPackageSchaduleVM
+                Schadules = package.PackageSchadules.Select(s => new PackageSchaduleDetails
                 {
+                    Id = s.Id,
                     Date = s.Date,
                     SlotsAvailable = s.SlotsAvailable
                 }).ToList()

@@ -31,11 +31,18 @@ namespace Dalel.Repository.Agency
 
 
         }
+
+        public AgencyPackageDetails GetPackageById(int packageId)
+        {
+            return GetList(p => p.Id == packageId).
+                Select(p => p.ToDetailsModels()).FirstOrDefault();
+        }
+
         //Search Packages by Name
         public PaginationViewModel<AgencyPackageDetails> Search(
       string searchText = "",
       string Name = "",
-      string Price = "",
+      float Price = 0,
 
       int pageSize = 10,
       int pageIndex = 1,
@@ -52,10 +59,10 @@ namespace Dalel.Repository.Agency
                  b.Description.ToLower().Contains(searchText.ToLower())
                 );
             }
-            if (!string.IsNullOrWhiteSpace(Price))
+            if (Price>0)
             {
                 predicate = predicate.And(b =>
-                b.Price == Price
+                b.Price <= Price
 
                 );
             }

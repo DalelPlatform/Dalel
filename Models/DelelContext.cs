@@ -103,7 +103,7 @@ namespace Models
         public DbSet<RestaurantOrderItem> RestaurantOrderItems { get; set; }
         public DbSet<RestaurantReservation> RestaurantReservations { get; set; }
         public DbSet<ReviewRestaurantOrder> ReviewRestaurantOrders { get; set; }
-
+        public DbSet<Notification.Notification> notifications { get; set; }
         //
 
       
@@ -131,6 +131,7 @@ namespace Models
             builder.ApplyConfiguration(new PackageSchaduleConfigration());
             builder.ApplyConfiguration(new PackageStepConfigration());
             builder.ApplyConfiguration(new TravelAgencyConfugeration());
+            builder.ApplyConfiguration(new NotificationConfigration());
             #endregion
 
             #region Driver

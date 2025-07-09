@@ -13,10 +13,16 @@ namespace Dalel.ViewModels.Agency.AgencyPackage
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Price { get; set; }
+        public float Price { get; set; }
+
+        public float Duration { get; set; }
+        public string TermsPolicies { get; set; }
+
+        public string Description { get; set; }
         public int AgencyId { get; set; }
+        public string? ImagePath { get; set; }
         public virtual VerificationStatus VerificationStatus { get; set; }
-        public List<addPackageStepVM> Steps { get; set; }
-        public List<addPackageSchaduleVM> Schadules { get; set; }
+        public List<PackageStepDetails> Steps { get; set; }
+        public List<PackageSchaduleDetails> Schadules { get; set; }
     }
 }
