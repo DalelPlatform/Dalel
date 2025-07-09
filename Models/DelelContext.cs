@@ -106,6 +106,7 @@ namespace Models
         public DbSet<RestaurantCartItem> RestaurantCartItems { get; set; }
 
 
+        public DbSet<Notification.Notification> notifications { get; set; }
         //
 
 
@@ -131,7 +132,9 @@ namespace Models
             builder.ApplyConfiguration(new PackageBookingPaymentConfigration());
             builder.ApplyConfiguration(new PackageBookingReviewConfigration());
             builder.ApplyConfiguration(new PackageSchaduleConfigration());
+            builder.ApplyConfiguration(new PackageStepConfigration());
             builder.ApplyConfiguration(new TravelAgencyConfugeration());
+            builder.ApplyConfiguration(new NotificationConfigration());
             #endregion
 
             #region Driver

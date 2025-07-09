@@ -16,7 +16,7 @@ namespace Dalel.ViewModels
         {
             return new PackageBookingReview
             {
-              date = review.date,
+              date = DateTime.Now,
               Rating = review.Rating,
               Comment = review.Comment,
               BookingId = review.BookingId, 
@@ -40,7 +40,7 @@ namespace Dalel.ViewModels
         public static PackageBookingReview ToEditModel(this AddAgencyReview review,
         PackageBookingReview old)
         {
-            old.date = review.date;
+            old.date = DateTime.Now;
             old.Rating = review.Rating;
             old.Comment = review.Comment;
             old.BookingId = review.BookingId;

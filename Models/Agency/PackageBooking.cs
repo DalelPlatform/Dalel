@@ -14,7 +14,9 @@ namespace Models.Agency
         public float TotalPrice { get; set; }
         public int PackageSchaduleId { get; set; }
         public string ClientId { get; set; }
+
         public virtual PackageSchadule PackageSchadule { get; set; }
+    
         public virtual Client Client { get; set; }
         public virtual PackageBookingPayment Payment { get; set; }
         public virtual PackageBookingReview Review { get; set; }
@@ -34,6 +36,7 @@ namespace Models.Agency
             .WithMany(Schadule => Schadule.PabckageBookings)
             .HasForeignKey(PackageBooking => PackageBooking.PackageSchaduleId).OnDelete(DeleteBehavior.NoAction);
 
+           
         }
     }
 }

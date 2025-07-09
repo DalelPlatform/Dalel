@@ -83,9 +83,32 @@ namespace Dalel.Repository
         }
         public PropertiesDetailsVM GetPropertyById(int propertyId)
         {
-            return GetList(p => p.Id == propertyId && !p.IsDeleted).Select(p => p.ToDetailsViewModel()).FirstOrDefault();
+            return GetList(p => p.Id == propertyId && !p.IsDeleted).
+                Select(p => p.ToDetailsViewModel()).FirstOrDefault();
         }
 
+        public bool CheckPropertyAvaliability(DateTime checkin, DateTime checkout, int propertyId)
+        {
+            var property = GetList(p => p.Id == propertyId && !p.IsDeleted).FirstOrDefault();
+
+            // return all booking from checkin/checkout date and this booking is confirmed
+          //  var result = property.BookingProperties.Where(p =>( p.CheckIn >= checkin || p.CheckOut <= checkout ) && p.Status != BookingStatus.Cancel || p.Status != BookingStatus.Done);
+           
+            var result = property.BookingProperties.Where(p =>
+            p.Status != BookingStatus.Cancel &&
+            p.Status != BookingStatus.Done &&
+            checkin < p.CheckOut &&
+            p.CheckIn < checkout);
+
+            if (result.Count() > 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
         public IQueryable<PropertiesDetailsVM> GetPropertiesByOwner(string ownerId)
         {
             return GetList(p => p.OwnerId == ownerId && !p.IsDeleted).Select(p => p.ToDetailsViewModel());

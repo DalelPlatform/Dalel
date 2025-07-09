@@ -11,6 +11,7 @@ namespace Dalel.ViewModels.Agency.AgencyVerificationDocument
 {
     public class addAgencyVerificationDocumentVM
     {
+
         [Required(ErrorMessage = "Please Provide valid DocumentType")]
         public string DocumentType { get; set; }
         [Required(ErrorMessage = "Please Provide valid DocumentFile")]
@@ -20,6 +21,7 @@ namespace Dalel.ViewModels.Agency.AgencyVerificationDocument
 
         [Required(ErrorMessage = "Please Select stutus")]
         public virtual VerificationStatus status { get; set; }
+        public bool keepPrevious { get; set; } =true;
         public int AgencyId { get; set; }
     }
 }

@@ -337,9 +337,6 @@ namespace Models.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     About = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    Licence = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Certificate = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    VerificationStatus = table.Column<int>(type: "int", nullable: false),
                     CategoryServicesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

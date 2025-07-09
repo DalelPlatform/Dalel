@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Models.User;
 using Models.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace Models.HomeService
 {
@@ -10,6 +11,7 @@ namespace Models.HomeService
         public int Id { get; set; }
         public string ClientId { get; set; }
         public DateTime Date { get; set; }
+        public DateTime DueDate { get; set; }
         public RequestStatus Status { get; set; }
         public bool IsDeleted { get; set; } 
         public double StartPrice { get; set; }
@@ -43,3 +45,4 @@ namespace Models.HomeService
         }
     }
 }
+ 

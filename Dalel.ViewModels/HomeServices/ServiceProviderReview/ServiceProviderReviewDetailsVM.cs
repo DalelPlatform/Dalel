@@ -11,10 +11,9 @@ namespace Dalel.ViewModels
         public int Id { get; set; }
         public int RequestId { get; set; }
         public string ServiceProviderId { get; set; }
-        public string ServiceProviderName { get; set; }
         public int Rating { get; set; }
         public string Review { get; set; }
         public DateTime ReviewDate { get; set; }
-        public string ClientName { get;  set; }
+        public string ClientId { get;  set; }
     }
 }

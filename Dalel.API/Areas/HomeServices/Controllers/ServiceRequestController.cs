@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
+using Stripe;
 using System.Security.Claims;
 
 namespace Dalel.API.Areas
@@ -54,6 +55,25 @@ namespace Dalel.API.Areas
         {
             var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = _homeServiceService.GetRequestsByClient(clientId, pageSize, pageNumber);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+
+
+        [HttpGet("ServiceRequestSearch")]
+        [Authorize(Roles = "ServiceProvider")]
+        public IActionResult SearchServiceRequests(
+            [FromQuery] string? Title = "",
+            [FromQuery] string? Description = null,
+            [FromQuery] string? Address = null,
+            [FromQuery] int? CategoryId = null,
+            [FromQuery] string sortBy = "Date",
+            [FromQuery] bool descending = false,
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageIndex = 1)
+        {
+            var result = _homeServiceService.SearchServiceRequest(Title, Description, Address,CategoryId, sortBy, descending, pageSize, pageIndex);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);

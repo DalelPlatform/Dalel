@@ -5,6 +5,7 @@ using LinqKit;
 using Microsoft.AspNetCore.Authorization;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Models.User;
 using System.Security.Claims;
 using System.Text;
@@ -22,6 +23,53 @@ namespace Dalel.API.Controllers
         public AccountController(AccountService accountService)
         {
             this.accountService = accountService;
+        }
+
+
+        [HttpGet("MyAccount")]
+        [Authorize(Roles = "Client,ServiceProvider,Admin")]
+        public IActionResult getMyAccount()
+        {
+            string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = accountService.GetUserById(id);
+            if (result == null)
+                return new JsonResult(new { Success = false, Message = "User not found" });
+            return new JsonResult(new { Success = true, 
+                Data = new
+                {
+                    result.Result.Id,
+                    result.Result.UserName,
+                    result.Result.Email,
+                    result.Result.PhoneNumber,
+                    result.Result.ProfileImg,
+                },
+                    Message = "User retrieved successfully" });
+        }
+
+        [HttpGet("GetUserById")]
+        public async Task<IActionResult> GetUserById(string id)
+        {
+            var user = await accountService.GetUserById(id);
+            if (user == null)
+            {
+                return new JsonResult(new
+                {
+                    Success = false,
+                    Message = "User not found"
+                });
+            }
+
+            return new JsonResult(new
+            {
+                Success = true,
+                Data = new
+                {
+                    user.Id,
+                    user.UserName,
+                    user.Email
+                },
+                Message = "User retrieved successfully!"
+            });
         }
 
 
@@ -92,12 +140,18 @@ namespace Dalel.API.Controllers
                 else
                 {
                     var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+                    var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+                    var user = await accountService.GetUserById(userId);
+
                     return new JsonResult(new
                     {
                         Massage = "Logged in Successfully",
                         Status = 200,
                         Token = res,
-                        Role = role
+                        Role = role,
+                        Image = user.ProfileImg,
+                        FullName = user.FirstName + " " + user.LastName,
                     });
 
                 }

@@ -2608,11 +2608,6 @@ namespace Models.Migrations
                     b.Property<int>("CategoryServicesId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Certificate")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2622,20 +2617,10 @@ namespace Models.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Licence")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.PrimitiveCollection<string>("Skills")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartProfisionalAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VerificationStatus")
-                        .HasColumnType("int");
 
                     b.HasKey("UserId");
 

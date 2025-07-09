@@ -110,5 +110,15 @@ namespace Dalel.API.Areas
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
+        [HttpPut("Complete/{id}")]
+        [Authorize(Roles = "ServiceProvider,Client")]
+        public IActionResult CompleteProposal(int id)
+        {
+            var result = _homeServiceService.CompleteProposal(id);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+
+        }
     }
 }

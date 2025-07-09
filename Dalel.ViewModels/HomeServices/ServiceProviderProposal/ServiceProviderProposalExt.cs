@@ -1,5 +1,6 @@
 ﻿using Models.Enums;
 using Models.HomeService;
+using Models.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,9 @@ namespace Dalel.ViewModels
                 ServiceRequestId = vm.ServiceRequestId,
                 Description = vm.Description,
                 SuggestedPrice = vm.SuggestedPrice,
-                Status = vm.Status
+                Status = vm.Status,
+                Date = vm.Date ?? DateTime.Now
+
             };
         }
         public static ServiceProviderPropsal ToEditModel(this AddServiceProviderProposalVM vm, ServiceProviderPropsal existing)
@@ -28,6 +31,7 @@ namespace Dalel.ViewModels
             existing.Description = vm.Description;
             existing.SuggestedPrice = vm.SuggestedPrice;
             existing.Status = vm.Status;
+            existing.Date = vm.Date ?? DateTime.Now;
             return existing;
         }
         public static ServiceProviderProposalDetailsVM ToDetailsViewModel(this ServiceProviderPropsal model)
@@ -38,8 +42,10 @@ namespace Dalel.ViewModels
                 ServiceProviderId = model.ServiceProviderId,
                 ServiceRequestId = model.ServiceRequestId,
                 Description = model.Description,
+                Date = model.Date,
                 SuggestedPrice = model.SuggestedPrice,
-                Status = model.Status
+                Status = model.Status,
+
             };
         }
     }

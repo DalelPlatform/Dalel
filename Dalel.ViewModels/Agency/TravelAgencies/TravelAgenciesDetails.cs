@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dalel.ViewModels.Agency.AgencyVerificationDocument;
 using Models.Enums;
 
 namespace Dalel.ViewModels.Agency.TravelAgencies
@@ -21,5 +22,6 @@ namespace Dalel.ViewModels.Agency.TravelAgencies
         public float Latitude { get; set; }
         public float Longitude { get; set; }
         public VerificationStatus VerificationStatus { get; set; }
+        public List<addAgencyVerificationDocumentVM> VerificationDocument { get; set; }
     }
 }

@@ -21,6 +21,10 @@ namespace Dalel.ViewModels
                 Address =vm.Address,
                 Date = vm.Date,
                 Status = vm.Status,
+                DueDate = vm.DueDate,
+                Image = vm.Image != null ? $"/images/servicerequest/{vm.Date}/{vm.ClientId}/{vm.Image.FileName}" : null,
+                StartPrice = vm.StartPrice,
+
                 
             };
         }
@@ -34,6 +38,10 @@ namespace Dalel.ViewModels
             existing.Address = vm.Address;
             existing.Date = vm.Date;
             existing.Status = vm.Status;
+            existing.DueDate = vm.DueDate;
+            existing.Image = vm.Imagepath ?? existing.Image;
+            existing.StartPrice = vm.StartPrice;
+
             
             return existing;
         }
@@ -50,6 +58,9 @@ namespace Dalel.ViewModels
                 Address = model.Address,
                 Date = model.Date,
                 Status = model.Status,
+                DueDate = model.DueDate,
+                Image = model.Image,
+                StartPrice = model.StartPrice,
             };
         }
     }

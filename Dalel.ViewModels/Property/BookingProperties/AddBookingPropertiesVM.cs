@@ -21,7 +21,7 @@ namespace Dalel.ViewModels
         public float Price { get; set; }
 
         [Required(ErrorMessage = "Booking status is required.")]
-        public BookingStatus Status { get; set; }
+        public BookingStatus Status { get; set; } = BookingStatus.Panding;
 
         [Required(ErrorMessage = "PropertyId is required.")]
         public int PropertyId { get; set; }

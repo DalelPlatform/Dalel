@@ -1,4 +1,5 @@
 ﻿using Dalel.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using System.Data.Entity;
 using System.Linq.Expressions;
@@ -121,7 +122,7 @@ namespace Dalel.Repository
             Save();
         }
 
-
+       
         //pending 
         public IQueryable<T> GetPendingRequests(Expression<Func<T, bool>> filter)
         {

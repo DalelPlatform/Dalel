@@ -13,6 +13,6 @@ namespace Dalel.ViewModels.Agency.Packagebooking
         public BookingStatus BookingStatus { get; set; }
         public DateTime Date { get; set; }
         public int ReservedPeople { get; set; }
-        public float TotalPrice { get; set; }
+        //public float TotalPrice { get; set; }
     }
 }

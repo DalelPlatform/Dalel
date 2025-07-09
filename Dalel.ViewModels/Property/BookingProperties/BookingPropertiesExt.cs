@@ -9,7 +9,8 @@ namespace Dalel.ViewModels
 {
     public static class BookingPropertiesExt
     {
-        public static BookingProperties ToModel(this AddBookingPropertiesVM viewModel,float TotalPrice)
+        public static BookingProperties ToModel(this AddBookingPropertiesVM viewModel,
+            float TotalPrice)
         {
             return new BookingProperties
             {

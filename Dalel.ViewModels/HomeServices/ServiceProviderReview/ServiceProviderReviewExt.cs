@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.HomeService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,21 +13,28 @@ namespace Dalel.ViewModels
         {
             return new Models.HomeService.ServiceProviderReview
             {
-                RequestId = vm.RequestId,
+                Id = vm.Id,
                 Review = vm.Review,
                 Rating = vm.Rating,
-                ReviewDate = DateTime.UtcNow
+                ServiceProviderId = vm.ServiceProviderId,
+                ClientId = vm.ClientId,
+                RequestId = vm.RequestId,
+                ReviewDate = DateTime.Now 
             };
+
+
         }
 
-        public static ServiceProviderReviewDetailsVM ToDetailsModel(this Models.HomeService.ServiceProviderReview model)
+        public static ServiceProviderReviewDetailsVM ToDetailsModel(this ServiceProviderReview model)
         {
             return new ServiceProviderReviewDetailsVM
             {
                 Id = model.Id,
-                ClientName = model.ServiceRequest?.Client?.User.UserName ?? string.Empty,
                 Review = model.Review,
                 Rating = model.Rating,
+                ServiceProviderId = model.ServiceProviderId,
+                ClientId = model.ClientId,
+                RequestId = model.RequestId,
                 ReviewDate = model.ReviewDate
             };
         }

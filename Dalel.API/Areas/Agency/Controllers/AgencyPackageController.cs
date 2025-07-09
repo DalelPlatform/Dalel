@@ -29,6 +29,14 @@ namespace Dalel.API.Areas.Agency.Controllers
             var res = _pakageService.GetAllAgencyPackage(id);
             return new JsonResult(res);
         }
+        [HttpGet("{id}")]
+        public IActionResult GetAgencyPackagebyid(int id)
+        {
+
+            var res = _pakageService.Getpackagebyid(id);
+            return new JsonResult(res);
+        }
+
         [HttpPost]
         [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult createAgencyPackage([FromForm] AddAgencyPackageVM packageAgency)
@@ -60,7 +68,7 @@ namespace Dalel.API.Areas.Agency.Controllers
         public IActionResult SearchAgencyPackage(
                [FromQuery] string searchText = "",
               [FromQuery] string Name = "",
-               [FromQuery] string Price = "",
+               [FromQuery] float Price = 0,
 
                [FromQuery] int pageSize = 10,
               [FromQuery] int pageIndex = 1,
@@ -80,7 +88,7 @@ namespace Dalel.API.Areas.Agency.Controllers
             );
 
             if (!result.Success)
-                return new JsonResult(result);
+                return new JsonResult(result) { StatusCode = 400 };
 
             return new JsonResult(result);
         }

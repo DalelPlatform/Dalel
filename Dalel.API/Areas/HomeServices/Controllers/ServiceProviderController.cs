@@ -46,13 +46,12 @@ namespace Dalel.API.Areas
             [FromQuery] string searchText = "",
             [FromQuery] int? categoryId = null,
             [FromQuery] string address = null,
-            [FromQuery] VerificationStatus? verificationStatus = null,
             [FromQuery] string sortBy = "Name",
             [FromQuery] bool descending = false,
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageIndex = 1)
         {
-            var result = _homeServiceService.SearchServiceProviders(searchText, categoryId, address, verificationStatus, sortBy, descending, pageSize, pageIndex);
+            var result = _homeServiceService.SearchServiceProviders(searchText, categoryId, address, sortBy, descending, pageSize, pageIndex);
             if (!result.Success)
                 return new JsonResult(new { Success = false, Message = result.Message });
             return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
@@ -67,6 +66,32 @@ namespace Dalel.API.Areas
             if (!result.Success)
                 return new JsonResult(new { Success = false, Message = result.Message });
             return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
+        }
+
+        [HttpGet("ProfileById")]
+        public IActionResult GetServiceProviderDataById(string id)
+        {
+            var result = _homeServiceService.GetServiceProviderById(id);
+            if (!result.Success)
+                return new JsonResult(new { Success = false, Message = result.Message });
+            return new JsonResult(new { Success = true, Data = new
+            {
+                result.Data.Image,
+                result.Data.UserId,
+                result.Data.UserName,
+                result.Data.Address,
+                result.Data.City,
+                result.Data.Price,
+                result.Data.PriceUnit,
+                result.Data.About,
+                result.Data.Website,
+                result.Data.CategoryServicesId,
+                result.Data.Country,
+                result.Data.ServiceArea,
+                result.Data.ZipCode,
+                result.Data.District
+            }
+                , Message = result.Message });
         }
 
         [HttpGet("category/{categoryId}")]
