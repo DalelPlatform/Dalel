@@ -2,6 +2,7 @@
 using Dalel.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 using Models.WeddingPlaces.Enums;
@@ -24,25 +25,27 @@ namespace Dalel.API.Areas
 
         [HttpGet("search")]
         public IActionResult SearchMeals(
-           [FromQuery] string search = "",
+           [FromQuery] string searchText = "",
            [FromQuery] float? minPrice = null,
            [FromQuery] float? maxPrice = null,
-           [FromQuery] Models.Enums.AvaliabilityStatus? avaliabilityStatus = null,
-           [FromQuery] FoodCategory? foodCategory = null,
-           [FromQuery] SizeOfPiece? sizeOfPiece = null,
+           [FromQuery] List<Models.Enums.AvaliabilityStatus>? avaliabilityStatus = null,
+           [FromQuery] List<FoodCategory>? foodCategory = null,
+           [FromQuery] List<SizeOfPiece>? sizeOfPiece = null,
+           //[FromQuery] List<RestaurantType>? RestaurantType = null,
            [FromQuery] double? duration = null,
            [FromQuery] string sortBy = "Name",
            [FromQuery] bool descending = false,
-           [FromQuery] int pageSize = 5,
+           [FromQuery] int pageSize = 2,
            [FromQuery] int pageIndex = 1)
         {
             var result = restaurantService.SearchMeals(
-                    search,
+                    searchText,
                     minPrice,
                     maxPrice,
                     avaliabilityStatus,
                     foodCategory,
                     sizeOfPiece,
+                    //RestaurantType,
                     duration,
                     sortBy,
                     descending,
@@ -93,7 +96,7 @@ namespace Dalel.API.Areas
 
             return new JsonResult(result);
         }
-        [HttpGet("{id}")]
+        [HttpGet("GetMeal/{id}")]
         public IActionResult GetMealByID(int id)
         {
             var result =  restaurantService.GetMealById(id);
@@ -102,5 +105,39 @@ namespace Dalel.API.Areas
 
             return new JsonResult(result);
         }
+        [HttpGet("GetMealsByRestaurantId/{id}")]
+        public IActionResult GetMealsByRestaurantId(int id)
+        {
+            var Meals = restaurantService.GetMealsByRestaurant(id);
+            if (!Meals.Success)
+                return new JsonResult(Meals.Message);
+
+            return new JsonResult(Meals);
+
+        }
+
+        [HttpGet("GetAllMeals")]
+        public IActionResult GetAllMeals()
+        {
+            var Meals = restaurantService.GetAllMeals();
+            if (!Meals.Success)
+                return new JsonResult(Meals.Message);
+
+            return new JsonResult(Meals);
+
+        }
+
+        [HttpGet("GetMealCategory")]
+        public IActionResult getMealType([FromQuery]FoodCategory category )
+        {
+            var Meals = restaurantService.GetMealType(category);
+            if (!Meals.Success)
+                return new JsonResult(Meals.Message);
+
+            return new JsonResult(Meals);
+
+        }
+
+
     }
 }

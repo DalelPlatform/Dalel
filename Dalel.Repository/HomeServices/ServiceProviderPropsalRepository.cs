@@ -42,17 +42,26 @@ namespace Dalel.Repository
         public void AcceptProposal(int proposalId)
         {
             var proposal = base.Get(p => p.Id == proposalId).FirstOrDefault();
-            if (proposal != null)
+            if (proposal == null || proposal.Status != ProposalStatus.Pending)
+                return;
+
+            proposal.Status = ProposalStatus.Accepted;
+            // Update the service request status to In Progress
+            var request = base.GetById(proposal.ServiceRequestId);
+            if (request != null)
             {
-                proposal.Status = ProposalStatus.Accepted;
-                var request = _context.ServiceRequests.Find(proposal.ServiceRequestId);
-                if (request != null)
+                request.Status = ProposalStatus.Accepted;
+
+                var otherProposals = base.Get(p => p.ServiceRequestId == request.Id && p.Id != proposalId);
+                foreach (var other in otherProposals)
                 {
-                    request.Status = RequestStatus.Pending;
+                    other.Status = ProposalStatus.Rejected;
                 }
-                base.Save();
             }
+
+            base.Save();
         }
+
 
         public void RejectProposal(int proposalId)
         {
@@ -64,6 +73,15 @@ namespace Dalel.Repository
             }
         }
 
+        public void CompleteProposal(int proposalId)
+        {
+            var proposal = base.Get(p => p.Id == proposalId).FirstOrDefault();
+            if (proposal != null && proposal.Status == ProposalStatus.Accepted)
+            {
+                proposal.Status = ProposalStatus.Completed;
+                base.Save();
+            }
+        }
         public void AddProposal(ServiceProviderPropsal proposal)
         {
             base.Add(proposal);

@@ -18,6 +18,8 @@ namespace Models.User
         //Relations 
 
         #region Restaurant
+        public virtual ICollection<RestaurantCartItem> RestaurautCartItems { get; set; }
+
         public virtual ICollection<RestaurantOrder> RestaurantOrders { get; set; }
         public virtual ICollection<RestaurantReservation> RestaurantReservations { get; set; }
         #endregion
@@ -41,6 +43,7 @@ namespace Models.User
         #region HomeService
         public virtual ICollection<ServiceQuaries> ServiceQuaries { get; set; }
         public virtual ICollection<ServiceRequest> ServiceRequests { get; set; }
+        public virtual ICollection<ServiceProviderReview> ServiceProviderReviews { get; set; }
         #endregion
 
         #region Agency

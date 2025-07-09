@@ -32,8 +32,10 @@ namespace Dalel.ViewModels
                 FoodCategory = menuItem.FoodCategory,
                 Price = menuItem.Price,
                 PieceSize = menuItem.PieceSize,
+                Duration = menuItem.Duration,
                 //VendorName = viewModel.Vendor.User.UserName ?? "Not Provided",
                 RestaurantName = menuItem.Restaurant.Name ?? "Not Provided",
+                //RestaurantType = menuItem.Restaurant.RestaurantType ,
                 Images = menuItem.RestaurantMenuItemImages.Select(i => i.Image).ToList() ?? new List<string>()
             };
         }

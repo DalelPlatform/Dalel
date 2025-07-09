@@ -19,12 +19,13 @@ namespace Dalel.Repository
 
         }
         public  PaginationViewModel<RestaurantMenuItemDetailsVM> SearchMeals(
-                string search = "",
+                string searchText = "",
                 float? minPrice = null,
                 float? maxPrice = null,
-                AvaliabilityStatus? avaliabilityStatus = null,
-                FoodCategory? foodCategory = null,
-                SizeOfPiece? sizeOfPiece = null,
+                List<AvaliabilityStatus>? avaliabilityStatus = null,
+                List<FoodCategory>? foodCategory = null,
+                List<SizeOfPiece>? sizeOfPiece = null,
+                //List<RestaurantType>? RestaurantType = null,
                 double? duration = null,
                 string sortBy = "Name",
                 bool descending = false,
@@ -33,10 +34,10 @@ namespace Dalel.Repository
         {
             var predicate = PredicateBuilder.New<RestaurantMenuItem>(true);
 
-            if (!string.IsNullOrWhiteSpace(search))
+            if (!string.IsNullOrWhiteSpace(searchText))
             {
-                predicate = predicate.And(m => m.Name.Contains(search));
-                predicate = predicate.And(m => m.Description.Contains(search));
+                predicate = predicate.Or(m => m.Name.Contains(searchText));
+                predicate = predicate.Or(m => m.Description.Contains(searchText));
             }
 
             if (minPrice.HasValue)
@@ -44,17 +45,28 @@ namespace Dalel.Repository
 
             if (maxPrice.HasValue)
                 predicate = predicate.And(m => m.Price <= maxPrice.Value);
-            if (avaliabilityStatus.HasValue)
+
+            if (avaliabilityStatus !=null && avaliabilityStatus.Any())
             {
-                predicate = predicate.And(m => m.AvailabilityStatus == avaliabilityStatus.Value);
+                predicate = predicate.And(m => avaliabilityStatus.Contains(m.AvailabilityStatus));
             }
-            if (foodCategory.HasValue)
+            if (foodCategory != null && foodCategory.Any())
             {
-                predicate = predicate.And(m => m.FoodCategory == foodCategory.Value);
+                predicate = predicate.And(m => foodCategory.Contains(m.FoodCategory));
             }
-            if (sizeOfPiece.HasValue)
+            if (sizeOfPiece != null && sizeOfPiece.Any())
             {
-                predicate = predicate.And(m => m.PieceSize == sizeOfPiece.Value);
+                predicate = predicate.And(m => sizeOfPiece.Contains(m.PieceSize));
+            }
+            //if(RestaurantType != null && RestaurantType.Any())
+            //{
+            //    predicate = predicate.And(m => RestaurantType.Contains(m.Restaurant.RestaurantType));
+            //}
+
+            if (duration.HasValue)
+            {
+                predicate = predicate.And(m => m.Duration == duration.Value);
+
             }
 
             Expression<Func<RestaurantMenuItem, object>> orderBy = sortBy.ToLower() switch
@@ -70,72 +82,77 @@ namespace Dalel.Repository
 
             return  Search(predicate, orderBy, m => m.ToDetailsViewModel(), descending, pageSize, pageIndex);
         }
-        public PaginationViewModel<RestaurantMenuItemDetailsVM> SearchMenuItem(
-           string searchText = "",
-           FoodCategory? category = null,
-           AvaliabilityStatus status = AvaliabilityStatus.Available,
-           float? minPrice = null,
-           float? maxPrice = null,
-           int pageSize = 4,
-           int pageIndex = 1,
-           string sortBy = "Name",
-           bool descending = false)
-        {
-            var predicate = PredicateBuilder.New<RestaurantMenuItem>(true);
+        //public PaginationViewModel<RestaurantMenuItemDetailsVM> SearchMenuItem(
+        //   string searchText = "",
+        //   FoodCategory? category = null,
+        //   AvaliabilityStatus? status = AvaliabilityStatus.Available,
+        //   SizeOfPiece? sizeOfPiece = SizeOfPiece.Small,
+        //   float? minPrice = null,
+        //   float? maxPrice = null,
+        //   double? duration = null,
+        //   int pageSize = 4,
+        //   int pageIndex = 1,
+        //   string sortBy = "Name",
+        //   bool descending = false)
+        //{
+        //    var predicate = PredicateBuilder.New<RestaurantMenuItem>(true);
 
-            if (!string.IsNullOrWhiteSpace(searchText))
-            {
-                predicate = predicate.And(r =>
-                    r.Name.Contains(searchText) || r.Description.Contains(searchText));
-            }
+        //    if (!string.IsNullOrWhiteSpace(searchText))
+        //    {
+        //        predicate = predicate.And(r =>
+        //            r.Name.Contains(searchText) || r.Description.Contains(searchText));
+        //    }
 
-            if (category.HasValue)
-            {
-                predicate = predicate.And(r => r.FoodCategory == category);
-            }
+        //    if (category.HasValue)
+        //    {
+        //        predicate = predicate.And(r => r.FoodCategory == category);
+        //    }
 
-            if (status != AvaliabilityStatus.Available)
-            {
-                predicate = predicate.And(r => r.AvailabilityStatus == status);
-            }
+        //    if (status != AvaliabilityStatus.Available)
+        //    {
+        //        predicate = predicate.And(r => r.AvailabilityStatus == status);
+        //    }
 
-            if (minPrice.HasValue)
-            {
-                predicate = predicate.And(r => r.Price >= minPrice.Value);
-            }
+        //    if (minPrice.HasValue)
+        //    {
+        //        predicate = predicate.And(r => r.Price >= minPrice.Value);
+        //    }
 
-            if (maxPrice.HasValue)
-            {
-                predicate = predicate.And(r => r.Price <= maxPrice.Value);
-            }
+        //    if (maxPrice.HasValue)
+        //    {
+        //        predicate = predicate.And(r => r.Price <= maxPrice.Value);
+        //    }
 
-            predicate = predicate.And(r => !r.IsDeleted);
+        //    predicate = predicate.And(r => !r.IsDeleted);
 
-            var query = base.GetList(predicate);
+        //    var query = base.GetList(predicate);
 
-            var totalCount = query.Count();
+            
 
-            query = sortBy.ToLower() switch
-            {
-                "price" => descending ? query.OrderByDescending(r => r.Price) : query.OrderBy(r => r.Price),
-                "category" => descending ? query.OrderByDescending(r => r.FoodCategory) : query.OrderBy(r => r.FoodCategory),
-                _ => descending ? query.OrderByDescending(r => r.Name) : query.OrderBy(r => r.Name)
-            };
+        //    var totalCount = query.Count();
 
-            var items = query
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .Select(p => p.ToDetailsViewModel())
-                .ToList();
+        //    query = sortBy.ToLower() switch
+        //    {
+        //        "price" => descending ? query.OrderByDescending(r => r.Price) : query.OrderBy(r => r.Price),
+        //        "category" => descending ? query.OrderByDescending(r => r.FoodCategory) : query.OrderBy(r => r.FoodCategory),
+        //        _ => descending ? query.OrderByDescending(r => r.Name) : query.OrderBy(r => r.Name)
+        //    };
+        //    var items = query
+        //        .Skip((pageIndex - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .Select(p => p.ToDetailsViewModel())
+        //        .ToList();
 
-            return new PaginationViewModel<RestaurantMenuItemDetailsVM>
-            {
-                Data = items,
-                PageNumber = pageIndex,
-                PageSize = pageSize,
-                TotalCount = totalCount
-            };
-        }
+
+
+        //    return new PaginationViewModel<RestaurantMenuItemDetailsVM>
+        //    {
+        //        Data = items,
+        //        PageNumber = pageIndex,
+        //        PageSize = pageSize,
+        //        TotalCount = totalCount
+        //    };
+        //}
 
         public List<RestaurantMenuItemDetailsVM> GetMealsByRestaurantId(int restaurantId)
         {
@@ -148,5 +165,23 @@ namespace Dalel.Repository
         {
             return base.GetList(m => m.Id == mealId && !m.IsDeleted).FirstOrDefault();
         }
+
+
+        public List<RestaurantMenuItemDetailsVM> GetMeals()
+        {
+            return base.GetList()
+                .Select(m => m.ToDetailsViewModel())
+                .ToList();
+        }
+
+        public List<RestaurantMenuItemDetailsVM> GetMealType(FoodCategory category)
+        {
+            return base.GetList(m => m.FoodCategory ==  category && !m.IsDeleted).Select(m => m.ToDetailsViewModel())
+                .ToList();
+        }
+
+
+
+
     }
 }

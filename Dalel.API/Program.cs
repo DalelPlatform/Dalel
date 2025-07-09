@@ -24,6 +24,10 @@ using Dalel.Reopsitory;
 using Dalel.Repository.HomeServices;
 using Utilities.Payments.Gateways;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Dalel.API.Areas.Agency.Hup;
+using Dalel.API.Areas.Agency.UserIdProviders;
+using Microsoft.AspNetCore.SignalR;
+using Hangfire;
 
 
 
@@ -82,7 +86,13 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 builder.Services.AddHttpClient();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
+
+//Hangfire 
+
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DalelDB")));
+builder.Services.AddHangfireServer();
 
 
 //Add srilog logging
@@ -148,6 +158,9 @@ builder.Services.AddScoped<RestaurantReservationRepository>();
 builder.Services.AddScoped<RestaurantOrderItemRepository>();
 builder.Services.AddScoped<PaymentRestaurantOrderReopsitory>();
 builder.Services.AddScoped<ReviewRestaurantOrderRepository>();
+builder.Services.AddScoped<RestaurantCartItemRepository>();
+
+
 #endregion
 
 #region HomeChef
@@ -186,6 +199,10 @@ builder.Services.AddScoped<PackageBookingReviewRepo>();
 builder.Services.AddScoped<PackageSchaduleRepo>();
 builder.Services.AddScoped<PackageStepRepo>();
 builder.Services.AddScoped<TravelAgenciesRepo>();
+builder.Services.AddScoped<NotificationRepo>();
+builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
+
 #endregion
 
 #region Payment
@@ -202,6 +219,7 @@ builder.Services.AddScoped<IPaymentProcessor<PaymentVehicle>, DriverPaymentProce
 
 #endregion
 
+
 builder.Services.AddScoped<UploadMedia>();
 
 builder.Services.AddControllers()
@@ -210,7 +228,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.MaxDepth = 64;
     });
-
+builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -225,6 +243,22 @@ builder.Services.AddAuthentication(option =>
         ValidateAudience = false,
         ValidateIssuer = false,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWT:PrivateKey"]))
+    };
+    option.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+           
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && 
+            path.StartsWithSegments("/notificationhub"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -252,8 +286,12 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHangfireDashboard("/hungfire");
+RecurringJob.AddOrUpdate<AgencyPakageService>("SendReviewNotificationsJob", 
+    x => x.SendReviewNotifications(), Cron.Daily);
 // Add this to your Program.cs
-
+app.MapHub<NotificationHub>("/notificationhub");
+app.MapHub<NotificationHub>("/NotificationServiceHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=index}");

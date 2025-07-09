@@ -83,7 +83,8 @@ namespace Dalel.Repository
         }
         public PropertiesDetailsVM GetPropertyById(int propertyId)
         {
-            return GetList(p => p.Id == propertyId && !p.IsDeleted).Select(p => p.ToDetailsViewModel()).FirstOrDefault();
+            return GetList(p => p.Id == propertyId && !p.IsDeleted).
+                Select(p => p.ToDetailsViewModel()).FirstOrDefault();
         }
 
         public bool CheckPropertyAvaliability(DateTime checkin, DateTime checkout, int propertyId)

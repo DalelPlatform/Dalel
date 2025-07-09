@@ -11,6 +11,7 @@ using LinqKit;
 using Models;
 using Models.Agency;
 using Models.Enums;
+using Models.Property;
 
 namespace Dalel.Repository.Agency
 {
@@ -54,7 +55,11 @@ namespace Dalel.Repository.Agency
         }
 
 
-
+        public PackageBooking GetBookingById(int bookingId)
+        {
+            return GetList(b => b.Id == bookingId).FirstOrDefault();
+        }
+       
         //searching 
 
 

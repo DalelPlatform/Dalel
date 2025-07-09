@@ -72,6 +72,8 @@ namespace Dalel.Services
                 // Check if the category exists
                 if (!_categoryServicesRepository.GetList(c => c.Id == entity.CategoryServicesId).Any())
                     return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Category not found");
+                vm.Imagepath = uploader.addimage(vm.Image);
+                
 
                 _serviceRequestRepository.Add(entity);
                 _serviceRequestRepository.Save(); // Save changes to the database
@@ -86,6 +88,7 @@ namespace Dalel.Services
                     $"Database error: {ex.InnerException?.Message ?? ex.Message}");
             }
         }
+
         public ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>> GetRequestsByCategory(
             int categoryId, int pageSize = 5, int pageNumber = 1)
         {
@@ -317,6 +320,77 @@ namespace Dalel.Services
             catch (Exception ex)
             {
                 return ServiceResult.FailureResult("Error: " + ex.Message);
+            }
+        }
+        public ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>> SearchServiceRequest(
+            string? Title = "",
+            string? Description = null,
+            string? Address = null,
+            int? CategoryId = null,
+            string sortBy = "Date",
+            bool descending = false,
+            int pageSize = 5,
+            int pageIndex = 1)
+        {
+            try
+            {
+                var providers = _serviceRequestRepository.GetList();
+
+                if (!string.IsNullOrEmpty(Title))
+                {
+                    string loweredTitle = Title.ToLower();
+                    providers = providers.Where(p => p.Title.ToLower().Contains(loweredTitle));
+                }
+                if (!string.IsNullOrEmpty(Description))
+                {
+                    string loweredDescription = Description.ToLower();
+                    providers = providers.Where(p => p.Description.ToLower().Contains(loweredDescription));
+                }
+                if (!string.IsNullOrEmpty(Address))
+                {
+                    string lowerAddress = Address.ToLower();
+                    providers = providers.Where(p => p.Address.ToLower().Contains(lowerAddress));
+                }
+                if (CategoryId.HasValue && CategoryId > 0)
+                {
+                    providers = providers.Where(p => p.CategoryServicesId == CategoryId.Value);
+                }
+
+
+                switch (sortBy)
+                {
+                    case "Date":
+                        providers = descending ? providers.OrderByDescending(p => p.Date) : providers.OrderBy(p => p.Date);
+                        break;
+                    //case "averagerating":
+                    //    providers = descending ? providers.OrderByDescending(p => p.Propsals.) : providers.OrderBy(p => p.AverageRating);
+                    //    break;
+                    default:
+                        providers = providers.OrderBy(p => p.Date);
+                        break;
+                }
+
+                var totalCount = providers.Count();
+                var paginatedProviders = providers
+                    .Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                var data = paginatedProviders.Select(p => p.ToDetailsViewModel()).ToList();
+
+                var paginationResult = new PaginationViewModel<ServiceRequestDetailsVM>
+                {
+                    Data = data,
+                    PageNumber = pageIndex,
+                    PageSize = pageSize,
+                    TotalCount = totalCount
+                };
+
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.SuccessResult(paginationResult, "Service providers retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.FailureResult("Error: " + ex.Message);
             }
         }
         public ServiceResult DeleteServiceRequest(int requestId)
@@ -781,7 +855,10 @@ namespace Dalel.Services
 
                 // Accept the selected proposal
                 _serviceProviderProposalRepository.AcceptProposal(proposalId);
-     
+                var updated = _serviceRequestRepository.UpdaterequestsStatus(proposal.ServiceRequestId, RequestStatus.InProgress);
+                if (!updated)
+                    return ServiceResult<bool>.FailureResult("Request not found");
+
 
                 var otherProposals = _serviceProviderProposalRepository.GetProposalsByRequest(proposal.ServiceRequestId)
                     .Where(p => p.Id != proposalId && p.Status == ProposalStatus.Pending)
@@ -868,6 +945,26 @@ namespace Dalel.Services
 
                 _serviceProviderProposalRepository.Delete(proposal);
                 return ServiceResult.SuccessResult("Proposal deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult("Error: " + ex.Message);
+            }
+        }
+        public ServiceResult CompleteProposal(int proposalId)
+        {
+            try
+            {
+                if (proposalId <= 0)
+                    return ServiceResult.FailureResult("Proposal ID must be greater than zero.");
+                var proposal = _serviceProviderProposalRepository.GetProposalWithDetails(proposalId);
+                if (proposal == null)
+                    return ServiceResult.FailureResult("Proposal not found.");
+                if (proposal.Status != ProposalStatus.Accepted)
+                    return ServiceResult.FailureResult("Proposal must be accepted before it can be completed.");
+                _serviceProviderProposalRepository.CompleteProposal(proposalId);
+                _serviceRequestRepository.UpdaterequestsStatus(proposal.ServiceRequestId, RequestStatus.Completed);
+                return ServiceResult.SuccessResult("Proposal completed successfully.");
             }
             catch (Exception ex)
             {
@@ -1293,24 +1390,25 @@ namespace Dalel.Services
 
         #region ServiceProviderReview
 
-        public ServiceResult<ServiceProviderReviewDetailsVM> CreateReview([FromForm] AddServiceProviderReviewVM vm, ServiceProviderReview review)
+        public ServiceResult<ServiceProviderReviewDetailsVM> CreateReview([FromForm] AddServiceProviderReviewVM vm)
         {
             try
             {
-                var ServiceProviderReviewDetails = vm.ToModel();
-                if (ServiceProviderReviewDetails.Rating < 1 || ServiceProviderReviewDetails.Rating > 5)
+                var review = vm.ToModel();
+                if (review.Rating < 1 || review.Rating > 5)
                     return ServiceResult<ServiceProviderReviewDetailsVM>.FailureResult("Rating must be between 1 and 5.");
-                if (string.IsNullOrEmpty(ServiceProviderReviewDetails.Review))
+                if (string.IsNullOrEmpty(review.Review))
                     return ServiceResult<ServiceProviderReviewDetailsVM>.FailureResult("Review text cannot be null or empty.");
 
-                _serviceProviderReviewRepository.AddReview(ServiceProviderReviewDetails);
-                return ServiceResult<ServiceProviderReviewDetailsVM>.SuccessResult(ServiceProviderReviewDetails.ToDetailsModel(), "Review created successfully.");
+                _serviceProviderReviewRepository.AddReview(review);
+                return ServiceResult<ServiceProviderReviewDetailsVM>.SuccessResult(review.ToDetailsModel(), "Review created successfully.");
             }
             catch (Exception ex)
             {
                 return ServiceResult<ServiceProviderReviewDetailsVM>.FailureResult("Error: " + ex.Message);
             }
         }
+
 
         public ServiceResult<ServiceProviderReviewDetailsVM> GetReviewByRequest(int requestId)
         {
@@ -1330,6 +1428,9 @@ namespace Dalel.Services
                 return ServiceResult<ServiceProviderReviewDetailsVM>.FailureResult("Error: " + ex.Message);
             }
         }
+
+
+
 
         public ServiceResult<PaginationViewModel<ServiceProviderReviewDetailsVM>> GetReviewsByProvider(
             string providerId, int pageSize = 5, int pageNumber = 1)
@@ -1579,7 +1680,6 @@ public ServiceResult DeletePayment(int paymentId)
             string? searchText = "",
             int? categoryId = null,
             string? address = null,
-            VerificationStatus? verificationStatus = null,
             string sortBy = "Name",
             bool descending = false,
             int pageSize = 5,

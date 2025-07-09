@@ -16,12 +16,12 @@ namespace Dalel.ViewModels
             return new PackageBookingPayment
             {
 
-                Amount = packageVM.Amount,
+                //Amount = packageVM.Amount,
                 AmountPaid = packageVM.AmountPaid,
-                CommissionDeducted = packageVM.CommissionDeducted,
+                //CommissionDeducted = packageVM.CommissionDeducted,
                 CodeApplied = packageVM.CodeApplied,
                 PaymentMethod = packageVM.PaymentMethod,
-                PaymentStatus = packageVM.PaymentStatus,
+                //PaymentStatus = packageVM.PaymentStatus,
                 BookingId = packageVM.BookingId,
             };
 
@@ -44,14 +44,16 @@ namespace Dalel.ViewModels
             };
         }
 
-        public static PackageBookingPayment ToEditModel(this AddAgencyPaymentVM pay, PackageBookingPayment old)
+        public static PackageBookingPayment ToEditModel(this AddAgencyPaymentVM pay,
+            PackageBookingPayment old)
         {
 
             old.CodeApplied = string.IsNullOrEmpty(pay.CodeApplied) ? old.CodeApplied : pay.CodeApplied;
-            old.PaymentStatus = pay.PaymentStatus == old.PaymentStatus ? old.PaymentStatus : pay.PaymentStatus;
-            old.Amount = pay.Amount;
+            //old.PaymentStatus = pay.PaymentStatus ==
+            //old.PaymentStatus ? old.PaymentStatus : pay.PaymentStatus;
+            //old.Amount = pay.Amount;
             old.AmountPaid = pay.AmountPaid;
-            old.CommissionDeducted = pay.CommissionDeducted;
+            //old.CommissionDeducted = pay.CommissionDeducted;
             old.PaymentMethod = pay.PaymentMethod;
 
 

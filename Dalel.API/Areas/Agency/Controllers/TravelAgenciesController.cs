@@ -56,14 +56,14 @@ namespace Dalel.API.Areas.Agency.Controllers
         {
             var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var res = _pakageService.GetAllTravelAgency(ownerId);
-           
+
             return new JsonResult(res);
         }
         [HttpGet("{Id}")]
         [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult GetTravelAgencyById(int id)
         {
-          
+
             var res = _pakageService.GetTravelAgencybyid(id);
 
             return new JsonResult(res);
@@ -85,7 +85,7 @@ namespace Dalel.API.Areas.Agency.Controllers
         [Authorize(Roles = "TravelAgencyOwner,Admin")]
         public IActionResult UpdateTravelAgency(int Id, [FromForm] addTravelAgenciesVM trvelAgency)
         {
-            var res = _pakageService.UpdateTravelAgencies(Id,trvelAgency);
+            var res = _pakageService.UpdateTravelAgencies(Id, trvelAgency);
             return new JsonResult(res);
         }
         [HttpDelete("{id}")]
@@ -96,5 +96,31 @@ namespace Dalel.API.Areas.Agency.Controllers
             return new JsonResult(res);
 
         }
+
+        [HttpGet("Owner/Earnings")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
+        public IActionResult GetOwnerEarnings()
+        {
+            var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var earnings = _pakageService.GetOwnerEarnings(ownerId);
+            return new JsonResult(earnings);
+        }
+        [HttpGet("GetOwnerTotalReviews")]
+        [Authorize(Roles = "TravelAgencyOwner,Admin")]
+        public IActionResult GetOwnerTotalReviews()
+        {
+            var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var totalReviews = _pakageService.GetOwnerTotalReviews(ownerId);
+            var averageRating = _pakageService.GetOwnerAverageRating(ownerId);
+
+            var result = new
+            {
+                TotalReviews = totalReviews,
+                AverageRating = averageRating
+            };
+
+            return new JsonResult(result);
+        }
+
     }
 }

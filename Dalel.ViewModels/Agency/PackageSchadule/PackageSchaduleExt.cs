@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dalel.ViewModels.Agency.Packagebooking;
 using Dalel.ViewModels.Agency.PackageSchadule;
 using Dalel.ViewModels.Agency.PackageStep;
 using Dalel.ViewModels.Agency.TravelAgencies;
@@ -17,6 +18,7 @@ namespace Dalel.ViewModels
         {
             return new PackageSchadule
             {
+                
                 Date = schadule.Date,
                 SlotsAvailable = schadule.SlotsAvailable,
                 //PabckageBookings = schadule.PackageBookings.Select(i => i.ToModel()).ToList(),
@@ -33,7 +35,14 @@ namespace Dalel.ViewModels
                 Id = schadule.Id,
                 Date = schadule.Date,
                 SlotsAvailable = schadule.SlotsAvailable,
-
+                PackagebookingDetails = schadule.PabckageBookings.
+                Select(s => new PackagebookingDetails
+                {
+                    Id = s.Id,
+                   BookingStatus = s.BookingStatus,
+                   Date = s.Date,
+                   ReservedPeople = s.ReservedPeople,
+                }).ToList()
 
             };
         }
