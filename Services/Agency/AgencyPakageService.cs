@@ -18,7 +18,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Models.Agency;
 using Models.Enums;
-using Models.Migrations;
 using Models.Notification;
 using Models.Property;
 using Models.Restaurant;

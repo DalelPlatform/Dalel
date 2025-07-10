@@ -19,7 +19,10 @@ namespace Dalel.ViewModels
         public SizeOfPiece PieceSize { get; set; }
         public string DietaryTags { get; set; }
 
-        
+        public int? Discount { get; set; }
+
+
+
         public double? Duration { get; set; }
 
         public string RestaurantName { get; set; }

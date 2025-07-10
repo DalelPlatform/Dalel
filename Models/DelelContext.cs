@@ -208,24 +208,58 @@ namespace Models
             builder.ApplyConfiguration(new RestaurantReervationConfiguration());
             builder.ApplyConfiguration(new ReviewRestaurantOrderConfiguration());
             #endregion
+            base.OnModelCreating(builder);
 
-            base.Add<CategoryServices>(new CategoryServices {
-                Id=1,
-                Name="",
-                Description=""
-            });
-
-            base.Add<IdentityRole>(new IdentityRole
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
             {
                 Id = "11111",
                 Name = "Client",
-                NormalizedName= "CLIENT"
+                NormalizedName = "CLIENT"
+            });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = "22222",
+                Name = "TravelAgencyOwner",
+                NormalizedName = "TRAVELAGENCYOWNER"
+            });
+            builder.Entity<IdentityRole>().HasData (new IdentityRole
+            {
+                Id = "33333",
+                Name = "ServiceProvider",
+                NormalizedName = "SERVICEPROVIDER"
+            });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = "55555",
+                Name = "HomeChef",
+                NormalizedName = "HOMECHEF"
+            });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = "66666",
+                Name = "HotelOwner",
+                NormalizedName = "HOTELOWNER"
+            });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = "77777",
+                Name = "PropertyOwner",
+                NormalizedName = "PROPERTYOWNER"
+            });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = "88888",
+                Name = "RestaurantOwner",
+                NormalizedName = "RESTAURANTOWNER"
+            });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = "99999",
+                Name = "Admin",
+                NormalizedName = "ADMIN"
             });
 
 
-
-
-            base.OnModelCreating(builder);
         }
     }
 }

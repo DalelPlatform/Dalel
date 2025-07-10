@@ -3,7 +3,6 @@ using Dalel.ViewModels.HomeServices.ServiceNotification;
 using Dalel.ViewModels.notification;
 using Microsoft.AspNetCore.SignalR;
 using Models;
-using Models.Migrations;
 using Models.Notification;
 using Stripe;
 using System;
