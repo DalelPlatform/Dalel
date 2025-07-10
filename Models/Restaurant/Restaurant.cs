@@ -62,7 +62,7 @@ namespace Models.Restaurant
         {
             builder.HasKey(rest => rest.Id);
             builder.Property(rest => rest.IsDeleted).HasDefaultValue(false);
-            builder.Property(rest =>rest.Description).HasColumnType("NVARCHAR(250)").HasDefaultValue("empty");
+            builder.Property(rest =>rest.Description).HasColumnType("NVARCHAR(20000)").HasDefaultValue("empty");
             builder.Property(rest => rest.NumberOfRooms).IsRequired();
             builder.Property(rest => rest.BuildingNo).IsRequired();
             builder.Property(rest => rest.Address).HasDefaultValue("empty").HasColumnType("NVARCHAR(50)");
