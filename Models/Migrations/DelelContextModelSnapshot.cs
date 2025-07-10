@@ -2161,7 +2161,7 @@ namespace Models.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NVARCHAR(20000)")
+                        .HasColumnType("NVARCHAR(MAX)")
                         .HasDefaultValue("empty");
 
                     b.Property<bool>("IsDeleted")
@@ -2295,7 +2295,7 @@ namespace Models.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NVARCHAR(20000)")
+                        .HasColumnType("NVARCHAR(MAX)")
                         .HasDefaultValue("empty");
 
                     b.Property<string>("DietaryTags")

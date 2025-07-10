@@ -12,8 +12,8 @@ using Models;
 namespace Models.Migrations
 {
     [DbContext(typeof(DelelContext))]
-    [Migration("20250710183918_restaurant")]
-    partial class restaurant
+    [Migration("20250710184442_new-restaurant")]
+    partial class newrestaurant
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2164,7 +2164,7 @@ namespace Models.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NVARCHAR(20000)")
+                        .HasColumnType("NVARCHAR(MAX)")
                         .HasDefaultValue("empty");
 
                     b.Property<bool>("IsDeleted")
@@ -2298,7 +2298,7 @@ namespace Models.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NVARCHAR(20000)")
+                        .HasColumnType("NVARCHAR(MAX)")
                         .HasDefaultValue("empty");
 
                     b.Property<string>("DietaryTags")

@@ -32,7 +32,7 @@ namespace Models.Restaurant
         {
             builder.HasKey(restmenuitem => restmenuitem.Id);
             builder.Property(restmenuitem => restmenuitem.FoodCategory).IsRequired();
-            builder.Property(restmenuitem => restmenuitem.Description).HasColumnType("NVARCHAR(20000)").HasDefaultValue("empty");
+            builder.Property(restmenuitem => restmenuitem.Description).HasColumnType("NVARCHAR(MAX)").HasDefaultValue("empty");
             builder.Property(restmenuitem => restmenuitem.PieceSize).IsRequired();
             builder.Property(restmenuitem => restmenuitem.Duration).IsRequired(false);
             builder.Property(restmenuitem => restmenuitem.Name).IsRequired().HasColumnType("NVARCHAR(50)");

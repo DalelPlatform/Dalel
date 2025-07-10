@@ -5,7 +5,7 @@
 namespace Models.Migrations
 {
     /// <inheritdoc />
-    public partial class restaurant : Migration
+    public partial class newrestaurant : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -13,7 +13,7 @@ namespace Models.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Description",
                 table: "Restaurants",
-                type: "NVARCHAR(20000)",
+                type: "NVARCHAR(MAX)",
                 nullable: false,
                 defaultValue: "empty",
                 oldClrType: typeof(string),
@@ -23,7 +23,7 @@ namespace Models.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Description",
                 table: "RestaurantMenuItems",
-                type: "NVARCHAR(20000)",
+                type: "NVARCHAR(MAX)",
                 nullable: false,
                 defaultValue: "empty",
                 oldClrType: typeof(string),
@@ -41,7 +41,7 @@ namespace Models.Migrations
                 nullable: false,
                 defaultValue: "empty",
                 oldClrType: typeof(string),
-                oldType: "NVARCHAR(20000)",
+                oldType: "NVARCHAR(MAX)",
                 oldDefaultValue: "empty");
 
             migrationBuilder.AlterColumn<string>(
@@ -51,7 +51,7 @@ namespace Models.Migrations
                 nullable: false,
                 defaultValue: "empty",
                 oldClrType: typeof(string),
-                oldType: "NVARCHAR(20000)",
+                oldType: "NVARCHAR(MAX)",
                 oldDefaultValue: "empty");
         }
     }
