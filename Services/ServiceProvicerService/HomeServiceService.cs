@@ -522,26 +522,7 @@ namespace Dalel.Services
             }
         }
 
-        public ServiceResult AnswerQuery(int queryId, string answer)
-        {
-            try
-            {
-                if (queryId <= 0)
-                    return ServiceResult.FailureResult("Query ID must be greater than zero.");
-                if (string.IsNullOrEmpty(answer))
-                    return ServiceResult.FailureResult("Answer cannot be null or empty.");
 
-                var success = _serviceQuariesRepository.AnswerQuery(queryId, answer);
-                if (!success)
-                    return ServiceResult.FailureResult("Query not found.");
-
-                return ServiceResult.SuccessResult("Query answered successfully.");
-            }
-            catch (Exception ex)
-            {
-                return ServiceResult.FailureResult("Error: " + ex.Message);
-            }
-        }
 
         public ServiceResult<ServiceQuariesDetailsVM> GetQueryById(int queryId)
         {

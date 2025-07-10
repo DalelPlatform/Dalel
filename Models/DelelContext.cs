@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Models.Agency;
 using Models.Driver;
@@ -207,6 +208,21 @@ namespace Models
             builder.ApplyConfiguration(new RestaurantReervationConfiguration());
             builder.ApplyConfiguration(new ReviewRestaurantOrderConfiguration());
             #endregion
+
+            base.Add<CategoryServices>(new CategoryServices {
+                Id=1,
+                Name="",
+                Description=""
+            });
+
+            base.Add<IdentityRole>(new IdentityRole
+            {
+                Id = "11111",
+                Name = "Client",
+                NormalizedName= "CLIENT"
+            });
+
+
 
 
             base.OnModelCreating(builder);

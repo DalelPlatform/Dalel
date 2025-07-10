@@ -9,8 +9,7 @@ namespace Dalel.ViewModels
 {
     public class AddServiceQuariesVM
     {
-        [Required(ErrorMessage = "Client ID is required.")]
-        public string ClientId { get; set; }
+        
 
         [Required(ErrorMessage = "Category ID is required.")]
         public int CategoryServicesId { get; set; }
@@ -20,6 +19,10 @@ namespace Dalel.ViewModels
         public string Comment { get; set; }
         public DateTime? CommentDate { get; set; } = DateTime.Now;
 
+        public bool IsSenderClient { get; set; }
+
+
+        public string ClientId { get; set; }
         public string ServiceProviderId { get; set; }
     }
 }
