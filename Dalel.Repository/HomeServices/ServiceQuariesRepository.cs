@@ -39,28 +39,13 @@ namespace Dalel.Repository.HomeServices
                          .OrderByDescending(q => q.CommentDate);
         }
 
-        public bool AnswerQuery(int queryId, string answer)
-        {
-            var query = base.GetList(q => q.Id == queryId).FirstOrDefault(); 
-            if (query != null)
-            {
-                query.CommentDate = DateTime.Now;
-                base.Save();
-                return true;
-            }
-            return false;
-        }
 
         public ServiceQuaries GetQueryById(int id)
         {
             return base.Get(q => q.Id == id).FirstOrDefault();
         }
 
-        public void UpdateQuery(ServiceQuaries query)
-        {
-            base.Update(query);
-            base.Save();
-        }
+
 
         //public async Task<PagedResult<ServiceQuaries>> FilterQueriesAsync(
         //    int? categoryId = null,

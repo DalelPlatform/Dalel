@@ -1,33 +1,34 @@
-using Dalel.Repository;
-using Microsoft.EntityFrameworkCore;
-using Models;
-using Models.User;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Text.Json.Serialization;
-using Dalel.Services;
-using Dalel.Services.Agency;
-using Models.Agency;
-using Dalel.Repository.Agency;
-using Serilog;
-using Microsoft.OpenApi.Models;
-using Models.HomeService;
-using Utilities;
-using Models.Restaurant;
-using Models.HomeChef;
-using Models.Property;
-using Models.Hotel;
-using Models.Driver;
-using Dalel.Reopsitory;
-using Dalel.Repository.HomeServices;
-using Utilities.Payments.Gateways;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Dalel.API.Areas.Agency.Hup;
 using Dalel.API.Areas.Agency.UserIdProviders;
-using Microsoft.AspNetCore.SignalR;
+using Dalel.API.Hubs;
+using Dalel.Reopsitory;
+using Dalel.Repository;
+using Dalel.Repository.Agency;
+using Dalel.Repository.HomeServices;
+using Dalel.Services;
+using Dalel.Services.Agency;
 using Hangfire;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Models;
+using Models.Agency;
+using Models.Driver;
+using Models.HomeChef;
+using Models.HomeService;
+using Models.Hotel;
+using Models.Property;
+using Models.Restaurant;
+using Models.User;
+using Serilog;
+using System.Text;
+using System.Text.Json.Serialization;
+using Utilities;
+using Utilities.Payments.Gateways;
 
 
 
@@ -292,6 +293,8 @@ RecurringJob.AddOrUpdate<AgencyPakageService>("SendReviewNotificationsJob",
 // Add this to your Program.cs
 app.MapHub<NotificationHub>("/notificationhub");
 app.MapHub<NotificationHub>("/NotificationServiceHub");
+app.MapHub<ChatHub>("/servicesChatHub");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=index}");

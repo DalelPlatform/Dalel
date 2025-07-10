@@ -9,9 +9,9 @@ namespace Models.HomeService
         public int Id { get; set; }
         public string ServiceProviderId { get; set; }
         public string ClientId { get; set; }
-        //public string? Question { get; set; }
+
+        public bool IsSenderClient { get; set; }
         public string Comment { get; set; }
-        //public DateTime QuestionDate { get; set; }
         public DateTime CommentDate { get; set; }
         public int CategoryServicesId { get; set; }
         public virtual User.Client Client { get; set; }
@@ -26,10 +26,6 @@ namespace Models.HomeService
             // Primary Key
             builder.HasKey(sq => sq.Id);
 
-            // Properties
-            //builder.Property(sq => sq.Question)
-            //    .HasMaxLength(1000);
-
             builder.Property(sq => sq.Comment)
                 .HasMaxLength(1000);
 
@@ -40,7 +36,7 @@ namespace Models.HomeService
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(sq => sq.ServiceProvider)
-                .WithMany()
+                .WithMany(i=>i.Quaries)
                 .HasForeignKey(sq => sq.ServiceProviderId)
                 .OnDelete(DeleteBehavior.NoAction);
 

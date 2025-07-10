@@ -361,3 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Models/HomeService/ServiceQuaries.cs~RF3a9ef15.TMP

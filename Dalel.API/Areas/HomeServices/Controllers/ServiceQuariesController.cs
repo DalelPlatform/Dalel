@@ -19,9 +19,21 @@ namespace Dalel.API.Areas
         }
 
         [HttpPost("create")]
-        //[Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client,ServiceProvider")]
         public IActionResult CreateServiceQuery([FromForm] AddServiceQuariesVM model)
         {
+            var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(UserId))
+                return new JsonResult("User not authenticated.") { StatusCode = 401 };
+
+            if (model.IsSenderClient)
+            {
+                model.ClientId = UserId;
+            }
+            else
+            {
+                model.ServiceProviderId = UserId;
+            }
             var result = _homeServiceService.CreateServiceQuery(model);
             if (!result.Success)
                 return new JsonResult(result.Message);
@@ -61,16 +73,6 @@ namespace Dalel.API.Areas
         {
             var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = _homeServiceService.GetQueriesByProvider(providerId, pageSize, pageNumber);
-            if (!result.Success)
-                return new JsonResult(result.Message);
-            return new JsonResult(result);
-        }
-
-        [HttpPut("answer/{id}")]
-        //[Authorize(Roles = "ServiceProvider")]
-        public IActionResult AnswerQuery(int id, [FromBody] string answer)
-        {
-            var result = _homeServiceService.AnswerQuery(id, answer);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);

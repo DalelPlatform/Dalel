@@ -12,8 +12,8 @@ using Models;
 namespace Models.Migrations
 {
     [DbContext(typeof(DelelContext))]
-    [Migration("20250420223018_paymentupdated")]
-    partial class paymentupdated
+    [Migration("20250710155918_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,56 @@ namespace Models.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "11111",
+                            Name = "Client",
+                            NormalizedName = "CLIENT"
+                        },
+                        new
+                        {
+                            Id = "22222",
+                            Name = "TravelAgencyOwner",
+                            NormalizedName = "TRAVELAGENCYOWNER"
+                        },
+                        new
+                        {
+                            Id = "33333",
+                            Name = "ServiceProvider",
+                            NormalizedName = "SERVICEPROVIDER"
+                        },
+                        new
+                        {
+                            Id = "55555",
+                            Name = "HomeChef",
+                            NormalizedName = "HOMECHEF"
+                        },
+                        new
+                        {
+                            Id = "66666",
+                            Name = "HotelOwner",
+                            NormalizedName = "HOTELOWNER"
+                        },
+                        new
+                        {
+                            Id = "77777",
+                            Name = "PropertyOwner",
+                            NormalizedName = "PROPERTYOWNER"
+                        },
+                        new
+                        {
+                            Id = "88888",
+                            Name = "RestaurantOwner",
+                            NormalizedName = "RESTAURANTOWNER"
+                        },
+                        new
+                        {
+                            Id = "99999",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -217,13 +267,15 @@ namespace Models.Migrations
                     b.Property<float?>("Duration")
                         .HasColumnType("real");
 
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Price")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
 
                     b.Property<string>("TermsPolicies")
                         .IsRequired()
@@ -437,9 +489,6 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AgencyPackageId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -459,7 +508,7 @@ namespace Models.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AgencyPackageId");
+                    b.HasIndex("PackageId");
 
                     b.ToTable("PackageSteps");
                 });
@@ -1095,6 +1144,9 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("ApproximatePrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -1102,17 +1154,21 @@ namespace Models.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PriceUnit")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("ProjectImages")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("ServiceProviderId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("VideoLink")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -1152,6 +1208,9 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -1187,6 +1246,10 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
@@ -1201,10 +1264,18 @@ namespace Models.Migrations
                     b.Property<DateTime>("ReviewDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ServiceProviderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("RequestId")
                         .IsUnique();
+
+                    b.HasIndex("ServiceProviderId");
 
                     b.ToTable("ServiceProviderReviews");
                 });
@@ -1245,14 +1316,6 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Answer")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("AnswerDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("CategoryServicesId")
                         .HasColumnType("int");
 
@@ -1260,13 +1323,16 @@ namespace Models.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Question")
+                    b.Property<string>("Comment")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTime>("QuestionDate")
+                    b.Property<DateTime>("CommentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsSenderClient")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ServiceProviderId")
                         .IsRequired()
@@ -1296,6 +1362,9 @@ namespace Models.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int>("CategoryServicesId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -1308,6 +1377,9 @@ namespace Models.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
@@ -1319,6 +1391,10 @@ namespace Models.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1336,9 +1412,6 @@ namespace Models.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("BookingHotelRoomId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BookingId")
                         .HasColumnType("int");
 
                     b.Property<string>("FullName")
@@ -1380,9 +1453,6 @@ namespace Models.Migrations
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
 
                     b.Property<int>("NumberOfGuests")
                         .HasColumnType("int");
@@ -1561,6 +1631,10 @@ namespace Models.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ClientUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("CodeApplied")
                         .HasColumnType("nvarchar(max)");
 
@@ -1587,6 +1661,10 @@ namespace Models.Migrations
 
                     b.HasIndex("BookingHotelRoomId")
                         .IsUnique();
+
+                    b.HasIndex("ClientUserId");
+
+                    b.HasIndex("HotelId");
 
                     b.ToTable("PaymentHotelRooms", (string)null);
                 });
@@ -1622,6 +1700,13 @@ namespace Models.Migrations
                     b.Property<int>("BookingHotelRoomId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClientUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Comments")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1636,6 +1721,8 @@ namespace Models.Migrations
 
                     b.HasIndex("BookingHotelRoomId")
                         .IsUnique();
+
+                    b.HasIndex("ClientUserId");
 
                     b.ToTable("ReviewHotelRooms", (string)null);
                 });
@@ -1653,34 +1740,8 @@ namespace Models.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("BedType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("RoomNumber")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
                     b.Property<int>("RoomTypeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("ViewType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -1696,10 +1757,6 @@ namespace Models.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AccessibilityFeatures")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1764,16 +1821,6 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("NVARCHAR");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -1784,14 +1831,6 @@ namespace Models.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("NVARCHAR");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("DATETIME");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1800,6 +1839,33 @@ namespace Models.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Service", (string)null);
+                });
+
+            modelBuilder.Entity("Models.Notification.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("notifications");
                 });
 
             modelBuilder.Entity("Models.Property.BookingProperties", b =>
@@ -2157,6 +2223,43 @@ namespace Models.Migrations
                     b.ToTable("Restaurants");
                 });
 
+            modelBuilder.Entity("Models.Restaurant.RestaurantCartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<float>("Quantity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("RestaurantMenuItemId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("SupPrice")
+                        .HasColumnType("real");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("RestaurantMenuItemId");
+
+                    b.ToTable("RestaurantCartItems");
+                });
+
             modelBuilder.Entity("Models.Restaurant.RestaurantImage", b =>
                 {
                     b.Property<int>("Id")
@@ -2201,6 +2304,9 @@ namespace Models.Migrations
                     b.Property<string>("DietaryTags")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Discount")
+                        .HasColumnType("int");
 
                     b.Property<double?>("Duration")
                         .HasColumnType("float");
@@ -2335,6 +2441,9 @@ namespace Models.Migrations
                         .IsRequired()
                         .HasColumnType("NVARCHAR(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("ModificationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -2390,6 +2499,49 @@ namespace Models.Migrations
                         .IsUnique();
 
                     b.ToTable("ReviewRestaurantOrders");
+                });
+
+            modelBuilder.Entity("Models.ServicesNotifications", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ServiceProviderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ServiceRequestId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("ServiceProviderId");
+
+                    b.HasIndex("ServiceRequestId");
+
+                    b.ToTable("ServicesNotifications");
                 });
 
             modelBuilder.Entity("Models.User.AppUser", b =>
@@ -2597,30 +2749,54 @@ namespace Models.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("About")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int?>("AverageRating")
+                        .HasColumnType("int");
 
                     b.Property<int>("CategoryServicesId")
                         .HasColumnType("int");
 
                     b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("District")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.PrimitiveCollection<string>("Skills")
-                        .IsRequired()
+                    b.Property<string>("PriceUnit")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ServiceArea")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("StartProfisionalAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Website")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ZipCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("UserId");
 
@@ -2798,8 +2974,8 @@ namespace Models.Migrations
                 {
                     b.HasOne("Models.Agency.AgencyPackage", "AgencyPackage")
                         .WithMany("PackageSteps")
-                        .HasForeignKey("AgencyPackageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("PackageId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AgencyPackage");
@@ -3045,11 +3221,27 @@ namespace Models.Migrations
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderReview", b =>
                 {
+                    b.HasOne("Models.User.Client", "Client")
+                        .WithMany("ServiceProviderReviews")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Models.HomeService.ServiceRequest", "ServiceRequest")
                         .WithOne("Review")
                         .HasForeignKey("Models.HomeService.ServiceProviderReview", "RequestId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("Models.User.ServiceProvider", "ServiceProvider")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ServiceProviderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("ServiceProvider");
 
                     b.Navigation("ServiceRequest");
                 });
@@ -3080,7 +3272,7 @@ namespace Models.Migrations
                         .IsRequired();
 
                     b.HasOne("Models.User.ServiceProvider", "ServiceProvider")
-                        .WithMany()
+                        .WithMany("Quaries")
                         .HasForeignKey("ServiceProviderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -3201,7 +3393,23 @@ namespace Models.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Models.User.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.Hotel.Hotel", "Hotel")
+                        .WithMany()
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("BookingHotelRoom");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Hotel");
                 });
 
             modelBuilder.Entity("Models.Hotel.ReviewHotelRoom", b =>
@@ -3212,7 +3420,15 @@ namespace Models.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Models.User.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("BookingHotelRoom");
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Models.Hotel.Room", b =>
@@ -3333,6 +3549,25 @@ namespace Models.Migrations
                     b.Navigation("RestaurantOwner");
                 });
 
+            modelBuilder.Entity("Models.Restaurant.RestaurantCartItem", b =>
+                {
+                    b.HasOne("Models.User.Client", "Client")
+                        .WithMany("RestaurautCartItems")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.Restaurant.RestaurantMenuItem", "RestaurantMenuItem")
+                        .WithMany("RestaurautCartItems")
+                        .HasForeignKey("RestaurantMenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("RestaurantMenuItem");
+                });
+
             modelBuilder.Entity("Models.Restaurant.RestaurantImage", b =>
                 {
                     b.HasOne("Models.Restaurant.Restaurant", "Restaurant")
@@ -3432,6 +3667,33 @@ namespace Models.Migrations
                         .IsRequired();
 
                     b.Navigation("RestaurantOrder");
+                });
+
+            modelBuilder.Entity("Models.ServicesNotifications", b =>
+                {
+                    b.HasOne("Models.User.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.User.ServiceProvider", "ServiceProvider")
+                        .WithMany()
+                        .HasForeignKey("ServiceProviderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.HomeService.ServiceRequest", "ServiceRequest")
+                        .WithMany()
+                        .HasForeignKey("ServiceRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("ServiceProvider");
+
+                    b.Navigation("ServiceRequest");
                 });
 
             modelBuilder.Entity("Models.User.Client", b =>
@@ -3696,6 +3958,8 @@ namespace Models.Migrations
                     b.Navigation("RestaurantMenuItemImages");
 
                     b.Navigation("RestaurantOrderItems");
+
+                    b.Navigation("RestaurautCartItems");
                 });
 
             modelBuilder.Entity("Models.Restaurant.RestaurantOrder", b =>
@@ -3746,6 +4010,10 @@ namespace Models.Migrations
 
                     b.Navigation("RestaurantReservations");
 
+                    b.Navigation("RestaurautCartItems");
+
+                    b.Navigation("ServiceProviderReviews");
+
                     b.Navigation("ServiceQuaries");
 
                     b.Navigation("ServiceRequests");
@@ -3790,6 +4058,10 @@ namespace Models.Migrations
                     b.Navigation("Projects");
 
                     b.Navigation("Propsals");
+
+                    b.Navigation("Quaries");
+
+                    b.Navigation("Reviews");
 
                     b.Navigation("Schedules");
                 });

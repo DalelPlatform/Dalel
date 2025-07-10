@@ -1,4 +1,4 @@
-﻿using Dalel.ViewModels.HomeServices.ServiceQuaries;
+﻿using Dalel.ViewModels.HomeServices;
 using Models.HomeService;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,9 @@ namespace Dalel.ViewModels
                 ClientId = vm.ClientId,
                 CategoryServicesId = vm.CategoryServicesId,
                 ServiceProviderId = vm.ServiceProviderId,
-                CommentDate = DateTime.Now
+                Comment = vm.Comment,
+                CommentDate = DateTime.Now,
+                IsSenderClient = vm.IsSenderClient,
             };
         }
         public static ServiceQuaries ToEditModel(this AddServiceQuariesVM vm, ServiceQuaries existing)
@@ -42,11 +44,11 @@ namespace Dalel.ViewModels
                 ClientId = model.ClientId,
                 ClientName = model.Client?.User.UserName ?? "Not Provided",
                 CategoryServicesId = model.CategoryServicesId,
-                CategoryName = model.CategoryServices?.Name ?? "Not Provided",
                 ServiceProviderId = model.ServiceProviderId,
                 ServiceProviderName = model.ServiceProvider?.AppUser?.UserName ?? "Not Provided",
                 Comment = model.Comment,
-                CommentDate = model.CommentDate
+                CommentDate = model.CommentDate,
+                IsSenderClient = model.IsSenderClient
             };
         }
     }

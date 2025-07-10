@@ -35,6 +35,7 @@ namespace Dalel.ViewModels
                 Duration = menuItem.Duration,
                 //VendorName = viewModel.Vendor.User.UserName ?? "Not Provided",
                 RestaurantName = menuItem.Restaurant.Name ?? "Not Provided",
+                Discount = menuItem.Discount,
                 //RestaurantType = menuItem.Restaurant.RestaurantType ,
                 Images = menuItem.RestaurantMenuItemImages.Select(i => i.Image).ToList() ?? new List<string>()
             };

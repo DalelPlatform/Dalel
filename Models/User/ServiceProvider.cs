@@ -25,6 +25,7 @@ namespace Models.User
         public virtual ICollection<ServiceProviderPropsal>? Propsals { get; set; }
         //public ServiceProviderReview? Review { get; set; }
         public virtual ICollection<ServiceProviderReview>? Reviews { get; set; }
+        public virtual ICollection<ServiceQuaries>? Quaries { get; set; }
         public int? AverageRating { get; set; }
         public string? Website { get; set; }
         public decimal? Price { get; set; }

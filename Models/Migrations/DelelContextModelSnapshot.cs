@@ -50,6 +50,56 @@ namespace Models.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "11111",
+                            Name = "Client",
+                            NormalizedName = "CLIENT"
+                        },
+                        new
+                        {
+                            Id = "22222",
+                            Name = "TravelAgencyOwner",
+                            NormalizedName = "TRAVELAGENCYOWNER"
+                        },
+                        new
+                        {
+                            Id = "33333",
+                            Name = "ServiceProvider",
+                            NormalizedName = "SERVICEPROVIDER"
+                        },
+                        new
+                        {
+                            Id = "55555",
+                            Name = "HomeChef",
+                            NormalizedName = "HOMECHEF"
+                        },
+                        new
+                        {
+                            Id = "66666",
+                            Name = "HotelOwner",
+                            NormalizedName = "HOTELOWNER"
+                        },
+                        new
+                        {
+                            Id = "77777",
+                            Name = "PropertyOwner",
+                            NormalizedName = "PROPERTYOWNER"
+                        },
+                        new
+                        {
+                            Id = "88888",
+                            Name = "RestaurantOwner",
+                            NormalizedName = "RESTAURANTOWNER"
+                        },
+                        new
+                        {
+                            Id = "99999",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1278,6 +1328,9 @@ namespace Models.Migrations
                     b.Property<DateTime>("CommentDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsSenderClient")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ServiceProviderId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -2190,6 +2243,10 @@ namespace Models.Migrations
 
                     b.Property<float>("SupPrice")
                         .HasColumnType("real");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -3212,7 +3269,7 @@ namespace Models.Migrations
                         .IsRequired();
 
                     b.HasOne("Models.User.ServiceProvider", "ServiceProvider")
-                        .WithMany()
+                        .WithMany("Quaries")
                         .HasForeignKey("ServiceProviderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -3998,6 +4055,8 @@ namespace Models.Migrations
                     b.Navigation("Projects");
 
                     b.Navigation("Propsals");
+
+                    b.Navigation("Quaries");
 
                     b.Navigation("Reviews");
 
