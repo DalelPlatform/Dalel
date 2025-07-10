@@ -39,6 +39,8 @@ namespace Dalel.ViewModels
         public int? RestaurantId { get; set; }
         public string? RestaurantOwnerId { get; set; }
 
+        public int? Discount { get; set; }
+
 
         //    [Required(ErrorMessage = "Please Provide valid Techer email")]
         //    [StringLength(100, MinimumLength = 3, ErrorMessage = "Product name must contain at least 3 letter and max 100 letter")]
