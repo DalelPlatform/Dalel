@@ -4,6 +4,7 @@ using Dalel.Repository.HomeServices;
 using Dalel.ViewModels;
 using Dalel.ViewModels.HomeServices;
 using Dalel.ViewModels.HomeServices.CategoryServices;
+using Dalel.ViewModels.HomeServices.ServiceNotification;
 using Dalel.ViewModels.HomeServices.ServiceProvider;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -32,6 +33,7 @@ namespace Dalel.Services
         private readonly ServiceProviderRepository _serviceProviderRepository;
         private readonly ClientRepository _clientRepository;
         private UploadMedia uploader;
+        private readonly ServiceNotificationRepository _serviceNotificationRepository;
 
         public HomeServiceService(
             ServiceRequestRepository serviceRequestRepository,
@@ -44,6 +46,7 @@ namespace Dalel.Services
             ServiceProviderPaymentRepository serviceProviderPaymentRepository,
             ServiceProviderRepository serviceProviderRepository,
             ClientRepository clientRepository,
+            ServiceNotificationRepository serviceNotificationRepository,
             UploadMedia uploader)
         {
             _serviceRequestRepository = serviceRequestRepository;
@@ -56,6 +59,7 @@ namespace Dalel.Services
             _serviceProviderPaymentRepository = serviceProviderPaymentRepository;
             _serviceProviderRepository = serviceProviderRepository;
             _clientRepository = clientRepository;
+            _serviceNotificationRepository = serviceNotificationRepository;
             this.uploader = uploader;
         }
         #region Service Request
@@ -728,6 +732,14 @@ namespace Dalel.Services
                     return ServiceResult<ServiceProviderProposalDetailsVM>.FailureResult("Provider has already proposed for this request.");
 
                 _serviceProviderProposalRepository.AddProposal(proposal);
+                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                {
+                    RequestId = proposal.ServiceRequestId,
+                    ServiceProviderId = proposal.ServiceProviderId,
+                    ClientId = proposal.ServiceRequest.ClientId,
+                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                });
+
                 return ServiceResult<ServiceProviderProposalDetailsVM>.SuccessResult(proposal.ToDetailsViewModel(), "Proposal created successfully.");
             }
             catch (Exception ex)
@@ -840,7 +852,13 @@ namespace Dalel.Services
                 if (!updated)
                     return ServiceResult<bool>.FailureResult("Request not found");
 
-
+                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                {
+                    RequestId = proposal.ServiceRequestId,
+                    ServiceProviderId = proposal.ServiceProviderId,
+                    ClientId = proposal.ServiceRequest.ClientId,
+                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                });
                 var otherProposals = _serviceProviderProposalRepository.GetProposalsByRequest(proposal.ServiceRequestId)
                     .Where(p => p.Id != proposalId && p.Status == ProposalStatus.Pending)
                     .ToList();
@@ -873,7 +891,13 @@ namespace Dalel.Services
                     return ServiceResult.FailureResult("Proposal is already processed (accepted or rejected).");
 
                 _serviceProviderProposalRepository.RejectProposal(proposalId);
-
+                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                {
+                    RequestId = proposal.ServiceRequestId,
+                    ServiceProviderId = proposal.ServiceProviderId,
+                    ClientId = proposal.ServiceRequest.ClientId,
+                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                });
                 return ServiceResult.SuccessResult("Proposal rejected successfully.");
             }
             catch (Exception ex)
@@ -899,6 +923,17 @@ namespace Dalel.Services
 
                 if (!proposals.Any())
                     return ServiceResult.FailureResult("No pending proposals found for this service request.");
+                foreach(var proposal in proposals)
+                {
+                    _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                    {
+                        RequestId = proposal.ServiceRequestId,
+                        ServiceProviderId = proposal.ServiceProviderId,
+                        ClientId = proposal.ServiceRequest.ClientId,
+                        Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                    });
+                }
+
 
                 foreach (var proposal in proposals)
                 {
@@ -925,6 +960,13 @@ namespace Dalel.Services
                     return ServiceResult.FailureResult("Proposal not found.");
 
                 _serviceProviderProposalRepository.Delete(proposal);
+                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                {
+                    RequestId = proposal.ServiceRequestId,
+                    ServiceProviderId = proposal.ServiceProviderId,
+                    ClientId = proposal.ServiceRequest.ClientId,
+                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                });
                 return ServiceResult.SuccessResult("Proposal deleted successfully.");
             }
             catch (Exception ex)
@@ -944,6 +986,13 @@ namespace Dalel.Services
                 if (proposal.Status != ProposalStatus.Accepted)
                     return ServiceResult.FailureResult("Proposal must be accepted before it can be completed.");
                 _serviceProviderProposalRepository.CompleteProposal(proposalId);
+                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                {
+                    RequestId = proposal.ServiceRequestId,
+                    ServiceProviderId = proposal.ServiceProviderId,
+                    ClientId = proposal.ServiceRequest.ClientId,
+                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                });
                 _serviceRequestRepository.UpdaterequestsStatus(proposal.ServiceRequestId, RequestStatus.Completed);
                 return ServiceResult.SuccessResult("Proposal completed successfully.");
             }

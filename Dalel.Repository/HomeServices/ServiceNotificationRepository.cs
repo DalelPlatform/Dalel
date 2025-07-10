@@ -1,4 +1,6 @@
-﻿using Models;
+﻿using Dalel.ViewModels.HomeServices;
+using Dalel.ViewModels.HomeServices.ServiceNotification;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -18,7 +20,12 @@ namespace Dalel.Repository.HomeServices
             _context = context;
         }
 
-        public async Task AddAsync(ServicesNotifications notification)
+        public async Task AddAsync(AddServiceNotificationVM notification)
+        {
+            _context.ServicesNotifications.Add(notification.ToModel());
+            await _context.SaveChangesAsync();
+        }
+        public async Task AddClass(ServicesNotifications notification)
         {
             _context.ServicesNotifications.Add(notification);
             await _context.SaveChangesAsync();

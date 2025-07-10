@@ -138,6 +138,8 @@ builder.Services.AddScoped<ServiceProviderReviewRepository>();
 builder.Services.AddScoped<ServiceRequestRepository>();
 builder.Services.AddScoped<ServiceQuariesRepository>();
 builder.Services.AddScoped<HomeServiceService>();
+builder.Services.AddScoped<ServiceNotificationRepository>();
+
 
 
 #endregion
