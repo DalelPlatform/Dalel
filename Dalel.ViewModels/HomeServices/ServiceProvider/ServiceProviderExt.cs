@@ -82,7 +82,7 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
                 PriceUnit = model.PriceUnit,
                 About = model.About,
                 Website = model.Website,
-                CategoryServicesId = model.CategoryServicesId,
+                CategoryServicesId = model.CategoryServicesId??0,
                 Country = model.Country ?? "",
                 ServiceArea = model.ServiceArea ?? "",
                 ZipCode = model.ZipCode ?? "",

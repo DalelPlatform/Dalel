@@ -18,7 +18,7 @@ namespace Models.User
         public string? District { get; set; }
         public string? ZipCode { get; set; }
         public string? About { get; set; }
-        public int CategoryServicesId { get; set; }
+        public int? CategoryServicesId { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
         public virtual ICollection<ServiceProviderProject>? Projects { get; set; }
         public virtual ICollection<ServiceProviderSchedule>? Schedules { get; set; }
