@@ -20,21 +20,20 @@ namespace Dalel.API.Areas
 
         [HttpPost("CreateProject")]
         [Authorize(Roles = "ServiceProvider")]
-        public IActionResult CreateProject([FromForm] AddServiceProviderProjectVM model, [FromForm(Name = "imageFiles")] List<IFormFile> imageFiles)
+        public IActionResult CreateProject([FromForm] AddServiceProviderProjectVM model)
         {
-            var result = _homeServiceService.CreateProject(model, imageFiles);
+            model.ServiceProviderId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = _homeServiceService.CreateProject(model);
             if (!result.Success)
                 return new JsonResult(new { Success = false, Message = result.Message });
             return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
         [HttpGet("provider")]
-        [Authorize(Roles = "ServiceProvider")]
         public IActionResult GetProjectsByProvider(
             [FromQuery] int pageSize = 5,
-            [FromQuery] int pageNumber = 1)
+            [FromQuery] int pageNumber = 1, [FromQuery] string providerId = "")
         {
-            var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = _homeServiceService.GetProjectsByProvider(providerId, pageSize, pageNumber);
             if (!result.Success)
                 return new JsonResult(new { Success = false, Message = result.Message });
@@ -50,27 +49,18 @@ namespace Dalel.API.Areas
             return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("UpdateProject")]
         [Authorize(Roles = "ServiceProvider")]
-        public IActionResult UpdateProject(int projectId, [FromForm] AddServiceProviderProjectVM model, [FromForm(Name = "imageFiles")] List<IFormFile> imageFiles = null)
+        public IActionResult UpdateProject(int projectId, [FromForm] AddServiceProviderProjectVM model)
         {
-            var result = _homeServiceService.UpdateProject(projectId, model, imageFiles);
+            var result = _homeServiceService.UpdateProject(projectId, model);
             if (!result.Success)
                 return new JsonResult(new { Success = false, Message = result.Message });
             return new JsonResult(new { Success = true, Message = result.Message });
         }
 
-        [HttpPut("image/{id}")]
-        [Authorize(Roles = "ServiceProvider")]
-        public IActionResult UpdateProjectImage(int projectId, [FromForm(Name = "imageFiles")] List<IFormFile> imageFiles)
-        {
-            var result = _homeServiceService.UpdateProjectImage(projectId, imageFiles);
-            if (!result.Success)
-                return new JsonResult(new { Success = false, Message = result.Message });
-            return new JsonResult(new { Success = true, Message = result.Message });
-        }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteProject")]
         public IActionResult DeleteProject(int projectId)
         {
             var result = _homeServiceService.DeleteProject(projectId);

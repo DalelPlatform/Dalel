@@ -1006,7 +1006,7 @@ namespace Dalel.Services
 
         #region ServiceProviderProject
 
-        public ServiceResult<ServiceProviderProjectDetailsVM> CreateProject([FromForm] AddServiceProviderProjectVM vm, List<IFormFile> imageFiles)
+        public ServiceResult<ServiceProviderProjectDetailsVM> CreateProject([FromForm] AddServiceProviderProjectVM vm)
         {
             try
             {
@@ -1015,17 +1015,8 @@ namespace Dalel.Services
                 if (string.IsNullOrEmpty(project.Name))
                     return ServiceResult<ServiceProviderProjectDetailsVM>.FailureResult("Project name cannot be null or empty.");
 
-                List<string> imagePaths = new List<string>();
-                if (imageFiles != null && imageFiles.Any())
-                {
-                    foreach (var file in imageFiles)
-                    {
-                        var imagePath = SaveImageFile(file, project.ServiceProviderId);
-                        imagePaths.Add(imagePath);
-                    }
-                }
-
-                _serviceProviderProjectRepository.AddProject(project, imagePaths);
+                vm.Imagepath = uploader.addimage(vm.Image);
+                _serviceProviderProjectRepository.AddProject(project);
                 return ServiceResult<ServiceProviderProjectDetailsVM>.SuccessResult(project.ToDetailsViewModel(), "Project created successfully.");
             }
             catch (Exception ex)
@@ -1079,7 +1070,7 @@ namespace Dalel.Services
             }
         }
 
-        public ServiceResult UpdateProject(int projectId, [FromForm] AddServiceProviderProjectVM vm, List<IFormFile> imageFiles = null)
+        public ServiceResult UpdateProject(int projectId, [FromForm] AddServiceProviderProjectVM vm)
         {
             try
             {
@@ -1087,21 +1078,13 @@ namespace Dalel.Services
                 if (existingProject == null)
                     return ServiceResult.FailureResult("Project not found.");
 
-                var updatedProject = vm.ToModel();
+                var updatedProject = vm.ToEditModel(existingProject);
                 updatedProject.Id = projectId;
+
                 updatedProject.ServiceProviderId = existingProject.ServiceProviderId;
+                vm.Imagepath = uploader.addimage(vm.Image);
 
-                List<string> imagePaths = new List<string>();
-                if (imageFiles != null && imageFiles.Any())
-                {
-                    foreach (var file in imageFiles)
-                    {
-                        var imagePath = SaveImageFile(file, existingProject.ServiceProviderId);
-                        imagePaths.Add(imagePath);
-                    }
-                }
-
-                _serviceProviderProjectRepository.UpdateProject(updatedProject, imagePaths);
+                _serviceProviderProjectRepository.UpdateProject(updatedProject);
                 return ServiceResult.SuccessResult("Project updated successfully.");
             }
             catch (Exception ex)
@@ -1110,30 +1093,30 @@ namespace Dalel.Services
             }
         }
 
-        public ServiceResult UpdateProjectImage(int projectId, List<IFormFile> imageFiles)
-        {
-            try
-            {
-                if (projectId <= 0)
-                    return ServiceResult.FailureResult("Invalid project ID.");
+        //public ServiceResult UpdateProjectImage(int projectId, List<IFormFile> imageFiles)
+        //{
+        //    try
+        //    {
+        //        if (projectId <= 0)
+        //            return ServiceResult.FailureResult("Invalid project ID.");
 
-                if (imageFiles == null || !imageFiles.Any())
-                    return ServiceResult.FailureResult("No image files provided.");
+        //        if (imageFiles == null || !imageFiles.Any())
+        //            return ServiceResult.FailureResult("No image files provided.");
 
-                var project = _serviceProviderProjectRepository.GetById(projectId);
-                if (project == null)
-                    return ServiceResult.FailureResult("Project not found.");
+        //        var project = _serviceProviderProjectRepository.GetById(projectId);
+        //        if (project == null)
+        //            return ServiceResult.FailureResult("Project not found.");
 
-                var imagePaths = imageFiles.Select(file => SaveImageFile(file, project.ServiceProviderId)).ToList();
-                _serviceProviderProjectRepository.UpdateProjectImage(projectId, imagePaths);
+        //        var imagePaths = imageFiles.Select(file => SaveImageFile(file, project.ServiceProviderId)).ToList();
+        //        _serviceProviderProjectRepository.UpdateProjectImage(projectId, imagePaths);
 
-                return ServiceResult.SuccessResult("Project images updated successfully.");
-            }
-            catch (Exception ex)
-            {
-                return ServiceResult.FailureResult("Error: " + ex.Message);
-            }
-        }
+        //        return ServiceResult.SuccessResult("Project images updated successfully.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ServiceResult.FailureResult("Error: " + ex.Message);
+        //    }
+        //}
 
         public ServiceResult DeleteProject(int projectId)
         {
@@ -1859,14 +1842,15 @@ public ServiceResult DeletePayment(int paymentId)
             }
         }
 
-        public ServiceResult<ServiceProviderDetailsVM> UpdateServiceProvider(int providerId, [FromForm] AddServiceProviderVM vm)
+        public ServiceResult<ServiceProviderDetailsVM> UpdateServiceProvider(string providerId, [FromForm] AddServiceProviderVM vm)
         {
+            vm.UserId = providerId;
             try
             {
                 if (string.IsNullOrEmpty(vm.UserId))
                     return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Name cannot be null or empty.");
 
-                var provider = _serviceProviderRepository.GetById(providerId);
+                var provider = _serviceProviderRepository.GetProvider(providerId);
                 if (provider == null)
                     return ServiceResult<ServiceProviderDetailsVM>.FailureResult("Service provider not found.");
 
@@ -1875,6 +1859,13 @@ public ServiceResult DeletePayment(int paymentId)
                 provider.CategoryServicesId = vm.CategoryServicesId;
                 provider.City = vm.City;
                 provider.Country = vm.Country;
+                provider.Price = vm.Price;
+                provider.About = vm.About;
+                provider.District = vm.District;
+                provider.PriceUnit = vm.PriceUnit;
+                provider.ServiceArea = vm.ServiceArea;
+                provider.Website = vm.Website;
+                provider.ZipCode = vm.ZipCode;
 
                 // Save new image if provided
                 var newImagePath = SaveProfileImage(vm.Image);
@@ -1884,6 +1875,7 @@ public ServiceResult DeletePayment(int paymentId)
                 }
 
                 _serviceProviderRepository.Update(provider);
+                _serviceProviderRepository.Save();
 
                 return ServiceResult<ServiceProviderDetailsVM>.SuccessResult(provider.ToDetailsViewModel(), "Service provider updated successfully.");
             }
@@ -1893,11 +1885,11 @@ public ServiceResult DeletePayment(int paymentId)
             }
         }
 
-        public ServiceResult DeleteServiceProvider(int providerId)
+        public ServiceResult DeleteServiceProvider(string providerId)
         {
             try
             {
-                var success = _serviceProviderRepository.GetById(providerId);
+                var success = _serviceProviderRepository.GetProvider(providerId);
                 if (success == null)
                     return ServiceResult.FailureResult("Service provider not found.");
 

@@ -19,18 +19,16 @@ namespace Models.User
         public string? ZipCode { get; set; }
         public string? About { get; set; }
         public int? CategoryServicesId { get; set; }
+        public int? AverageRating { get; set; }
+        public string? Website { get; set; }
+        public decimal? Price { get; set; }
+        public string? PriceUnit { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
         public virtual ICollection<ServiceProviderProject>? Projects { get; set; }
         public virtual ICollection<ServiceProviderSchedule>? Schedules { get; set; }
         public virtual ICollection<ServiceProviderPropsal>? Propsals { get; set; }
-        //public ServiceProviderReview? Review { get; set; }
         public virtual ICollection<ServiceProviderReview>? Reviews { get; set; }
         public virtual ICollection<ServiceQuaries>? Quaries { get; set; }
-        public int? AverageRating { get; set; }
-        public string? Website { get; set; }
-        public decimal? Price { get; set; }
-
-        public string? PriceUnit { get; set; }
 
     }
     public class ServiceProviderConfiguration : IEntityTypeConfiguration<ServiceProvider>
