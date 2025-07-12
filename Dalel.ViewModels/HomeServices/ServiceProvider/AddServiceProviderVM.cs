@@ -22,16 +22,16 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
         public string City { get; set; }
         public string Country { get; set; }
         public string District { get; set; }
-        public string ServiceArea { get; set; }
-        public string ZipCode { get; set; }
+        public string? ServiceArea { get; set; }
+        public string? ZipCode { get; set; }
         [Required(ErrorMessage = "Price is required.")]
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Price unit is required.")]
-        public string PriceUnit { get; set; }
+        public string? PriceUnit { get; set; }
 
-        public string About { get; set; }
-        public string Website { get; set; }
+        public string? About { get; set; }
+        public string? Website { get; set; }
         [Required(ErrorMessage = "Category number is required.")]
         public int CategoryServicesId { get; set; }
         public List<AddServiceProviderScheduleItemVM>? Schedules { get; set; }  = new List<AddServiceProviderScheduleItemVM>();

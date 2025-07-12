@@ -18,9 +18,10 @@ namespace Dalel.ViewModels
         [Required(ErrorMessage = "Price unit is required.")]
         public string PriceUnit { get; set; }
 
-        public string VideoLink { get; set; }
-        public IFormCollection ImageFiles { get; set; } 
         public string ServiceProviderId { get; set; }
+        [Required(ErrorMessage = "Image Is Required")]
+        public IFormFile Image { get; set; }
+        public string? Imagepath { get; set; } = "";
 
     }
 }

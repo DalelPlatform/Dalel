@@ -10,7 +10,6 @@ namespace Dalel.ViewModels
         public string Description { get; set; }
         public decimal ApproximatePrice { get; set; }
         public string PriceUnit { get; set; }
-        public string VideoLink { get; set; }
-        public List<string> ImagePaths { get; set; }
+        public string? Image { get; set; }
     }
 }

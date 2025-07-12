@@ -43,6 +43,7 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
             existing.City = vm.City;
             existing.Price = vm.Price;
             existing.PriceUnit = vm.PriceUnit;
+            existing.District = vm.District;
             existing.About = vm.About;
             existing.Website = vm.Website;
             existing.ServiceArea = vm.ServiceArea;
@@ -82,7 +83,7 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
                 PriceUnit = model.PriceUnit,
                 About = model.About,
                 Website = model.Website,
-                CategoryServicesId = model.CategoryServicesId,
+                CategoryServicesId = model.CategoryServicesId??0,
                 Country = model.Country ?? "",
                 ServiceArea = model.ServiceArea ?? "",
                 ZipCode = model.ZipCode ?? "",
@@ -94,17 +95,8 @@ namespace Dalel.ViewModels.HomeServices.ServiceProvider
                     WorKDay = s.WorKDay,
                     AvailableFrom = s.AvailableFrom,
                     AvailableTo = s.AvailableTo
-                }).ToList() ?? new List<ServiceProviderScheduleDetailsVM>(),
-                Projects = model.Projects?.Select(p => new ServiceProviderProjectDetailsVM
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    ApproximatePrice = p.ApproximatePrice,
-                    PriceUnit = p.PriceUnit,
-                    VideoLink = p.VideoLink,
-                    ImagePaths = p.ServiceProviderProjectImages?.Select(i => i.ImagePath).ToList() ?? new List<string>()
-                }).ToList() ?? new List<ServiceProviderProjectDetailsVM>()
+                }).ToList() ?? new List<ServiceProviderScheduleDetailsVM>()
+                
             };
         }
     }

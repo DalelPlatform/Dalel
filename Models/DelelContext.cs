@@ -67,7 +67,6 @@ namespace Models
         public DbSet<ServiceProviderSchedule> ServiceProviderSchedules { get; set; }
         public DbSet<ServiceQuaries> ServiceQuaries { get; set; }
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
-        public DbSet<ServiceProviderProjectImages> ServiceProviderProjectImages { get; set; }
         public DbSet<ServicesNotifications> ServicesNotifications { get; set; }
 
 
@@ -169,7 +168,6 @@ namespace Models
             builder.ApplyConfiguration(new ServiceProviderScheduleConfigration());
             builder.ApplyConfiguration(new ServiceQuariesConfiguration());
             builder.ApplyConfiguration(new ServiceRequestConfiguration());
-            builder.ApplyConfiguration(new ServiceProviderProjectImagesConfiguration());
             builder.ApplyConfiguration(new ServicesNotificationsConfiguration());
             #endregion
 

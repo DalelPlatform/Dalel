@@ -1,4 +1,5 @@
 ﻿using Dalel.Repository.HomeServices;
+using Dalel.ViewModels.HomeServices;
 using Dalel.ViewModels.HomeServices.ServiceNotification;
 using Dalel.ViewModels.notification;
 using Microsoft.AspNetCore.SignalR;
@@ -35,7 +36,7 @@ namespace Dalel.Services
                 ServiceProviderId = model.IsToClient ? model.FromUserId : model.ToUserId
             };
 
-            await _repo.AddAsync(notification);
+             _repo.AddClass(notification);
 
             await _hub.Clients.User(model.ToUserId).SendAsync("ReceiveNotification", new
             {
