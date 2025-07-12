@@ -103,7 +103,10 @@ namespace Dalel.Repository
         {
             return Table.Find(id);
         }
-
+        public T GetById(string id)
+        {
+            return Table.Find(id);
+        }
         public void Add(T newRow)
         {
             Table.Add(newRow);

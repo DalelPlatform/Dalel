@@ -2,6 +2,7 @@
 using Models.Restaurant;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Dalel.ViewModels
 {
@@ -15,21 +16,10 @@ namespace Dalel.ViewModels
                 Description = vm.Description,
                 ApproximatePrice = vm.ApproximatePrice,
                 PriceUnit = vm.PriceUnit,
-                VideoLink = vm.VideoLink,
-                ServiceProviderId = vm.ServiceProviderId 
-            };
-            project.ServiceProviderProjectImages = new List<ServiceProviderProjectImages>();
+                ServiceProviderId = vm.ServiceProviderId,
+                Image =  vm.Image != null ? $"/images/serviceproviderProject/{vm.ServiceProviderId}/{vm.Image.FileName}" : null,
 
-            if(vm.ImageFiles != null && vm.ImageFiles.Any())
-            {
-                foreach (var imageFile in vm.ImageFiles)
-                {
-                    project.ServiceProviderProjectImages.Add(new ServiceProviderProjectImages
-                    {
-                        ImagePath = imageFile.Value 
-                    });
-                }
-            }
+            };
 
             return project;
         }
@@ -40,21 +30,7 @@ namespace Dalel.ViewModels
             existing.Description = vm.Description;
             existing.ApproximatePrice = vm.ApproximatePrice;
             existing.PriceUnit = vm.PriceUnit;
-            existing.VideoLink = vm.VideoLink;
-
-            if(vm.ImageFiles != null && vm.ImageFiles.Any())
-            {
-                // Clear existing images and add the new ones
-                existing.ServiceProviderProjectImages.Clear();
-                foreach (var imageFile in vm.ImageFiles)
-                {
-                    existing.ServiceProviderProjectImages.Add(new ServiceProviderProjectImages
-                    {
-                        ImagePath = imageFile.Value
-                    });
-                }
-            }
-
+            existing.Image = vm.Image != null ? vm.Imagepath : existing.Image;
 
             return existing;
         }
@@ -68,8 +44,8 @@ namespace Dalel.ViewModels
                 Description = model.Description,
                 ApproximatePrice = model.ApproximatePrice,
                 PriceUnit = model.PriceUnit,
-                VideoLink = model.VideoLink,
-                ImagePaths = model.ServiceProviderProjectImages?.Select(i => i.ImagePath).ToList() ?? new List<string>()
+                Image = model.Image,
+
             };
         }
     }

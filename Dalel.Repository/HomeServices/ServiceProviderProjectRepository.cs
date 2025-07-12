@@ -24,51 +24,41 @@ namespace Dalel.Repository
                 .OrderByDescending(p => p.Id);
         }
 
-        public void AddProject(ServiceProviderProject project, List<string> imagePath = null)
+        public void AddProject(ServiceProviderProject project)
         {
-            if (imagePath!= null && imagePath.Any())
-            {
-                project.ServiceProviderProjectImages = 
-                    imagePath.Select(ip => new ServiceProviderProjectImages
-                    { ImagePath = ip }).ToList();
-            }
             base.Add(project);
             base.Save();
 
         }
 
-        public void UpdateProject(ServiceProviderProject project, List<string> imagePath = null)
+        public void UpdateProject(ServiceProviderProject project)
         {
-            if (imagePath != null && imagePath.Any())
-            {
-                UpdateProjectImage(project.Id, imagePath);
-            }
             base.Update(project);
             base.Save();
         }
 
-        public void UpdateProjectImage(int projectId, List<string> imagePath = null)
-        {
-            var project = base.Get(p => p.Id == projectId).FirstOrDefault();
-            if (project != null)
-            {
-                var existingImages =  _context.ServiceProviderProjectImages
-                .Where(i => i.ServiceProviderProjectId == projectId)
-                .ToList();
+        //public void UpdateProjectImage(int projectId, List<string> imagePath = null)
+        //{
+        //    var project = base.Get(p => p.Id == projectId).FirstOrDefault();
+        //    if (project != null)
+        //    {
+        //        var existingImages =  _context.ServiceProviderProjectImages
+        //        .Where(i => i.ServiceProviderProjectId == projectId)
+        //        .ToList();
 
-                if (existingImages.Any())
-                {
-                    _context.ServiceProviderProjectImages.RemoveRange(existingImages);
-                }
+        //        if (existingImages.Any())
+        //        {
+        //            _context.ServiceProviderProjectImages.RemoveRange(existingImages);
+        //        }
 
-                project.ServiceProviderProjectImages = 
-                    imagePath.Select(ip => new ServiceProviderProjectImages 
-                    { ImagePath = ip }).ToList();
+        //        project.ServiceProviderProjectImages = 
+        //            imagePath.Select(ip => new ServiceProviderProjectImages 
+        //            { ImagePath = ip }).ToList();
 
-                base.Update(project);
-                base.Save();
-            }
-        }
+        //        base.Update(project);
+        //        base.Save();
+        //    }
+        //}
 
         public void DeleteProject(int projectId)
         {

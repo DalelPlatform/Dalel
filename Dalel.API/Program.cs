@@ -7,6 +7,7 @@ using Dalel.Repository.Agency;
 using Dalel.Repository.HomeServices;
 using Dalel.Services;
 using Dalel.Services.Agency;
+using Dalel.ViewModels.HomeServices.ServiceNotification;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -138,6 +139,8 @@ builder.Services.AddScoped<ServiceProviderReviewRepository>();
 builder.Services.AddScoped<ServiceRequestRepository>();
 builder.Services.AddScoped<ServiceQuariesRepository>();
 builder.Services.AddScoped<HomeServiceService>();
+builder.Services.AddScoped<ServiceNotificationRepository>();
+
 
 
 #endregion

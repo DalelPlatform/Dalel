@@ -21,7 +21,7 @@ namespace Dalel.Repository
         public ServiceProvider GetProviderWithDetails(string providerId)
         {
             return base.GetList(sp => sp.UserId == providerId).FirstOrDefault();
-            
+
         }
         public bool CheckProfileCompleteness(string userId)
         {
@@ -32,7 +32,7 @@ namespace Dalel.Repository
             }
             return !string.IsNullOrWhiteSpace(serviceProvider.Address) &&
                    !string.IsNullOrWhiteSpace(serviceProvider.City) &&
-                   !string.IsNullOrWhiteSpace(serviceProvider.Country)&&
+                   !string.IsNullOrWhiteSpace(serviceProvider.Country) &&
                    !string.IsNullOrWhiteSpace(serviceProvider.District) &&
                    !string.IsNullOrWhiteSpace(serviceProvider.ZipCode) &&
                    !string.IsNullOrWhiteSpace(serviceProvider.ServiceArea) &&
@@ -63,6 +63,10 @@ namespace Dalel.Repository
                 .Select(x => x.Provider);
 
             return query;
+        }
+        public ServiceProvider GetProvider(string Id)
+        {
+            return base.GetById(Id);
         }
 
         // Check if provider exists

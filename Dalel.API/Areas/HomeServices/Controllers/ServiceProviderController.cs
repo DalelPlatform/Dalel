@@ -124,10 +124,11 @@ namespace Dalel.API.Areas
             return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("UpdateServiceProfile")]
         [Authorize(Roles = "ServiceProvider,Admin")]
-        public IActionResult UpdateServiceProvider(int id, [FromForm] AddServiceProviderVM model, [FromQuery] VerificationStatus? verificationStatus = null)
+        public IActionResult UpdateServiceProvider([FromForm] AddServiceProviderVM model)
         {
+            string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = _homeServiceService.UpdateServiceProvider(id, model);
             if (!result.Success)
                 return new JsonResult(new { Success = false, Message = result.Message });
@@ -136,7 +137,7 @@ namespace Dalel.API.Areas
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult DeleteServiceProvider(int id)
+        public IActionResult DeleteServiceProvider(string id)
         {
             var result = _homeServiceService.DeleteServiceProvider(id);
             if (!result.Success)
