@@ -22,7 +22,7 @@ namespace Models.Restaurant
         public string Address { get; set; } 
         public string? Note { get; set; } //optional
 
-        public string? PhoneNumber { get; set; } //optional
+        public string PhoneNumber { get; set; } //optional
 
         public string City { get; set; } //optional
 
