@@ -6,6 +6,7 @@ using Dalel.ViewModels.Agency.AgencyPackage;
 using Dalel.ViewModels.Agency.AgencyVerificationDocument;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Models.Hotel;
 using Newtonsoft.Json.Linq;
@@ -93,6 +94,12 @@ namespace Dalel.API.Areas.Agency.Controllers
             return new JsonResult(result);
         }
 
-
-    }
+        [HttpGet("TopPackages")]
+        public IActionResult GetTopPackages()
+        {
+            var result = _pakageService.GetTopBookedPackages();
+         
+            return new JsonResult(result);
+        }
+        }
 }
