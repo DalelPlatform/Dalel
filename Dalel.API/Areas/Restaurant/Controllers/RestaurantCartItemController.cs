@@ -39,7 +39,7 @@ namespace Dalel.API.Areas.Restaurant.Controllers
 
 
         [HttpGet("GetCartItems")]
-        //[Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client")]
         public IActionResult GetCartItems()
         {
             var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -56,22 +56,24 @@ namespace Dalel.API.Areas.Restaurant.Controllers
 
 
         [HttpPut("EditCartItem/{id}")]
-        //[Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client")]
         public IActionResult EditCartItem([FromBody] AddRestaurantCartItemVM edit, int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             edit.ClientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = restaurantService.UpdateCartItem(id, edit);
-            if (ModelState.IsValid)
-            {
-                if (!result.Success)
-                    return new JsonResult(result);
-            }
+
+            if (!result.Success)
+                return new JsonResult(result);
             return new JsonResult(result);
         }
 
 
+
         [HttpDelete("DeleteCartItem/{id}")]
-        //[Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client")]
 
         public IActionResult DeleteCartItem(int id)
         {
@@ -80,6 +82,11 @@ namespace Dalel.API.Areas.Restaurant.Controllers
                 return new JsonResult(result);
             return new JsonResult(result);
         }
+
+
+
+
+
 
     }
 }

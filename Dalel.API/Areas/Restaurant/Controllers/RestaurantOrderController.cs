@@ -5,6 +5,7 @@ using Dalel.ViewModels.Restaurant;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models.Enums;
 
 namespace Dalel.API.Areas.Restaurant.Controllers
 {
@@ -23,8 +24,8 @@ namespace Dalel.API.Areas.Restaurant.Controllers
         [Authorize(Roles = "Client")]
         public IActionResult AddOrder([FromBody] AddRestaurantOrderVM order)
         {
-           
 
+            order.OrderStatus = OrderStatus.Panding;
             var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(clientId))
                 return new JsonResult("ClientId cannot be null or empty.");
