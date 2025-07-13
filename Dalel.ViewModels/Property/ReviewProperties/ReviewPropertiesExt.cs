@@ -28,6 +28,11 @@ namespace Dalel.ViewModels
                 Id = reviewProperties.Id,
                 Comments = reviewProperties.Comments,
                 Rating = reviewProperties.Rating,
+                ModificationDateTime = reviewProperties.ModificationDateTime,
+                PropertyId = reviewProperties.BookingPropertyId,
+                PropertyName = reviewProperties.BookingProperties.Properties.Description,
+                ClientName = reviewProperties.BookingProperties.Client.User.FirstName + " " + reviewProperties.BookingProperties.Client.User.LastName,
+                ClientId = reviewProperties.BookingProperties.ClientId,
             };
         }
     }

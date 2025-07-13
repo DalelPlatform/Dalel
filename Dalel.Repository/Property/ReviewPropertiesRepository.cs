@@ -24,7 +24,12 @@ namespace Dalel.Repository
         {
             return GetList(rp => rp.BookingPropertyId == bookingPropertyId);
         }
-
+        
+        public async Task<List<ReviewPropertiesDetailsVM>> GetAllReviews(string ownerid)
+        {
+            return GetList(b => b.BookingProperties.Properties.OwnerId == ownerid)
+                .Select(p => p.ToDetailsViewModel()).ToList();
+        }
         public IQueryable<ReviewPropertiesDetailsVM> GetReviewsByRating(float rating)
         {
             return GetList(rp => rp.Rating >= rating).Select(rp => rp.ToDetailsViewModel());

@@ -11,6 +11,16 @@ namespace Dalel.ViewModels
     {
         [Required(ErrorMessage = "This Field is Required")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Value Must at least 6 letter ")]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "This Field is Required")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Value Must at least 6 letter ")]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Required(ErrorMessage = "This Field is Required")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Value Must at least 6 letter ")]
         [Display(Name = "User Name")]
         public string UserName { get; set; }
 

@@ -71,6 +71,8 @@ namespace Dalel.API.Areas
         public  IActionResult AddProperty([FromForm] AddPropertiesVM property)
         {
             if (!ModelState.IsValid)
+                return new JsonResult("Invalid Form");
+
             property.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             property.Paths = uploader.addimage(property.PropertyImages);
             var result =  propertyService.AddProperty(property.ToModel());
@@ -140,6 +142,16 @@ namespace Dalel.API.Areas
 
         }
 
+        [HttpGet("get-top-three-bookings")]
+        public IActionResult GetTop3Bookings()
+        {
+            var result = propertyService.GetTop3Bookings();
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+
+        }
+
         [HttpPost("Payment")]
         public async Task<IActionResult> AddPayment(AddPaymentPropertiesVM payment)
         {
@@ -178,6 +190,16 @@ namespace Dalel.API.Areas
         public async Task<IActionResult> DeleteReview(int reviewId)
         {
             var result = await propertyService.DeleteReview(reviewId);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+
+        [HttpGet("get-all-reviews")]
+        public async Task<IActionResult> GetAllReviews()
+        {
+            string ownerid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = await propertyService.GetAllReviews(ownerid);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);

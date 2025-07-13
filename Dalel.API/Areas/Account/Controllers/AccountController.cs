@@ -27,7 +27,7 @@ namespace Dalel.API.Controllers
 
 
         [HttpGet("MyAccount")]
-        [Authorize(Roles = "Client,ServiceProvider,Admin")]
+        //[Authorize(Roles = "Client,ServiceProvider,Admin")]
         public IActionResult getMyAccount()
         {
             string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -38,13 +38,23 @@ namespace Dalel.API.Controllers
                 Data = new
                 {
                     result.Result.Id,
-                    result.Result.UserName,
+                    result.Result.FirstName,
+                    result.Result.LastName,
                     result.Result.Email,
+                    result.Result.UserName,
                     result.Result.PhoneNumber,
                     result.Result.ProfileImg,
                 },
                     Message = "User retrieved successfully" });
         }
+
+        //[HttpGet("update-account")]
+        //public IActionResult UpdateMyAccount()
+        //{
+        //    string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //    var result = accountService.GetUserById(id);
+            
+        //}
 
         [HttpGet("GetUserById")]
         public async Task<IActionResult> GetUserById(string id)
@@ -152,6 +162,7 @@ namespace Dalel.API.Controllers
                         Role = role,
                         Image = user.ProfileImg,
                         FullName = user.FirstName + " " + user.LastName,
+                        Email = user.Email,
                     });
 
                 }

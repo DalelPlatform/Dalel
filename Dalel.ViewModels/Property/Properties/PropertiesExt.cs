@@ -31,7 +31,12 @@ namespace Dalel.ViewModels
                 CancelationOptions = viewModel.CancelationOptions,
                 IsForRent = viewModel.IsForRent,
                 VerificationStatus = viewModel.VerificationStatus,
-                OwnerId = viewModel.OwnerId
+                OwnerId = viewModel.OwnerId,
+                PropertyImages = viewModel.Paths.Select(path => new PropertyImages
+                {
+                    Image = path
+                }).ToList(),
+
             };
         }
         

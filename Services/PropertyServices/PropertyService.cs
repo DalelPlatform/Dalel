@@ -17,6 +17,7 @@ namespace Dalel.Services
         private readonly PaymentPropertiesRepository _paymentRepo;
         private readonly PropertiesRepository _propertiesRepo;
         private readonly ReviewPropertiesRepository _reviewRepo;
+        private readonly UploadMedia uploadMedia;
         private readonly IPaymentProcessor<PaymentProperties> paymentProcessor;
 
         public PropertyService(
@@ -24,13 +25,15 @@ namespace Dalel.Services
             PaymentPropertiesRepository paymentRepo,
             PropertiesRepository propertiesRepo,
             ReviewPropertiesRepository reviewRepo,
-            IPaymentProcessor<PaymentProperties> paymentProcessor)
+            IPaymentProcessor<PaymentProperties> paymentProcessor,
+            UploadMedia uploadMedia)
         {
             _bookingRepo = bookingRepo;
             _paymentRepo = paymentRepo;
             _propertiesRepo = propertiesRepo;
             _reviewRepo = reviewRepo;
             this.paymentProcessor = paymentProcessor;
+            this.uploadMedia = uploadMedia;
         }
 
         #region Properties
@@ -88,10 +91,36 @@ namespace Dalel.Services
                 return ServiceResult<List<PropertiesDetailsVM>>.FailureResult(ex.Message);
             }
         }
+
+        public ServiceResult<List<PropertiesDetailsVM>> GetTop3Bookings()
+        {
+            // First, load all properties into memory
+            var properties = _propertiesRepo.GetList()
+                .ToList(); // <-- force immediate materialization
+
+            var top3 = properties
+                .Select(p => new
+                {
+                    Property = p,
+                    AvgRating = p.BookingProperties
+                        .Where(bp => bp.ReviewProperties != null)
+                        .Select(bp => bp.ReviewProperties.Rating)
+                        .DefaultIfEmpty(0)
+                        .Average()
+                })
+                .OrderByDescending(x => x.AvgRating)
+                .Take(3)
+                .Select(x => x.Property.ToDetailsViewModel())
+                .ToList();
+
+            return ServiceResult<List<PropertiesDetailsVM>>.SuccessResult(top3, "bookings found");
+        }
+
         public ServiceResult AddProperty(Properties property)
         {
             try
             {
+
                 _propertiesRepo.Add(property);
                 return ServiceResult.SuccessResult("Property added successfully.");
             }
@@ -307,6 +336,22 @@ namespace Dalel.Services
             catch (Exception ex)
             {
                 return ServiceResult.FailureResult(ex.Message);
+            }
+        }
+        
+        public async Task<ServiceResult<List<ReviewPropertiesDetailsVM>>> GetAllReviews(string ownerid)
+        {
+            try
+            {
+                var reviews = await _reviewRepo.GetAllReviews(ownerid);
+                if (reviews == null || reviews.Count() <= 0)
+                    return ServiceResult<List<ReviewPropertiesDetailsVM>>.FailureResult("No Reviews Found");
+
+                return ServiceResult<List<ReviewPropertiesDetailsVM>>.SuccessResult(reviews, "Reviews found");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<ReviewPropertiesDetailsVM>>.FailureResult(ex.Message);
             }
         }
 

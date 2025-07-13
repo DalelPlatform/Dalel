@@ -13,6 +13,8 @@ namespace Dalel.ViewModels
         {
             return new AppUser
             {
+                FirstName = viewmodel.FirstName,
+                LastName = viewmodel.LastName,
                 NationalId = viewmodel.NationalId,
                 UserName = viewmodel.UserName,
                 Email = viewmodel.Email,
