@@ -1114,7 +1114,7 @@ namespace Models.Migrations
 
                     b.HasIndex("ServiceProviderId");
 
-                    b.ToTable("Chats");
+                    b.ToTable("ServiceChats");
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderPayment", b =>
@@ -1321,6 +1321,9 @@ namespace Models.Migrations
                     b.Property<int>("CategoryServicesId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -1333,14 +1336,8 @@ namespace Models.Migrations
                     b.Property<DateTime>("CommentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsSenderClient")
                         .HasColumnType("bit");
-
-                    b.Property<int>("ServiceChatId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ServiceProviderId")
                         .IsRequired()
@@ -1350,9 +1347,9 @@ namespace Models.Migrations
 
                     b.HasIndex("CategoryServicesId");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("ChatId");
 
-                    b.HasIndex("ServiceChatId");
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("ServiceProviderId");
 
@@ -3176,7 +3173,7 @@ namespace Models.Migrations
             modelBuilder.Entity("Models.HomeService.ServiceChat", b =>
                 {
                     b.HasOne("Models.User.Client", "Client")
-                        .WithMany("Chats")
+                        .WithMany("ServiceChats")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -3279,15 +3276,15 @@ namespace Models.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Models.User.Client", "Client")
-                        .WithMany("ServiceQuaries")
-                        .HasForeignKey("ClientId")
+                    b.HasOne("Models.HomeService.ServiceChat", "Chat")
+                        .WithMany("Quaries")
+                        .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Models.HomeService.ServiceChat", "Chat")
-                        .WithMany("Quaries")
-                        .HasForeignKey("ServiceChatId")
+                    b.HasOne("Models.User.Client", "Client")
+                        .WithMany("ServiceQuaries")
+                        .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -4021,8 +4018,6 @@ namespace Models.Migrations
 
                     b.Navigation("BookingVehicles");
 
-                    b.Navigation("Chats");
-
                     b.Navigation("HomeChefOrders");
 
                     b.Navigation("Inquiries");
@@ -4034,6 +4029,8 @@ namespace Models.Migrations
                     b.Navigation("RestaurantReservations");
 
                     b.Navigation("RestaurautCartItems");
+
+                    b.Navigation("ServiceChats");
 
                     b.Navigation("ServiceProviderReviews");
 

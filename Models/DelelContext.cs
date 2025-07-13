@@ -66,7 +66,7 @@ namespace Models
         public DbSet<ServiceProviderReview> ServiceProviderReviews { get; set; }
         public DbSet<ServiceProviderSchedule> ServiceProviderSchedules { get; set; }
         public DbSet<ServiceQuaries> ServiceQuaries { get; set; }
-        public DbSet<ServiceChat> Chats { get; set; }
+        public DbSet<ServiceChat> ServiceChats { get; set; }
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
         public DbSet<ServicesNotifications> ServicesNotifications { get; set; }
 
