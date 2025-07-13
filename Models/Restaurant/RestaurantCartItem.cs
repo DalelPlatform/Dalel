@@ -19,8 +19,7 @@ namespace Models.Restaurant
 
         public virtual Client Client { get; set; }
         public string ClientId { get; set; } // fk
-        public string name { get; set; } // optional, for display purposes
-
+        
         public int RestaurantMenuItemId { get; set; } 
 
         public virtual RestaurantMenuItem RestaurantMenuItem { get; set; }

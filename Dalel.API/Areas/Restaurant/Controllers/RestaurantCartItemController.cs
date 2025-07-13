@@ -13,10 +13,14 @@ namespace Dalel.API.Areas.Restaurant.Controllers
     {
 
         private RestaurantService restaurantService;
+        public RestaurantCartItemController(RestaurantService restaurantService)
+        {
+            this.restaurantService = restaurantService;
+        }
 
         [HttpPost("AddToCart")]
         //[Authorize(Roles = "Client")]
-        public IActionResult AddToCart([FromForm] AddRestaurantCartItemVM item)
+        public IActionResult AddToCart([FromBody] AddRestaurantCartItemVM item)
         {
             item.ClientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (item.ClientId == null)
@@ -39,6 +43,11 @@ namespace Dalel.API.Areas.Restaurant.Controllers
         public IActionResult GetCartItems()
         {
             var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(clientId))
+            {
+                return new JsonResult("UnAuthorized.");
+            }
             var result = restaurantService.GetCartItemsByClientId(clientId);
             if (!result.Success)
                 return new JsonResult(result);

@@ -12,19 +12,12 @@ namespace Models.User
         public string? LastName { get; set; }
         public string? NationalId { get; set; }
         public string? Location { get; set; }
-
         public string? Address { get; set; }
-
         public string? City { get; set; }
-
         public string? ProfileImg { get; set; }
-
         public string? ModificationBy { get; set; }
-
         public DateTime? ModificationDate { get; set; }
-
         public bool? IsDeleted { get; set; }
-
 
         //Relations :
         public virtual Client? Client { get; set; }

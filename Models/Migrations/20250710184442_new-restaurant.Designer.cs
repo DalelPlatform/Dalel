@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
@@ -11,9 +12,11 @@ using Models;
 namespace Models.Migrations
 {
     [DbContext(typeof(DelelContext))]
-    partial class DelelContextModelSnapshot : ModelSnapshot
+    [Migration("20250710184442_new-restaurant")]
+    partial class newrestaurant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1149,10 +1152,6 @@ namespace Models.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("Image")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1167,11 +1166,38 @@ namespace Models.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("VideoLink")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ServiceProviderId");
 
                     b.ToTable("ServiceProviderProjects");
+                });
+
+            modelBuilder.Entity("Models.HomeService.ServiceProviderProjectImages", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("ServiceProviderProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceProviderProjectId");
+
+                    b.ToTable("ServiceProviderProjectImages");
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceProviderPropsal", b =>
@@ -2221,6 +2247,10 @@ namespace Models.Migrations
                     b.Property<float>("SupPrice")
                         .HasColumnType("real");
 
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
@@ -3159,6 +3189,17 @@ namespace Models.Migrations
                     b.Navigation("ServiceProvider");
                 });
 
+            modelBuilder.Entity("Models.HomeService.ServiceProviderProjectImages", b =>
+                {
+                    b.HasOne("Models.HomeService.ServiceProviderProject", "ServiceProviderProject")
+                        .WithMany("ServiceProviderProjectImages")
+                        .HasForeignKey("ServiceProviderProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ServiceProviderProject");
+                });
+
             modelBuilder.Entity("Models.HomeService.ServiceProviderPropsal", b =>
                 {
                     b.HasOne("Models.User.ServiceProvider", "ServiceProvider")
@@ -3822,6 +3863,11 @@ namespace Models.Migrations
                     b.Navigation("Quaries");
 
                     b.Navigation("ServiceProviders");
+                });
+
+            modelBuilder.Entity("Models.HomeService.ServiceProviderProject", b =>
+                {
+                    b.Navigation("ServiceProviderProjectImages");
                 });
 
             modelBuilder.Entity("Models.HomeService.ServiceRequest", b =>

@@ -17,7 +17,7 @@ namespace Dalel.ViewModels
 
 
         [Required(ErrorMessage = "Please provide a valid description.")]
-        [StringLength(200, MinimumLength = 20, ErrorMessage = "Description must be between 20 and 200 characters.")]
+        [StringLength(20000, MinimumLength = 20, ErrorMessage = "Description must be between 20 and 20000 characters.")]
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Number of rooms is required.")]
