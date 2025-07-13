@@ -1,8 +1,11 @@
-﻿using Dalel.Services;
+﻿using Dalel.API.Hubs;
+using Dalel.Services;
 using Dalel.ViewModels;
 using Dalel.ViewModels.HomeServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Models.HomeService;
 using System.Security.Claims;
 
 namespace Dalel.API.Areas
@@ -12,13 +15,16 @@ namespace Dalel.API.Areas
     public class ServiceQuariesController : ControllerBase
     {
         private readonly HomeServiceService _homeServiceService;
+        private readonly IHubContext<ChatHub> _hub;
 
-        public ServiceQuariesController(HomeServiceService homeServiceService)
+
+        public ServiceQuariesController(HomeServiceService homeServiceService,IHubContext<ChatHub> hub)
         {
             _homeServiceService = homeServiceService;
+            _hub = hub;
         }
 
-        [HttpPost("create")]
+        [HttpPost("send")]
         [Authorize(Roles = "Client,ServiceProvider")]
         public IActionResult CreateServiceQuery([FromForm] AddServiceQuariesVM model)
         {
@@ -37,16 +43,15 @@ namespace Dalel.API.Areas
             var result = _homeServiceService.CreateServiceQuery(model);
             if (!result.Success)
                 return new JsonResult(result.Message);
+             _hub.Clients.User(model.IsSenderClient? model.ServiceProviderId : model.ClientId).SendAsync("ReceiveMessage", model);
             return new JsonResult(result);
         }
 
         [HttpGet("category/{categoryId}")]
         public IActionResult GetQueriesByCategory(
-            int categoryId,
-            [FromQuery] int pageSize = 5,
-            [FromQuery] int pageNumber = 1)
+            int categoryId)
         {
-            var result = _homeServiceService.GetQueriesByCategory(categoryId, pageSize, pageNumber);
+            var result = _homeServiceService.GetQueriesByCategory(categoryId);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);
@@ -54,12 +59,10 @@ namespace Dalel.API.Areas
 
         [HttpGet("client")]
         //[Authorize(Roles = "Client")]
-        public IActionResult GetQueriesByClient(
-            [FromQuery] int pageSize = 5,
-            [FromQuery] int pageNumber = 1)
+        public IActionResult GetQueriesByClient()
         {
             var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = _homeServiceService.GetQueriesByClient(clientId, pageSize, pageNumber);
+            var result = _homeServiceService.GetQueriesByClient(clientId);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);
@@ -67,12 +70,10 @@ namespace Dalel.API.Areas
 
         [HttpGet("provider")]
         //[Authorize(Roles = "ServiceProvider")]
-        public IActionResult GetQueriesByProvider(
-            [FromQuery] int pageSize = 5,
-            [FromQuery] int pageNumber = 1)
+        public IActionResult GetQueriesByProvider()
         {
             var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = _homeServiceService.GetQueriesByProvider(providerId, pageSize, pageNumber);
+            var result = _homeServiceService.GetQueriesByProvider(providerId);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);

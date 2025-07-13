@@ -15,5 +15,9 @@ namespace Dalel.ViewModels
         public float PricePerNight { get; set; }
         public string PropertyName { get; set; }
         public string ClientName { get; set; }
+        public float TotalPrice { get; set; }
+        public BookingStatus Status { get; set; } // int
+        public int PropertyId { get; set; } // fk Properties
+        public string ClientId { get; set; }
     }
 }

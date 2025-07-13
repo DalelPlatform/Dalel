@@ -29,6 +29,7 @@ namespace Models.User
         public virtual ICollection<ServiceProviderPropsal>? Propsals { get; set; }
         public virtual ICollection<ServiceProviderReview>? Reviews { get; set; }
         public virtual ICollection<ServiceQuaries>? Quaries { get; set; }
+        public virtual ICollection<ServiceChat>? Chats { get; set; }
 
     }
     public class ServiceProviderConfiguration : IEntityTypeConfiguration<ServiceProvider>
@@ -70,6 +71,7 @@ namespace Models.User
                 .WithOne(s => s.ServiceProvider)
                 .HasForeignKey(s => s.ServiceProviderId)
                 .OnDelete(DeleteBehavior.Cascade);
+
 
         }
     }

@@ -19,12 +19,10 @@ namespace Dalel.API.Areas
         }
 
         [HttpGet("provider")]
-        //[Authorize(Roles = "ServiceProvider")]
-        public IActionResult GetSchedulesByProvider(
+        public IActionResult GetSchedulesByProvider([FromQuery] string providerId,
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1)
         {
-            var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = _homeServiceService.GetSchedulesByProvider(providerId, pageSize, pageNumber);
             if (!result.Success)
                 return new JsonResult(result.Message);
@@ -56,7 +54,7 @@ namespace Dalel.API.Areas
 
         [HttpPut("update")]
         [Authorize(Roles = "ServiceProvider")]
-        public IActionResult UpdateProviderSchedule([FromForm] AddServiceProviderScheduleVM model)
+        public IActionResult UpdateProviderSchedule([FromBody] AddServiceProviderScheduleVM model)
         {
             model.ServiceProviderId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = _homeServiceService.UpdateProviderSchedule(model);

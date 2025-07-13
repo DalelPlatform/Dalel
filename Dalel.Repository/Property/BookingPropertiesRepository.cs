@@ -62,9 +62,19 @@ namespace Dalel.Repository
             return GetList(b => b.PropertyId == propertyId);
         }
 
+        public List<BookingPropertiesDetailsVM> GetAllBookings(string ownerid)
+        {
+            return GetList(b => b.Properties.OwnerId == ownerid).Select(p => p.ToDetailsViewModel()).ToList();
+        }
+
         public IQueryable<BookingProperties> GetActiveBookings()
         {
             return GetList(b => b.Status != BookingStatus.Rejected);
+        }
+
+        public List<BookingPropertiesDetailsVM> GetBookingsByStatus(BookingStatus status, string ownerid)
+        {
+            return GetList(b => b.Status == status && b.Properties.OwnerId == ownerid).Select(p => p.ToDetailsViewModel()).ToList();
         }
 
         public IQueryable<BookingProperties> GetBookingsByDateRange(DateTime startDate, DateTime endDate)

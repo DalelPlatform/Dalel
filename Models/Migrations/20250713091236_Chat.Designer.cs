@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
@@ -11,9 +12,11 @@ using Models;
 namespace Models.Migrations
 {
     [DbContext(typeof(DelelContext))]
-    partial class DelelContextModelSnapshot : ModelSnapshot
+    [Migration("20250713091236_Chat")]
+    partial class Chat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1321,6 +1324,9 @@ namespace Models.Migrations
                     b.Property<int>("CategoryServicesId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -1339,9 +1345,6 @@ namespace Models.Migrations
                     b.Property<bool>("IsSenderClient")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ServiceChatId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ServiceProviderId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -1350,9 +1353,9 @@ namespace Models.Migrations
 
                     b.HasIndex("CategoryServicesId");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("ChatId");
 
-                    b.HasIndex("ServiceChatId");
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("ServiceProviderId");
 
@@ -3279,15 +3282,15 @@ namespace Models.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Models.User.Client", "Client")
-                        .WithMany("ServiceQuaries")
-                        .HasForeignKey("ClientId")
+                    b.HasOne("Models.HomeService.ServiceChat", "Chat")
+                        .WithMany("Quaries")
+                        .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Models.HomeService.ServiceChat", "Chat")
-                        .WithMany("Quaries")
-                        .HasForeignKey("ServiceChatId")
+                    b.HasOne("Models.User.Client", "Client")
+                        .WithMany("ServiceQuaries")
+                        .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
