@@ -9,12 +9,15 @@ namespace Models.HomeService
         public int Id { get; set; }
         public string ServiceProviderId { get; set; }
         public string ClientId { get; set; }
-
-        public bool IsSenderClient { get; set; }
+        public int ChatId { get; set; }
         public string Comment { get; set; }
         public DateTime CommentDate { get; set; }
+        public bool IsSenderClient { get; set; }
         public int CategoryServicesId { get; set; }
+        public bool IsRead { get; set; }
+
         public virtual User.Client Client { get; set; }
+        public virtual ServiceChat Chat { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
         public virtual ServiceProvider ServiceProvider { get; set; }
     }
@@ -43,6 +46,11 @@ namespace Models.HomeService
             builder.HasOne(sc => sc.Client)
                 .WithMany(sq => sq.ServiceQuaries)
                 .HasForeignKey(sq => sq.ClientId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(c=>c.Chat)
+                .WithMany(q=>q.Quaries)
+                .HasForeignKey(c=>c.Id)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

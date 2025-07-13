@@ -66,6 +66,7 @@ namespace Models
         public DbSet<ServiceProviderReview> ServiceProviderReviews { get; set; }
         public DbSet<ServiceProviderSchedule> ServiceProviderSchedules { get; set; }
         public DbSet<ServiceQuaries> ServiceQuaries { get; set; }
+        public DbSet<ServiceChat> Chats { get; set; }
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
         public DbSet<ServicesNotifications> ServicesNotifications { get; set; }
 
@@ -169,6 +170,7 @@ namespace Models
             builder.ApplyConfiguration(new ServiceQuariesConfiguration());
             builder.ApplyConfiguration(new ServiceRequestConfiguration());
             builder.ApplyConfiguration(new ServicesNotificationsConfiguration());
+            builder.ApplyConfiguration(new ServiceChatConfiguration());
             #endregion
 
             #region Hotel
