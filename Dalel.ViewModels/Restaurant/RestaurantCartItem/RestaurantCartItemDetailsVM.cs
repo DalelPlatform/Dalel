@@ -19,6 +19,8 @@ namespace Dalel.ViewModels
         public int RestaurantMenuItemId { get; set; }
         public string? MenuItemName { get; set; } // optional
         public float? MenuItemPrice { get; set; } // optional
+
+        public int RestaurantId { get; set; }
     }
 
 }
