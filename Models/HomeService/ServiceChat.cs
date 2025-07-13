@@ -28,6 +28,7 @@ namespace Models.HomeService
             // Primary Key
             builder.HasKey(sq => sq.Id);
 
+
             builder.HasOne(sq => sq.ServiceProvider)
                 .WithMany(i => i.Chats)
                 .HasForeignKey(sq => sq.ServiceProviderId)

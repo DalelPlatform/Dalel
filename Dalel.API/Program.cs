@@ -133,6 +133,7 @@ builder.Services.AddScoped<ServiceProviderProjectRepository>();
 builder.Services.AddScoped<ServiceProviderPropsalRepository>();
 builder.Services.AddScoped<ServiceProviderScheduleRepository>();
 builder.Services.AddScoped<ServiceProviderPaymentRepository>();
+builder.Services.AddScoped<ChatRepository>();
 //builder.Services.AddScoped<ServiceProviderRepository>();
 builder.Services.AddScoped<CategoryServicesRepository>();
 builder.Services.AddScoped<ServiceProviderReviewRepository>();

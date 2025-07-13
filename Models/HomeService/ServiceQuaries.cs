@@ -14,8 +14,6 @@ namespace Models.HomeService
         public DateTime CommentDate { get; set; }
         public bool IsSenderClient { get; set; }
         public int CategoryServicesId { get; set; }
-        public bool IsRead { get; set; }
-
         public virtual User.Client Client { get; set; }
         public virtual ServiceChat Chat { get; set; }
         public virtual CategoryServices CategoryServices { get; set; }
@@ -50,7 +48,7 @@ namespace Models.HomeService
 
             builder.HasOne(c=>c.Chat)
                 .WithMany(q=>q.Quaries)
-                .HasForeignKey(c=>c.Id)
+                .HasForeignKey(c=>c.ChatId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }
