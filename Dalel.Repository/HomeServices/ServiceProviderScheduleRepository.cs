@@ -56,8 +56,12 @@ namespace Dalel.Repository
 
         public IQueryable<ServiceProviderSchedule> GetSchedulesByProvider(string providerId)
         {
-            return (IQueryable<ServiceProviderSchedule>)base.GetList(s=> s.ServiceProviderId == providerId).OrderBy(s => s.WorKDay).ThenBy(s => s.AvailableFrom).ToList();
+            return base.GetList(s => s.ServiceProviderId == providerId)
+                       .OrderBy(s => s.WorKDay)
+                       .ThenBy(s => s.AvailableFrom)
+                       .AsQueryable();
         }
+
 
         public bool IsProviderAvailable(string providerId, DateTime date, TimeOnly time)
         {

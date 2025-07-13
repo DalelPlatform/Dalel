@@ -29,8 +29,13 @@ namespace Dalel.ViewModels
                 Id = property.Id,
                 CheckIn = property.CheckIn,
                 CheckOut = property.CheckOut,
+                PricePerNight = property.Properties.PricePerNight,
+                PropertyName = property.Properties.Description,
                 ClientName = property.Client.User.UserName ?? "Not Provided",
-                PropertyName = property.Properties.Description
+                TotalPrice = property.Price,
+                Status = property.Status,
+                PropertyId = property.PropertyId,
+                ClientId = property.ClientId
             };
         }
     }

@@ -41,7 +41,8 @@ namespace Models.User
         #endregion
 
         #region HomeService
-        public virtual ICollection<ServiceQuaries> ServiceQuaries { get; set; }
+        public virtual ICollection<ServiceQuaries>? ServiceQuaries { get; set; }
+        public virtual ICollection<ServiceChat>? Chats { get; set; }
         public virtual ICollection<ServiceRequest> ServiceRequests { get; set; }
         public virtual ICollection<ServiceProviderReview> ServiceProviderReviews { get; set; }
         #endregion

@@ -19,7 +19,7 @@ namespace Dalel.ViewModels
 
 
         [Required(ErrorMessage = "Please Provide valid Description")]
-        [StringLength(200, MinimumLength = 20, ErrorMessage = "Description  must contain at least 20 letter and max 200 letter")]
+        [StringLength(20000, MinimumLength = 20, ErrorMessage = "Description  must contain at least 20 letter and max 20000 letter")]
         public string Description { get; set; }
 
 

@@ -55,6 +55,17 @@ namespace Dalel.API.Areas
             return new JsonResult(result);
         }
 
+        [HttpGet("get-listings")]
+        [Authorize(Roles = "PropertyOwner")]
+        public IActionResult GetPropertiesByOwnerId()
+        {
+            string ownerid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = propertyService.GetPropertiesByOwnerId(ownerid);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+
         [HttpPost("Property")]
         [Authorize(Roles = "PropertyOwner")]
         public  IActionResult AddProperty([FromForm] AddPropertiesVM property)
@@ -103,7 +114,30 @@ namespace Dalel.API.Areas
             var result = await propertyService.CancelBooking(bookingId);
             if (!result.Success)
                 return new JsonResult(result.Message);
+            return new JsonResult(result);  
+        }
+
+        [HttpGet("get-bookings-by-status")]
+        [Authorize(Roles ="PropertyOwner")]
+        public  IActionResult GetBookingsByStatus([FromQuery] BookingStatus status)
+        {
+            string ownerid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result =  propertyService.GetBookingsByStatus(status,ownerid);
+            if (!result.Success)
+                return new JsonResult(result.Message);
             return new JsonResult(result);
+
+        }
+        [HttpGet("get-all-bookings")]
+        [Authorize(Roles = "PropertyOwner")]
+        public IActionResult GetAllBookings()
+        {
+            string ownerid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = propertyService.GetAllBookings(ownerid);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+
         }
 
         [HttpPost("Payment")]
@@ -123,15 +157,14 @@ namespace Dalel.API.Areas
             return new JsonResult(result);
         }
 
-        // complete the view model
-        //[HttpPost]
-        //public async Task<IActionResult> AddReview(AddReviewPropertiesVM review)
-        //{
-        //    var result = await propertyService.AddReview(review.ToModel());
-        //    if (!result.Success)
-        //        return BadRequest(result.Message);
-        //    return Ok(result);
-        //}
+       [HttpPost("Review")]
+        public async Task<IActionResult> AddReview(AddReviewPropertiesVM review)
+        {
+            var result = await propertyService.AddReview(review.ToModel());
+            if (!result.Success)
+                return BadRequest(result.Message);
+            return Ok(result);
+        }
 
         [HttpPut("Review")]
         public async Task<IActionResult> EditReview(ReviewProperties review)

@@ -76,6 +76,18 @@ namespace Dalel.Services
                 return ServiceResult.FailureResult(ex.Message);
             }
         }
+        public ServiceResult<List<PropertiesDetailsVM>> GetPropertiesByOwnerId(string ownerId)
+        {
+            try
+            {
+                var properties = _propertiesRepo.GetPropertiesByOwner(ownerId);
+                return ServiceResult<List<PropertiesDetailsVM>>.SuccessResult(properties, "Properties retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<PropertiesDetailsVM>>.FailureResult(ex.Message);
+            }
+        }
         public ServiceResult AddProperty(Properties property)
         {
             try
@@ -170,6 +182,39 @@ namespace Dalel.Services
                 return ServiceResult.FailureResult(ex.Message);
             }
         }
+
+        public ServiceResult<List<BookingPropertiesDetailsVM>> GetBookingsByStatus(BookingStatus status, string ownerid)
+        {
+            try
+            {
+                var bookings = _bookingRepo.GetBookingsByStatus(status,ownerid);
+                if (bookings == null)
+                    return ServiceResult<List<BookingPropertiesDetailsVM>>.FailureResult("No Bookings Found");
+
+                return ServiceResult<List<BookingPropertiesDetailsVM>>.SuccessResult(bookings, "bookings found");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<BookingPropertiesDetailsVM>>.FailureResult(ex.Message);
+            }
+        }
+
+        public ServiceResult<List<BookingPropertiesDetailsVM>> GetAllBookings(string ownerid)
+        {
+            try
+            {
+                var bookings = _bookingRepo.GetAllBookings(ownerid);
+                if (bookings == null)
+                    return ServiceResult<List<BookingPropertiesDetailsVM>>.FailureResult("No Bookings Found");
+
+                return ServiceResult<List<BookingPropertiesDetailsVM>>.SuccessResult(bookings, "bookings found");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<BookingPropertiesDetailsVM>>.FailureResult(ex.Message);
+            }
+        }
+
 
         #endregion
 
