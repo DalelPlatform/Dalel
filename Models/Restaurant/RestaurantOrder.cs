@@ -19,6 +19,13 @@ namespace Models.Restaurant
 
         public string ClientId { get; set; } // fk
 
+        public string Address { get; set; } 
+        public string? Note { get; set; } //optional
+
+        public string PhoneNumber { get; set; } //optional
+
+        public string City { get; set; } //optional
+
 
         //Relations : 
         public virtual Restaurant Restaurant { get; set; }

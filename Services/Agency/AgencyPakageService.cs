@@ -119,20 +119,20 @@ namespace Dalel.Services.Agency
             var _agencyPackage = AgencyPackageRepo.GetList(i => i.Id == id).FirstOrDefault();
             if (_agencyPackage != null)
             {
-                //var steps = PackageStepRepo.GetList(s => s.PackageId
-                //== _agencyPackage.Id).ToList();
-                //foreach (var step in steps)
-                //{
-                //    PackageStepRepo.Delete(step);
-                //}
-                //var schedules = PackageSchaduleRepo.GetList(s => s.PackageId 
-                //== _agencyPackage.Id).ToList();
-                //foreach (var sch in schedules)
-                //{
-                //    PackageSchaduleRepo.Delete(sch);
-                //}
-                _agencyPackage.PackageSchadules.Clear();
-                _agencyPackage.PackageSteps.Clear();
+                var steps = PackageStepRepo.GetList(s => s.PackageId
+                == _agencyPackage.Id).ToList();
+                foreach (var step in steps)
+                {
+                    PackageStepRepo.Delete(step);
+                }
+                var schedules = PackageSchaduleRepo.GetList(s => s.PackageId
+                == _agencyPackage.Id).ToList();
+                foreach (var sch in schedules)
+                {
+                    PackageSchaduleRepo.Delete(sch);
+                }
+                //_agencyPackage.PackageSchadules.Clear();
+                //_agencyPackage.PackageSteps.Clear();
                 AgencyPackageRepo.Delete(_agencyPackage);
             }
 
@@ -214,7 +214,20 @@ namespace Dalel.Services.Agency
 
 
 
+        public List<AgencyPackageDetails> GetTopBookedPackages(int topCount = 3)
+        {
+            var packages = AgencyPackageRepo.GetList();
+            var packagesWithBookingCount = packages.Select(p=>new
+            {
+                packages = p,
+                totalBooking = p.PackageSchadules.
+                Sum(s => s.PabckageBookings.Count())
+            }).OrderByDescending(p=>p.totalBooking).
+            Take(topCount).Select(p=>p.packages.ToDetailsModels()).ToList();
+            return packagesWithBookingCount;
 
+
+        }
 
 
 
@@ -328,7 +341,8 @@ namespace Dalel.Services.Agency
                 //booking.BookingStatus = BookingStatus.Panding;
                 var newBooking = booking.ToModel(totalprice);
                 PackagebookingRepo.Add(newBooking);
-                return ServiceResult<PackageBooking>.SuccessResult(newBooking, "Booking created.");
+                return ServiceResult<PackageBooking>.
+                    SuccessResult(newBooking, "Booking created.");
             }
             catch (Exception ex)
             {
@@ -534,8 +548,7 @@ namespace Dalel.Services.Agency
         //}
         public ServiceResult CreateTravelAgencies(addTravelAgenciesVM agency)
         {
-            var travelAgency = agency.ToModel();
-
+           
 
             if (agency.VerificationDocument != null && agency.VerificationDocument.Any())
             {
@@ -551,13 +564,16 @@ namespace Dalel.Services.Agency
                         if (uploadedUrls.Any())
                         {
                             doc.DocumentFileName = uploadedUrls[0];
-                            var documentEntity = doc.ToModel();
-                            documentEntity.AgencyId = travelAgency.Id;
-                            AgencyVerificationDocumentRepo.Add(documentEntity);
+                            //var documentEntity = doc.ToModel();
+                            //documentEntity.AgencyId = travelAgency.Id;
+                            //AgencyVerificationDocumentRepo.Add(documentEntity);
+                            
                         }
                     }
                 }
             }
+            var travelAgency = agency.ToModel();
+
             TravelAgenciesRepo.Add(travelAgency);
             return new ServiceResult
             {

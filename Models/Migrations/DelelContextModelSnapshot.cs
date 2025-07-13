@@ -1089,6 +1089,34 @@ namespace Models.Migrations
                     b.ToTable("CategoryServices");
                 });
 
+            modelBuilder.Entity("Models.HomeService.ServiceChat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("LastMessageAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ServiceProviderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("ServiceProviderId");
+
+                    b.ToTable("ServiceChats");
+                });
+
             modelBuilder.Entity("Models.HomeService.ServiceProviderPayment", b =>
                 {
                     b.Property<int>("Id")
@@ -1293,6 +1321,9 @@ namespace Models.Migrations
                     b.Property<int>("CategoryServicesId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -1315,6 +1346,8 @@ namespace Models.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryServicesId");
+
+                    b.HasIndex("ChatId");
 
                     b.HasIndex("ClientId");
 
@@ -2337,6 +2370,14 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -2346,10 +2387,17 @@ namespace Models.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("OrderStatus")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RestaurantId")
                         .HasColumnType("int");
@@ -3137,6 +3185,25 @@ namespace Models.Migrations
                     b.Navigation("HomeChefOrder");
                 });
 
+            modelBuilder.Entity("Models.HomeService.ServiceChat", b =>
+                {
+                    b.HasOne("Models.User.Client", "Client")
+                        .WithMany("ServiceChats")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Models.User.ServiceProvider", "ServiceProvider")
+                        .WithMany("Chats")
+                        .HasForeignKey("ServiceProviderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("ServiceProvider");
+                });
+
             modelBuilder.Entity("Models.HomeService.ServiceProviderPayment", b =>
                 {
                     b.HasOne("Models.HomeService.ServiceRequest", "ServiceRequest")
@@ -3224,6 +3291,12 @@ namespace Models.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Models.HomeService.ServiceChat", "Chat")
+                        .WithMany("Quaries")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Models.User.Client", "Client")
                         .WithMany("ServiceQuaries")
                         .HasForeignKey("ClientId")
@@ -3237,6 +3310,8 @@ namespace Models.Migrations
                         .IsRequired();
 
                     b.Navigation("CategoryServices");
+
+                    b.Navigation("Chat");
 
                     b.Navigation("Client");
 
@@ -3824,6 +3899,11 @@ namespace Models.Migrations
                     b.Navigation("ServiceProviders");
                 });
 
+            modelBuilder.Entity("Models.HomeService.ServiceChat", b =>
+                {
+                    b.Navigation("Quaries");
+                });
+
             modelBuilder.Entity("Models.HomeService.ServiceRequest", b =>
                 {
                     b.Navigation("Payment")
@@ -3965,6 +4045,8 @@ namespace Models.Migrations
 
                     b.Navigation("RestaurautCartItems");
 
+                    b.Navigation("ServiceChats");
+
                     b.Navigation("ServiceProviderReviews");
 
                     b.Navigation("ServiceQuaries");
@@ -4008,6 +4090,8 @@ namespace Models.Migrations
 
             modelBuilder.Entity("Models.User.ServiceProvider", b =>
                 {
+                    b.Navigation("Chats");
+
                     b.Navigation("Projects");
 
                     b.Navigation("Propsals");

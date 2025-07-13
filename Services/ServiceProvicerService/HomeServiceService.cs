@@ -32,6 +32,7 @@ namespace Dalel.Services
         private readonly ServiceProviderPaymentRepository _serviceProviderPaymentRepository;
         private readonly ServiceProviderRepository _serviceProviderRepository;
         private readonly ClientRepository _clientRepository;
+        private readonly ChatRepository _chatRepository;
         private UploadMedia uploader;
         private readonly ServiceNotificationRepository _serviceNotificationRepository;
 
@@ -47,6 +48,7 @@ namespace Dalel.Services
             ServiceProviderRepository serviceProviderRepository,
             ClientRepository clientRepository,
             ServiceNotificationRepository serviceNotificationRepository,
+            ChatRepository chatRepository,
             UploadMedia uploader)
         {
             _serviceRequestRepository = serviceRequestRepository;
@@ -60,6 +62,7 @@ namespace Dalel.Services
             _serviceProviderRepository = serviceProviderRepository;
             _clientRepository = clientRepository;
             _serviceNotificationRepository = serviceNotificationRepository;
+            _chatRepository = chatRepository;
             this.uploader = uploader;
         }
         #region Service Request
@@ -77,7 +80,7 @@ namespace Dalel.Services
                 if (!_categoryServicesRepository.GetList(c => c.Id == entity.CategoryServicesId).Any())
                     return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Category not found");
                 vm.Imagepath = uploader.addimage(vm.Image);
-                
+
 
                 _serviceRequestRepository.Add(entity);
                 _serviceRequestRepository.Save(); // Save changes to the database
@@ -261,8 +264,8 @@ namespace Dalel.Services
                 if (string.IsNullOrEmpty(clientId))
                     return ServiceResult<PaginationViewModel<ServiceRequestDetailsVM>>.FailureResult("Client ID cannot be null or empty.");
 
-                var totalCount = _serviceRequestRepository.GetRequestsByClient(clientId,pageSize).Count();
-                var requests = _serviceRequestRepository.GetRequestsByClient(clientId,pageSize);
+                var totalCount = _serviceRequestRepository.GetRequestsByClient(clientId, pageSize).Count();
+                var requests = _serviceRequestRepository.GetRequestsByClient(clientId, pageSize);
                 var data = requests.Select(r => r.ToDetailsViewModel()).ToList();
 
                 var paginationResult = new PaginationViewModel<ServiceRequestDetailsVM>
@@ -287,9 +290,9 @@ namespace Dalel.Services
             try
             {
                 // Get the total count of requests for this status
-                var totalCount = _serviceRequestRepository.GetRequestsByStatus(status,pageSize).Count();
+                var totalCount = _serviceRequestRepository.GetRequestsByStatus(status, pageSize).Count();
                 // Get the paginated subset
-                var requests = _serviceRequestRepository.GetRequestsByStatus(status,pageSize);
+                var requests = _serviceRequestRepository.GetRequestsByStatus(status, pageSize);
                 var data = requests.Select(r => r.ToDetailsViewModel()).ToList();
 
                 var paginationResult = new PaginationViewModel<ServiceRequestDetailsVM>
@@ -422,7 +425,7 @@ namespace Dalel.Services
         #endregion
 
         #region ServiceQuaries
-
+        //send Message
         public ServiceResult<ServiceQuariesDetailsVM> CreateServiceQuery([FromForm] AddServiceQuariesVM vm)
         {
             try
@@ -554,7 +557,7 @@ namespace Dalel.Services
                 var updatedQuery = vm.ToModel();
                 updatedQuery.Id = queryId;
                 updatedQuery.ClientId = query.ClientId;
-                updatedQuery.ServiceProviderId = query.ServiceProviderId; 
+                updatedQuery.ServiceProviderId = query.ServiceProviderId;
                 _serviceQuariesRepository.Update(updatedQuery);
                 return ServiceResult.SuccessResult("Service query updated successfully.");
             }
@@ -592,22 +595,26 @@ namespace Dalel.Services
         #region ServiceProviderSchedule
 
         public ServiceResult<PaginationViewModel<ServiceProviderScheduleDetailsVM>> GetSchedulesByProvider(
-            string providerId, int pageSize = 5, int pageNumber = 1)
+     string providerId, int pageSize = 5, int pageNumber = 1)
         {
             try
             {
                 if (string.IsNullOrEmpty(providerId))
                     return ServiceResult<PaginationViewModel<ServiceProviderScheduleDetailsVM>>.FailureResult("Provider ID cannot be null or empty.");
 
-                // Get the total count of schedules for this ServiceProvider
-                var totalCount = _serviceProviderScheduleRepository.GetSchedulesByProvider(providerId).Count();
-                // Get the paginated subset
-                var schedules = _serviceProviderScheduleRepository.GetSchedulesByProvider(providerId);
-                var data = schedules.Select(s => s.ToDetailsViewModel()).ToList();
+                var query = _serviceProviderScheduleRepository.GetSchedulesByProvider(providerId).AsQueryable();
+
+                var totalCount = query.Count();
+
+                var paginatedData = query
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(s => s.ToDetailsViewModel())
+                    .ToList();
 
                 var paginationResult = new PaginationViewModel<ServiceProviderScheduleDetailsVM>
                 {
-                    Data = data,
+                    Data = paginatedData,
                     PageNumber = pageNumber,
                     PageSize = pageSize,
                     TotalCount = totalCount
@@ -620,6 +627,7 @@ namespace Dalel.Services
                 return ServiceResult<PaginationViewModel<ServiceProviderScheduleDetailsVM>>.FailureResult("Error: " + ex.Message);
             }
         }
+
 
         public ServiceResult<bool> IsProviderAvailable(string providerId, DateTime date, TimeOnly time)
         {
@@ -674,7 +682,7 @@ namespace Dalel.Services
                 if (vm.Schedules == null || !vm.Schedules.Any())
                     return ServiceResult.FailureResult("Schedules cannot be null or empty.");
 
-                var schedules = vm.Schedules.Select(s => s.ToModel(vm.ServiceProviderId)).AsQueryable(); 
+                var schedules = vm.Schedules.Select(s => s.ToModel(vm.ServiceProviderId)).AsQueryable();
                 foreach (var schedule in schedules)
                 {
                     if (schedule.AvailableTo <= schedule.AvailableFrom)
@@ -713,10 +721,68 @@ namespace Dalel.Services
         }
 
         #endregion
+        #region ServiceChat
+        public ServiceResult<IQueryable<ChatVM>> GetChatsForUser(string userId)
+        {
+            try
+            {
+                var chats = _chatRepository.GetChatsForUser(userId);
 
-        #region ServiceProviderProposal
+                var chatVMs = chats.Select(chat => new ChatVM
+                {
+                    Id = chat.Id,
+                    ClientId = chat.ClientId,
+                    ServiceProviderId = chat.ServiceProviderId,
+                    LastMessageAt = chat.LastMessageAt,
+                    Messages = chat.Quaries
+                                .Select(q => q.ToDetailsViewModel())
+                                .OrderBy(m => m.CommentDate)
+                                .ToList()
+                }).AsQueryable();
 
-        public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm] AddServiceProviderProposalVM vm)
+                return ServiceResult<IQueryable<ChatVM>>.SuccessResult(chatVMs, "Chats Loaded Successfully");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IQueryable<ChatVM>>.FailureResult($"Failed To Load Chats: {ex.Message}");
+            }
+        }
+
+        public ServiceResult<ChatVM> GetChatById(int chatId)
+        {
+            try
+            {
+                var chat = _chatRepository.GetChatById(chatId);
+
+                if (chat == null)
+                    return ServiceResult<ChatVM>.FailureResult("Chat not found");
+
+                var chatVM = new ChatVM
+                {
+                    Id = chat.Id,
+                    ClientId = chat.ClientId,
+                    ServiceProviderId = chat.ServiceProviderId,
+                    LastMessageAt = chat.LastMessageAt,
+                    Messages = chat.Quaries?
+                                .Select(q => q.ToDetailsViewModel())
+                                .OrderBy(m => m.CommentDate) 
+                                .ToList()
+                };
+
+                return ServiceResult<ChatVM>.SuccessResult(chatVM, "Chat Loaded Successfully");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<ChatVM>.FailureResult($"Failed to load chat: {ex.Message}");
+            }
+        }
+
+
+#endregion
+
+#region ServiceProviderProposal
+
+public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm] AddServiceProviderProposalVM vm)
         {
             try
             {

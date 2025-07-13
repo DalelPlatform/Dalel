@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Models.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class initt : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -361,7 +361,7 @@ namespace Models.Migrations
                     District = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ZipCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     About = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    CategoryServicesId = table.Column<int>(type: "int", nullable: false),
+                    CategoryServicesId = table.Column<int>(type: "int", nullable: true),
                     AverageRating = table.Column<int>(type: "int", nullable: true),
                     Website = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
@@ -590,7 +590,7 @@ namespace Models.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR(250)", nullable: false, defaultValue: "empty"),
+                    Description = table.Column<string>(type: "NVARCHAR(MAX)", nullable: false, defaultValue: "empty"),
                     NumberOfRooms = table.Column<int>(type: "int", nullable: false),
                     BuildingNo = table.Column<int>(type: "int", nullable: false),
                     Address = table.Column<string>(type: "NVARCHAR(50)", nullable: false, defaultValue: "empty"),
@@ -676,6 +676,31 @@ namespace Models.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ServiceChats",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ServiceProviderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LastMessageAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceChats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ServiceChats_Client_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Client",
+                        principalColumn: "UserId");
+                    table.ForeignKey(
+                        name: "FK_ServiceChats_ServiceProviders_ServiceProviderId",
+                        column: x => x.ServiceProviderId,
+                        principalTable: "ServiceProviders",
+                        principalColumn: "UserId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ServiceProviderProjects",
                 columns: table => new
                 {
@@ -685,8 +710,8 @@ namespace Models.Migrations
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     ApproximatePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PriceUnit = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    VideoLink = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    ServiceProviderId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ServiceProviderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -715,39 +740,6 @@ namespace Models.Migrations
                     table.PrimaryKey("PK_ServiceProviderSchedules", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ServiceProviderSchedules_ServiceProviders_ServiceProviderId",
-                        column: x => x.ServiceProviderId,
-                        principalTable: "ServiceProviders",
-                        principalColumn: "UserId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ServiceQuaries",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ServiceProviderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IsSenderClient = table.Column<bool>(type: "bit", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    CommentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CategoryServicesId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServiceQuaries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ServiceQuaries_CategoryServices_CategoryServicesId",
-                        column: x => x.CategoryServicesId,
-                        principalTable: "CategoryServices",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ServiceQuaries_Client_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Client",
-                        principalColumn: "UserId");
-                    table.ForeignKey(
-                        name: "FK_ServiceQuaries_ServiceProviders_ServiceProviderId",
                         column: x => x.ServiceProviderId,
                         principalTable: "ServiceProviders",
                         principalColumn: "UserId");
@@ -1255,7 +1247,7 @@ namespace Models.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "NVARCHAR(50)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR(250)", nullable: false, defaultValue: "empty"),
+                    Description = table.Column<string>(type: "NVARCHAR(MAX)", nullable: false, defaultValue: "empty"),
                     Price = table.Column<float>(type: "real", nullable: false),
                     Discount = table.Column<int>(type: "int", nullable: true),
                     AvailabilityStatus = table.Column<int>(type: "int", nullable: false),
@@ -1402,23 +1394,42 @@ namespace Models.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServiceProviderProjectImages",
+                name: "ServiceQuaries",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ImagePath = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    ServiceProviderProjectId = table.Column<int>(type: "int", nullable: false)
+                    ServiceProviderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ChatId = table.Column<int>(type: "int", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    CommentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsSenderClient = table.Column<bool>(type: "bit", nullable: false),
+                    CategoryServicesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceProviderProjectImages", x => x.Id);
+                    table.PrimaryKey("PK_ServiceQuaries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ServiceProviderProjectImages_ServiceProviderProjects_ServiceProviderProjectId",
-                        column: x => x.ServiceProviderProjectId,
-                        principalTable: "ServiceProviderProjects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_ServiceQuaries_CategoryServices_CategoryServicesId",
+                        column: x => x.CategoryServicesId,
+                        principalTable: "CategoryServices",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServiceQuaries_Client_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Client",
+                        principalColumn: "UserId");
+                    table.ForeignKey(
+                        name: "FK_ServiceQuaries_ServiceChats_ChatId",
+                        column: x => x.ChatId,
+                        principalTable: "ServiceChats",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServiceQuaries_ServiceProviders_ServiceProviderId",
+                        column: x => x.ServiceProviderId,
+                        principalTable: "ServiceProviders",
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -1515,7 +1526,6 @@ namespace Models.Migrations
                     SupPrice = table.Column<float>(type: "real", nullable: false),
                     Quantity = table.Column<float>(type: "real", nullable: false),
                     ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RestaurantMenuItemId = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -2264,15 +2274,20 @@ namespace Models.Migrations
                 column: "HotelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ServiceChats_ClientId",
+                table: "ServiceChats",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServiceChats_ServiceProviderId",
+                table: "ServiceChats",
+                column: "ServiceProviderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ServiceProviderPayments_RequestId",
                 table: "ServiceProviderPayments",
                 column: "RequestId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ServiceProviderProjectImages_ServiceProviderProjectId",
-                table: "ServiceProviderProjectImages",
-                column: "ServiceProviderProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ServiceProviderProjects_ServiceProviderId",
@@ -2319,6 +2334,11 @@ namespace Models.Migrations
                 name: "IX_ServiceQuaries_CategoryServicesId",
                 table: "ServiceQuaries",
                 column: "CategoryServicesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServiceQuaries_ChatId",
+                table: "ServiceQuaries",
+                column: "ChatId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ServiceQuaries_ClientId",
@@ -2485,7 +2505,7 @@ namespace Models.Migrations
                 name: "ServiceProviderPayments");
 
             migrationBuilder.DropTable(
-                name: "ServiceProviderProjectImages");
+                name: "ServiceProviderProjects");
 
             migrationBuilder.DropTable(
                 name: "ServiceProviderPropsals");
@@ -2539,7 +2559,7 @@ namespace Models.Migrations
                 name: "BookingVehicles");
 
             migrationBuilder.DropTable(
-                name: "ServiceProviderProjects");
+                name: "ServiceChats");
 
             migrationBuilder.DropTable(
                 name: "ServiceRequests");

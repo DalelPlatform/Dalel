@@ -7,8 +7,8 @@ namespace Dalel.ViewModels
 {
     public class AddRestaurantOrderVM
     {
-        [Required]
-        public DateTime Date { get; set; }
+
+        public DateTime Date { get; set; } = DateTime.Now ;
 
         //[Range(0.01, double.MaxValue, ErrorMessage = "TotalPrice must be greater than 0.")]
         //public float TotalPrice { get; set; }
