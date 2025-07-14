@@ -15,7 +15,6 @@ namespace Models.Restaurant
 
         public OrderStatus OrderStatus { get; set; } 
 
-        public int RestaurantId { get; set; } //fk
 
         public string ClientId { get; set; } // fk
 
@@ -27,8 +26,6 @@ namespace Models.Restaurant
         public string City { get; set; } //optional
 
 
-        //Relations : 
-        public virtual Restaurant Restaurant { get; set; }
         public virtual Client Client { get; set; }
 
         public virtual ICollection<RestaurantOrderItem> RestaurantOrderItems { get; set; }
@@ -46,16 +43,11 @@ namespace Models.Restaurant
         {
             builder.HasKey(restorder => restorder.Id);
             builder.Property(restorder => restorder.Date).HasDefaultValueSql("GETDATE()");
-            builder.Property(restorder => restorder.OrderStatus).HasDefaultValue(OrderStatus.Panding);
+            builder.Property(restorder => restorder.OrderStatus).HasDefaultValue(OrderStatus.Pending);
 
             builder.HasOne(p => p.Client)
             .WithMany(p => p.RestaurantOrders)
             .HasForeignKey(p => p.ClientId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            builder.HasOne(p => p.Restaurant)
-            .WithMany(p => p.RestaurantOrders)
-            .HasForeignKey(p => p.RestaurantId)
             .OnDelete(DeleteBehavior.NoAction);
         }
     }

@@ -494,7 +494,10 @@ namespace Dalel.Services
         {
             try
             {
-                var NewOrder = order.ToModel();
+
+                var cart = _restaurantCartItemRepository.GetCartItemsByClientId(order.ClientId);
+
+                var NewOrder = order.ToModel(cart);
                 _restaurantOrderRepository.Add(NewOrder);
 
                 return ServiceResult.SuccessResult("Order added successfully.");

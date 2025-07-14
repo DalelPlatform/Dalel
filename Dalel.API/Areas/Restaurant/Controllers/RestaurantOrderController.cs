@@ -25,7 +25,7 @@ namespace Dalel.API.Areas.Restaurant.Controllers
         public IActionResult AddOrder([FromBody] AddRestaurantOrderVM order)
         {
 
-            order.OrderStatus = OrderStatus.Panding;
+            //order.OrderStatus = OrderStatus.Pending; i add this in the view model
             var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(clientId))
                 return new JsonResult("ClientId cannot be null or empty.");

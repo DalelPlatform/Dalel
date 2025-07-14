@@ -34,7 +34,7 @@ namespace Models.HomeChef
         {
             builder.HasKey(homecheforder => homecheforder.Id);
             builder.Property(homecheforder => homecheforder.OrderDate).HasDefaultValueSql("GETDATE()");
-            builder.Property(homecheforder => homecheforder.OrderStatus).HasDefaultValue(OrderStatus.Panding);
+            builder.Property(homecheforder => homecheforder.OrderStatus).HasDefaultValue(OrderStatus.Pending);
 
 
             builder.HasOne(HomeChefOrder => HomeChefOrder.Client)

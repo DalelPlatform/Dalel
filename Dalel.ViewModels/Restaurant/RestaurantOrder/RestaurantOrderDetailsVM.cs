@@ -11,12 +11,9 @@ namespace Dalel.ViewModels.Restaurant
         public DateTime Date { get; set; }
         public float TotalPrice { get; set; }
         public OrderStatus OrderStatus { get; set; }
-
-        public int RestaurantId { get; set; }
         public string ClientId { get; set; }
 
         // Optional: Include nested details if needed
-        public string? RestaurantName { get; set; }
         public string? ClientName { get; set; }
 
         public List<RestaurantOrderItemDetailsVM>? OrderItems { get; set; }
