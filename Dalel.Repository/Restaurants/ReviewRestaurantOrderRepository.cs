@@ -24,10 +24,10 @@ namespace Dalel.Repository
             return GetList(review => review.Rating == rating).Select(review => review.ToDetailsViewModel());
         }
 
-        public IQueryable<ReviewRestaurantOrderDetailsVM> GetReviewsByRestaurant(int restaurantId)
-        {
-            return GetList(review => review.RestaurantOrder.RestaurantId == restaurantId).Select(review => review.ToDetailsViewModel());
-        }
+        //public IQueryable<ReviewRestaurantOrderDetailsVM> GetReviewsByRestaurant(int restaurantId)
+        //{
+        //    return GetList(review => review.RestaurantOrder.RestaurantId == restaurantId).Select(review => review.ToDetailsViewModel());
+        //}
          
         public void AddReview(ReviewRestaurantOrder review)
         {

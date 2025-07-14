@@ -16,9 +16,7 @@ namespace Dalel.Extensions
                 Date = order.Date,
                 TotalPrice = order.TotalPrice,
                 OrderStatus = order.OrderStatus,
-                RestaurantId = order.RestaurantId,
                 ClientId = order.ClientId,
-                RestaurantName = order.Restaurant?.Name,
                 ClientName = order.Client.User?.FirstName,
 
                 OrderItems = order.RestaurantOrderItems?.Select(item => new RestaurantOrderItemDetailsVM
@@ -28,6 +26,8 @@ namespace Dalel.Extensions
                     Quantity = item.Quantity,
                     RestaurantMenuItemId = item.RestaurantMenuItemId,
                     RestaurantOrderId = item.RestaurantOrderId,
+                    RestaurantId = item.RestaurantMenuItem.RestaurantId,
+                    RestaurantName = item.RestaurantMenuItem.Restaurant.Name
                     
                 }).ToList(),
 
@@ -48,25 +48,27 @@ namespace Dalel.Extensions
         }
 
 
-        public static RestaurantOrder ToModel(this AddRestaurantOrderVM order)
+        public static RestaurantOrder ToModel(this AddRestaurantOrderVM order, List<RestauranCartItemDetailsVM> cart)
         {
             return new RestaurantOrder
             {
 
                 Date = order.Date,
-                //TotalPrice = order.TotalPrice,
+                Address=order.Address,
+                City=order.City,
+                Note=order.Note,
+                PhoneNumber=order.PhoneNumber,
                 OrderStatus = order.OrderStatus,
-                RestaurantId = order.RestaurantId,
                 ClientId = order.ClientId,
-                RestaurantOrderItems = order.listItems.Select(item => new RestaurantOrderItem
+                RestaurantOrderItems = cart.Select(item => new RestaurantOrderItem
                 {
                     SupPrice = item.SupPrice,
                     Quantity = item.Quantity,
                     RestaurantMenuItemId = item.RestaurantMenuItemId,
-
+                    
                 }).ToList(),
 
-                TotalPrice = order.listItems.Sum(item => item.SupPrice * item.Quantity)
+                TotalPrice = cart.Sum(item => item.SupPrice)
             };
         }
 
@@ -86,9 +88,6 @@ namespace Dalel.Extensions
                     ? order.OrderStatus
                     : oldModel.OrderStatus;
 
-                oldModel.RestaurantId = order.RestaurantId > 0
-                    ? order.RestaurantId
-                    : oldModel.RestaurantId;
 
                 oldModel.ClientId = !string.IsNullOrEmpty(order.ClientId)
                     ? order.ClientId
