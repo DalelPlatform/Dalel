@@ -16,6 +16,8 @@ namespace Dalel.ViewModels
         public string? ClientId { get; set; } // optional, from  token
 
         public int RestaurantMenuItemId { get; set; }
+
+
     }
 
 }

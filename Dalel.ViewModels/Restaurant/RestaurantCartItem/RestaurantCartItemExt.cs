@@ -26,18 +26,29 @@ namespace Dalel.ViewModels
                 ClientName = item.Client?.User.FirstName,
                 RestaurantMenuItemId = item.RestaurantMenuItemId,
                 MenuItemName = item.RestaurantMenuItem?.Name,
-                MenuItemPrice = item.RestaurantMenuItem?.Price
+                MenuItemPrice = item.RestaurantMenuItem?.Price,
+                RestaurantId = item.RestaurantMenuItem.RestaurantId
+
             };
         }
 
         public static RestaurantCartItem ToEditModel(this AddRestaurantCartItemVM edit, RestaurantCartItem old)
         {
-            old.SupPrice = edit.SupPrice == 0 ? old.SupPrice : edit.SupPrice;
-            old.Quantity = edit.Quantity == 0 ? old.Quantity : edit.Quantity;
-            old.ClientId = string.IsNullOrEmpty(edit.ClientId) ? old.ClientId : edit.ClientId;
-            old.RestaurantMenuItemId = edit.RestaurantMenuItemId == 0 ? old.RestaurantMenuItemId : edit.RestaurantMenuItemId;
+            if (edit.SupPrice > 0)
+                old.SupPrice = edit.SupPrice;
+
+            if (edit.Quantity > 0)
+                old.Quantity = edit.Quantity;
+
+            if (!string.IsNullOrWhiteSpace(edit.ClientId))
+                old.ClientId = edit.ClientId;
+
+            if (edit.RestaurantMenuItemId > 0)
+                old.RestaurantMenuItemId = edit.RestaurantMenuItemId;
+
             return old;
         }
+
     }
 
 }

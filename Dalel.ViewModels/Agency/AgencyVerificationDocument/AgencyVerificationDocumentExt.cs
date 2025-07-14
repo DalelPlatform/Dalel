@@ -21,7 +21,7 @@ namespace Dalel.ViewModels
                 DocumentFile = Document.DocumentFileName??"",
                 DocumentType = Document.DocumentType,
                 status = Document.status,
-                AgencyId = Document.AgencyId,
+                //AgencyId = Document.AgencyId,
 
             };
 

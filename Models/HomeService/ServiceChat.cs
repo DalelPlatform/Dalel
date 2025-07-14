@@ -35,7 +35,7 @@ namespace Models.HomeService
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(sc => sc.Client)
-                .WithMany(sq => sq.Chats)
+                .WithMany(sq => sq.ServiceChats)
                 .HasForeignKey(sq => sq.ClientId)
                 .OnDelete(DeleteBehavior.NoAction);
 
