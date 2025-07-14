@@ -9,6 +9,7 @@ namespace Dalel.ViewModels
     public class ServiceQuariesDetailsVM
     {
         public int Id { get; set; }
+        public int ChatId { get; set; }
         public string ClientId { get; set; }
         public string ClientName { get; set; }
         public int CategoryServicesId { get; set; }

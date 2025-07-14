@@ -426,25 +426,54 @@ namespace Dalel.Services
 
         #region ServiceQuaries
         //send Message
-        public ServiceResult<ServiceQuariesDetailsVM> CreateServiceQuery([FromForm] AddServiceQuariesVM vm)
+        public ServiceResult<ServiceQuariesDetailsVM> CreateServiceQuery(AddServiceQuariesVM vm)
         {
             try
             {
                 var query = vm.ToModel();
+
                 if (string.IsNullOrEmpty(query.ClientId))
                     return ServiceResult<ServiceQuariesDetailsVM>.FailureResult("Client ID cannot be null or empty.");
                 if (query.CategoryServicesId <= 0)
                     return ServiceResult<ServiceQuariesDetailsVM>.FailureResult("Category ID must be greater than zero.");
+                ServiceChat chat;
+                if (vm.ChatId > 0)
+                {
+                    chat = _chatRepository.GetChatById(vm.ChatId);
+                    if (chat == null)
+                        return ServiceResult<ServiceQuariesDetailsVM>.FailureResult("Chat not found.");
+                }
+                else
+                {
+                    chat = new ServiceChat
+                    {
+                        ClientId = query.ClientId,
+                        ServiceProviderId = query.ServiceProviderId,
+                        LastMessageAt = DateTime.Now,
+                        Quaries = new List<ServiceQuaries>()
+                    };
+                    _chatRepository.Add(chat);
+                    _chatRepository.Save();
+                }
+
+                query.ChatId = chat.Id;
+                query.CommentDate = DateTime.Now;
 
                 _serviceQuariesRepository.Add(query);
+
+                chat.LastMessageAt = query.CommentDate;
+                _chatRepository.Update(chat);
+
                 _serviceQuariesRepository.Save();
-                return ServiceResult<ServiceQuariesDetailsVM>.SuccessResult(query.ToDetailsViewModel(), "Service query created successfully.");
+
+                return ServiceResult<ServiceQuariesDetailsVM>.SuccessResult(query.ToDetailsViewModel(), "Message sent successfully.");
             }
             catch (Exception ex)
             {
                 return ServiceResult<ServiceQuariesDetailsVM>.FailureResult("Error: " + ex.Message);
             }
         }
+
         public ServiceResult<PaginationViewModel<ServiceQuariesDetailsVM>> GetQueriesByCategory(
             int categoryId, int pageSize = 5, int pageNumber = 1)
         {
@@ -722,11 +751,11 @@ namespace Dalel.Services
 
         #endregion
         #region ServiceChat
-        public ServiceResult<IQueryable<ChatVM>> GetChatsForUser(string userId)
+        public ServiceResult<List<ChatVM>> GetChatsForUser(string userId)
         {
             try
             {
-                var chats = _chatRepository.GetChatsForUser(userId);
+                var chats = _chatRepository.GetChatsForUser(userId).ToList();
 
                 var chatVMs = chats.Select(chat => new ChatVM
                 {
@@ -734,19 +763,43 @@ namespace Dalel.Services
                     ClientId = chat.ClientId,
                     ServiceProviderId = chat.ServiceProviderId,
                     LastMessageAt = chat.LastMessageAt,
-                    Messages = chat.Quaries
-                                .Select(q => q.ToDetailsViewModel())
-                                .OrderBy(m => m.CommentDate)
-                                .ToList()
-                }).AsQueryable();
+                    Messages = new List<ServiceQuariesDetailsVM>() 
+                }).ToList();
 
-                return ServiceResult<IQueryable<ChatVM>>.SuccessResult(chatVMs, "Chats Loaded Successfully");
+                return ServiceResult<List<ChatVM>>.SuccessResult(chatVMs, "Chats Loaded Successfully");
             }
             catch (Exception ex)
             {
-                return ServiceResult<IQueryable<ChatVM>>.FailureResult($"Failed To Load Chats: {ex.Message}");
+                return ServiceResult<List<ChatVM>>.FailureResult($"Failed To Load Chats: {ex.Message}");
             }
         }
+
+        public ServiceResult<ChatVM> GetChatBetween(string clientId, string providerId)
+        {
+            try
+            {
+                var chat = _chatRepository
+                    .GetChatsForUser(clientId)
+                    .FirstOrDefault(c => c.ServiceProviderId == providerId);
+
+                if (chat == null)
+                    return ServiceResult<ChatVM>.FailureResult("Chat not found.");
+
+                return ServiceResult<ChatVM>.SuccessResult(new ChatVM
+                {
+                    Id = chat.Id,
+                    ClientId = chat.ClientId,
+                    ServiceProviderId = chat.ServiceProviderId,
+                    LastMessageAt = chat.LastMessageAt,
+                    Messages = new List<ServiceQuariesDetailsVM>()
+                });
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<ChatVM>.FailureResult("Error: " + ex.Message);
+            }
+        }
+
 
         public ServiceResult<ChatVM> GetChatById(int chatId)
         {
@@ -765,7 +818,7 @@ namespace Dalel.Services
                     LastMessageAt = chat.LastMessageAt,
                     Messages = chat.Quaries?
                                 .Select(q => q.ToDetailsViewModel())
-                                .OrderBy(m => m.CommentDate) 
+                                .OrderBy(m => m.CommentDate)
                                 .ToList()
                 };
 
@@ -776,13 +829,45 @@ namespace Dalel.Services
                 return ServiceResult<ChatVM>.FailureResult($"Failed to load chat: {ex.Message}");
             }
         }
+        public ServiceResult<ChatVM> CreateChat([FromForm] AddChatVM model)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(model.ClientId) || string.IsNullOrEmpty(model.ServiceProviderId))
+                    return ServiceResult<ChatVM>.FailureResult("ClientId and ServiceProviderId are required.");
+
+                var newChat = new ServiceChat
+                {
+                    ClientId = model.ClientId,
+                    ServiceProviderId = model.ServiceProviderId,
+                    LastMessageAt = DateTime.UtcNow
+                };
+
+                _chatRepository.Add(newChat);
+                _chatRepository.Save();
+                var chatVM = new ChatVM
+                {
+                    Id = newChat.Id,
+                    ClientId = newChat.ClientId,
+                    ServiceProviderId = newChat.ServiceProviderId,
+                    LastMessageAt = newChat.LastMessageAt,
+                    Messages = new List<ServiceQuariesDetailsVM>()
+                };
+
+                return ServiceResult<ChatVM>.SuccessResult(chatVM, "Chat created successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<ChatVM>.FailureResult($"Failed to create chat: {ex.Message}");
+            }
+        }
 
 
-#endregion
+        #endregion
 
-#region ServiceProviderProposal
+        #region ServiceProviderProposal
 
-public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm] AddServiceProviderProposalVM vm)
+        public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm] AddServiceProviderProposalVM vm)
         {
             try
             {
@@ -1232,7 +1317,6 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
                     return ServiceResult<CategoryServicesDetailsVM>.FailureResult("Category name cannot be null or empty.");
                 if (string.IsNullOrEmpty(vm.Description))
                     return ServiceResult<CategoryServicesDetailsVM>.FailureResult("Description cannot be null or empty.");
-
                 var category = vm.ToModel();
                 _categoryServicesRepository.Add(category);
                 return ServiceResult<CategoryServicesDetailsVM>.SuccessResult(category.ToDetailsViewModel(), "Category created successfully.");

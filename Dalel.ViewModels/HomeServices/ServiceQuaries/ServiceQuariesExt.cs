@@ -20,6 +20,7 @@ namespace Dalel.ViewModels
         {
             return new ServiceQuaries
             {
+                ChatId = vm.ChatId,
                 ClientId = vm.ClientId,
                 CategoryServicesId = vm.CategoryServicesId,
                 ServiceProviderId = vm.ServiceProviderId,
@@ -30,6 +31,7 @@ namespace Dalel.ViewModels
         }
         public static ServiceQuaries ToEditModel(this AddServiceQuariesVM vm, ServiceQuaries existing)
         {
+            existing.ChatId = vm.ChatId;
             existing.ClientId = vm.ClientId;
             existing.CategoryServicesId = vm.CategoryServicesId;
             existing.ServiceProviderId = vm.ServiceProviderId;
@@ -41,6 +43,7 @@ namespace Dalel.ViewModels
             return new ServiceQuariesDetailsVM
             {
                 Id = model.Id,
+                ChatId = model.ChatId,
                 ClientId = model.ClientId,
                 ClientName = model.Client?.User.UserName ?? "Not Provided",
                 CategoryServicesId = model.CategoryServicesId,
