@@ -798,13 +798,13 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
                     return ServiceResult<ServiceProviderProposalDetailsVM>.FailureResult("Provider has already proposed for this request.");
 
                 _serviceProviderProposalRepository.AddProposal(proposal);
-                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
-                {
-                    RequestId = proposal.ServiceRequestId,
-                    ServiceProviderId = proposal.ServiceProviderId,
-                    ClientId = proposal.ServiceRequest.ClientId,
-                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
-                });
+                //_serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                //{
+                //    RequestId = proposal.ServiceRequestId,
+                //    ServiceProviderId = proposal.ServiceProviderId,
+                //    ClientId = proposal.ServiceRequest.ClientId,
+                //    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                //});
 
                 return ServiceResult<ServiceProviderProposalDetailsVM>.SuccessResult(proposal.ToDetailsViewModel(), "Proposal created successfully.");
             }
@@ -918,13 +918,13 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
                 if (!updated)
                     return ServiceResult<bool>.FailureResult("Request not found");
 
-                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
-                {
-                    RequestId = proposal.ServiceRequestId,
-                    ServiceProviderId = proposal.ServiceProviderId,
-                    ClientId = proposal.ServiceRequest.ClientId,
-                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
-                });
+                //_serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                //{
+                //    RequestId = proposal.ServiceRequestId,
+                //    ServiceProviderId = proposal.ServiceProviderId,
+                //    ClientId = proposal.ServiceRequest.ClientId,
+                //    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                //});
                 var otherProposals = _serviceProviderProposalRepository.GetProposalsByRequest(proposal.ServiceRequestId)
                     .Where(p => p.Id != proposalId && p.Status == ProposalStatus.Pending)
                     .ToList();
@@ -957,13 +957,13 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
                     return ServiceResult.FailureResult("Proposal is already processed (accepted or rejected).");
 
                 _serviceProviderProposalRepository.RejectProposal(proposalId);
-                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
-                {
-                    RequestId = proposal.ServiceRequestId,
-                    ServiceProviderId = proposal.ServiceProviderId,
-                    ClientId = proposal.ServiceRequest.ClientId,
-                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
-                });
+                //_serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                //{
+                //    RequestId = proposal.ServiceRequestId,
+                //    ServiceProviderId = proposal.ServiceProviderId,
+                //    ClientId = proposal.ServiceRequest.ClientId,
+                //    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                //});
                 return ServiceResult.SuccessResult("Proposal rejected successfully.");
             }
             catch (Exception ex)
@@ -989,16 +989,16 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
 
                 if (!proposals.Any())
                     return ServiceResult.FailureResult("No pending proposals found for this service request.");
-                foreach(var proposal in proposals)
-                {
-                    _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
-                    {
-                        RequestId = proposal.ServiceRequestId,
-                        ServiceProviderId = proposal.ServiceProviderId,
-                        ClientId = proposal.ServiceRequest.ClientId,
-                        Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
-                    });
-                }
+                //foreach(var proposal in proposals)
+                //{
+                //    _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                //    {
+                //        RequestId = proposal.ServiceRequestId,
+                //        ServiceProviderId = proposal.ServiceProviderId,
+                //        ClientId = proposal.ServiceRequest.ClientId,
+                //        Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                //    });
+                //}
 
 
                 foreach (var proposal in proposals)
@@ -1026,13 +1026,13 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
                     return ServiceResult.FailureResult("Proposal not found.");
 
                 _serviceProviderProposalRepository.Delete(proposal);
-                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
-                {
-                    RequestId = proposal.ServiceRequestId,
-                    ServiceProviderId = proposal.ServiceProviderId,
-                    ClientId = proposal.ServiceRequest.ClientId,
-                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
-                });
+                //_serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                //{
+                //    RequestId = proposal.ServiceRequestId,
+                //    ServiceProviderId = proposal.ServiceProviderId,
+                //    ClientId = proposal.ServiceRequest.ClientId,
+                //    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                //});
                 return ServiceResult.SuccessResult("Proposal deleted successfully.");
             }
             catch (Exception ex)
@@ -1052,13 +1052,13 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
                 if (proposal.Status != ProposalStatus.Accepted)
                     return ServiceResult.FailureResult("Proposal must be accepted before it can be completed.");
                 _serviceProviderProposalRepository.CompleteProposal(proposalId);
-                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
-                {
-                    RequestId = proposal.ServiceRequestId,
-                    ServiceProviderId = proposal.ServiceProviderId,
-                    ClientId = proposal.ServiceRequest.ClientId,
-                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
-                });
+                //_serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                //{
+                //    RequestId = proposal.ServiceRequestId,
+                //    ServiceProviderId = proposal.ServiceProviderId,
+                //    ClientId = proposal.ServiceRequest.ClientId,
+                //    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                //});
                 _serviceRequestRepository.UpdaterequestsStatus(proposal.ServiceRequestId, RequestStatus.Completed);
                 return ServiceResult.SuccessResult("Proposal completed successfully.");
             }
