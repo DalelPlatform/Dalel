@@ -18,10 +18,10 @@ namespace Dalel.Repository
         }
 
 
-        public IQueryable<RestaurantOrder> GetOrdersByRestaurant(int restaurantId)
-        {
-            return base.GetList(or => or.RestaurantId == restaurantId);
-        }
+        //public IQueryable<RestaurantOrder> GetOrdersByRestaurant(int restaurantId)
+        //{
+        //    return base.GetList(or => or.RestaurantId == restaurantId);
+        //}
 
 
         public IQueryable<RestaurantOrder> GetOrdersByClient(string clientId)

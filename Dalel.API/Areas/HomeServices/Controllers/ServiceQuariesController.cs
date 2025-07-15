@@ -67,6 +67,14 @@ namespace Dalel.API.Areas
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
+        [HttpGet("chat")]
+        public IActionResult GetQueriesByChat(int chatId)
+        {
+            var result = _homeServiceService.GetQueriesByChatId(chatId);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
 
         [HttpGet("provider")]
         //[Authorize(Roles = "ServiceProvider")]

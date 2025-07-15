@@ -17,5 +17,9 @@ namespace Dalel.ViewModels.Restaurant
         public int RestaurantOrderId { get; set; } //fk
 
         public int RestaurantMenuItemId { get; set; } //fk
+
+        public int RestaurantId { get; set; }
+        public string? RestaurantName { get; set; }
+
     }
 }

@@ -50,8 +50,6 @@ namespace Models.Restaurant
 
         public virtual ICollection<RestaurantMenuItem> RestaurantMenuItem { get; set; }
 
-        public virtual ICollection<RestaurantOrder> RestaurantOrders { get; set; }
-
         public virtual ICollection<RestaurantReservation> RestaurantReservations { get; set; }
 
     }

@@ -25,9 +25,7 @@ namespace Dalel.Repository
         // Get reviews by provider with pagination
         public IQueryable<ServiceProviderReview> GetReviewsByProvider(string providerId, int pageSize = 10, int pageNumber = 1)
         {
-            IQueryable<ServiceProviderReview> query = _context.ServiceProviderReviews
-                .Include(r => r.ServiceRequest)
-                .Where(r => r.ServiceRequest.Propsals.Any(p => p.ServiceProviderId == providerId && p.Status == ProposalStatus.Accepted));
+            IQueryable<ServiceProviderReview> query = base.GetList(q=>q.ServiceProviderId == providerId);
 
             // Apply pagination
             if (pageSize < 1) pageSize = 10;

@@ -1,6 +1,8 @@
 ﻿using Dalel.Services;
+using Dalel.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -19,13 +21,36 @@ namespace Dalel.API.Areas.HomeServices.Controllers
         [HttpGet ("Chat")]
         [Authorize(Roles = "ServiceProvider,Client")]
         public IActionResult GetChats()
-        {
+       {
             var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = _homeServiceService.GetChatsForUser(UserId);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
+
+        [HttpPost("create")]
+        [Authorize(Roles = "ServiceProvider,Client")]
+        public IActionResult CreateChat([FromForm] AddChatVM model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (User.IsInRole("Client"))
+                model.ClientId = userId;
+            else if (User.IsInRole("ServiceProvider"))
+                model.ServiceProviderId = userId;
+
+            var existingChatResult = _homeServiceService.GetChatBetween(model.ClientId, model.ServiceProviderId);
+
+            if (existingChatResult.Success)
+            {
+                return new JsonResult(existingChatResult);
+            }
+            var result = _homeServiceService.CreateChat(model);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+
 
     }
 }

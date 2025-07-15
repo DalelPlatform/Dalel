@@ -66,32 +66,29 @@ namespace Dalel.Services
             this.uploader = uploader;
         }
         #region Service Request
-        public ServiceResult<ServiceRequestDetailsVM> CreateServiceRequest(AddServiceRequestVM vm)
+        public ServiceResult CreateServiceRequest(AddServiceRequestVM vm)
         {
             try
             {
-                var entity = vm.ToModel();
 
                 // Check if the client exists
-                if (!_clientRepository.GetList(c => c.UserId == entity.ClientId).Any())
-                    return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Client not found");
+                if (!_clientRepository.GetList(c => c.UserId == vm.ClientId).Any())
+                    return ServiceResult.FailureResult("Client not found");
 
                 // Check if the category exists
-                if (!_categoryServicesRepository.GetList(c => c.Id == entity.CategoryServicesId).Any())
-                    return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Category not found");
+                if (!_categoryServicesRepository.GetList(c => c.Id == vm.CategoryServicesId).Any())
+                    return ServiceResult.FailureResult("Category not found");
                 vm.Imagepath = uploader.addimage(vm.Image);
 
 
-                _serviceRequestRepository.Add(entity);
+                _serviceRequestRepository.Add(vm.ToModel());
                 _serviceRequestRepository.Save(); // Save changes to the database
 
-                return ServiceResult<ServiceRequestDetailsVM>.SuccessResult(
-                    entity.ToDetailsViewModel(),
-                    "Request created successfully");
+                return ServiceResult.SuccessResult("Request created successfully");
             }
             catch (Exception ex)
             {
-                return ServiceResult<ServiceRequestDetailsVM>.FailureResult(
+                return ServiceResult.FailureResult(
                     $"Database error: {ex.InnerException?.Message ?? ex.Message}");
             }
         }
@@ -426,25 +423,54 @@ namespace Dalel.Services
 
         #region ServiceQuaries
         //send Message
-        public ServiceResult<ServiceQuariesDetailsVM> CreateServiceQuery([FromForm] AddServiceQuariesVM vm)
+        public ServiceResult<ServiceQuariesDetailsVM> CreateServiceQuery(AddServiceQuariesVM vm)
         {
             try
             {
                 var query = vm.ToModel();
+
                 if (string.IsNullOrEmpty(query.ClientId))
                     return ServiceResult<ServiceQuariesDetailsVM>.FailureResult("Client ID cannot be null or empty.");
                 if (query.CategoryServicesId <= 0)
                     return ServiceResult<ServiceQuariesDetailsVM>.FailureResult("Category ID must be greater than zero.");
+                ServiceChat chat;
+                if (vm.ChatId > 0)
+                {
+                    chat = _chatRepository.GetChatById(vm.ChatId);
+                    if (chat == null)
+                        return ServiceResult<ServiceQuariesDetailsVM>.FailureResult("Chat not found.");
+                }
+                else
+                {
+                    chat = new ServiceChat
+                    {
+                        ClientId = query.ClientId,
+                        ServiceProviderId = query.ServiceProviderId,
+                        LastMessageAt = DateTime.Now,
+                        Quaries = new List<ServiceQuaries>()
+                    };
+                    _chatRepository.Add(chat);
+                    _chatRepository.Save();
+                }
+
+                query.ChatId = chat.Id;
+                query.CommentDate = DateTime.Now;
 
                 _serviceQuariesRepository.Add(query);
+
+                chat.LastMessageAt = query.CommentDate;
+                _chatRepository.Update(chat);
+
                 _serviceQuariesRepository.Save();
-                return ServiceResult<ServiceQuariesDetailsVM>.SuccessResult(query.ToDetailsViewModel(), "Service query created successfully.");
+
+                return ServiceResult<ServiceQuariesDetailsVM>.SuccessResult(query.ToDetailsViewModel(), "Message sent successfully.");
             }
             catch (Exception ex)
             {
                 return ServiceResult<ServiceQuariesDetailsVM>.FailureResult("Error: " + ex.Message);
             }
         }
+
         public ServiceResult<PaginationViewModel<ServiceQuariesDetailsVM>> GetQueriesByCategory(
             int categoryId, int pageSize = 5, int pageNumber = 1)
         {
@@ -529,7 +555,22 @@ namespace Dalel.Services
             }
         }
 
+        public ServiceResult <IQueryable<ServiceQuariesDetailsVM>> GetQueriesByChatId(int chatId)
+        {
+            try
+            {
+                var query = _serviceQuariesRepository.GetQueryByChatId(chatId);
+                if (query == null)
+                    return ServiceResult<IQueryable<ServiceQuariesDetailsVM>>.FailureResult("Query not found.");
 
+                return ServiceResult<IQueryable<ServiceQuariesDetailsVM>>
+                    .SuccessResult(query.Select(q => q.ToDetailsViewModel()).AsQueryable(), "Query retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IQueryable<ServiceQuariesDetailsVM>>.FailureResult("Error: " + ex.Message);
+            }
+        }
 
         public ServiceResult<ServiceQuariesDetailsVM> GetQueryById(int queryId)
         {
@@ -722,11 +763,11 @@ namespace Dalel.Services
 
         #endregion
         #region ServiceChat
-        public ServiceResult<IQueryable<ChatVM>> GetChatsForUser(string userId)
+        public ServiceResult<List<ChatVM>> GetChatsForUser(string userId)
         {
             try
             {
-                var chats = _chatRepository.GetChatsForUser(userId);
+                var chats = _chatRepository.GetChatsForUser(userId).ToList();
 
                 var chatVMs = chats.Select(chat => new ChatVM
                 {
@@ -734,19 +775,43 @@ namespace Dalel.Services
                     ClientId = chat.ClientId,
                     ServiceProviderId = chat.ServiceProviderId,
                     LastMessageAt = chat.LastMessageAt,
-                    Messages = chat.Quaries
-                                .Select(q => q.ToDetailsViewModel())
-                                .OrderBy(m => m.CommentDate)
-                                .ToList()
-                }).AsQueryable();
+                    Messages = new List<ServiceQuariesDetailsVM>() 
+                }).ToList();
 
-                return ServiceResult<IQueryable<ChatVM>>.SuccessResult(chatVMs, "Chats Loaded Successfully");
+                return ServiceResult<List<ChatVM>>.SuccessResult(chatVMs, "Chats Loaded Successfully");
             }
             catch (Exception ex)
             {
-                return ServiceResult<IQueryable<ChatVM>>.FailureResult($"Failed To Load Chats: {ex.Message}");
+                return ServiceResult<List<ChatVM>>.FailureResult($"Failed To Load Chats: {ex.Message}");
             }
         }
+
+        public ServiceResult<ChatVM> GetChatBetween(string clientId, string providerId)
+        {
+            try
+            {
+                var chat = _chatRepository
+                    .GetChatsForUser(clientId)
+                    .FirstOrDefault(c => c.ServiceProviderId == providerId);
+
+                if (chat == null)
+                    return ServiceResult<ChatVM>.FailureResult("Chat not found.");
+
+                return ServiceResult<ChatVM>.SuccessResult(new ChatVM
+                {
+                    Id = chat.Id,
+                    ClientId = chat.ClientId,
+                    ServiceProviderId = chat.ServiceProviderId,
+                    LastMessageAt = chat.LastMessageAt,
+                    Messages = new List<ServiceQuariesDetailsVM>()
+                });
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<ChatVM>.FailureResult("Error: " + ex.Message);
+            }
+        }
+
 
         public ServiceResult<ChatVM> GetChatById(int chatId)
         {
@@ -765,7 +830,7 @@ namespace Dalel.Services
                     LastMessageAt = chat.LastMessageAt,
                     Messages = chat.Quaries?
                                 .Select(q => q.ToDetailsViewModel())
-                                .OrderBy(m => m.CommentDate) 
+                                .OrderBy(m => m.CommentDate)
                                 .ToList()
                 };
 
@@ -776,13 +841,45 @@ namespace Dalel.Services
                 return ServiceResult<ChatVM>.FailureResult($"Failed to load chat: {ex.Message}");
             }
         }
+        public ServiceResult<ChatVM> CreateChat([FromForm] AddChatVM model)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(model.ClientId) || string.IsNullOrEmpty(model.ServiceProviderId))
+                    return ServiceResult<ChatVM>.FailureResult("ClientId and ServiceProviderId are required.");
+
+                var newChat = new ServiceChat
+                {
+                    ClientId = model.ClientId,
+                    ServiceProviderId = model.ServiceProviderId,
+                    LastMessageAt = DateTime.UtcNow
+                };
+
+                _chatRepository.Add(newChat);
+                _chatRepository.Save();
+                var chatVM = new ChatVM
+                {
+                    Id = newChat.Id,
+                    ClientId = newChat.ClientId,
+                    ServiceProviderId = newChat.ServiceProviderId,
+                    LastMessageAt = newChat.LastMessageAt,
+                    Messages = new List<ServiceQuariesDetailsVM>()
+                };
+
+                return ServiceResult<ChatVM>.SuccessResult(chatVM, "Chat created successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<ChatVM>.FailureResult($"Failed to create chat: {ex.Message}");
+            }
+        }
 
 
-#endregion
+        #endregion
 
-#region ServiceProviderProposal
+        #region ServiceProviderProposal
 
-public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm] AddServiceProviderProposalVM vm)
+        public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm] AddServiceProviderProposalVM vm)
         {
             try
             {
@@ -798,13 +895,13 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
                     return ServiceResult<ServiceProviderProposalDetailsVM>.FailureResult("Provider has already proposed for this request.");
 
                 _serviceProviderProposalRepository.AddProposal(proposal);
-                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
-                {
-                    RequestId = proposal.ServiceRequestId,
-                    ServiceProviderId = proposal.ServiceProviderId,
-                    ClientId = proposal.ServiceRequest.ClientId,
-                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
-                });
+                //_serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                //{
+                //    RequestId = proposal.ServiceRequestId,
+                //    ServiceProviderId = proposal.ServiceProviderId,
+                //    ClientId = proposal.ServiceRequest.ClientId,
+                //    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                //});
 
                 return ServiceResult<ServiceProviderProposalDetailsVM>.SuccessResult(proposal.ToDetailsViewModel(), "Proposal created successfully.");
             }
@@ -918,13 +1015,13 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
                 if (!updated)
                     return ServiceResult<bool>.FailureResult("Request not found");
 
-                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
-                {
-                    RequestId = proposal.ServiceRequestId,
-                    ServiceProviderId = proposal.ServiceProviderId,
-                    ClientId = proposal.ServiceRequest.ClientId,
-                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
-                });
+                //_serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                //{
+                //    RequestId = proposal.ServiceRequestId,
+                //    ServiceProviderId = proposal.ServiceProviderId,
+                //    ClientId = proposal.ServiceRequest.ClientId,
+                //    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                //});
                 var otherProposals = _serviceProviderProposalRepository.GetProposalsByRequest(proposal.ServiceRequestId)
                     .Where(p => p.Id != proposalId && p.Status == ProposalStatus.Pending)
                     .ToList();
@@ -957,13 +1054,13 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
                     return ServiceResult.FailureResult("Proposal is already processed (accepted or rejected).");
 
                 _serviceProviderProposalRepository.RejectProposal(proposalId);
-                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
-                {
-                    RequestId = proposal.ServiceRequestId,
-                    ServiceProviderId = proposal.ServiceProviderId,
-                    ClientId = proposal.ServiceRequest.ClientId,
-                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
-                });
+                //_serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                //{
+                //    RequestId = proposal.ServiceRequestId,
+                //    ServiceProviderId = proposal.ServiceProviderId,
+                //    ClientId = proposal.ServiceRequest.ClientId,
+                //    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                //});
                 return ServiceResult.SuccessResult("Proposal rejected successfully.");
             }
             catch (Exception ex)
@@ -989,16 +1086,16 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
 
                 if (!proposals.Any())
                     return ServiceResult.FailureResult("No pending proposals found for this service request.");
-                foreach(var proposal in proposals)
-                {
-                    _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
-                    {
-                        RequestId = proposal.ServiceRequestId,
-                        ServiceProviderId = proposal.ServiceProviderId,
-                        ClientId = proposal.ServiceRequest.ClientId,
-                        Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
-                    });
-                }
+                //foreach(var proposal in proposals)
+                //{
+                //    _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                //    {
+                //        RequestId = proposal.ServiceRequestId,
+                //        ServiceProviderId = proposal.ServiceProviderId,
+                //        ClientId = proposal.ServiceRequest.ClientId,
+                //        Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                //    });
+                //}
 
 
                 foreach (var proposal in proposals)
@@ -1026,13 +1123,13 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
                     return ServiceResult.FailureResult("Proposal not found.");
 
                 _serviceProviderProposalRepository.Delete(proposal);
-                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
-                {
-                    RequestId = proposal.ServiceRequestId,
-                    ServiceProviderId = proposal.ServiceProviderId,
-                    ClientId = proposal.ServiceRequest.ClientId,
-                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
-                });
+                //_serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                //{
+                //    RequestId = proposal.ServiceRequestId,
+                //    ServiceProviderId = proposal.ServiceProviderId,
+                //    ClientId = proposal.ServiceRequest.ClientId,
+                //    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                //});
                 return ServiceResult.SuccessResult("Proposal deleted successfully.");
             }
             catch (Exception ex)
@@ -1052,13 +1149,13 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
                 if (proposal.Status != ProposalStatus.Accepted)
                     return ServiceResult.FailureResult("Proposal must be accepted before it can be completed.");
                 _serviceProviderProposalRepository.CompleteProposal(proposalId);
-                _serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
-                {
-                    RequestId = proposal.ServiceRequestId,
-                    ServiceProviderId = proposal.ServiceProviderId,
-                    ClientId = proposal.ServiceRequest.ClientId,
-                    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
-                });
+                //_serviceNotificationRepository.AddAsync(new AddServiceNotificationVM
+                //{
+                //    RequestId = proposal.ServiceRequestId,
+                //    ServiceProviderId = proposal.ServiceProviderId,
+                //    ClientId = proposal.ServiceRequest.ClientId,
+                //    Message = $"New proposal created for request ID {proposal.ServiceRequestId}."
+                //});
                 _serviceRequestRepository.UpdaterequestsStatus(proposal.ServiceRequestId, RequestStatus.Completed);
                 return ServiceResult.SuccessResult("Proposal completed successfully.");
             }
@@ -1072,22 +1169,21 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
 
         #region ServiceProviderProject
 
-        public ServiceResult<ServiceProviderProjectDetailsVM> CreateProject([FromForm] AddServiceProviderProjectVM vm)
+        public ServiceResult CreateProject([FromForm] AddServiceProviderProjectVM vm)
         {
             try
             {
-                var project = vm.ToModel();
 
-                if (string.IsNullOrEmpty(project.Name))
-                    return ServiceResult<ServiceProviderProjectDetailsVM>.FailureResult("Project name cannot be null or empty.");
+                if (string.IsNullOrEmpty(vm.Name))
+                    return ServiceResult.FailureResult("Project name cannot be null or empty.");
 
                 vm.Imagepath = uploader.addimage(vm.Image);
-                _serviceProviderProjectRepository.AddProject(project);
-                return ServiceResult<ServiceProviderProjectDetailsVM>.SuccessResult(project.ToDetailsViewModel(), "Project created successfully.");
+                _serviceProviderProjectRepository.AddProject(vm.ToModel());
+                return ServiceResult.SuccessResult("Project created successfully.");
             }
             catch (Exception ex)
             {
-                return ServiceResult<ServiceProviderProjectDetailsVM>.FailureResult("Error: " + ex.Message);
+                return ServiceResult.FailureResult("Error: " + ex.Message);
             }
         }
 
@@ -1232,7 +1328,6 @@ public ServiceResult<ServiceProviderProposalDetailsVM> CreateProposal([FromForm]
                     return ServiceResult<CategoryServicesDetailsVM>.FailureResult("Category name cannot be null or empty.");
                 if (string.IsNullOrEmpty(vm.Description))
                     return ServiceResult<CategoryServicesDetailsVM>.FailureResult("Description cannot be null or empty.");
-
                 var category = vm.ToModel();
                 _categoryServicesRepository.Add(category);
                 return ServiceResult<CategoryServicesDetailsVM>.SuccessResult(category.ToDetailsViewModel(), "Category created successfully.");

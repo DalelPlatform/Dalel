@@ -38,6 +38,10 @@ namespace Dalel.Repository.HomeServices
             return base.GetList(q => q.ServiceProviderId == providerId)
                          .OrderByDescending(q => q.CommentDate);
         }
+        public IQueryable<ServiceQuaries> GetQueryByChatId(int ChatId)
+        {
+            return base.GetList(q => q.ChatId == ChatId);
+        }
         public void AddMessage(ServiceQuaries message)
         {
             base.Add(message);

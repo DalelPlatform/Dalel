@@ -20,8 +20,7 @@ namespace Dalel.ViewModels
         public DateTime? CommentDate { get; set; } = DateTime.Now;
 
         public bool IsSenderClient { get; set; }
-
-
+        public int ChatId { get; set; }
         public string ClientId { get; set; }
         public string ServiceProviderId { get; set; }
     }
