@@ -26,5 +26,10 @@ namespace Dalel.API.Areas.Agency.Hup
         //    string userID = Context.User?.FindFirstValue(ClaimTypes.NameIdentifier);
         //    await Clients.All.SendAsync("ReceiveNotification", Message);
         //}
+
+        public async Task SendNotificationToUser(string userId, NotificationDetailsVM message)
+        {
+            await Clients.Group(userId).SendAsync("ReceiveNotification", message);
+        }
     }
 }

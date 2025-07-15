@@ -116,6 +116,21 @@ namespace Dalel.API.Areas
 
         }
 
+        [HttpGet("GetMealsByRestaurantOwner")]
+        [Authorize(Roles = "RestaurantOwner")]
+
+        public IActionResult GetMealsByRestaurantOwner()
+        {
+            var ownerid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var Meals = restaurantService.GetMealsByRestaurantOwner(ownerid);
+            if (!Meals.Success)
+                return new JsonResult(Meals.Message);
+
+            return new JsonResult(Meals);
+
+        }
+
         [HttpGet("GetAllMeals")]
         public IActionResult GetAllMeals()
         {

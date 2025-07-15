@@ -86,7 +86,20 @@ namespace Dalel.ViewModels
             existingProperty.IsForRent = viewModel.IsForRent == false ? existingProperty.IsForRent : viewModel.IsForRent;
             existingProperty.ModificationDate = DateTime.Now;
             existingProperty.IsDeleted = false;
+            existingProperty.PropertyImages = viewModel.Paths.Select(path => new PropertyImages
+            {
+                Image = path
+            }).ToList();
+            existingProperty.VerificationStatus = viewModel.VerificationStatus == 0 ? existingProperty.VerificationStatus : viewModel.VerificationStatus;
 
+
+            // Ensure the OwnerId is not changed
+            if (!string.IsNullOrEmpty(viewModel.OwnerId) && viewModel.OwnerId != existingProperty.OwnerId)
+            {
+                throw new InvalidOperationException("OwnerId cannot be changed.");
+            }
+            existingProperty.OwnerId = existingProperty.OwnerId; // Keep the existing OwnerId
+           
             return existingProperty;
         }
     }

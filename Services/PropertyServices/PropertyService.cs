@@ -8,6 +8,13 @@ using Utilities;
 using Dalel.Repository;
 using Models.Enums;
 using Dalel.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using Dalel.Repository.Agency;
+using Dalel.ViewModels.notification;
+using Models.Notification;
+using Dalel.ViewModels.Property.Properties;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Dalel.Services
 {
@@ -16,6 +23,9 @@ namespace Dalel.Services
         private readonly BookingPropertiesRepository _bookingRepo;
         private readonly PaymentPropertiesRepository _paymentRepo;
         private readonly PropertiesRepository _propertiesRepo;
+        private readonly BaseRepository<PropertyImages> _propertyImagesRepo;
+        private readonly NotificationRepo NotificationRepo;
+
         private readonly ReviewPropertiesRepository _reviewRepo;
         private readonly UploadMedia uploadMedia;
         private readonly IPaymentProcessor<PaymentProperties> paymentProcessor;
@@ -26,7 +36,9 @@ namespace Dalel.Services
             PropertiesRepository propertiesRepo,
             ReviewPropertiesRepository reviewRepo,
             IPaymentProcessor<PaymentProperties> paymentProcessor,
-            UploadMedia uploadMedia)
+            UploadMedia uploadMedia,
+            BaseRepository<PropertyImages> propertyImagesRepo,
+            NotificationRepo notificationRepo)
         {
             _bookingRepo = bookingRepo;
             _paymentRepo = paymentRepo;
@@ -34,6 +46,8 @@ namespace Dalel.Services
             _reviewRepo = reviewRepo;
             this.paymentProcessor = paymentProcessor;
             this.uploadMedia = uploadMedia;
+            _propertyImagesRepo = propertyImagesRepo;
+            NotificationRepo = notificationRepo;
         }
 
         #region Properties
@@ -135,6 +149,7 @@ namespace Dalel.Services
             try
             {
                 var existingProperty = _propertiesRepo.GetList(i => i.Id == id).FirstOrDefault();
+
                 _propertiesRepo.Update(property.ToEditModel(existingProperty));
                 return ServiceResult.SuccessResult("Property updated successfully.");
             }
@@ -149,8 +164,14 @@ namespace Dalel.Services
             try
             {
                 var property = _propertiesRepo.GetList(i=>i.Id == id).FirstOrDefault();
+                var property2 = _propertiesRepo.GetList(i => i.Id == id)
+                              .Include(p => p.PropertyImages) // make sure you include images
+                              .FirstOrDefault();
+
                 if (property == null)
                     return ServiceResult.FailureResult("Property not found.");
+
+                _propertyImagesRepo.DeleteRange(property.PropertyImages.ToList());
 
                 _propertiesRepo.Delete(property);
                 return ServiceResult.SuccessResult("Property deleted.");
@@ -194,6 +215,67 @@ namespace Dalel.Services
             }
         }
 
+        public Notification AddNotification(AddNotificationVM vm)
+        {
+            var notification = vm.ToModel();
+            NotificationRepo.Add(notification);
+            return notification;
+        }
+        public List<NotificationDetailsVM> GetUserNotifications(string userId)
+        {
+
+            var notifications = NotificationRepo.GetList(n => n.UserId == userId && !n.IsRead);
+
+            if (notifications == null)
+                return new List<NotificationDetailsVM>();
+            Console.WriteLine($"Notifications Count: {notifications}");
+
+            return notifications.OrderByDescending(n => n.CreatedAt)
+                                .Select(n => n.ToDetailsVM())
+                                .ToList();
+        }
+
+        public void MarkAsRead(int notificationId, string userId)
+        {
+            var notification = NotificationRepo.GetList(n => n.Id == notificationId && n.UserId == userId)
+                                                .FirstOrDefault();
+            if (notification != null)
+            {
+                notification.IsRead = true;
+                NotificationRepo.Update(notification);
+            }
+        }
+
+        public ServiceResult<List<PropertiesDetailsVM>> SearchPropertiesForBooking(SearchBookingVM searchVM)
+        {
+            try
+            {
+                if (searchVM == null)
+                    return ServiceResult<List<PropertiesDetailsVM>>.FailureResult("Invalid search data.");
+
+                if (searchVM.CheckIn >= searchVM.CheckOut)
+                    return ServiceResult<List<PropertiesDetailsVM>>.FailureResult("Check-out date must be after check-in date.");
+
+                // Get all property IDs that have conflicting bookings in this period
+                var bookedPropertyIds = _bookingRepo.GetList(b =>
+                    b.CheckIn < searchVM.CheckOut &&
+                    b.CheckOut > searchVM.CheckOut &&
+                    b.Status != BookingStatus.Confirmed // Or adjust status logic as needed
+                ).Select(b => b.PropertyId).ToList();
+
+                // Get available properties based on location and that are not booked
+                var availableProperties = _propertiesRepo.GetList(p =>
+                    (string.IsNullOrEmpty(searchVM.Location) || p.Address.Contains(searchVM.Location)) &&
+                    !bookedPropertyIds.Contains(p.Id)
+                ).Select(p=>p.ToDetailsViewModel()).ToList();
+
+                return ServiceResult<List<PropertiesDetailsVM>>.SuccessResult(availableProperties,"OK");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<PropertiesDetailsVM>>.FailureResult($"An error occurred while searching: {ex.Message}");
+            }
+        }
         public async Task<ServiceResult> CancelBooking(int bookingId)
         {
             try
@@ -211,6 +293,41 @@ namespace Dalel.Services
                 return ServiceResult.FailureResult(ex.Message);
             }
         }
+        public async Task<ServiceResult> AcceptBooking(int bookingId)
+        {
+            try
+            {
+                var booking = _bookingRepo.GetBookingById(bookingId);
+                if (booking == null)
+                    return ServiceResult.FailureResult("Booking not found.");
+
+                booking.Status = BookingStatus.Confirmed;
+                _bookingRepo.Update(booking);
+                return ServiceResult.SuccessResult("Booking confirmed.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult(ex.Message);
+            }
+        }
+        public async Task<ServiceResult> RejectBooking(int bookingId)
+        {
+            try
+            {
+                var booking = _bookingRepo.GetBookingById(bookingId);
+                if (booking == null)
+                    return ServiceResult.FailureResult("Booking not found.");
+
+                booking.Status = BookingStatus.Rejected;
+                _bookingRepo.Update(booking);
+                return ServiceResult.SuccessResult("Booking rejected.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult(ex.Message);
+            }
+        }
+
 
         public ServiceResult<List<BookingPropertiesDetailsVM>> GetBookingsByStatus(BookingStatus status, string ownerid)
         {
