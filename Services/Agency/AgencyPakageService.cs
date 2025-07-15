@@ -129,6 +129,11 @@ namespace Dalel.Services.Agency
                 == _agencyPackage.Id).ToList();
                 foreach (var sch in schedules)
                 {
+                    var bookings = PackagebookingRepo.GetList(b => b.PackageSchaduleId == sch.Id).ToList();
+                    foreach (var booking in bookings)
+                    {
+                        PackagebookingRepo.Delete(booking);
+                    }
                     PackageSchaduleRepo.Delete(sch);
                 }
                 //_agencyPackage.PackageSchadules.Clear();
