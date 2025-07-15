@@ -10,6 +10,16 @@ namespace Dalel.ViewModels
     public class UserRegisterVM
     {
         [Required(ErrorMessage = "This Field is Required")]
+        [StringLength(25, MinimumLength = 2, ErrorMessage = "Value Must at least 2 letter ")]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "This Field is Required")]
+        [StringLength(25, MinimumLength = 2, ErrorMessage = "Value Must at least 2 letter ")]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Required(ErrorMessage = "This Field is Required")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Value Must at least 6 letter ")]
         [Display(Name = "User Name")]
         public string UserName { get; set; }
@@ -37,7 +47,7 @@ namespace Dalel.ViewModels
         [Required(ErrorMessage = "This Field is Required")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Value Must at least 6 letter ")]
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm Password")]
+        [Display(Name = "ConfirmPassword")]
         public string ConfirmPassowrd { get; set; }
 
         [Required(ErrorMessage = "Role is Required")]

@@ -152,6 +152,8 @@ builder.Services.AddScoped<PropertiesRepository>();
 builder.Services.AddScoped<BookingPropertiesRepository>();
 builder.Services.AddScoped<PaymentPropertiesRepository>();
 builder.Services.AddScoped<ReviewPropertiesRepository>();
+builder.Services.AddScoped<BaseRepository<PropertyImages>>();
+
 #endregion
 
 #region Restaurant

@@ -1,10 +1,15 @@
-﻿using Dalel.Services;
+﻿using Dalel.API.Areas.Agency.Hup;
+using Dalel.Repository;
+using Dalel.Services;
 using Dalel.ViewModels;
 using Dalel.ViewModels.Agency.PackageBookingPayment;
 using Dalel.ViewModels.Property.PaymentPropertiesDeails;
+using Dalel.ViewModels.Property.Properties;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Models.Enums;
 using Models.Property;
 using System.Security.Claims;
@@ -18,7 +23,11 @@ namespace Dalel.API.Areas
     {
         private PropertyService propertyService;
         private UploadMedia uploader;
-        public PropertyController(PropertyService propertyService, UploadMedia uploader)
+        private PropertiesRepository propertiesRepository;
+        private readonly IHubContext<NotificationHub> _hubContext;
+
+        public PropertyController(PropertyService propertyService, UploadMedia uploader, IHubContext<NotificationHub> hubContext
+)
         {
             this.propertyService = propertyService;
             this.uploader = uploader;
@@ -55,6 +64,15 @@ namespace Dalel.API.Areas
             return new JsonResult(result);
         }
 
+        [HttpPost("search-available-properties")]
+        public IActionResult SearchAvailableProperties([FromBody] SearchBookingVM searchVM)
+        {
+            var result = propertyService.SearchPropertiesForBooking(searchVM);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+
         [HttpGet("get-listings")]
         [Authorize(Roles = "PropertyOwner")]
         public IActionResult GetPropertiesByOwnerId()
@@ -71,6 +89,8 @@ namespace Dalel.API.Areas
         public  IActionResult AddProperty([FromForm] AddPropertiesVM property)
         {
             if (!ModelState.IsValid)
+                return new JsonResult("Invalid Form");
+
             property.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             property.Paths = uploader.addimage(property.PropertyImages);
             var result =  propertyService.AddProperty(property.ToModel());
@@ -82,19 +102,35 @@ namespace Dalel.API.Areas
         [HttpPut("{id}")]
         public async Task<IActionResult> EditProperty([FromBody] AddPropertiesVM property, int id)
         {
+            if (!ModelState.IsValid)
+                return new JsonResult("Invalid Form");
+            property.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (property.PropertyImages != null && property.PropertyImages.Count > 0)
+            {
+                property.Paths = uploader.addimage(property.PropertyImages);
+            }
+            else
+            {
+                var existingProperty = propertiesRepository.GetPropertyById(id);
+                if (existingProperty == null)
+                    return NotFound("Property not found.");
+                property.Paths = existingProperty.Images;
+
+            }
+
             var result = await propertyService.EditProperty(property,id);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);
         }
-        [HttpDelete("delete-property/{id}")]
-        public async Task<IActionResult> DeleteProperty(int id)
-        {
-            var result = await propertyService.DeleteProperty(id);
-            if (!result.Success)
-                return new JsonResult(result.Message);
-            return new JsonResult(result);
-        }
+            [HttpDelete("delete-property/{id}")]
+            public async Task<IActionResult> DeleteProperty(int id)
+            {
+                var result = await propertyService.DeleteProperty(id);
+                if (!result.Success)
+                    return new JsonResult(result.Message);
+                return new JsonResult(result);
+            }
 
         [HttpPost("Booking")]
         [Authorize(Roles = "Client")]
@@ -104,6 +140,8 @@ namespace Dalel.API.Areas
             var result =  propertyService.BookProperty(booking);
             if (!result.Success)
                 return new JsonResult(result);
+
+
             return new JsonResult(result);
         }
 
@@ -138,6 +176,34 @@ namespace Dalel.API.Areas
                 return new JsonResult(result.Message);
             return new JsonResult(result);
 
+        }
+
+        [HttpGet("get-top-three-bookings")]
+        public IActionResult GetTop3Bookings()
+        {
+            var result = propertyService.GetTop3Bookings();
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+
+        }
+        [HttpPut("accept-booking/{id}")]
+        [Authorize(Roles = "PropertyOwner")]
+        public async Task<IActionResult> AcceptBooking(int id)
+        {
+            var result = await propertyService.AcceptBooking(id);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+        [HttpPut("reject-booking/{id}")]
+        [Authorize(Roles = "PropertyOwner")]
+        public async Task<IActionResult> RejectBooking(int id)
+        {
+            var result = await propertyService.RejectBooking(id);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
         }
 
         [HttpPost("Payment")]
@@ -178,6 +244,16 @@ namespace Dalel.API.Areas
         public async Task<IActionResult> DeleteReview(int reviewId)
         {
             var result = await propertyService.DeleteReview(reviewId);
+            if (!result.Success)
+                return new JsonResult(result.Message);
+            return new JsonResult(result);
+        }
+
+        [HttpGet("get-all-reviews")]
+        public async Task<IActionResult> GetAllReviews()
+        {
+            string ownerid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = await propertyService.GetAllReviews(ownerid);
             if (!result.Success)
                 return new JsonResult(result.Message);
             return new JsonResult(result);

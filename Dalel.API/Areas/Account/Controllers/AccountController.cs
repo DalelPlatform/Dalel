@@ -1,5 +1,6 @@
 ﻿using Dalel.Services;
 using Dalel.ViewModels;
+using Dalel.ViewModels.Accounts;
 using LinqKit;
 
 using Microsoft.AspNetCore.Authorization;
@@ -20,14 +21,17 @@ namespace Dalel.API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly AccountService accountService;
-        public AccountController(AccountService accountService)
+        private UploadMedia uploader;
+
+        public AccountController(AccountService accountService, UploadMedia uploader)
         {
             this.accountService = accountService;
+            this.uploader = uploader;
         }
 
 
         [HttpGet("MyAccount")]
-        [Authorize(Roles = "Client,ServiceProvider,Admin")]
+        //[Authorize(Roles = "Client,ServiceProvider,Admin")]
         public IActionResult getMyAccount()
         {
             string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -38,12 +42,29 @@ namespace Dalel.API.Controllers
                 Data = new
                 {
                     result.Result.Id,
-                    result.Result.UserName,
+                    result.Result.FirstName,
+                    result.Result.LastName,
                     result.Result.Email,
+                    result.Result.UserName,
                     result.Result.PhoneNumber,
                     result.Result.ProfileImg,
                 },
                     Message = "User retrieved successfully" });
+        }
+
+        [HttpPut("update-account")]
+        public async Task<IActionResult> UpdateMyAccount([FromForm] UpdateProfile profile)
+        {
+            string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            profile.ProfileImg = uploader.addimage(profile.Image);
+
+
+            var result = await accountService.UpdateAccount(profile, id);
+
+            if (!result.Success)
+                return new JsonResult(new { Message = result.Message, Status = 400 });
+
+            return new JsonResult(new { Message = result.Message, Status = 200 });
         }
 
         [HttpGet("GetUserById")]
@@ -90,11 +111,18 @@ namespace Dalel.API.Controllers
                 }
                 else
                 {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    res.Errors.ForEach(err => stringBuilder.Append(err.Description));
+                    var errorMessages = new StringBuilder();
+                    foreach (var item in ModelState.Values)
+                    {
+                        foreach (var err in item.Errors)
+                        {
+                            errorMessages.Append(err.ErrorMessage);
+                        }
+                    }
+
                     return new JsonResult(new
                     {
-                        Massage = "Some Data Are Missing",
+                        Massage = errorMessages.ToString(),
                         Status = 400
                     });
                 }
@@ -141,6 +169,7 @@ namespace Dalel.API.Controllers
                 {
                     var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
                     var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                    var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
 
                     var user = await accountService.GetUserById(userId);
 
@@ -152,6 +181,7 @@ namespace Dalel.API.Controllers
                         Role = role,
                         Image = user.ProfileImg,
                         FullName = user.FirstName + " " + user.LastName,
+                        Email = email,
                     });
 
                 }

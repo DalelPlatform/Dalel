@@ -66,32 +66,29 @@ namespace Dalel.Services
             this.uploader = uploader;
         }
         #region Service Request
-        public ServiceResult<ServiceRequestDetailsVM> CreateServiceRequest(AddServiceRequestVM vm)
+        public ServiceResult CreateServiceRequest(AddServiceRequestVM vm)
         {
             try
             {
-                var entity = vm.ToModel();
 
                 // Check if the client exists
-                if (!_clientRepository.GetList(c => c.UserId == entity.ClientId).Any())
-                    return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Client not found");
+                if (!_clientRepository.GetList(c => c.UserId == vm.ClientId).Any())
+                    return ServiceResult.FailureResult("Client not found");
 
                 // Check if the category exists
-                if (!_categoryServicesRepository.GetList(c => c.Id == entity.CategoryServicesId).Any())
-                    return ServiceResult<ServiceRequestDetailsVM>.FailureResult("Category not found");
+                if (!_categoryServicesRepository.GetList(c => c.Id == vm.CategoryServicesId).Any())
+                    return ServiceResult.FailureResult("Category not found");
                 vm.Imagepath = uploader.addimage(vm.Image);
 
 
-                _serviceRequestRepository.Add(entity);
+                _serviceRequestRepository.Add(vm.ToModel());
                 _serviceRequestRepository.Save(); // Save changes to the database
 
-                return ServiceResult<ServiceRequestDetailsVM>.SuccessResult(
-                    entity.ToDetailsViewModel(),
-                    "Request created successfully");
+                return ServiceResult.SuccessResult("Request created successfully");
             }
             catch (Exception ex)
             {
-                return ServiceResult<ServiceRequestDetailsVM>.FailureResult(
+                return ServiceResult.FailureResult(
                     $"Database error: {ex.InnerException?.Message ?? ex.Message}");
             }
         }
@@ -558,7 +555,22 @@ namespace Dalel.Services
             }
         }
 
+        public ServiceResult <IQueryable<ServiceQuariesDetailsVM>> GetQueriesByChatId(int chatId)
+        {
+            try
+            {
+                var query = _serviceQuariesRepository.GetQueryByChatId(chatId);
+                if (query == null)
+                    return ServiceResult<IQueryable<ServiceQuariesDetailsVM>>.FailureResult("Query not found.");
 
+                return ServiceResult<IQueryable<ServiceQuariesDetailsVM>>
+                    .SuccessResult(query.Select(q => q.ToDetailsViewModel()).AsQueryable(), "Query retrieved.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IQueryable<ServiceQuariesDetailsVM>>.FailureResult("Error: " + ex.Message);
+            }
+        }
 
         public ServiceResult<ServiceQuariesDetailsVM> GetQueryById(int queryId)
         {
@@ -1157,22 +1169,21 @@ namespace Dalel.Services
 
         #region ServiceProviderProject
 
-        public ServiceResult<ServiceProviderProjectDetailsVM> CreateProject([FromForm] AddServiceProviderProjectVM vm)
+        public ServiceResult CreateProject([FromForm] AddServiceProviderProjectVM vm)
         {
             try
             {
-                var project = vm.ToModel();
 
-                if (string.IsNullOrEmpty(project.Name))
-                    return ServiceResult<ServiceProviderProjectDetailsVM>.FailureResult("Project name cannot be null or empty.");
+                if (string.IsNullOrEmpty(vm.Name))
+                    return ServiceResult.FailureResult("Project name cannot be null or empty.");
 
                 vm.Imagepath = uploader.addimage(vm.Image);
-                _serviceProviderProjectRepository.AddProject(project);
-                return ServiceResult<ServiceProviderProjectDetailsVM>.SuccessResult(project.ToDetailsViewModel(), "Project created successfully.");
+                _serviceProviderProjectRepository.AddProject(vm.ToModel());
+                return ServiceResult.SuccessResult("Project created successfully.");
             }
             catch (Exception ex)
             {
-                return ServiceResult<ServiceProviderProjectDetailsVM>.FailureResult("Error: " + ex.Message);
+                return ServiceResult.FailureResult("Error: " + ex.Message);
             }
         }
 

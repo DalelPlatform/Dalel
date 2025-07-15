@@ -1,5 +1,6 @@
 ﻿using Dalel.Repository;
 using Dalel.ViewModels;
+using Dalel.ViewModels.Accounts;
 using LinqKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -116,6 +117,26 @@ namespace Dalel.Services
             return IdentityResult.Failed();
         }
 
+        public async Task<ServiceResult> UpdateAccount(UpdateProfile profile, string userId)
+        {
+            try
+            {
+                var existingUser = await GetUserById(userId);
+
+                if (existingUser == null)
+                    return ServiceResult.FailureResult("User not found.");
+
+                profile.ToEditModel(existingUser);
+
+                appUserRepository.Update(existingUser);
+
+                return ServiceResult.SuccessResult("Account updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.FailureResult(ex.Message);
+            }
+        }
         public async Task<AppUser> GetUserById(string userId)
         {
             return await appUserRepository.FindById(userId);
@@ -168,7 +189,7 @@ namespace Dalel.Services
 
                 JwtSecurityToken securityToken = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(60), // expiration time
+                    expires: DateTime.Now.AddHours(24), // expiration time
                     signingCredentials: new SigningCredentials(
                         algorithm: SecurityAlgorithms.HmacSha256,
                         key: new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettingConfiguration["JWT:PrivateKey"]))

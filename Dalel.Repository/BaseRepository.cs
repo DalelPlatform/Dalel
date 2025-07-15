@@ -124,8 +124,13 @@ namespace Dalel.Repository
             Table.Remove(row);
             Save();
         }
+        public void DeleteRange(IEnumerable<T> rows)
+        {
+            Table.RemoveRange(rows);
+            Save();
+        }
 
-       
+
         //pending 
         public IQueryable<T> GetPendingRequests(Expression<Func<T, bool>> filter)
         {

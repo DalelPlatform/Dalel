@@ -26,7 +26,7 @@ namespace Dalel.API.Areas
             var result = _homeServiceService.CreateProject(model);
             if (!result.Success)
                 return new JsonResult(new { Success = false, Message = result.Message });
-            return new JsonResult(new { Success = true, Data = result.Data, Message = result.Message });
+            return new JsonResult(new { Success = true, Message = result.Message });
         }
 
         [HttpGet("provider")]

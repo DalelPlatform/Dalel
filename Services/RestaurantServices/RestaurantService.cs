@@ -301,6 +301,20 @@ namespace Dalel.Services
             }
         }
 
+        public ServiceResult<List<RestaurantMenuItemDetailsVM>> GetMealsByRestaurantOwner(string ownerId)
+        {
+            try
+            {
+                var restaurant = _restaurantRepo.GetRestaurantByOwnerId(ownerId);
+
+                var meals = _menuItemRepository.GetMealsByRestaurantId(restaurant.Id);
+                return ServiceResult<List<RestaurantMenuItemDetailsVM>>.SuccessResult(meals, "Meals loaded successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<List<RestaurantMenuItemDetailsVM>>.FailureResult($"Failed to load meals: {ex.Message}");
+            }
+        }
         public ServiceResult<RestaurantMenuItemDetailsVM> GetMealById(int mealId)
         {
             try
