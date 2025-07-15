@@ -21,7 +21,7 @@ namespace Dalel.API.Areas.HomeServices.Controllers
         [HttpGet ("Chat")]
         [Authorize(Roles = "ServiceProvider,Client")]
         public IActionResult GetChats()
-        {
+       {
             var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = _homeServiceService.GetChatsForUser(UserId);
             if (!result.Success)
@@ -29,7 +29,7 @@ namespace Dalel.API.Areas.HomeServices.Controllers
             return new JsonResult(result);
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         [Authorize(Roles = "ServiceProvider,Client")]
         public IActionResult CreateChat([FromForm] AddChatVM model)
         {

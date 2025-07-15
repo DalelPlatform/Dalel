@@ -15,9 +15,10 @@ namespace Dalel.ViewModels
                 Name = vm.Name,
                 Description = vm.Description,
                 ApproximatePrice = vm.ApproximatePrice,
-                PriceUnit = vm.PriceUnit,
+                PriceUnit = vm.PriceUnit,            
+                Image = vm.Image != null ? vm.Imagepath: null,
+
                 ServiceProviderId = vm.ServiceProviderId,
-                Image =  vm.Image != null ? $"/images/serviceproviderProject/{vm.ServiceProviderId}/{vm.Image.FileName}" : null,
 
             };
 
@@ -30,7 +31,7 @@ namespace Dalel.ViewModels
             existing.Description = vm.Description;
             existing.ApproximatePrice = vm.ApproximatePrice;
             existing.PriceUnit = vm.PriceUnit;
-            existing.Image = vm.Image != null ? vm.Imagepath : existing.Image;
+            existing.Image = vm.Imagepath ?? existing.Image;
 
             return existing;
         }

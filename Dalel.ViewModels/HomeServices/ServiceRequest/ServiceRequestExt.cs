@@ -22,7 +22,7 @@ namespace Dalel.ViewModels
                 Date = vm.Date,
                 Status = vm.Status,
                 DueDate = vm.DueDate,
-                Image = vm.Image != null ? $"/images/servicerequest/{vm.Date}/{vm.ClientId}/{vm.Image.FileName}" : null,
+                Image = vm.Image != null ? vm.Imagepath : null,
                 StartPrice = vm.StartPrice,
 
                 
@@ -39,7 +39,6 @@ namespace Dalel.ViewModels
             existing.Date = vm.Date;
             existing.Status = vm.Status;
             existing.DueDate = vm.DueDate;
-            existing.Image = vm.Imagepath ?? existing.Image;
             existing.StartPrice = vm.StartPrice;
 
             

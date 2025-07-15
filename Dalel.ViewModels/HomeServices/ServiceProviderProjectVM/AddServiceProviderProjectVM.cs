@@ -20,7 +20,7 @@ namespace Dalel.ViewModels
 
         public string ServiceProviderId { get; set; }
         [Required(ErrorMessage = "Image Is Required")]
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
         public string? Imagepath { get; set; } = "";
 
     }
