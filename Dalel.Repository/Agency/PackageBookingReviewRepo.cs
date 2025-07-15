@@ -40,7 +40,8 @@ namespace Dalel.Repository.Agency
 
         public IQueryable<AgencyReviewDetails> GetReviewsByPackageId(int packageId)
         {
-            return GetList(r => r.PackageBooking.PackageSchadule.PackageId == packageId).Select(
+            return GetList(r => r.PackageBooking.PackageSchadule.PackageId == packageId).
+                Select(
                 s => s.ToDetailsModels());
         }
     }
