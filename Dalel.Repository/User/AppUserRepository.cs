@@ -25,8 +25,6 @@ namespace Dalel.Repository
 
         public async Task<IdentityResult> Register(UserRegisterVM accountRegister)
         {
-            //return await userManager.CreateAsync(accountRegister.ToModel(),
-            //    accountRegister.Password);
             var res = await userManager.CreateAsync(accountRegister.ToModel(),
                 accountRegister.Password);
             if (res.Succeeded)
